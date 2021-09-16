@@ -308,7 +308,7 @@ class OrderController extends Controller
                 ->with('orderItems','user')
                 ->latest()
                 ->get();
-            $result = [];
+            //$result = [];
             // foreach ($order as $key => $value) {
             //     $database = app('firebase.database');
             //     $url = Config::get('constants.FIREBASE_DB_NAME')."/".$request->post('restaurant_id')."/".$value->order_number;
