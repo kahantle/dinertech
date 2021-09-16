@@ -1,0 +1,214 @@
+@font-face {
+    font-family: 'sf_pro_displaybold';
+    src: url('../fonts/SFPro-webfontkit/fontsfree-net-sfprodisplay-bold-webfont.woff2') format('woff2'), url('../fonts/SFPro-webfontkit/fontsfree-net-sfprodisplay-bold-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'sf_pro_displaymedium';
+    src: url('../fonts/SFPro-webfontkit/fontsfree-net-sfprodisplay-medium-webfont.woff2') format('woff2'), url('../fonts/SFPro-webfontkit/fontsfree-net-sfprodisplay-medium-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'sf_pro_textbold';
+    src: url('../fonts/SFPro-webfontkit/fontsfree-net-sfprotext-bold-webfont.woff2') format('woff2'), url('../fonts/SFPro-webfontkit/fontsfree-net-sfprotext-bold-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'sf_pro_textlight';
+    src: url('../fonts/SFPro-webfontkit/fontsfree-net-sfprotext-light-webfont.woff2') format('woff2'), url('../fonts/SFPro-webfontkit/fontsfree-net-sfprotext-light-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'sf_pro_textmedium';
+    src: url('../fonts/SFPro-webfontkit/fontsfree-net-sfprotext-medium-webfont.woff2') format('woff2'), url('../fonts/SFPro-webfontkit/fontsfree-net-sfprotext-medium-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'sf_pro_textsemibold';
+    src: url('../fonts/SFPro-webfontkit/fontsfree-net-sfprotext-semibold-webfont.woff2') format('woff2'), url('../fonts/SFPro-webfontkit/fontsfree-net-sfprotext-semibold-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'sf_pro_textregular';
+    src: url('../fonts/SFPro-webfontkit/fontsfree-net-sfprotext-regular-webfont.woff2') format('woff2'), url('../fonts/SFPro-webfontkit/fontsfree-net-sfprotext-regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'century_gothicregular';
+    src: url('../fonts/Century-gothic-webfontkit/gothic-webfont.woff2') format('woff2'), url('../fonts/Century-gothic-webfontkit/gothic-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.login-backgroung {
+    background-image: url('../images/Login-bg.png');
+    background-size: 100% 100%;
+}
+
+.login-backgroung h1 {
+    font-family: 'sf_pro_textregular';
+    font-size: 50px;
+    color: #4135b5;
+    margin-top: 50px;
+    margin-bottom: 15px;
+}
+
+.login-backgroung h2 {
+    font-family: 'century_gothicregular';
+    color: #000;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.login-backgroung p {
+    font-family: 'century_gothicregular';
+    color: #4e4e4e;
+}
+
+.container .login-form {
+    background-color: white;
+    color: #000;
+    text-align: left;
+    padding-top: 20px;
+}
+
+.container .login-form label {
+    display: none;
+}
+
+.container .login-form input,
+.container .login-form textarea {
+    /* to create space for placing icon*/
+    padding-left: 32px;
+    border-color: transparent;
+    background-color: #FFF;
+    border-radius: 0px;
+    box-shadow: none !important;
+    border-bottom: 1px solid #4e4e4e;
+}
+
+.container .login-form input::placeholder {
+    font-family: 'century_gothicregular';
+    color: #4e4e4e;
+}
+
+.container .login-form .btn-default {
+    margin-top: 5px;
+    margin-bottom: 30px;
+    padding: 15px 36px;
+    background-color: #FFF;
+    border-radius: 0px;
+    border: 0px;
+    color: #000;
+}
+
+.container .login-form .btn-default:hover,
+.container .login-form .btn-default:focus {
+    background-color: #FFF;
+    color: #000;
+    border-color: transparent;
+    outline: 0px auto -webkit-focus-ring-color;
+}
+
+
+/*position should be relative and z-index greater than one*/
+
+.container .login-form .icon {
+    position: relative;
+    float: left;
+    margin-left: 8px;
+    margin-top: -24px;
+    z-index: 2;
+    color: #4e4e4e;
+}
+
+.container .login-form a {
+    font-family: 'century_gothicregular';
+    font-size: 20px;
+    color: #4e4e4e;
+    display: block;
+    text-align: right;
+    margin-top: 30px;
+}
+
+.container .login-form button {
+    background-color: #524cc8;
+    text-align: center;
+    font-family: 'century_gothicregular';
+    font-weight: bolder;
+    font-size: 30px;
+    color: #FFF;
+    border-radius: 20px;
+    margin-top: 30px;
+}
+
+.container .login-form .backlogin {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.forgotpassword {
+    margin-top: 50px !important;
+}
+
+.form-group-verify-input {
+    width: 15%;
+    display: inline-block;
+    margin-right: 20px;
+}
+
+.verify-input {
+    border-radius: 10px !important;
+    background-color: #a9a9a9 !important;
+    border: none !important;
+    height: 50px !important;
+}
+
+@media only screen and (max-width: 768px) {
+    
+}
+@media only screen and (width: 768px) {
+    
+}
+/* Extra Small Devices, Phones */
+@media only screen and (max-width: 480px) {
+    .login-backgroung{
+        background-image: none;
+    }
+    .login-backgroung .container{
+        padding-right: 0;
+        padding-left: 0;
+    }
+    .login-backgroung .container .jumbotron{
+        padding: 0;
+    }
+    .login-backgroung .container .jumbotron .col-sm-4{
+        padding-right: 0;
+        padding-left: 0;
+    }
+    .login-backgroung .container .jumbotron .col-sm-4 img{
+        width: 100%;
+    }
+    .login-backgroung .text-margin{
+        margin: 20px;
+    }
+}
+/* Custom, iPhone Retina */
+
+@media only screen and (max-width: 360px) {
+  
+}

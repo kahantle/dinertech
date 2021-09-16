@@ -1,0 +1,168 @@
+<?php
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register API routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| is assigned the "api" middleware group. Enjoy building your API!
+|
+*/
+
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+// Route::post('/search/menu','Api\Customer\MenuItemController@searchMenu');
+Route::prefix('customer')->namespace('Api\Customer')->group(function () {
+    Route::post('/login', 'UserController@login')->name('customer.login');
+    Route::post('/signup', 'UserController@signup')->name('customer.signup');
+    Route::post('/verify-otp', 'UserController@verifyOtp')->name('customer.verify-otp');
+    Route::post('/forgot-password', 'UserController@forgotPassword')->name('customer.forgot');
+    Route::post('/verify-forgot-otp', 'UserController@forgotVerifyOtp')->name('customer.otp.verfy.forgot');
+    Route::post('/reset-password', 'UserController@resetPassword')->name('customer.otp.verfy.resetPassword');
+});
+
+Route::namespace('Api')->group(function () {
+    //API FOR CUSTOMER
+    Route::prefix('customer')->namespace('Customer')->group(function () {
+        Route::post('/login', 'UserController@login')->name('customer.login');
+        Route::post('/signup', 'UserController@signup')->name('customer.signup');
+        Route::post('/verify-otp', 'UserController@verifyOtp')->name('customer.verify-otp');
+        Route::post('/forgot-password', 'UserController@forgotPassword')->name('customer.forgot');
+        Route::post('/verify-forgot-otp', 'UserController@forgotVerifyOtp')->name('customer.otp.verfy.forgot');
+        Route::post('/reset-password', 'UserController@resetPassword')->name('customer.otp.verfy.resetPassword');
+        Route::post('/logout', 'UserController@login')->name('customer.logout');
+        Route::post('/category-list', 'CategoryController@getCategoryList')->name('customer.category.without.auth.list');
+        Route::post('/category-menu-list', 'MenuItemController@getMenuList')->name('category.menu.without.auth.list');
+        Route::post('/category-search','MenuItemController@searchMenu')->name('customer.menu.without.auth.search');
+        Route::post('/modifier-list', 'ModifierController@getModifierList')->name('customer.modifier.without.auth.list');
+        Route::post('/promotion-list', 'PromotionController@getRecords')->name('customer.promotion.without.auth.get');
+        Route::post('/logout', 'UserController@logout')->name('customer.logout');
+        Route::middleware(['auth:api', 'role-cutomer'])->group(function () {
+            Route::post('/category', 'CategoryController@getCategoryList')->name('customer.category.list');
+            Route::post('/profile', 'UserController@profile')->name('customer.profile');
+            Route::post('/category-menu', 'MenuItemController@getMenuList')->name('customer.category.menu.list');
+            Route::post('/modifier', 'ModifierController@getModifierList')->name('customer.modifier.list');
+            Route::post('/menu', 'MenuItemController@getMenuList')->name('customer.menu.list');
+            Route::post('/search/menu','MenuItemController@searchMenu')->name('customer.menu.search');
+            Route::post('/hours', 'RestaurantHoursController@get')->name('customer.menu.hours');
+            Route::post('/change-password', 'UserController@changePassword')->name('customer.change.password');
+            Route::prefix('promotion')->group(function () { 
+                Route::post('/list', 'PromotionController@getRecords')->name('customer.promotion.get');
+            });
+            Route::prefix('address')->group(function () {
+                Route::post('/', 'AddressController@getAddressList')->name('address.list');
+                Route::post('/add', 'AddressController@addAddress')->name('address.list');
+                Route::post('/delete', 'AddressController@deleteAddress')->name('delete.address.list');
+            });
+            Route::prefix('feedback')->group(function () {
+                Route::post('/add', 'FeedbackController@addFeedback')->name('feedback.add');
+            });
+            Route::prefix('card')->group(function () {
+                Route::post('/', 'CardController@list')->name('address.list');
+                Route::post('/add', 'CardController@add')->name('address.list');
+                Route::post('/delete', 'CardController@delete')->name('delete.address.list');
+            });
+            Route::prefix('order')->group(function () {
+                Route::post('/add', 'OrderController@add')->name('order.add');
+                Route::post('/list', 'OrderController@getOrderList')->name('order.list');
+                Route::post('/id', 'OrderController@getOrderById')->name('order.id');
+            });
+            Route::prefix('setting')->group(function () {
+                Route::post('/get', 'UserSettingController@get')->name('setting.list');
+                Route::post('/set', 'UserSettingController@add')->name('setting.set');
+            });
+            Route::prefix('payment')->group(function () {
+                Route::post('/', 'PaymentController@payment')->name('stripe.payment');
+            });
+        });
+    });
+    //API FOR restaurant
+    Route::prefix('restaurant')->namespace('Restaurant')->group(function () {
+        Route::post('/login', 'UserController@login')->name('restaurant.login');
+        Route::post('/signup', 'UserController@signup')->name('restaurant.signup');
+        Route::post('/verify-otp', 'UserController@verifyOtp')->name('restaurant.verify-otp');
+        Route::post('/forgot-password', 'UserController@forgotPassword')->name('restaurant.forgot');
+        Route::post('/verify-forgot-otp', 'UserController@forgotVerifyOtp')->name('restaurant.otp.verfy.forgot');
+        Route::post('/reset-password', 'UserController@resetPassword')->name('restaurant.otp.verfy.resetPassword');
+        Route::post('/logout', 'UserController@logout')->name('restaurant.logout');
+        Route::middleware(['auth:api', 'role-restaurant'])->group(function () {
+            Route::post('/category', 'CategoryController@getCategoryList')->name('customer.category.list');
+            Route::post('/category/item', 'CategoryController@getCategoryItemList')->name('customer.category.item.list');
+            Route::post('/category/add', 'CategoryController@addCategory')->name('customer.category.add');
+            Route::post('/category/update', 'CategoryController@addCategory')->name('update.update.post');
+            Route::post('/category/delete','CategoryController@delete')->name('category.delete');
+
+
+            Route::post('/modifier/add', 'ModifierController@addModifierGroup')->name('customer.modifier.add');
+            Route::post('/modifier/edit', 'ModifierController@editModifierGroup')->name('customer.modifier.edit');
+            Route::post('/modifier', 'ModifierController@getModifierList')->name('customer.modifier.list');
+            Route::post('/modifier-item', 'ModifierController@addModifierGroupItem')->name('customer.modifier.add');
+            Route::post('/modifier-edit-item', 'ModifierController@editModifierGroupItem')->name('customer.modifier.edit');
+            Route::post('/modifier/delete','ModifierController@delete')->name('modifier.delete');
+            Route::post('/modifier-item/delete','ModifierController@deleteItem')->name('modifier.item.delete');
+
+            Route::post('/menu', 'MenuItemController@getMenuList')->name('restaurant.menu.list');
+            Route::post('/menu/add', 'MenuItemController@addMenuItem')->name('restaurant.menu.add'); 
+            Route::post('/menu/update', 'MenuItemController@addMenuItem')->name('restaurant.menu.update'); 
+            Route::post('/menu/delete','MenuItemController@delete')->name('menu.delete');
+
+            Route::post('/category-menu', 'MenuItemController@getMenuListByCategory')->name('customer.category.menu.list');
+            Route::prefix('promotion-type')->group(function () { 
+                Route::post('/', 'PromotionTypeController@getRecords')->name('restaurant.promotion.type.list');
+            });
+            Route::prefix('promotion')->group(function () { 
+                Route::post('/add', 'PromotionController@addRecord')->name('restaurant.promotion.add');
+                Route::post('/list', 'PromotionController@getRecords')->name('restaurant.promotion.get');
+                Route::post('/active', 'PromotionController@active')->name('restaurant.promotion.active');
+                Route::post('/eligible', 'PromotionController@getRecordById')->name('restaurant.promotion.get.by.id');
+                Route::post('/category/add', 'PromotionController@addCategoryRecord')->name('restaurant.promotion.add');
+                Route::post('/status', 'PromotionController@status')->name('restaurant.promotion.status');
+                Route::post('/delete','PromotionController@delete')->name('restaurant.promotion.delete');
+            });
+            Route::prefix('hour')->group(function () {
+                Route::post('/', 'RestaurantHoursController@get')->name('menu');
+                Route::post('/add', 'RestaurantHoursController@add')->name('add.hour.post');
+                Route::post('/update', 'RestaurantHoursController@update')->name('update.hour.post');
+                Route::post('/delete', 'RestaurantHoursController@delete')->name('update.hour.delete');
+            });
+            Route::prefix('contact')->group(function () {
+                Route::post('/', 'ContactController@add')->name('contact');
+            });
+            Route::prefix('feedback')->group(function () {
+                Route::post('/', 'FeedbackController@add')->name('contact');
+            });
+
+            Route::prefix('report')->group(function () {
+                Route::post('/', 'ReportController@index')->name('contact');
+            });
+
+            Route::prefix('outofstock')->group(function () {
+                Route::post('/', 'StockController@index')->name('outofstock');
+            });
+
+            Route::prefix('chat-number')->group(function () {
+                Route::post('/', 'ChatNumberController@index')->name('outofstock');
+            });
+          
+            Route::prefix('pin')->group(function () {
+                Route::post('/add', 'PinController@add')->name('set.pin');
+                Route::post('/status', 'PinController@status')->name('pin.status');
+            });
+            Route::prefix('order')->group(function () {
+                Route::post('/list', 'OrderController@getOrderList')->name('order.list');
+                Route::post('/recent', 'OrderController@getRecentOrder')->name('order.recent');
+                Route::post('/id', 'OrderController@getOrderById')->name('order.id');
+                Route::post('/accept', 'OrderController@makeOrder')->name('order.accept');
+                Route::post('/prepared', 'OrderController@preparedOrder')->name('order.prepared');
+                Route::post('/cancel', 'OrderController@cancelOrder')->name('order.cancel');
+            });
+        });
+    });
+});
