@@ -18,9 +18,9 @@ class Restaurant extends Model
         return $this->hasMany('App\Models\Order','restaurant_id');
     }
 
+    public function OnlineOrders()
+    {
+        return $this->hasMany('App\Models\Order','restaurant_id')->where('isCash',1);
+    }
 
-    // public function getGrandTotalAttribute()
-    // {
-    //     return $this->orders->where('isCash', '=', 1)->sum('grand_total');
-    // }
 }

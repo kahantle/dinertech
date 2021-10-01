@@ -293,9 +293,18 @@ Route::prefix('admin')->group(function(){
         Route::get('/login','Admin\LoginController@showLogin')->name('admin.login');
         Route::post('/login','Admin\LoginController@attemptLogin')->name('admin.auth.login');
         Route::post('/logout','Admin\LoginController@logout')->name('admin.logout');
+        
+        /* Forgot Password */
+        Route::get('/forgot-password','Admin\ForgotpasswordController@forgotPasswordShow')->name('admin.auth.forgot-password');
+        Route::post('/forgot-password','Admin\ForgotpasswordController@forgotPassword')->name('admin.auth.forget-passsword.getcode');
+        Route::get('/forgot-password/verify-process','Admin\ForgotpasswordController@verifyProcess')->name('admin.auth.forgot-password.verifyProcess');
+        Route::post('/forgot-password/verify-otp','Admin\ForgotpasswordController@verifyOtp')->name('admin.auth.forget-passsword.verifyOtp');
+        Route::get('/change-password','Admin\ForgotpasswordController@changePasswordShow')->name('admin.auth.change-password.show');
+        Route::post('/change-password','Admin\ForgotpasswordController@resetPassword')->name('admin.auth.change-password');
         Route::group(['middleware' => ['auth:admin','web','is_admin']], function () {
             
             Route::get('/dashboard','Admin\DashboardController@index')->name('admin.index');
+            Route::post('/dashboard/filter','Admin\DashboardController@dashboardFilter')->name('admin.dashboard.filter');
 
             /* Restaurant Users */
             Route::get('/users','Admin\UserController@index')->name('admin.users.index');
@@ -327,8 +336,9 @@ Route::prefix('admin')->group(function(){
             Route::get('/feedbacks','Admin\FeedbackController@index')->name('admin.feedback.index');
 
             /* Payment Info */
-            Route::get('/paymentInfo','Admin\PaymentInfoController@index')->name('admin.paymentInfo.index');
+            Route::get('/paymentInfo/{filter?}','Admin\PaymentInfoController@index')->name('admin.paymentInfo.index');
             Route::get('payment/report/{restaurantId}','Admin\PaymentInfoController@show')->name('admin.paymentInfo.report');
+            Route::post('/payment/chart/','Admin\PaymentInfoController@getChartDetail')->name('admin.paymentInfo.chart');
 
             /* Restaurant Panel */
             Route::get('/{restaurantName?}/{restaurantId}/dashboard','Admin\RestaurantController@ResDashboard')->name('admin.restaurants.dashboard');

@@ -8,3 +8,4 @@
  <link href="{{asset('assets/admin/css/custom.css')}}" rel="stylesheet">
  <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
  @yield('css')
+ 

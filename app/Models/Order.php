@@ -10,7 +10,6 @@ class Order extends Model
     protected $primaryKey = 'order_id';
     protected $appends = ['user_name'];
 
-
     public function orderItems()
     {
         return $this->hasMany('App\Models\OrderMenuItem', 'order_id');

@@ -21,7 +21,6 @@
                         </button>
                     <ul class="dropdown-menu">
                         <li><a href="#"><i class="material-icons">person</i> <span data-i18n="userinfo.profile">Your Profile</span></a></li>
-                        <li><a href="#"><i class="material-icons">settings</i> <span data-i18n="userinfo.settings">Settings</span></a></li>
                         <li class="divider-horizontal"></li>
                         <li><a href="#"><i class="material-icons">lock</i> <span data-i18n="userinfo.lock">Lock</span></a></li>
                         <li class="divider-horizontal"></li>
@@ -70,12 +69,6 @@
                 </li>
                 <li class="nav-main-heading">
                     <span class="sidebar-mini-hide" data-i18n="nav.premadePages.premadePages">Pages & Apps</span>
-                </li>
-                <li>
-                    <a href="#">
-                        <span class="menu-item-ico"><img src="{{asset('assets/admin/images/SideMenuIcon/Setting-small.png')}}"></span>
-                        <span class="menu-item-name" data-i18n="nav.calendar">Setting</span>
-                    </a>
                 </li>
                 <li class="{{ (Request::is('admin/feedbacks')) ? 'active' : '' }}">
                     <a href="{{route('admin.feedback.index')}}">

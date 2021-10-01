@@ -12,12 +12,12 @@
                         </h1>
                         <div class="del-ref-btn-grp">
                             <div class="dropdown">
-                                <button class="btn btn-default btn-lg title-text dropdown-toggle" type="button" data-toggle="dropdown">1 Month
+                                <button class="btn btn-default btn-lg title-text dropdown-toggle" type="button" data-toggle="dropdown">{{$filterType}}
                                 <span class="caret"></span></button>
                                 <ul class="dropdown-menu">
-                                    <li><a href="#">1 Day</a></li>
-                                    <li><a href="#">1 Month</a></li>
-                                    <li><a href="#">1 Year</a></li>
+                                    <li><a href="{{route('admin.paymentInfo.index','today')}}">1 Day</a></li>
+                                    <li><a href="{{route('admin.paymentInfo.index','currentMonth')}}">1 Month</a></li>
+                                    <li><a href="{{route('admin.paymentInfo.index','currentYear')}}">1 Year</a></li>
                                 </ul>
                             </div> 
                         </div>
@@ -44,11 +44,11 @@
                                                         <div class="person">
                                                             <div class="sales">
                                                                 <h2>Sales</h2>
-                                                                <h3>$ 123.00</h3>
+                                                                <h3>$ {{number_format($restaurant->restaurant->orders->sum('grand_total'),2)}}</h3>
                                                             </div>
                                                             <div class="profit">
                                                                 <h2>Profit</h2>
-                                                                <h3>$ 123.00</h3>
+                                                                <h3>$ {{number_format($restaurant->restaurant->orders->sum('cart_charge') - $restaurant->restaurant->orders->sum('discount_charge') - $restaurant->restaurant->orders->sum('tax_charge'),2)}}</h3>
                                                             </div>
                                                             <div class="clearfix"></div>
                                                         </div>
@@ -66,9 +66,10 @@
                                         <h3>
                                             Online Payment
                                         </h3>
-                                        @if ($restaurant->restaurant->orders_count != 0 && $restaurant->restaurant->totalOnlinePayments != 0)
+                                        
+                                        @if ($restaurant->restaurant->online_orders_count != 0 && $restaurant->restaurant->OnlineOrders->sum('grand_total') != 0)
                                             @php
-                                                $percentage = number_format($restaurant->restaurant->totalOnlinePayments/$restaurant->restaurant->orders_count * 100,2);
+                                                $percentage = number_format($restaurant->restaurant->OnlineOrders->sum('grand_total') * $restaurant->restaurant->online_orders_count / 100,2);
                                             @endphp
                                         @else
                                             @php
@@ -86,54 +87,39 @@
                                             <span class="sr-only">60% Complete</span>
                                         </div>
                                     </div>
-                                    {{$restaurant->restaurant->totalOnlinePayment}}
                                     <div class="stat-wrapper">
-                                        <h4 class="no-margin-top margin-bottom-2">Online Sales <span class="rs">$ {{($restaurant->restaurant->totalOnlineSales) ? number_format($restaurant->restaurant->totalOnlineSales,2) : 0}}</span></h4>
-                                        <div class="linear-progress-demo  cc-preloader-primary" data-toggle="linear-progress" data-mode="determinate" data-type="primary" data-value="30" style="width: 100%;" aria-valuenow="30" value="30">
-                                            <div class="md-progress-linear" role="progressbar" md-mode="" aria-valuemax="100" aria-valuemin="0" aria-valuenow="88" value="88">
-                                                <div class="md-container md-mode-determinate">
-                                                    <div class="md-dashed"></div>
-                                                    <div class="md-bar md-bar1"></div>
-                                                    <div class="md-bar md-bar2" style="transform: translateX(-35%) scale(0.3, 1);"></div>
-                                                </div>
-                                            </div>
+                                        <h4 class="no-margin-top margin-bottom-2">Online Sales <span class="rs">$ {{($restaurant->restaurant->OnlineOrders->sum('grand_total')) ? number_format($restaurant->restaurant->OnlineOrders->sum('grand_total'),2) : 0}}</span></h4>
+                                        <div class="progress wd-dr-progress">
+                                            <div class="progress-bar" role="progressbar" style="width: {{$percentage}}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
                                         </div>
                                     </div>
                                     @php
-                                        $onlineProfit = $restaurant->restaurant->totalOnlineCartCharge - $restaurant->restaurant->totalOnlineDiscountCharge;
+                                        $onlineProfit = $restaurant->restaurant->OnlineOrders->sum('cart_charge') - $restaurant->restaurant->OnlineOrders->sum('discount_charge') - $restaurant->restaurant->OnlineOrders->sum('tax_charge');
+                                        if($restaurant->restaurant->online_orders_count != 0)
+                                        {
+                                            $profitPercentage = number_format($restaurant->restaurant->online_orders_count * $onlineProfit / 100,2);
+                                        }
+                                        else 
+                                        {
+                                            $profitPercentage = 0;
+                                        }
                                     @endphp
                                     <div class="stat-wrapper">
                                         <h4 class="no-margin-top margin-bottom-2">Online Profit <span class="rs">$ {{($onlineProfit == 0) ? 0 : number_format($onlineProfit,2)}}</span></h4>
-                                        <div class="linear-progress-demo  cc-preloader-primary" data-toggle="linear-progress" data-mode="determinate" data-type="primary" data-value="30" style="width: 100%;" aria-valuenow="30" value="30">
-                                            <div class="md-progress-linear" role="progressbar" md-mode="" aria-valuemax="100" aria-valuemin="0" aria-valuenow="88" value="88">
-                                                <div class="md-container md-mode-determinate">
-                                                    <div class="md-dashed"></div>
-                                                    <div class="md-bar md-bar1"></div>
-                                                    <div class="md-bar md-bar2" style="transform: translateX(-35%) scale(0.3, 1);"></div>
-                                                </div>
-                                            </div>
+                                        <div class="progress wd-dr-progress">
+                                            <div class="progress-bar" role="progressbar" style="width: {{$profitPercentage}}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="col-sm-4  zoomIn animated" style="animation-delay: 0.12s;">
-                                <div class="chart" id="chartContainer">
+                            <div class="col-sm-4  zoomIn animated chartPercentage" style="animation-delay: 0.12s;" data-percentage="{{$percentage}}" data-restaurantid="{{$restaurant->restaurant->restaurant_id}}">
+                                <div class="chart" id="chartContainer-{{$restaurant->restaurant->restaurant_id}}">
                                     <figure class="chart__figure">
-                                        <canvas class="chart__canvas" id="chartCanvas" width="160" height="160" aria-label="Example doughnut chart showing data as a percentage" role="img"></canvas>
-                                    
+                                        <canvas class="chart__canvas" id="chartCanvas-{{$restaurant->restaurant->restaurant_id}}" width="160" height="160" aria-label="Example doughnut chart showing data as a percentage" role="img"></canvas>
                                     </figure>
                                 </div>
                                 <div class="">
-                                    {{-- <div class="micro-chart-1 cc-spc-warning" data-toggle="simple-pie-chart" data-percent="2" data-type="warning" data-size="45" data-line-width="3">
-                                        <div class="cc-spc-wrapper" role="pie-chart" aria-valuemin="0" aria-valuemax="100" aria-valuenow="2" data-valuenow="0" data-diameter="45" style="width: 100%; height: 150px">
-                                            <div class="cc-spc-chart-percent"><span>2</span>%</div>
-                                            <svg class="cc-spc-svg" width="100" height="100">
-                                                <circle class="cc-spc-track" cx="38.5" cy="38.5" r="38.5" fill="transparent" stroke="#F2F3F3" stroke-width="10"></circle>
-                                                <circle class="cc-spc-bar" cx="38.5" cy="38.5" r="38.5" fill="transparent" stroke="#706bc8" stroke-width="10" stroke-dasharray="122.46000000000001" stroke-dashoffset="122.46000000000001" stroke-linecap="square" style="stroke-dashoffset: 15.9198px; transition-duration: 1000ms;"></circle>
-                                            </svg>
-                                        </div>
-                                    </div> --}}
                                     <div class="bemat-pie-chart" data-toggle="simple-pie-chart" data-percent="37" data-type="primary"></div>
                                 </div>
                             </div>
@@ -244,48 +230,6 @@
 @endsection
 
 @section('script')
-{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" type="text/javascript"></script>
-<script>
-    // This demo uses the Chartjs javascript library
-
-    const percent = 84;
-    const color = '#706bc8';
-    const canvas = 'chartCanvas';
-    const container = 'chartContainer';
-
-    const percentValue = percent; // Sets the single percentage value
-    const colorGreen = color, // Sets the chart color
-    animationTime = '1400'; // Sets speed/duration of the animation
-
-    const chartCanvas = document.getElementById(canvas), // Sets canvas element by ID
-    chartContainer1 = document.getElementById(container), // Sets container element ID
-    divElement = document.createElement('div'), // Create element to hold and show percentage value in the center on the chart
-    domString = '<div class="chart__value"><p>' + percentValue + '%</p></div>'; // String holding markup for above created element
-
-    // Create a new Chart object
-    const doughnutChart = new Chart(chartCanvas, {
-    type: 'doughnut', // Set the chart to be a doughnut chart type
-    data: {
-        datasets: [
-            {
-                data: [percentValue, 100 - percentValue], // Set the value shown in the chart as a percentage (out of 100)
-                backgroundColor: [colorGreen], // The background color of the filled chart
-                borderWidth: 0 // Width of border around the chart
-            }
-        ]
-    },
-    options: {
-        cutoutPercentage: 84, // The percentage of the middle cut out of the chart
-        responsive: false, // Set the chart to not be responsive
-        tooltips: {
-            enabled: false // Hide tooltips
-        }
-    }
-    });
-
-    Chart.defaults.global.animation.duration = animationTime; // Set the animation duration
-
-    divElement.innerHTML = domString; // Parse the HTML set in the domString to the innerHTML of the divElement
-    chartContainer1.appendChild(divElement.firstChild); // Append the divElement within the chartContainer1 as it's child
-</script> --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" type="text/javascript"></script>
+    <script src="{{asset('assets/admin/js/payment/index.js')}}"></script>
 @endsection

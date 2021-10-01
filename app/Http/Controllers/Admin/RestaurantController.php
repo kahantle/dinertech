@@ -12,6 +12,7 @@ use App\Models\MenuItem;
 use App\Models\MenuModifierItem;
 use App\Models\ModifierGroup;
 use App\Models\Order;
+use App\Http\Requests\Admin\RestaurantRequest;
 use Config;
 use Auth;
 
@@ -274,14 +275,27 @@ class RestaurantController extends Controller
         return view('admin.restaurant.edit_restaurant',$data);
     }
 
-    public function updateDetail(Request $request)
+    public function updateDetail(RestaurantRequest $request,User $users)
     {
         $uid = $request->restaurantUid;
         $user = User::find($uid);
         $user->mobile_number = $request->mobile_number;
         $user->email_id = $request->email;
+
+        if ($request->hasFile('restaurant_image')) {
+            $image = $request->file('restaurant_image');
+            $save_name =  $request->post('restaurant_name').'.'.$image->getClientOriginalExtension();
+            $image->storeAs(Config::get('constants.IMAGES.RESTAURANT_USER_IMAGE_PATH'), $save_name);
+            $user->profile_image = $save_name;
+        }
         $user->save();
-        // User::where('uid',$uid)->Update(['mobile_number' => $request->mobile_number,"email_id" => $request->email]);
+
+        $restaurantId = $request->restaurantId;
+        $restaurant = Restaurant::find($restaurantId);
+        $restaurant->restaurant_name = $request->post('restaurant_name');
+        $restaurant->restaurant_address = $request->post('restaurant_address');
+        $restaurant->save();
+        
         return redirect()->back()->with('success','Detail Update Successfully.');
     }
 

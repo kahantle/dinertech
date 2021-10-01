@@ -77,6 +77,7 @@
 .login-backgroung p {
     font-family: 'century_gothicregular';
     color: #4e4e4e;
+    font-size: 18px;
 }
 
 .container .login-form {
@@ -135,14 +136,16 @@
     z-index: 2;
     color: #4e4e4e;
 }
-
+.login-form input{
+    font-size: 16px;
+}
 .container .login-form a {
     font-family: 'century_gothicregular';
-    font-size: 20px;
+    font-size: 18px;
     color: #4e4e4e;
     display: block;
     text-align: right;
-    margin-top: 30px;
+    margin-top: 24px;
 }
 
 .container .login-form button {
@@ -150,7 +153,7 @@
     text-align: center;
     font-family: 'century_gothicregular';
     font-weight: bolder;
-    font-size: 30px;
+    font-size: 26px;
     color: #FFF;
     border-radius: 20px;
     margin-top: 30px;
@@ -164,13 +167,39 @@
 .forgotpassword {
     margin-top: 50px !important;
 }
-
-.form-group-verify-input {
+form .otp{
+    display:inline-block;
+    width:50px;
+    height:50px;
+    text-align:center;
+  padding-left: 5px!important;
+  padding-right: 5px!important;
+    border-radius: 10px !important;
+  background-color: #a9a9a9 !important;
+  text-align: center;
+  border:none!important;
+  margin-right: 12px;
+  
+  }
+  .forgot-email-blog{
+      display: flex;
+      align-items: center;
+  }
+.forgot-password-form .verify-input{
+padding-left: 5px!important;
+padding-right: 5px!important;
+text-align: center!important;
+}
+/* .form-group-verify-input {
     width: 15%;
     display: inline-block;
     margin-right: 20px;
+} */
+.form-group-verify-input {
+    width: 11%;
+    display: inline-block;
+    margin-right: 20px;
 }
-
 .verify-input {
     border-radius: 10px !important;
     background-color: #a9a9a9 !important;
@@ -209,6 +238,43 @@
 }
 /* Custom, iPhone Retina */
 
-@media only screen and (max-width: 360px) {
-  
+@media only screen and (max-width: 575px) {
+    .wd-dr-inner-future {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+    .img-login {
+        margin: 30px 0 0 0;
+        border-radius: none!important;
+    }
+}
+
+.wd-dr-inner-login{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+
+}
+.wd-dr-inner-future{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.img-login{
+    width: 100%;
+    border-radius: 16px;
+}
+.login-backgroung .jumbotron{
+
+    width: 80%;
+    margin: auto;
+    padding: 16px;
+}
+
+.error{
+    color: rgb(212, 16, 16);
 }

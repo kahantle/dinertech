@@ -114,9 +114,6 @@ $(function(){
             category:{
                 required:true
             },
-            "modifier[]":{
-                required:true
-            },
             stockType:{
                 required:true
             }

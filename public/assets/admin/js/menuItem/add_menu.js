@@ -121,9 +121,6 @@ $(function(){
             category:{
                 required:true
             },
-            "modifier[]":{
-                required:true
-            },
             stockType:{
                 required:true
             }
@@ -196,7 +193,5 @@ $(function(){
         }
     });
 
-    // $(".menuFormSubmit").on("click",function() {
-    //     console.log(menuform.valid());
-    // });
+    
 });

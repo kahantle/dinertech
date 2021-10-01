@@ -32,7 +32,7 @@ class MenuItem extends Model
             'menu_id',
              'modifier_group_id',
              'menu_id',
-             'modifier_id'
+             'modifier_id',
         );
     }
 
@@ -47,7 +47,6 @@ class MenuItem extends Model
     {
         if($this->category){
             return $this->category->category_name;
-
         }else{
             return '';
         }
