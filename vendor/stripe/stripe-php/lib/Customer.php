@@ -78,6 +78,27 @@ class Customer extends ApiResource
         $url = $this->instanceUrl() . '/discount';
         list($response, $opts) = $this->_request('delete', $url, $params, $opts);
         $this->refreshFrom(['discount' => null], $opts, true);
+
+        return $this;
+    }
+
+    /**
+     * @param null|array $params
+     * @param null|array|string $opts
+     * @param mixed $id
+     *
+     * @throws \Stripe\Exception\ApiErrorException if the request fails
+     *
+     * @return \Stripe\Collection list of PaymentMethods
+     */
+    public static function allPaymentMethods($id, $params = null, $opts = null)
+    {
+        $url = static::resourceUrl($id) . '/payment_methods';
+        list($response, $opts) = static::_staticRequest('get', $url, $params, $opts);
+        $obj = \Stripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj->setLastResponse($response);
+
+        return $obj;
     }
 
     const PATH_BALANCE_TRANSACTIONS = '/balance_transactions';
@@ -139,7 +160,6 @@ class Customer extends ApiResource
     {
         return self::_updateNestedResource($id, static::PATH_BALANCE_TRANSACTIONS, $balanceTransactionId, $params, $opts);
     }
-
     const PATH_SOURCES = '/sources';
 
     /**
@@ -214,7 +234,6 @@ class Customer extends ApiResource
     {
         return self::_updateNestedResource($id, static::PATH_SOURCES, $sourceId, $params, $opts);
     }
-
     const PATH_TAX_IDS = '/tax_ids';
 
     /**

@@ -1,324 +1,385 @@
 @extends('layouts.app')
-@section('content')
-{{ Form::open(array('route' => array('promotion.add.free.getonefree.post'),'id'=>'promotionForm','method'=>'POST','class'=>'','files'=>'true')) }}
-
-<section id="wrapper">
-  @include('layouts.sidebar')
-  <div id="navbar-wrapper">
-        <nav class="navbar navbar-inverse">
-          <div class="container-fluid">
-            <div class="navbar-header">
-              <a href="#" class="navbar-brand" id="sidebar-toggle"><i class="fa fa-bars"></i></a>
-              Buy one,get one free.
-            </div>
-          </div>
-        </nav>
-      </div>
-      <div class="add-category Promotion content-wrapper">
-        <div class="container-fluid">
-            <div class="row">
-              <div class="col-lg-5">
-                <div class="form-group">   
-                  <img src="{{ asset('assets/images/percentage.png') }}">              
-                  <input type="text" class="form-control" id="promotion_code" name="promotion_code" value="{{$promotion->promotion_code}}" placeholder="Promo code (optional)">
-                  <input type="hidden" id="promotion_id" name="promotion_id" value="{{$promotion->promotion_id}}" />
-                </div>
-                <div class="form-group">   
-                  <img src="{{ asset('assets/images/speaker.png') }}">              
-                  <input type="text" class="form-control" id="promotion_name" name="promotion_name" value="{{$promotion->promotion_name}}" placeholder="Enter Headline">
-                </div>
-                <div class="form-group">   
-                  <img src="{{ asset('assets/images/description.png') }}">              
-                  <textarea type="text" class="form-control" id="promotion_details" name="promotion_details"  placeholder="Enter Description">{{$promotion->promotion_details}}</textarea>
-                </div>
-              </div>
-              <div class="col-lg-7">
-                <div class="form-group select-input input-popup">
-                  <a href="#field-one">
-                    <img src="{{ asset('assets/images/modifiers-black.png') }}">
-                    <p name="slct" id="slct" class="form-control">Eligible Items 1</p>
-                  </a>
-                </div>
-
-                <div class="form-group select-input input-popup">
-                  <a href="#field-two">
-                    <img src="{{ asset('assets/images/modifiers-black.png') }}">
-                    <p name="slct" id="slct" class="form-control">Eligible Items 2</p>
-                  </a>
-                </div>
 
 
-
-
-
-                <div class="text-promotion">
-                  <h5>Discount</h5>
-                </div>
-
-                <div class="form-group select-input">
-                  <img src="{{ asset('assets/images/client-t.png') }}">
-                  <select name="auto_manually_discount" id="auto_manually_discount" class="form-control auto_manually_discount">
-                    @foreach (Config::get('constants.AUTO_DISCOUNT') as $key=>$item)
-                      <option value="{{$key}}" {{($promotion->auto_manually_discount==$key)?'selected':''}}>{{$item}}</option>
-
-                    @endforeach
-                  </select>
-                </div>
-                @if($promotion->auto_manually_discount == 1)
-                  <div class="auto_fields" >
-                @else
-                <div class="auto_fields" style="display: none">
-
-                @endif
-                <div class="form-group">   
-                  <img src="{{ asset('assets/images/tag-d.png') }}">              
-                  <input type="text" class="form-control" id="discount_cheapest" name="discount_cheapest" value="{{$promotion->discount_cheapest}}" placeholder="Discount for cheapest item (%)">
-                </div>
-
-                <div class="form-group">   
-                  <img src="{{ asset('assets/images/tag-d.png') }}">              
-                  <input type="text" class="form-control" id="discount_expensive" name="discount_expensive" value="{{$promotion->discount_expensive}}" placeholder="Discount for most expensive item (%)">
-                </div>
-              </div>
-
-
-                  @if($promotion->auto_manually_discount == 2)
-                  <div class="manually_fields" >
-                @else
-                <div class="manually_fields" style="display: none">
-
-                @endif
-
-
-                <div class="form-group">   
-                  <img src="{{ asset('assets/images/tag-d.png') }}">              
-                  <input type="text" class="form-control" id="item_group_1" name="item_group_1" value="{{$promotion->item_group_1}}" placeholder="Item Group 1 (%)">
-                </div>
-
-                <div class="form-group">   
-                  <img src="{{ asset('assets/images/tag-d.png') }}">              
-                  <input type="text" class="form-control" id="item_group_2" name="item_group_2" value="{{$promotion->item_group_2}}" placeholder="Item Group 2 (%)">
-                </div>
-              </div>
-
-                {{-- <div class="form-group select-input">
-                  <img src="{{ asset('assets/images/modifiers-black.png') }}">
-                  <select name="no_extra_charge" id="no_extra_charge" class="form-control">
-                    <option value="No Extra charges">No Extra charges</option>
-                    @foreach (Config::get('constants.NO_EXTRA_CHARGES') as $key=>$item)
-                    <option value="{{$key}}" {{($promotion->no_extra_charge==$key)?'selected':''}}>{{$item}}</option>
-                    @endforeach
-                  </select>
-                </div> --}}
-
-                <div class="form-group select-input">
-                  <img src="{{ asset('assets/images/modifiers-black.png') }}">
-                  <select name="client_type" id="client_type" class="form-control">
-                    <option value="Client type">Client type</option>
-                    @foreach (Config::get('constants.CLIENT_TYPE') as $key=>$item)
-                    <option value="{{$key}}" {{($promotion->client_type==$key)?'selected':''}}>{{$item}}</option>
-                  @endforeach
-                  </select>
-                </div>
-
-                <div class="form-group select-input">
-                  <img src="{{ asset('assets/images/modifiers-black.png') }}">
-                  <select name="order_type" id="order_type" class="form-control">
-                    <option value="Order Type">Order Type</option>
-                    @foreach (Config::get('constants.ORDER_TYPE') as $key=>$item)
-                    <option value="{{$key}}" {{($promotion->order_type==$key)?'selected':''}}>{{$item}}</option>
-                    @endforeach
-                  </select>
-                </div>
-
-                <div class="form-group cs-checkbox">
-                  <input type="checkbox" class="checkbox-custom onlyForSelectedPayment" id="payment" name="only_selected_payment_method"   {{($promotion->only_selected_payment_method)?'checked':''}}>
-                  <label for="payment">Only for selected payment methods</label>
-  
-                  @if($promotion->only_selected_payment_method)
-                  <div class="form-group cs-checkbox onlyForSelectedPaymentDiv" >
-                  @else
-                  <div class="form-group cs-checkbox onlyForSelectedPaymentDiv" style="display: none">
-  
-                  @endif
-                    <input type="checkbox"  class="checkbox-custom" id="cash" name="only_selected_cash"   {{($promotion->only_selected_cash)?'checked':''}}>
-                    <label for="cash">Cash</label>
-  
-                    <input type="checkbox" class="checkbox-custom" id="cardtodelivery" name="only_selected_cash_delivery_person"   {{($promotion->only_selected_cash_delivery_person)?'checked':''}}>
-                    <label for="cardtodelivery">Card to delivery person or at pickup counter</label>
-                  </div>
-  
-                </div>
-                  <div class="form-group cs-checkbox">
-                  <input type="checkbox" class="checkbox-custom" id="client" name="only_once_per_client"   {{($promotion->only_once_per_client)?'checked':''}}>
-                    <label for="client">Only once per client</label>
-                  </div>
-  
-                  <div class="form-group select-input">
-                    <img src="{{ asset('assets/images/modifiers-black.png') }}">
-                    <select name="mark_promo_as" id="mark_promo_as" class="form-control">
-                         @foreach (Config::get('constants.MARK_PROMO_AS') as $key=>$item)
-                          <option value="{{$key}}" {{($promotion->mark_promo_as==$key)?'selected':''}}>{{$item}}</option>
-                        @endforeach
-                    </select>
-                  </div>
-                  <div class="form-group select-input">
-                    <img src="{{ asset('assets/images/modifiers-black.png') }}">
-                    <select name="display_time" id="display_time" class="form-control">
-                        @foreach (Config::get('constants.DISPLAY_TIME') as $key=>$item)
-                           <option value="{{$key}}" {{($promotion->display_time==$key)?'selected':''}}>{{$item}}</option>
-                        @endforeach
-                    </select>
-                  </div>
-
-                <div id="field-one" class="overlay field-popup">
-                  <div class="popup text-center">
-                    <h2>Eligible Items</h2>
-                    <a class="close" href="#">&times;</a>
-                    <div class="content">
-                      <div id="accordion" class="accordion">
-                      @foreach($category as $key=>$value)
-                              <div class="card mb-0">
-                                  <div class="form-group cs-checkbox">
-                                    @php
-                                    $category_selected =  \App\Models\PromotionCategoryItem::where('eligible_item_id',0)->where(['category_id' => $value->category_id])->where(['promotion_id' => $promotion->promotion_id])->count();
-                                      if($category_selected >0){
-                                      $all = $value->category_item->count()===$category_selected ;
-                                      }else{
-                                        $all=false;
-                                      }
-                                   @endphp
-
-                                  <input type="checkbox" class="checkbox-custom categoryList" {{($all)?'checked':''}} id="category{{$key}}" value="{{$value->category_id}}" name="eligible_item[1][{{$value->category_id}}]">
-                                  <label for="category{{$key}}">{{$value->category_name}}</label>
-                                </div>
-                                <div class="card-header collapsed" data-toggle="collapse" href="#collapse{{$key}}">
-                                    <a class="card-title">
-                                        <i class="fa fa-plus"></i>
-                                    </a>
-                                </div>
-                                  <div id="collapse{{$key}}" class="card-body collapse" data-parent="#accordion" >
-                                  @foreach($value->category_item as $key1=>$value1)
-                                  @php
-                                  $category_select_item =  \App\Models\PromotionCategoryItem::where('eligible_item_id',0)->where(['category_id' => $value->category_id])->where(['item_id' => $value1->menu_id])->where(['promotion_id' => $promotion->promotion_id])->first();
-                                  @endphp
-                                      <div class="form-group cs-checkbox">
-                                        <input type="checkbox" class="checkbox-custom category{{$key}}"  {{($category_select_item)?'checked':''}} id="item{{$value->category_id}}{{$key1}}" value="{{$value1->menu_id}}" name="eligible_item[1][{{$value->category_id}}][{{$value1->menu_id}}]">
-                                        <label for="item{{$value->category_id}}{{$key1}}">{{$value1->item_name}}</label>
-                                      </div>
-                                      @endforeach
-                                  </div>
-                              </div>
-                          @endforeach
-                      </div>
-                  
-                    </div>
-                    <div class="form-group form-btn justify-content-center">   
-                            <div class="btn-custom">
-                             
-                            </div>
-                          </div>
-                  </div>
-                </div>
-
-
-
-                <div id="field-two" class="overlay field-popup">
-                  <div class="popup text-center">
-                    <h2>Eligible Items</h2>
-                    <a class="close" href="#">&times;</a>
-                    <div class="content">
-                      <div id="accordion1" class="accordion">
-                      @foreach($category as $key=>$value)
-                              <div class="card mb-0">
-                                  <div class="form-group cs-checkbox">
-                                    @php
-                                    $category_selected =  \App\Models\PromotionCategoryItem::where('eligible_item_id',1)->where(['category_id' => $value->category_id])->where(['promotion_id' => $promotion->promotion_id])->count();
-                                      if($category_selected >0){
-                                      $all = $value->category_item->count()===$category_selected ;
-                                      }else{
-                                        $all=false;
-                                      }
-                                   @endphp
-                                  <input type="checkbox" class="checkbox-custom categoryListTwo" {{($all)?'checked':''}} id="category_two_{{$key}}" value="{{$value->category_id}}" name="eligible_item[2][{{$value->category_id}}]">
-                                  <label for="category_two_{{$key}}">{{$value->category_name}}</label>
-                                </div>
-                                <div class="card-header collapsed" data-toggle="collapse" href="#collapse_two_{{$key}}">
-                                    <a class="card-title">
-                                        <i class="fa fa-plus"></i>
-                                    </a>
-                                </div>
-                                  <div id="collapse_two_{{$key}}" class="card-body collapse" data-parent="#accordion1" >
-                                  @foreach($value->category_item as $key1=>$value1)
-                                  @php
-                                  $category_select_item =  \App\Models\PromotionCategoryItem::where('eligible_item_id',1)->where(['category_id' => $value->category_id])->where(['item_id' => $value1->menu_id])->where(['promotion_id' => $promotion->promotion_id])->first();
-                                  @endphp
-                                      <div class="form-group cs-checkbox">
-                                        <input type="checkbox" class="checkbox-custom category_two_{{$key}}"  {{($category_select_item)?'checked':''}}  id="item_two_{{$value->category_id}}{{$key1}}" value="{{$value1->menu_id}}" name="eligible_item[2][{{$value->category_id}}][{{$value1->menu_id}}]">
-                                        <label for="item_two_{{$value->category_id}}{{$key1}}">{{$value1->item_name}}</label>
-                                      </div>
-                                      @endforeach
-                                  </div>
-                              </div>
-                          @endforeach
-                      </div>
-                  
-                    </div>
-                    <div class="form-group form-btn justify-content-center">   
-                            <div class="btn-custom">
-                             
-                            </div>
-                          </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-                  </div>
-        </div>
-        <div class="form-group form-btn-menu">
-          <div class="btn-custom">
-            <a href="{{route('promotion')}}" class="btn-grey"><span>Cancel</span></a>
-          </div>
-          <div class="btn-custom">
-            <button type="submit" class="btn-blue"><span>Submit</span></button>
-          </div>
-        </div>
-      </div></section>
-      </form>
+@section('css')
+    <link rel="stylesheet" href="{{ asset('/assets/css/promotion_style.css') }}">
+    @if ($webview == 1)
+        <style>
+            #wrapper{
+                padding-left : 0px
+            }
+        </style>
+    @endif
 @endsection
+
+
+@section('content')
+    @if ($webview == 1)
+        {{ Form::open(array('route' => array('promotion.add.get.one.free.webView'),'id'=>'promotionForm','method'=>'POST','class'=>'','files'=>'true')) }}
+        <input type="hidden" name="restaurant_user_id" value="{{$uid}}">
+    @else
+        {{ Form::open(array('route' => array('promotion.add.free.getonefree.post'),'id'=>'promotionForm','method'=>'POST','class'=>'','files'=>'true')) }}
+    @endif
+
+    <section id="wrapper">
+        @if ($webview == 0)
+            @include('layouts.sidebar')
+            <div id="navbar-wrapper">
+                <nav class="navbar navbar-inverse">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                    <div class="profile-title-new">
+                        <a href="#" class="navbar-brand" id="sidebar-toggle"><i class="fa fa-bars"></i></a>
+                        <h2> Edit Buy one,get one free.</h2>
+                    </div>
+                    </div>
+                </div>
+                </nav>
+            </div>
+        @endif
+        <div class="add-category Promotion content-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="@if($webview == 1) col-md-5 @else col-lg-5 @endif">
+                        <div class="form-group">   
+                          <img src="{{ asset('assets/images/percentage.png') }}">              
+                          <input type="text" class="form-control" id="promotion_code" name="promotion_code" placeholder="Promo code(Optional)" value="{{$promotion->promotion_code}}" maxlength="15">
+                          <input type="hidden" id="promotion_id" name="promotion_id" value="{{$promotion->promotion_id}}" />
+                        </div>
+                        <div class="form-group">   
+                          <img src="{{ asset('assets/images/speaker.png') }}">              
+                          <input type="text" class="form-control" id="promotion_name" name="promotion_name" placeholder="Enter Title" value="{{$promotion->promotion_name}}">
+                        </div>
+                        <div class="form-group">   
+                          <img src="{{ asset('assets/images/description.png') }}">              
+                          <textarea type="text" class="form-control" id="promotion_details" name="promotion_details" placeholder="Enter Description(Optional)">{{$promotion->promotion_details}}</textarea>
+                        </div>
+                    </div>
+                    <div class="@if($webview == 1) col-md-7 @else col-lg-7 @endif promotion-add-border">
+
+                        <div class="form-group select-input input-popup inputpop-inner">
+                            <a href="#field-one" class="fill-inner fill-p-bog">
+                               <img src="{{ asset('assets/images/modifiers-black.png') }}" class="items-inner-st wd-dr-wrapper">
+                               <p name="slct" id="slct" class="form-control inner-p-wrapper-blog-sys">Eligible Items Group 1</p>
+                            </a>
+                        </div>
+                        
+                        <div>
+                            <input type="text" style="clip-path: circle(0);height: 0;padding: 0; width: 0; position: absolute; opacity: 0;" id="hidden_eligible_item-first" name="hidden_eligible_item_first" />
+                        </div>
+
+                        <div class="form-group select-input input-popup inputpop-inner">
+                            <a href="#field-two" class="fill-inner fill-p-bog">
+                                <img src="{{ asset('assets/images/modifiers-black.png') }}" class="items-inner-st wd-dr-wrapper">
+                                <p name="slct-two" id="slct-two" class="form-control inner-p-wrapper-blog-sys">Eligible Items Group 2</p>
+                            </a>
+                        </div>
+
+                        <div>
+                            <input type="text" style="clip-path: circle(0);height: 0;padding: 0; width: 0; position: absolute; opacity: 0;" id="hidden_eligible_item-second" name="hidden_eligible_item_second" />
+                        </div>
+
+                        <div class="text-promotion">
+                            <h5>Discount</h5>
+                        </div>
+
+                        <div class="tab-container">
+                            <div class="tab-navigation">
+                                <div class="form-group select-input"> 
+                                    <img src="{{ asset('assets/images/Promotion Function.png') }}">
+                                    <select id="select-box" class="form-control" name="auto_manually_discount">
+                                        @foreach (Config::get('constants.AUTO_DISCOUNT') as $key=>$item)
+                                            <option value="{{$key}}" {{($promotion->auto_manually_discount==$key)?'selected':''}}>{{$item}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            @if ($promotion->auto_manually_discount == 2)
+                                <div id="tab-2" class="tab-content">
+                            @else
+                                <div id="tab-2" class="tab-content" style="display: none">
+                            @endif
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend"> 
+                                        <span class="input-group-text inner-text-blog">
+                                            Items Group 1:
+                                        </span>
+                                    </div>
+                                    <input type="text" class="form-control discount_percentage" value="{{$promotion->item_group_1}}"  name="item_group_1" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-group-text-first">%</span> 
+                                    </div>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend"> 
+                                        <span class="input-group-text inner-text-blog">
+                                            Items Group 2:
+                                        </span>
+                                    </div>
+                                    <input type="text" class="form-control discount_percentage" value="{{$promotion->item_group_2}}"  name="item_group_2" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+                                    <div class="input-group-prepend"> 
+                                        <span class="input-group-text input-group-text-first">%</span> 
+                                    </div>
+                                </div>
+                            </div>
+                            @if ($promotion->auto_manually_discount == 1)
+                                <div id="tab-1" class="tab-content">
+                            @else
+                                <div id="tab-1" class="tab-content" style="display: none">
+                            @endif
+                            
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend"> 
+                                        <span class="input-group-text inner-text-blog">
+                                            Discount for cheapest item:
+                                        </span>
+                                    </div>
+                                    <input type="text" class="form-control discount_percentage" value="{{$promotion->discount_cheapest}}"  name="discount_cheapest" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+                                    <div class="input-group-prepend"> 
+                                        <span class="input-group-text input-group-text-first">%</span> 
+                                    </div>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend"> 
+                                        <span class="input-group-text inner-text-blog">
+                                            Discount for most expensive item:
+                                        </span>
+                                    </div>
+                                    <input type="text" class="form-control discount_percentage" value="{{$promotion->discount_expensive}}"  name="discount_expensive" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+                                    <div class="input-group-prepend"> 
+                                        <span class="input-group-text input-group-text-first">%</span> 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group select-input">
+                            <img src="{{ asset('assets/images/modifiers-black.png') }}">
+                            <select name="no_extra_charge" id="no_extra_charge" class="form-control">
+                              @foreach (Config::get('constants.NO_EXTRA_CHARGES') as $key=>$item)
+                                <option value="{{$item}}" {{($promotion->no_extra_charge_type == $item)?'selected':''}}>{{$item}}</option>
+                              @endforeach
+                            </select>
+                        </div>
+
+                        <div class="form-group select-input">
+                            <img src="{{ asset('assets/images/modifiers-black.png') }}">
+                            <select name="client_type" id="client_type" class="form-control">
+                                  <option value="">Customer type</option>
+                                  @foreach (Config::get('constants.CLIENT_TYPE') as $key=>$item)
+                                      <option value="{{$item}}" {{($promotion->client_type==$item)?'selected':''}}>{{$item}}</option>
+                                  @endforeach
+                            </select>
+                        </div>
+
+                        <div class="form-group select-input">
+                            <img src="{{ asset('assets/images/modifiers-black.png') }}">
+                            <select name="order_type" id="order_type" class="form-control">
+                              <option selected="" value="">Order Type</option>
+                              @foreach (Config::get('constants.ORDER_TYPE') as $key=>$item)
+                                  <option value="{{$item}}" {{($promotion->order_type==$item)?'selected':''}}>{{$item}}</option>
+                              @endforeach
+                            </select>
+                        </div>
+
+                        <div class="form-group cs-checkbox">
+                            <input type="checkbox" class="checkbox-custom onlyForSelectedPayment" id="payment" name="only_selected_payment_method" {{($promotion->only_selected_payment_method)?'checked':''}}>
+                            <label for="payment">Apply To Selected Payment Methods</label>
+                            
+                            @if($promotion->only_selected_payment_method)
+                                <div class="form-group cs-checkbox onlyForSelectedPaymentDiv">
+                            @else
+                                <div class="form-group cs-checkbox onlyForSelectedPaymentDiv" style="display: none">
+                            @endif
+                                <div class="cash-blog mt-1">
+                                    <input type="checkbox" class="checkbox-custom cash" id="cash" name="only_selected_cash" {{($promotion->only_selected_cash)?'checked':''}}>
+                                    <label for="cash">Cash</label>
+                                </div>
+                                
+                                <div class="cash-blog">
+                                    <input type="checkbox" class="checkbox-custom cardtodelivery" id="cardtodelivery" name="only_selected_cash_delivery_person" {{($promotion->only_selected_cash_delivery_person)?'checked':''}}>
+                                    <label for="cardtodelivery">Credit Card</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group cs-checkbox">
+                            <input type="checkbox" class="checkbox-custom" id="client" name="only_once_per_client" {{($promotion->only_once_per_client)?'checked':''}}>
+                            <label for="client">Single Use Per Customer</label>
+                        </div>
+
+                        <div class="form-group select-input">   
+                            <img src="{{ asset('assets/images/client-t.png') }}">
+                            <select name="mark_promo_as" id="mark_promo_as" class="form-control">
+                              <option selected disabled>Mark Promo as</option>
+                              @foreach (Config::get('constants.MARK_PROMO_AS') as $key=>$item)
+                                <option value="{{$item}}" {{($promotion->mark_promoas_status == $item)?'selected':''}}>{{$item}}</option>
+                              @endforeach
+                            </select>
+                        </div>
+
+                        <div class="form-group select-input"> 
+                            <img src="{{ asset('assets/images/Availability.png') }}">
+                            <select name="availability" id="display_time" class="form-control">
+                                @foreach (Config::get('constants.AVAILABILITY') as $key=>$item)
+                                    <option value="{{$key}}" {{($promotion->availability==$key)?'selected':''}}>{{$item}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div id="field-one" class="overlay field-popup">
+                            <div class="popup text-center">
+                              <h2>Eligible Items</h2>
+                              <a class="close eligible_popup_close" href="#">&times;</a>
+                              <div class="content">
+                                  <div id="accordion" class="accordion">
+                                    @php
+                                        $category_item_count =0;
+                                    @endphp
+                                      @foreach($category as $key=>$value)
+                                        @if($value->category_item->count() != 0)
+                                          <div class="card mb-0">
+                                              <div class="form-group cs-checkbox">
+                                                    @php
+                                                        $category_selected =  \App\Models\PromotionCategoryItem::where(['category_id' => $value->category_id])->where(['promotion_id' => $promotion->promotion_id])->where('eligible_item_id',1)->count();
+                                                        if($category_selected >0){
+                                                            $all = $value->category_item->count()===$category_selected ;
+                                                        }else{
+                                                            $all=false;
+                                                        }
+                                                    @endphp
+                                                  <input type="checkbox" class="checkbox-custom categoryList" {{($all)?'checked':''}} id="category{{$key}}" value="{{$value->category_id}}" name="category[{{$value->category_id}}]">
+                                                  <label for="category{{$key}}">{{$value->category_name}}</label>
+                                              </div>
+                                              <div class="card-header collapsed" data-toggle="collapse" href="#collapse{{$key}}">
+                                                  <a class="card-title">
+                                                      <i class="fa fa-plus"></i>
+                                                  </a>
+                                              </div>
+                                              <div id="collapse{{$key}}" class="card-body collapse" data-parent="#accordion" >
+                                              @foreach($value->category_item as $key1=>$value1)
+                                                    @php
+                                                        $category_select_item =  \App\Models\PromotionCategoryItem::where(['category_id' => $value->category_id])->where(['item_id' => $value1->menu_id])->where(['promotion_id' => $promotion->promotion_id])->where('eligible_item_id',1)->first();
+                                                        if($category_select_item){
+                                                            $category_item_count = $category_item_count+1;
+                                                        }
+                                                    @endphp
+                                                  <div class="form-group cs-checkbox">
+                                                      <input type="checkbox" class="checkbox-custom category_item-first category{{$key}}" {{($category_select_item)?'checked':''}} id="item{{$value->category_id}}{{$key1}}" value="{{$value1->menu_id}}" name="category[{{$value->category_id}}][{{$value1->menu_id}}]">
+                                                      <label for="item{{$value->category_id}}{{$key1}}">{{$value1->item_name}}</label>
+                                                  </div>
+                                                  @endforeach
+                                              </div>
+                                          </div>
+                                        @endif
+                                      @endforeach
+                                  </div>
+                              </div>
+                              <div class="form-group form-btn justify-content-center">   
+                                  <a class="close eligible_popup_close-first eligible_popup-inner" href="#">Submit</a> 
+                              </div>
+                            </div>
+                        </div>
+
+                        <div id="field-two" class="overlay field-popup">
+                            <div class="popup text-center">
+                              <h2>Eligible Items</h2>
+                              <a class="close eligible_popup_close" href="#">&times;</a>
+                              <div class="content">
+                                  <div id="accordion" class="accordion">
+                                    @php
+                                        $second_category_item_count =0;
+                                    @endphp
+                                      @foreach($category as $key=>$value)
+                                          <div class="card mb-0">
+                                              <div class="form-group cs-checkbox">
+                                                    @php
+                                                        $category_selected =  \App\Models\PromotionCategoryItem::where(['category_id' => $value->category_id])->where(['promotion_id' => $promotion->promotion_id])->where('eligible_item_id',2)->count();
+                                                        if($category_selected >0){
+                                                            $all = $value->category_item->count()===$category_selected ;
+                                                        }else{
+                                                            $all=false;
+                                                        }
+                                                    @endphp
+                                                  <input type="checkbox" class="checkbox-custom categoryList-two" {{($all)?'checked':''}} id="category-two{{$key}}" value="{{$value->category_id}}" name="category_two[{{$value->category_id}}]">
+                                                  <label for="category-two{{$key}}">{{$value->category_name}}</label>
+                                              </div>
+                                              <div class="card-header collapsed" data-toggle="collapse" href="#collapse-two{{$key}}">
+                                                  <a class="card-title">
+                                                      <i class="fa fa-plus"></i>
+                                                  </a>
+                                              </div>
+                                              <div id="collapse-two{{$key}}" class="card-body collapse" data-parent="#accordion" >
+                                                 @foreach($value->category_item as $key1=>$value1)
+                                                    @php
+                                                        $category_select_item =  \App\Models\PromotionCategoryItem::where(['category_id' => $value->category_id])->where(['item_id' => $value1->menu_id])->where(['promotion_id' => $promotion->promotion_id])->where('eligible_item_id',2)->first();
+                                                        if($category_select_item){
+                                                            $second_category_item_count = $second_category_item_count+1;
+                                                        }
+                                                    @endphp
+                                                  <div class="form-group cs-checkbox">
+                                                      <input type="checkbox" class="checkbox-custom category_item-second category-two{{$key}}" {{($category_select_item)?'checked':''}} id="item-two{{$value->category_id}}{{$key1}}" value="{{$value1->menu_id}}" name="category_two[{{$value->category_id}}][{{$value1->menu_id}}]">
+                                                      <label for="item-two{{$value->category_id}}{{$key1}}">{{$value1->item_name}}</label>
+                                                  </div>
+                                                  @endforeach
+                                              </div>
+                                          </div>
+                                      @endforeach
+                                  </div>
+                              </div>
+                              <div class="form-group form-btn justify-content-center">   
+                                  <a class="close eligible_popup_close-second eligible_popup-inner" href="#">Submit</a> 
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @if ($webview == 0)
+                <div class="form-group form-btn-menu from-inner">
+                    <div class="btn-custom">
+                        <a href="{{route('promotion')}}" class="btn-grey"><span>Cancel</span></a>
+                    </div>
+                    <div class="btn-custom">
+                        <button type="submit" class="btn-blue"><span>Update</span></button>
+                    </div>
+                </div>
+            @else
+                <div class="form-group form-btn-menu from-inner">
+                    <div class="btn-custom"> 
+                        <button type="button" class="btn-grey btn-inner cancel" ><span>Cancel</span></button>
+                    </div>
+                    <div class="btn-custom">
+                        <button type="submit" class="btn-blue btn-inner formsubmit" ><span>Update</span></button>
+                    </div>
+                </div>
+            @endif
+        </div>
+    </section>
+@endsection
+
 @section('scripts')
-<script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js')}}"></script>
-<script src="{{ asset('assets/js/common.js')}}"></script>
-<script>
-    $(document).on('click', '.categoryList', function() {
-       var id =$(this).attr('id')
-        if($(this).prop("checked") == true){
-            $("."+id).prop("checked",true)        }
-        else if($(this).prop("checked") == false){
-            $("."+id).prop("checked",false)        }
-    });
+    <script>
+        var first_item_count = {!! json_encode($category_item_count) !!};
+        if(first_item_count){
+            $("#slct").text(first_item_count+" Eligible items selected.");
+            $("#hidden_eligible_item-first").val(first_item_count)
+        }
 
-
-    $(document).on('click', '.categoryListTwo', function() {
-       var id =$(this).attr('id')
-        if($(this).prop("checked") == true){
-            $("."+id).prop("checked",true)        }
-        else if($(this).prop("checked") == false){
-            $("."+id).prop("checked",false)        }
-    });
-
-
-    $(document).on('change', '.auto_manually_discount', function() {
-       if($(this).val()==1){
-          $(".auto_fields").show();
-          $(".manually_fields").hide();
-       }else{
-          $(".auto_fields").hide();
-          $(".manually_fields").show();
-       }
-    });
-
-    
-</script>
-{!! JsValidator::formRequest('App\Http\Requests\PromotionRequest','#promotionForm'); !!}
+        var second_item_count = {!! json_encode($second_category_item_count) !!};
+        if(second_item_count){
+            $("#slct-two").text(second_item_count+" Eligible items selected.");
+            $("#hidden_eligible_item-second").val(second_item_count)
+        }
+    </script>
+    <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js')}}"></script>
+    <script src="{{ asset('assets/js/common.js')}}"></script>
+    <script src="{{ asset('assets/js/type/getonefree.js')}}"></script>
+    @if ($webview == 1)
+        <script src="{{asset('assets/customer/js/jquery.validate.min.js')}}"></script>
+        <script src="{{asset('assets/customer/js/additional-methods.min.js')}}"></script>
+        <script src="{{asset('assets/js/type/getonefree-webview.js')}}"></script>
+    @else
+        {!! JsValidator::formRequest('App\Http\Requests\PromotionGetonefreeRequest','#promotionForm'); !!}
+    @endif
 @endsection

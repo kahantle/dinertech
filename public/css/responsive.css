@@ -1,0 +1,566 @@
+/* Large Mobile :480px. */
+
+@media (max-width: 575.98px) {
+    .container {
+        width: 100%
+    }
+    .single-slider {
+        display: inherit !important;
+        padding-top: 160px;
+    }
+    /* .category .accordion .child .order-number-inner {
+		padding-right: 0!important;
+		margin-right: 0!important;
+	} */
+    n n n .category .accordion .child .number {
+        padding-right: 0!important;
+        margin-right: 0!important;
+    }
+    .main-header.header-sticky.sticky-bar.sticky {
+        padding: 10px 0;
+    }
+    .main-header {
+        padding: 0 0 20px 0;
+        background: #fff;
+        box-shadow: 0 2px 10px rgba(25, 25, 25, 0.1);
+    }
+    .logo img {
+        max-width: 80px;
+    }
+    .hero-img {
+        position: relative !important;
+        right: inherit !important;
+        width: 100% !important;
+        margin: 30px 0 0 0;
+    }
+    .header-area .slicknav_btn {
+        top: -70px;
+        right: 20px;
+    }
+    .slider-area {
+        box-shadow: 1px 5px 10px #dcdcdc;
+    }
+    .slider-area .hero__caption h1 {
+        margin: 0px 0 10px 0;
+    }
+    .slider-area .hero__caption p {
+        margin-bottom: 24px;
+        padding-right: 0;
+    }
+    section.service-area {
+        padding: 50px 0;
+    }
+    .applic-apps {
+        padding: 50px 0 50px 0;
+    }
+    .applic-apps.customer-apps .owl-carousel .owl-item img {
+        margin: 0 auto;
+    }
+    .app-img-right {
+        position: relative;
+        right: inherit;
+        top: inherit;
+        transform: inherit;
+    }
+    .app-img-right img {
+        width: 100%;
+        float: none;
+        margin: 50px 0 0 0;
+    }
+    .available-app-area {
+        padding: 50px 0;
+    }
+    .say-something-form {
+        margin: 50px 0 0 0;
+    }
+    .footer-padding {
+        padding: 20px 0;
+    }
+    .footer-copy-right p {
+        margin: 0px !important;
+    }
+    .applic-apps .order2 {
+        order: 2;
+    }
+    .best-features-area .features-shpae {
+        position: relative;
+        text-align: center;
+        left: inherit;
+        top: inherit;
+        display: block !important;
+        transform: inherit;
+        margin: 50px 0 0 0;
+    }
+    .best-features-area .features-shpae img {
+        max-width: 100%;
+        width: 100%;
+    }
+    .header-sticky .slicknav_btn {
+        top: -60px !important;
+    }
+    .best-features-area-content {
+        margin: 0px;
+        display: inherit;
+    }
+    .best-features-area .row {
+        display: inherit;
+    }
+    .order2 {
+        order: 2;
+    }
+    .best-features-area {
+        padding: 50px 0 0 0;
+    }
+    .best-features-area .features-info {
+        margin: 30px 0 0 0;
+    }
+    .best-features-area .row.align-items-center.mb-custom:last-child {
+        border: none;
+    }
+    .say-something-aera .say-something-cap h2,
+    .say-something-form h2 {
+        font-size: 30px;
+    }
+    .slider-area .hero__caption p {
+        width: 100%;
+        font-size: 24px;
+    }
+    .best-features-area .row.align-items-center.mb-custom {
+        border-bottom: 2px solid #6778ff;
+        padding: 0 0 20px 0;
+    }
+    .best-features-area-content .row {
+        display: flex;
+    }
+    .applic-apps.customer-apps .single-cases-info {
+        margin: 0px;
+    }
+    .what-working .single-features .features-caption {
+        width: 70%;
+    }
+    .applic-apps .single-cases-info p {
+        font-size: 16px;
+    }
+    .what-working .single-features .features-caption h3 {
+        font-size: 20px;
+    }
+    .best-features-area .features-info h3 {
+        font-size: 30px;
+    }
+    .available-app-area .app-caption .section-tittle3 h2 {
+        font-size: 30px;
+    }
+    .header-transparrent {
+        z-index: 9999;
+    }
+    .mb-custom {
+        margin-bottom: 0px;
+    }
+    .available-app-area .app-caption .app-btn a {
+        padding-right: 0;
+        /* float: left; */
+        display: inline-block !important;
+    }
+    .available-app-area .app-caption .app-btn a img {
+        width: 150px;
+    }
+}
+
+@media (max-width: 476px) {
+    .modal-inner-footer .btn-secondary {
+        padding: 6px 20px;
+    }
+    .modal-inner-footer .btn-primary {
+        padding: 6px 20px;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .container {
+        width: 100%
+    }
+    .main-header {
+        padding: 0 0 20px 0;
+        background: #fff;
+        box-shadow: 0 2px 10px rgba(25, 25, 25, 0.1);
+    }
+    .main-header.header-sticky.sticky-bar.sticky {
+        padding: 10px 0;
+    }
+    .logo img {
+        max-width: 80px;
+    }
+    .single-slider {
+        display: inherit !important;
+        padding-top: 160px;
+    }
+    .hero-img {
+        position: relative !important;
+        right: inherit !important;
+        width: 100% !important;
+        margin: 30px 0 0 0;
+    }
+    .header-area .slicknav_btn {
+        top: -70px;
+        right: 20px;
+    }
+    .slider-area {
+        box-shadow: 1px 5px 10px #dcdcdc;
+    }
+    .slider-area .hero__caption h1 {
+        margin: 0px 0 10px 0;
+    }
+    .slider-area .hero__caption p {
+        margin-bottom: 24px;
+        padding-right: 0;
+    }
+    section.service-area {
+        padding: 50px 0;
+    }
+    .applic-apps {
+        padding: 0 0 50px 0;
+    }
+    .applic-apps.customer-apps .owl-carousel .owl-item img {
+        margin: 0 auto;
+    }
+    .app-img-right {
+        position: relative;
+        right: inherit;
+        top: inherit;
+        transform: inherit;
+    }
+    .app-img-right img {
+        width: 100%;
+        float: none;
+        margin: 50px 0 0 0;
+    }
+    .available-app-area {
+        padding: 50px 0;
+    }
+    .say-something-form {
+        margin: 50px 0 0 0;
+    }
+    .footer-padding {
+        padding: 20px 0;
+    }
+    .footer-copy-right p {
+        margin: 0px !important;
+    }
+    .applic-apps .order2 {
+        order: 2;
+    }
+    .best-features-area .row.align-items-center.mb-custom {
+        border-bottom: 2px solid #6778ff;
+        padding: 0 0 30px 0;
+    }
+    .best-features-area .mb-custom2 {
+        margin-bottom: 10px !important;
+    }
+    .best-features-area .row.align-items-center.mb-custom:last-child {
+        border: none;
+        padding: 0px;
+    }
+    .best-features-area .features-shpae {
+        position: relative;
+        text-align: center;
+        left: inherit;
+        top: inherit;
+        display: block !important;
+        transform: inherit;
+        margin: 50px 0 0 0;
+    }
+    .best-features-area .features-shpae img {
+        max-width: 100%;
+        width: 100%;
+    }
+    .header-sticky .slicknav_btn {
+        top: -60px !important;
+        right: 0;
+    }
+    .best-features-area-content {
+        margin: 0px;
+        /*display: flex;*/
+    }
+    .order2 {
+        order: 2;
+    }
+    .best-features-area .features-info {
+        margin: 40px 0 0 0;
+    }
+    .say-something-aera .say-something-cap h2,
+    .say-something-form h2 {
+        font-size: 30px;
+    }
+    .best-features-area .features-info h3 {
+        font-size: 30px;
+    }
+    .mb-custom {
+        margin-bottom: 0px;
+    }
+    .available-app-area .app-caption .app-btn a {
+        padding-right: 0;
+        /* float: left; */
+        display: inline-block !important;
+    }
+    .available-app-area .app-caption .app-btn a img {
+        width: 150px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .container {
+        width: 100%
+    }
+    .main-header {
+        padding: 0 0 20px 0;
+        background: #fff;
+        box-shadow: 0 2px 10px rgba(25, 25, 25, 0.1);
+    }
+    .main-header.header-sticky.sticky-bar.sticky {
+        padding: 10px 0;
+    }
+    .logo img {
+        max-width: 80px;
+    }
+    .single-slider {
+        display: inherit !important;
+        padding-top: 160px;
+    }
+    .hero-img {
+        position: relative !important;
+        right: inherit !important;
+        width: 100% !important;
+        margin: 30px 0 0 0;
+    }
+    .header-area .slicknav_btn {
+        top: -70px;
+        right: 20px;
+    }
+    .slider-area {
+        box-shadow: 1px 5px 10px #dcdcdc;
+    }
+    .slider-area .hero__caption h1 {
+        margin: 0px 0 10px 0;
+    }
+    .slider-area .hero__caption p {
+        margin-bottom: 24px;
+        padding-right: 0;
+    }
+    section.service-area {
+        padding: 50px 0;
+    }
+    .applic-apps {
+        padding: 0 0 50px 0;
+    }
+    .applic-apps .col-xl-4.col-lg-4.col-md-8.order1 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+    .applic-apps.customer-apps .owl-carousel .owl-item img {
+        margin: 0 auto;
+    }
+    .app-img-right {
+        position: relative;
+        right: inherit;
+        top: inherit;
+        transform: inherit;
+    }
+    .app-img-right img {
+        width: 100%;
+        float: none;
+        margin: 50px 0 0 0;
+    }
+    .available-app-area {
+        padding: 50px 0;
+    }
+    .say-something-form {
+        margin: 50px 0 0 0;
+    }
+    .footer-padding {
+        padding: 20px 0;
+    }
+    .footer-copy-right p {
+        margin: 0px !important;
+    }
+    .applic-apps .order2 {
+        order: 2;
+    }
+    .best-features-area .row.align-items-center.mb-custom {
+        border-bottom: 2px solid #6778ff;
+        padding: 0 0 30px 0;
+    }
+    .best-features-area .row.align-items-center.mb-custom:last-child {
+        border: none;
+        padding: 0px;
+    }
+    .best-features-area .features-shpae {
+        position: relative;
+        text-align: center;
+        left: inherit;
+        top: inherit;
+        display: block !important;
+        transform: inherit;
+        margin: 50px 0 0 0;
+    }
+    .best-features-area .features-shpae img {
+        max-width: 100%;
+        width: 100%;
+    }
+    .footer-copy-right {
+        padding: 0 !important;
+    }
+    .header-sticky .slicknav_btn {
+        top: -60px !important;
+        right: 0;
+    }
+    .best-features-area-content {
+        margin: 0px;
+        /*display: flex;*/
+    }
+    .order2 {
+        order: 2;
+    }
+    .best-features-area .features-info {
+        margin: 40px 0 0 0;
+    }
+    .best-features-area-content .col-md-6 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+    .mb-custom {
+        margin-bottom: 0px;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .best-features-area .features-shpae {
+        position: relative;
+        text-align: center;
+        left: inherit;
+        top: inherit;
+        display: block !important;
+        transform: inherit;
+        margin: 50px 0 0 0;
+    }
+    .col-xl-8.col-lg-10.best-features-area-content {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+    .best-features-area .features-shpae img {
+        max-width: 100%;
+        width: 100%;
+        display: block !important;
+    }
+    .footer-padding {
+        padding: 20px 0;
+    }
+    .footer-copy-right {
+        padding: 0 !important;
+    }
+    .footer-copy-right p {
+        margin: 0px !important;
+    }
+    .applic-apps.customer-apps {
+        padding: 0 0 50px 0;
+    }
+    .applic-apps .single-cases-info h3 {
+        font-size: 30px;
+    }
+    .best-features-area .features-info h3 {
+        font-size: 40px;
+    }
+    .applic-apps .col-xl-4.col-lg-4.col-md-8 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+    .applic-apps .single-cases-info {
+        left: 0 !important;
+    }
+    .get-started-btn.text-center {
+        padding: 0px;
+        text-align: left !important;
+    }
+    .applic-apps .no-js .owl-carousel,
+    .applic-apps .owl-carousel.owl-loaded {
+        right: 0 !important;
+    }
+    .applic-apps {
+        padding: 100px 0 0 0;
+    }
+    .app-img-right {
+        right: 0;
+    }
+    .app-img-right img {
+        width: 50%;
+    }
+    .applic-apps .order2 {
+        order: 2;
+    }
+}
+
+@media (min-width: 1200px) and (max-width: 1365.98px) {
+    .applic-apps.customer-apps {
+        padding: 0 0 50px 0;
+    }
+    .container {
+        max-width: 1170px;
+    }
+    .what-working .single-features .features-caption {
+        width: 70%;
+        margin: 0 0 0 10px;
+    }
+    .applic-apps {
+        padding: 100px 0 0 0;
+    }
+    .applic-apps .single-cases-info h3 {
+        font-size: 36px;
+    }
+}
+
+@media (min-width: 1366px) and (max-width: 1439.98px) {
+    .applic-apps .single-cases-info h3 {
+        font-size: 34px;
+    }
+    .what-working .single-features .features-caption {
+        width: 75%;
+    }
+    .applic-apps {
+        padding: 100px 0 0 0;
+    }
+    .get-started-btn.text-center {
+        padding: 0px;
+    }
+}
+
+@media (min-width: 1440px) and (max-width: 1539.98px) {
+    .applic-apps .single-cases-info h3 {
+        font-size: 34px;
+    }
+    .what-working .single-features .features-caption {
+        width: 75%;
+    }
+    .applic-apps {
+        padding: 100px 0 0 0;
+    }
+}
+
+@media (min-width: 1549px) and (max-width: 1650.98px) {
+    .what-working .single-features .features-caption {
+        width: 78%;
+        margin: 0 0 0 20px;
+    }
+}
+
+@media (min-width: 1651px) and (max-width: 1699.98px) {
+    .what-working .single-features .features-caption {
+        width: 81%;
+        margin: 0 0 0 20px;
+    }
+}
+
+@media (min-width: 1700px) and (max-width: 1799.98px) {
+    .what-working .single-features .features-caption {
+        width: 80%;
+        margin: 0 0 0 20px;
+    }
+}

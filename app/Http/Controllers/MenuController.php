@@ -9,6 +9,7 @@ use App\Models\Restaurant;
 use App\Models\Category;
 use App\Models\ModifierGroup;
 use App\Models\MenuModifierItem;
+use App\Models\PromotionCategoryItem;
 use Config;
 use Toastr;
 use DB;
@@ -111,17 +112,18 @@ class MenuController extends Controller
     public function delete($id)
     {
        try {
-        $alert =['Menu does not delete successfully','', Config::get('constants.toster')];
-        $category = MenuItem::where('menu_id', $id)->first();
-        if($category){
-            $category->delete();
-            $alert =['Menu delete successfully','', Config::get('constants.toster')];
-        }
-        return response()->json(['route'=>route('menu'),'alert'=>$alert,'success' => true], 200);
+            $alert =['Menu does not delete successfully','', Config::get('constants.toster')];
+            $category = MenuItem::where('menu_id', $id)->first();
+            if($category){
+                $category->delete();
+                PromotionCategoryItem::where('item_id',$id)->delete();
+                $alert =['Menu delete successfully','', Config::get('constants.toster')];
+            }
+            return response()->json(['route'=>route('menu'),'alert'=>$alert,'success' => true], 200);
         }catch (\Throwable $th) {
-        $errors['success'] = false;
-        $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
-        return response()->json($errors, 500);
+            $errors['success'] = false;
+            $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
+            return response()->json($errors, 500);
         }
     }
 

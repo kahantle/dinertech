@@ -44,8 +44,9 @@ class DatabaseApiExceptionConverter
     {
         $message = $e->getMessage();
         $code = $e->getCode();
+        $response = $e->getResponse();
 
-        if ($response = $e->getResponse()) {
+        if ($response !== null) {
             $message = $this->responseParser->getErrorReasonFromResponse($response);
             $code = $response->getStatusCode();
         }
@@ -54,10 +55,8 @@ class DatabaseApiExceptionConverter
             case 401:
             case 403:
                 return new Database\PermissionDenied($message, $code, $e);
-
             case 412:
                 return new Database\PreconditionFailed($message, $code, $e);
-
             case 404:
                 return Database\DatabaseNotFound::fromUri($e->getRequest()->getUri());
         }

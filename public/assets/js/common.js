@@ -19,38 +19,45 @@ $(document).ready(function () {
         $(".slt-img").html('');
         readURL(this);
     });
-    $('.slt-img').click(function(){
-         $('#image').trigger('click'); 
+    $('.slt-img').click(function () {
+        $('#image').trigger('click');
     });
 
-    $('.add-category[href*=\\#]:not([href=\\#])').on('click', function() {
+    $('.add-category[href*=\\#]:not([href=\\#])').on('click', function () {
         var target = $(this.hash);
-        target = target.length ? target : $('[name=' + this.hash.substr(1) +']');
+        target = target.length ? target : $('[name=' + this.hash.substr(1) + ']');
     });
 
-    $(document).on('change', '.discountUsdPercentage', function() {
+    $(document).on('change', '.discountUsdPercentage', function () {
         var currentValue = $(this).val();
-        if(currentValue=="usd"){
+        if (currentValue == "usd") {
             $("#discount_amount").attr("placeholder", "Discount (USD)");
-        }else{
+        } else {
             $("#discount_amount").attr("placeholder", "Discount (%)");
         }
     });
 
 
-    $(document).on('change', '.setMinimumOrderAmount', function() {
+    $(document).on('change', '.setMinimumOrderAmount', function () {
         $(".minimumAmountDiv").toggle();
     });
 
-    $(document).on('change', '.onlyForSelectedPayment', function() {
+    $(document).on('change', '.onlyForSelectedPayment', function () {
         $(".onlyForSelectedPaymentDiv").toggle();
     });
 
+    $("#promotion_code").on("keyup", function (e) {
+        var max = 15;
+        var inputLength = $(this).val().length;
+        if (inputLength > max) {
+            $(this).val($(this).val().substring(0, max));
+        }
+    });
 });
-  $(document).ready(function(){
-      $(".add-category a").each(function(){
-          if($(this).hasClass("disabled")){
-              $(this).removeAttr("href");
-          }
-      });
-  });
+$(document).ready(function () {
+    $(".add-category a").each(function () {
+        if ($(this).hasClass("disabled")) {
+            $(this).removeAttr("href");
+        }
+    });
+});

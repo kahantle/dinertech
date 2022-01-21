@@ -13,6 +13,9 @@ use App\Models\OrderMenuItem;
 use App\Models\OrderMenuGroup;
 use App\Models\OrderMenuGroupItem;
 use App\Models\User;
+use App\Notifications\AcceptOrder;
+use App\Notifications\DeclineOrder;
+use App\Notifications\PreparedOrder;
 use DB;
 
 class OrderController extends Controller
@@ -190,6 +193,8 @@ class OrderController extends Controller
             $order->order_progress_status = Config::get('constants.ORDER_STATUS.ACCEPTED');
             if($order->save()){
                 DB::commit();
+                $user = User::find($order->uid);
+                $user->notify(new AcceptOrder);
                 return response()->json(['message' => "Order accepted successfully.", 'success' => true], 200);
             }else{
                 DB::rollBack();
@@ -231,6 +236,8 @@ class OrderController extends Controller
             $order->order_progress_status = Config::get('constants.ORDER_STATUS.CANCEL');
             if($order->save()){
                 DB::commit();
+                $user = User::find($order->uid);
+                $user->notify(new DeclineOrder($order));
                 return response()->json(['message' => "Order declined successfully.", 'success' => true], 200);
             }else{
                 DB::rollBack();
@@ -268,6 +275,8 @@ class OrderController extends Controller
                 $order->order_progress_status = Config::get('constants.ORDER_STATUS.PREPARED');
                 if($order->save()){
                     DB::commit();
+                    $user = User::find($order->uid);
+                    $user->notify(new PreparedOrder);
                     return response()->json(['message' => "Order has been Prepared Now.", 'success' => true], 200);
                 }else{
                     DB::rollBack();
@@ -308,10 +317,10 @@ class OrderController extends Controller
                 ->with('orderItems','user')
                 ->latest()
                 ->get();
-            //$result = [];
+            // $result = [];
             // foreach ($order as $key => $value) {
             //     $database = app('firebase.database');
-            //     $url = Config::get('constants.FIREBASE_DB_NAME')."/".$request->post('restaurant_id')."/".$value->order_number;
+            //     $url = Config::get('constants.FIREBASE_DB_NAME')."/".$request->post('restaurant_id')."/".$value->order_number."/".$value->uid."/";
             //     $message = $database->getReference($url)->getvalue();
             //     $count = 0 ;
             //     if($message){
@@ -324,6 +333,7 @@ class OrderController extends Controller
             //     $result[$key] = $value;
             //     $result[$key]['notification_badge'] = $count ;
             // }
+
             return response()->json(['order' => $order, 'success' => true], 200);
         } catch (\Throwable $th) {
             $errors['success'] = false;

@@ -52,7 +52,7 @@ $(document).ready(function(e) {
   });
 
   $(document).on('click', '.openModifierForm', function(e) {
-    e.preventDefault();
+    e.stopPropagation();
     $('#modifierForm')[0].reset();
     $(".closeAllModal").css('visibility', 'hidden');
     $(".closeAllModal").css('opacity', 0);
@@ -103,7 +103,7 @@ $(document).ready(function(e) {
   });
 
   $(document).on('click', '.openModifierItemForm', function(e) {
-    e.preventDefault();
+    e.stopPropagation();
     $('#modifierItemForm')[0].reset();
     $(".closeAllModal").css('visibility', 'hidden');
     $(".closeAllModal").css('opacity', 0);
@@ -111,9 +111,10 @@ $(document).ready(function(e) {
 
     if($(this).hasClass("open")){
       $(".itemHeading").html('Add modifier group item');
-      $(".itemBtn").html('Update');
+      $(".itemBtn").html('Add');
 
     }else{
+      $(".error-help-block").remove();
       $(".itemHeading").html('Edit modifier group item');
       $(".itemBtn").html('Update');
     }
@@ -150,6 +151,7 @@ $(document).ready(function(e) {
   });
 
   $(document).on('click', '.closeModal', function(e) {
+    e.stopPropagation()
     $(".closeAllModal").css('visibility', 'hidden');
     $(".closeAllModal").css('opacity', 0);
   });

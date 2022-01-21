@@ -3,23 +3,24 @@
 namespace App\Http\Controllers\Api\Restaurant;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Validator;
-use App\Models\User;
 use App\Models\Restaurant;
+use App\Models\RestaurantFcmTokens;
+use App\Models\User;
 use App\Notifications\Otp;
+use Auth;
 use Carbon\Carbon;
 use Config;
-use Hash;
 use DB;
-use Auth;
+use Hash;
+use Illuminate\Http\Request;
+use Validator;
 
 class UserController extends Controller
 {
 
     /**
      * @method login
-     * 
+     *
      */
 
     public function login(Request $request)
@@ -27,21 +28,22 @@ class UserController extends Controller
         try {
             $request_data = $request->json()->all();
             $validator = Validator::make($request_data, [
-                'email_id'  =>  'required_without:mobile_number|email',
+                'email_id' => 'required_without:mobile_number|email',
                 'mobile_number' => 'required_without:email_id|numeric',
                 'fcm_id' => 'required',
+                'device' => 'required',
                 'password' => 'required|min:6',
             ]);
             if ($validator->fails()) {
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
             }
             $email = $request->post('email_id');
-            $mobile_number =  $request->post('mobile_number');
+            $mobile_number = $request->post('mobile_number');
             $user = User::where('role', Config::get('constants.ROLES.RESTAURANT'))
-            ->where(function ($query) use ($email, $mobile_number) {
-                $query->where('email_id',  $email);
-                $query->orWhere('mobile_number', $mobile_number);
-            })->first();
+                ->where(function ($query) use ($email, $mobile_number) {
+                    $query->where('email_id', $email);
+                    $query->orWhere('mobile_number', $mobile_number);
+                })->first();
             if (!$user) {
                 return response()->json(['success' => false, 'message' => "User not found."], 400);
             }
@@ -51,20 +53,38 @@ class UserController extends Controller
             if ($user) {
                 if (Hash::check($request->post('password'), $user->password)) {
                     $token = $user->createToken('Laravel Password Grant Client')->accessToken;
-                    $user =  $user->with('restaurant')
-                    ->where('uid', $user->uid)
-                    ->get(['uid', 'first_name', 'last_name',
-                       'email_id', 'mobile_number', 'profile_image',
-                       'app_notifications', 'chat_notifications',
-                       'location_tracking'])
-                    ->first()
-                    ->makeHidden('restaurant');
+                    $user = $user->with('restaurant')
+                        ->where('uid', $user->uid)
+                        ->get(['uid', 'first_name', 'last_name',
+                            'email_id', 'mobile_number', 'profile_image',
+                            'app_notifications', 'chat_notifications',
+                            'location_tracking', 'email_subscription', 'loyalty_subscription'])
+                        ->first()
+                        ->makeHidden('restaurant');
+
+                    // User::where('uid',$user->uid)->update(['fcm_id' => $request->post('fcm_id'),'device' => $request->post('device')]);
+                    $user->email_subscription = $user->email_subscription;
+                    $user->email_subscription_web_url = ($user->email_subscription == Config::get('constants.STATUS.ACTIVE')) ? route('restaurant.email.campaigns') . '/' . $user->uid : route('restaurant.email.subscriptions.list') . '/' . $user->uid;
+                    $user->loyalty_subscription = $user->loyalty_subscription;
+                    $user->loyalty_subscription_web_url = ($user->loyalty_subscription == Config::get('constants.STATUS.ACTIVE')) ? null : route('restaurant.email.subscriptions.list') . '/' . $user->uid;
                     $user->restaurant_name = $user->restaurant->restaurant_name;
                     $user->restaurant_id = $user->restaurant->restaurant_id;
                     $user->restaurant_address = $user->restaurant->restaurant_address;
                     $user->restaurant_city = $user->restaurant->restaurant_city;
                     $user->restaurant_state = $user->restaurant->restaurant_state;
-                    $user->is_pin_protected = ($user->restaurant->is_pin_protected)?true:false;
+                    $user->is_pin_protected = ($user->restaurant->is_pin_protected) ? true : false;
+
+                    $fcmId = $request->post('fcm_id');
+                    $device = $request->post('device');
+                    $restaurantFcmToken = RestaurantFcmTokens::where('restaurant_id', $user->restaurant->restaurant_id)->where('fcm_id', $fcmId)->first();
+                    if ($restaurantFcmToken == null) {
+                        $restaurantFcmToken = new RestaurantFcmTokens;
+                        $restaurantFcmToken->uid = $user->uid;
+                        $restaurantFcmToken->restaurant_id = $user->restaurant->restaurant_id;
+                        $restaurantFcmToken->fcm_id = $fcmId;
+                        $restaurantFcmToken->device = $device;
+                        $restaurantFcmToken->save();
+                    }
                     return response()->json(['token' => $token, 'user' => $user, 'message' => 'You have successfully login.', 'success' => true], 200);
                 } else {
                     return response()->json(['success' => false, 'message' => "Please enter a valid email or mobile and password."], 400);
@@ -89,7 +109,7 @@ class UserController extends Controller
             $validator = Validator::make($request_data, [
                 'first_name' => 'required',
                 'last_name' => 'required',
-                'email_id'  =>  'required|email|unique:users,email_id',
+                'email_id' => 'required|email|unique:users,email_id',
                 'mobile_number' => 'required|phone:US,IN|unique:users,mobile_number',
                 'password' => 'required|min:6',
                 'restaurant_address' => 'required',
@@ -140,7 +160,6 @@ class UserController extends Controller
         }
     }
 
-
     public function verifyOtp(Request $request)
     {
         try {
@@ -148,26 +167,26 @@ class UserController extends Controller
 
             $validator = Validator::make($request_data, [
                 'otp' => 'required',
-                'email_id'  =>  'required_without:mobile_number|email',
+                'email_id' => 'required_without:mobile_number|email',
                 'mobile_number' => 'required_without:email_id|numeric',
             ]);
             if ($validator->fails()) {
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
             }
             $email = $request->post('email_id');
-            $mobile =  $request->post('mobile_number');
+            $mobile = $request->post('mobile_number');
             $user = User::where('role', Config::get('constants.ROLES.RESTAURANT'))
-            ->where('otp', $request->post('otp'))
-            ->where(function ($query) use ($email, $mobile) {
-                $query->where('email_id',  $email);
-                $query->orWhere('mobile_number', $mobile);
-            })
-            ->first();
+                ->where('otp', $request->post('otp'))
+                ->where(function ($query) use ($email, $mobile) {
+                    $query->where('email_id', $email);
+                    $query->orWhere('mobile_number', $mobile);
+                })
+                ->first();
             if ($user) {
                 DB::beginTransaction();
                 $user->is_verified_at = Carbon::now();
-                $user->otp = NULL;
-                $user->otp_valid_time = NULL;
+                $user->otp = null;
+                $user->otp_valid_time = null;
                 $user->status = Config::get('constants.STATUS.ACTIVE');
                 $user->save();
                 DB::commit();
@@ -191,19 +210,19 @@ class UserController extends Controller
         try {
             $request_data = $request->json()->all();
             $validator = Validator::make($request_data, [
-                'email_id'  =>  'required_without:mobile_number|email',
-                'mobile_number' => 'required_without:email_id|numeric'
+                'email_id' => 'required_without:mobile_number|email',
+                'mobile_number' => 'required_without:email_id|numeric',
             ]);
             if ($validator->fails()) {
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
             }
             $email = $request->post('email_id');
-            $mobile =  $request->post('mobile_number');
+            $mobile = $request->post('mobile_number');
             $user = User::where(function ($query) use ($email, $mobile) {
-                $query->where('email_id',  $email);
+                $query->where('email_id', $email);
                 $query->orWhere('mobile_number', $mobile);
             })->where('role', Config::get('constants.ROLES.RESTAURANT'))
-            ->first();
+                ->first();
             if ($user) {
                 DB::beginTransaction();
                 //$user->otp = mt_rand(Config::get('constantsOTP_NO_OF_DIGIT'), 9999);
@@ -226,7 +245,6 @@ class UserController extends Controller
         }
     }
 
-
     public function resetPassword(Request $request)
     {
         try {
@@ -241,8 +259,8 @@ class UserController extends Controller
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
             }
             $user = User::where('uid', $request->post('uid'))
-            ->where('role', Config::get('constants.ROLES.RESTAURANT'))
-            ->first();
+                ->where('role', Config::get('constants.ROLES.RESTAURANT'))
+                ->first();
             if ($user) {
                 DB::beginTransaction();
                 $user->password = Hash::make($request->post('password'));
@@ -265,8 +283,30 @@ class UserController extends Controller
 
     public function logout(Request $request)
     {
-        $token = auth('api')->user()->token();
-        $token->revoke();
-        return response()->json(['message' => 'You have been successfully logged out!', 'success' => true], 200);
+        try {
+            $request_data = $request->json()->all();
+
+            $validator = Validator::make($request_data, [
+                'fcm_id' => 'required',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json(['success' => false, 'message' => $validator->errors()], 400);
+            }
+            $uid = auth('api')->user()->uid;
+            $fcmId = $request->post('fcm_id');
+            RestaurantFcmTokens::where('uid', $uid)->where('fcm_id', $fcmId)->delete();
+            $token = auth('api')->user()->token();
+            $token->revoke();
+            return response()->json(['message' => 'You have been successfully logged out!', 'success' => true], 200);
+        } catch (\Throwable $th) {
+            $errors['success'] = false;
+            $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
+            if ($request->debug_mode == 'ON') {
+                $errors['debug'] = $th->getMessage();
+            }
+            return response()->json($errors, 401);
+        }
+
     }
 }

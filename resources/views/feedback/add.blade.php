@@ -6,8 +6,10 @@
     <nav class="navbar navbar-inverse">
       <div class="container-fluid">
         <div class="navbar-header">
+          <div class="profile-title-new">
           <a href="#" class="navbar-brand" id="sidebar-toggle"><i class="fa fa-bars"></i></a>
           <h2>Feedback</h2>
+          </div>
         </div>
       </div>
     </nav>
@@ -25,15 +27,15 @@
           <p>Do You have a Feature Request or App Error,General Feedback ?,let us know in the field bellow.</p>
         </div>
         <div class="form-group">            
-          <input type="text" id="name" name="name" class="form-control"
+          <input type="text" id="name" name="name" value="{{$user->first_name}} {{$user->last_name}}" class="form-control"
           placeholder="Enter feedback name" />
         </div>
         <div class="form-group">            
-          <input type="text" id="email" name="email" class="form-control"
+          <input type="text" id="email" name="email" value="{{$user->email_id}}" class="form-control"
           placeholder="Enter feedback email" />
         </div>
         <div class="form-group">            
-          <input type="text" id="phone" name="phone" class="form-control"
+          <input type="text" id="phone" name="phone" value="{{$user->mobile_number}}" class="form-control"
           placeholder="Enter feedback phone" />
         </div>
         <div class="form-group select-input">             

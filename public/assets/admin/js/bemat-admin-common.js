@@ -180,9 +180,9 @@
                  appComponentsCSS = [];
              $LAB
                  .script(
-                     "js/bemat-config.js",
-                     "js/bemat-circularLoader.js",
-                     "js/bemat-components.js"
+                    //  "js/bemat-config.js",
+                    //  "js/bemat-circularLoader.js",
+                    //  "js/bemat-components.js"
                  )
                  .wait(function() {
                      if (typeOf($.bematAppComponents) == "array") {
@@ -218,21 +218,21 @@
                  .wait()
                  .script(
                      // System Required Third Party Scripts
-                     "vendor/lazyload/lazyload.js",
-                     "vendor/i18next/i18next.min.js",
-                     "vendor/i18next/i18nextXHRBackend.min.js",
-                     "vendor/i18next/i18next-jquery.min.js",
-                     "vendor/idle-timer/idle-timer.1.0.1.min.js",
-                     "vendor/perfectscrollbar/perfect-scrollbar.jquery.min.js",
-                     "vendor/tinycon/tinycon.min.js",
-                     "vendor/hierarchicaldisplay/jquery.zmd.hierarchical-display.min.js"
+                    //  "vendor/lazyload/lazyload.js",
+                    //  "vendor/i18next/i18next.min.js",
+                    //  "vendor/i18next/i18nextXHRBackend.min.js",
+                    //  "vendor/i18next/i18next-jquery.min.js",
+                    //  "vendor/idle-timer/idle-timer.1.0.1.min.js",
+                    //  "vendor/perfectscrollbar/perfect-scrollbar.jquery.min.js",
+                    //  "vendor/tinycon/tinycon.min.js",
+                    //  "vendor/hierarchicaldisplay/jquery.zmd.hierarchical-display.min.js"
                  )
                  .wait(function() {
                      // System Required Third Party CSS Style Sheets
                      var cssFiles = [
-                         "vendor/flag-icon-css/flag-icon.min.css",
-                         "vendor/animations/animate.css",
-                         "vendor/hierarchicaldisplay/zmd.hierarchical-display.min.css"
+                        //  "vendor/flag-icon-css/flag-icon.min.css",
+                        //  "vendor/animations/animate.css",
+                        //  "vendor/hierarchicaldisplay/zmd.hierarchical-display.min.css"
                      ];
                      AppLoadScript.loadCSS(cssFiles);
                  })

@@ -1,172 +1,190 @@
-$(document).ready(function() {
-    $(document).on('change', '.discountUsdPercentage', function() {
-        var currentValue = $(this).val();
-        if(currentValue=="usd"){
-            $("#discount_amount").attr("placeholder", "Discount (USD)");
-        }else{
-            $("#discount_amount").attr("placeholder", "Discount (%)");
+$(document).ready(function () {
+
+    var baseUrl = $("meta[name='base-url']").attr("content");
+
+    $(document).on('click', '.categoryList', function () {
+        var id = $(this).attr('id');
+        var category = $(this).data('category');
+        if ($(this).prop("checked") == true) {
+            $("." + id).prop("checked", true)
+            var check_length = $(".category_item_" + category + ":checked").length;
+            $(document).find("#hidden_eligible_item_" + category).val(check_length);
+        }
+        else if ($(this).prop("checked") == false) {
+            $("." + id).prop("checked", false)
+            $(document).find("#hidden_eligible_item_" + category).val('');
         }
     });
 
-
-    $(document).on('change', '.setMinimumOrderAmount', function() {
-        if($(this).prop('checked') == true){
-            $(".minimumAmountDiv").show();
-        }else{
-            $(".minimumAmountDiv").hide();
+    $(document).on('click', '.checkbox-custom', function () {
+        var categoryType = $(this).data("category");
+        var check_length = $(".category_item_" + categoryType + ":checked").length;
+        if (check_length) {
+            $("#hidden_eligible_item_" + categoryType).val(check_length);
+        } else {
+            $("#hidden_eligible_item_" + categoryType).val('');
         }
     });
 
-    $(document).on('change', '.onlyForSelectedPayment', function() {
-        if($(this).prop('checked') == true){
+    $(document).on('change', '.onlyForSelectedPayment', function () {
+        if ($(this).prop('checked') == true) {
             $(".onlyForSelectedPaymentDiv").show();
-        }else{
+            $("#cash").prop("checked", true);
+            $("#cardtodelivery").prop("checked", true);
+        } else {
+            $("#cash").prop("checked", false);
+            $("#cardtodelivery").prop("checked", false);
             $(".onlyForSelectedPaymentDiv").hide();
         }
     });
 
-
-    $(document).on('change', '.onlyForSelectedPayment', function() {
-        if($(this).prop('checked') == true){
-            $(".onlyForSelectedPaymentDiv").show();
-        }else{
-            $(".onlyForSelectedPaymentDiv").hide();
+    $(document).on('click', '.eligible_popup_remove', function () {
+        var popupId = $(this).data('popup');
+        var check_length = $(".category_item_" + popupId + ":checked").length;
+        if (check_length) {
+            $("#slct-" + popupId).text(check_length + " Eligible items selected.");
+        } else {
+            $("#slct-" + popupId).text('Eligible Items');
         }
     });
+
+    var count = $(".eligible-item").length + 1;
+    var uid = $("input[name='restaurant_user_id']").val();
+    $(document).on('click', "#addEligibleItems", function () {
+        count = $(".eligible-item").length + 1;
+
+        $(document).find(".btn-remove-one").show();
+        var words_number = toWords(count);
+
+        var html = '<div  id="eligible-item-' + words_number + '" class="form-group eligible-item">';
+        html += '<a href="#field-' + words_number + '" class="fill-inner w-100 fill-sec">';
+        html += '<img src="' + baseUrl + '/assets/images/order-cart.png" class="items-inner-st-sec wd-dr-wrapper">';
+        html += '<p name="slct" id="slct-' + words_number + '" class="form-control inner-p-wrapper-blog-sys">Eligible Items Group ' + count + '</p>';
+        html += '</a>';
+        html += '<button type="button" class="btn btn-remove btn-remove-' + words_number + '" data-remove=' + words_number + '>✕</button>';
+        html += '<div>';
+        html += '<input type="text" style="clip-path: circle(0);height: 0;padding: 0; width: 0; position: absolute; opacity: 0;" id="hidden_eligible_item_' + words_number + '" name="hidden_eligible_item_' + words_number + '" />';
+        html += '</div>';
+        html += '</div>';
+
+        $("#eligibleItems").append(html);
+
+        $.ajax({
+            url: baseUrl + '/promotion-add/getCategory',
+            type: "POST",
+            dataType: "json",
+            data: {
+                "uid": (uid) ? uid : 0,
+                "_token": $("meta[name='csrf-token']").attr('content'),
+            },
+            success: function (response) {
+                var categoryData = response;
+                if (categoryData) {
+                    var popUp = '<div id="field-' + words_number + '" class="overlay field-popup">';
+                    popUp += '<div class="popup text-center">';
+                    popUp += '<h2>Eligible Items</h2>';
+                    popUp += '<a class="close eligible_popup_close" href="#">&times;</a>';
+                    popUp += '<div class="content">';
+                    popUp += '<div id="accordion" class="accordion">';
+                    for (var i in categoryData) {
+                        if (categoryData[i].category_item.length != 0) {
+                            popUp += '<div class="card mb-0">';
+                            popUp += '<div class="form-group cs-checkbox">';
+                            popUp += '<input type="checkbox" class="checkbox-custom categoryList" id="category_' + words_number + i + '" value=' + categoryData[i].category_id + ' name="category[' + count + '][' + categoryData[i].category_id + ']" data-category="' + words_number + '">';
+                            popUp += '<label for="category_' + words_number + i + '">' + categoryData[i].category_name + '</label>';
+                            popUp += '</div>';
+                            popUp += '<div class="card-header collapsed" data-toggle="collapse" href="#collapse_' + words_number + i + '">';
+                            popUp += '<a class="card-title">';
+                            popUp += '<i class="fa fa-plus"></i>';
+                            popUp += '</a>';
+                            popUp += '</div>';
+                            popUp += '<div id="collapse_' + words_number + i + '" class="card-body collapse" data-parent="#accordion" >';
+                            for (var item in categoryData[i].category_item) {
+                                popUp += '<div class="form-group cs-checkbox">';
+                                popUp += '<input type="checkbox" class="checkbox-custom category_item_' + words_number + ' category_' + words_number + i + '" id="item' + categoryData[i].category_id + item + '" value=' + categoryData[i].category_item[item].menu_id + ' name="category[' + count + '][' + categoryData[i].category_id + '][' + categoryData[i].category_item[item].menu_id + ']" data-category="' + words_number + '">';
+                                popUp += '<label for="item' + categoryData[i].category_id + item + '">' + categoryData[i].category_item[item].item_name + '</label>';
+                                popUp += '</div>';
+                            }
+                            popUp += '</div>';
+                            popUp += '</div>';
+                        }
+                    }
+                    popUp += '</div>';
+                    popUp += '</div>';
+                    popUp += '<div class="form-group form-btn justify-content-center">';
+                    popUp += '<a class="close eligible_popup_remove eligible_popup-inner" href="#" data-popup="' + words_number + '">Submit</a>';
+                    popUp += '</div>';
+                    popUp += '</div>';
+                    popUp += '</div>';
+                    $("#addEligiblePopup").append(popUp);
+                }
+            }
+        });
+        count++;
+    });
+
+    $(document).on("click", ".btn-remove", function () {
+        $(document).find(".eligible-item").last().remove();
+        $(document).find(".field-popup").last().remove();
+
+        if ($(".eligible-item").length == 1) {
+            $(document).find(".btn-remove-one").hide();
+        }
+
+    });
+
+
+
+    var th = ['', 'thousand', 'million', 'billion', 'trillion'];
+
+    var dg = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
+    var tn = ['ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
+    var tw = ['twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+    function toWords(s) {
+        s = s.toString();
+        s = s.replace(/[\, ]/g, '');
+        if (s != parseFloat(s)) return 'not a number';
+        var x = s.indexOf('.');
+        if (x == -1) x = s.length;
+        if (x > 15) return 'too big';
+        var n = s.split('');
+        var str = '';
+        var sk = 0;
+        for (var i = 0; i < x; i++) {
+            if ((x - i) % 3 == 2) {
+                if (n[i] == '1') {
+                    str += tn[Number(n[i + 1])] + ' ';
+                    i++;
+                    sk = 1;
+                } else if (n[i] != 0) {
+                    str += tw[n[i] - 2] + ' ';
+                    sk = 1;
+                }
+            } else if (n[i] != 0) {
+                str += dg[n[i]] + ' ';
+                if ((x - i) % 3 == 0) str += 'hundred ';
+                sk = 1;
+            }
+            if ((x - i) % 3 == 1) {
+                if (sk) str += th[(x - i - 1) / 3] + ' ';
+                sk = 0;
+            }
+        }
+        if (x != s.length) {
+            var y = s.length;
+            str += 'point ';
+            for (var i = x + 1; i < y; i++) str += dg[n[i]] + ' ';
+        }
+        return str.replace(/^\s+|\s+$/gm, '');
+    }
+
+    var total_eligible_item = $(".eligible-item").length;
+
+    for (var item = 1; item <= total_eligible_item; item++) {
+        var item_count = $(".total_item_count_" + toWords(item)).val();
+        if (item_count) {
+            $("#slct-" + toWords(item)).text(item_count + " Eligible items selected.");
+            $("#hidden_eligible_item-" + toWords(item)).val(item_count);
+        }
+    }
 });
-
-
-$(document).on('click', '.categoryList', function() {
-    var id =$(this).attr('id')
-     if($(this).prop("checked") == true){
-         $("."+id).prop("checked",true)        }
-     else if($(this).prop("checked") == false){
-         $("."+id).prop("checked",false)        }
- });
-
-
-$(document).ready(function() {
-    var buttonAdd = $("#add-button");
-    var buttonRemove = $("#remove-button");
-    var className = ".dynamic-field";
-    var count = (is_edit==0)?0:$(className).length;
-    var field = "";
-    var maxFields = 50;
-  
-    function totalFields() {
-      return $(className).length;
-    }
-  
-    function addNewField() {
-      var original_count = totalFields()
-      original_count =original_count+1;
-      count = totalFields() + 1;
-      field = $("#dynamic-field-1").clone();
-     
-      var popup_field = '<div id="field-'+count+'" class="overlay field-popup popup_intial">';
-      popup_field+='<div class="popup text-center">';
-      popup_field+='<h2>Eligible Items '+count+'</h2>';
-      popup_field+='<a class="close" href="#">&times;</a>';
-      popup_field+='<div class="content">';
-      popup_field+='<div id="accordion'+count+'" class="accordion">';
-            category.forEach(function(value,key) {
-                var rand_number_1 = Math.floor(Math.random() * 10000000);; 
-                var rand_number_2 = Math.floor(Math.random() * 10000000);;  
-                var rand_number_3 = Math.floor(Math.random() * 10000000);;  
-                popup_field+='<div class="card mb-0">';
-                popup_field+='<div class="form-group cs-checkbox">';
-                popup_field+='<input type="checkbox" class="checkbox-custom categoryList" id="category'+rand_number_1+'" value="'+value.category_id+'" name="eligible_item['+original_count+']['+value.category_id+']">';
-                popup_field+='<label for="category'+rand_number_1+'">'+value.category_name+'</label>';
-                popup_field+='</div>';
-                popup_field+='<div class="card-header collapsed" data-toggle="collapse" href="#collapse'+rand_number_2+'">';
-                popup_field+='<a class="card-title">';
-                popup_field+='<i class="fa fa-plus"></i>'
-                popup_field+='</a>'
-                popup_field+='</div>'
-                popup_field+='<div id="collapse'+rand_number_2+'" class="card-body collapse" data-parent="#accordion'+count+'">';
-                        value.category_item.forEach(function(value1,key1,) {
-                            popup_field+='<div class="form-group cs-checkbox">';
-                            popup_field+='<input type="checkbox" class="checkbox-custom category'+rand_number_1+'" id="item'+key1+rand_number_3+'" value="'+value1.menu_id+'" name="eligible_item['+original_count+']['+value.category_id+']['+value1.menu_id+']">';
-                            popup_field+='<label for="item'+key1+rand_number_3+'">'+value1.item_name+'</label>';
-                            popup_field+='</div>'
-                        });
-                         popup_field+='</div>';
-                         popup_field+='</div>';
-              });
-              popup_field+='</div>';
-              popup_field+='</div>';
-              popup_field+='<div class="form-group form-btn justify-content-center">';   
-                popup_field+='<div class="btn-custom">';
-                popup_field+='<button disabled class="btn-blue"><span>Close</span></button>';
-                popup_field+='</div>';
-                popup_field+='</div>';
-                popup_field+='</div>';
-                popup_field+='</div>';
-      $(".popup_intial:last").after($(popup_field));
-      field.attr("id", "dynamic-field-" + count);
-      field.children("label").text("Field " + count);
-      field.find("input").val("");
-      $(className + ":last").after($(field));
-
-      $('.display_count').each(function(i, obj) {
-          $(this).text("Eligible Items "+ ++i)
-      });
-
-    }
-  
-    function removeLastField() {
-      if (totalFields() > 1) {
-        $(className + ":last").remove();
-        $(".popup_intial:last").remove();
-      }
-    }
-  
-    function enableButtonRemove() {
-      if (totalFields() > 2) {
-        buttonRemove.removeAttr("disabled");
-        buttonRemove.addClass("shadow-sm");
-      }
-    }
-  
-    function disableButtonRemove() {
-      if (totalFields() === 2) {
-        buttonRemove.attr("disabled", "disabled");
-        buttonRemove.removeClass("shadow-sm");
-      }
-    }
-  
-    function disableButtonAdd() {
-      if (totalFields() === maxFields) {
-        buttonAdd.attr("disabled", "disabled");
-        buttonAdd.removeClass("shadow-sm");
-      }
-    }
-  
-    function enableButtonAdd() {
-      if (totalFields() === (maxFields - 1)) {
-        buttonAdd.removeAttr("disabled");
-        buttonAdd.addClass("shadow-sm");
-      }
-    }
-  
-    buttonAdd.click(function() {
-      addNewField();
-      $('.first_link').each(function (key,value) {
-      if(key>0){
-           var i = key+1;
-          $(this).attr('href',"#field-" + i);
-      }
-    });
-      enableButtonRemove();
-      disableButtonAdd();
-    });
-  
-    buttonRemove.click(function() {
-      removeLastField();
-      disableButtonRemove();
-      enableButtonAdd();
-    });
-
-    enableButtonRemove();
-  });
-  

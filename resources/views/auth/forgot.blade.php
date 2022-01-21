@@ -45,7 +45,7 @@
                 </div>                
                 <div class="form-group">
                   <div class="btn-custom">
-                    <button href="#" class="btn-blue"><span>Send Verification</span></button>
+                    <button href="#" class="btn-blue"><span>Reset Password</span></button>
                   </div>
                 </div>
               </form>
@@ -58,5 +58,5 @@
 @endsection
 @section('scripts')
 <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js')}}"></script>
-{!! JsValidator::formRequest('App\Http\Requests\Frontend\ForgotPasswordRequest','#sendToken_form'); !!}
+{!! JsValidator::formRequest('App\Http\Requests\ForgotPasswordRequest','#sendToken_form'); !!}
 @endsection

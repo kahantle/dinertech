@@ -34,7 +34,7 @@ class PaymentRequest extends FormRequest
     public function messages()
     {
         return [
-            'digit.*.required'       => 'Please enter valid card number.',
+            'digit.*.required'       => '',
             'ccExpiryMonth.required'        => 'Please select expiry month.',
             'ccExpiryYear.required'            => 'Please select expiry year.',
             'cvvNumber.required'            => 'Please enter cvv.'

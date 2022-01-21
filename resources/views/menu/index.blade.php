@@ -7,8 +7,10 @@
     <nav class="navbar navbar-inverse">
       <div class="container-fluid">
         <div class="navbar-header">
+          <div class="profile-title-new">
           <a href="#" class="navbar-brand" id="sidebar-toggle"><i class="fa fa-bars"></i></a>
           <h2>Menu</h2>
+          </div>
           <div class="form-group">
             <i class="fa fa-search" aria-hidden="true"></i>
             <input type="text" name="item-name" id="searchText" class="form-control searchText" value="{{$params}}" placeholder="Search Menu">
@@ -41,13 +43,15 @@
               <div class="menu-title">
                 <h4>{{$item->item_name}} | <span>{{$item->category->category_name}}</span></h4>&nbsp;
 
+                <div class="menu-actions-ctm">
                 <a href="{{route('edit.menu',$item->menu_id)}}" class="" data-route=""><p>Edit<i class="fa fa-pencil" aria-hidden="true"></i></p></a>
 
-                &nbsp;<a  data-route="{{route('delete.menu.post',[$item->menu_id])}}" class="delete " href="javaScript:Void(0);"><p>Delete<i class="fa fa-trash " aria-hidden="true"></i></p></a>             
+                &nbsp;<a  data-route="{{route('delete.menu.post',[$item->menu_id])}}" class="delete " href="javaScript:void(0);"><p>Delete<i class="fa fa-trash " aria-hidden="true"></i></p></a>             
+              </div>
               </div>
               <p>{{$item->item_details}}</p>
               <div class="price">
-                <p>${{$item->item_price}}</p>
+                <p>${{number_format($item->item_price,2)}}</p>
                 {{-- <a href="#0">Out Of Stock</a> --}}
               </div>
             </div>
@@ -56,7 +60,7 @@
         @endforeach
         
       </div>
-      <div class="float-right"> {{ $menu->links() }}</div>
+      <div class="w-100 pagination-links"> {{ $menu->links() }}</div>
       @else
       <p>No records found.</p>
       @endif

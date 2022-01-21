@@ -31,33 +31,12 @@
                     <div class="row zmd-hierarchical-display in paymentinfo-row" data-animation="hierarchical-display">
                         <div class="col-sm-12 zoomIn animated" style="animation-delay: 0.12s;">
                             <h1 class="daily_report" >Daily Sales Report</h1>
-                            {{-- <div class="igFrameBar">
-                                <div class="igData igData1"></div>
-                                <div class="igData igData2"></div>
-                                <div class="igData igData3"></div>
-                                <div class="igData igData4"></div>
-                                <div class="igData igData5"></div>
-                                <div class="igData igData6"></div>
-                                <div class="igData igData7"></div>
-                            </div> --}}
-                            {{-- <figure class="highcharts-figure">
-                              <div id="container"></div>
-                            </figure> --}}
                             <canvas id="mychart" width="1099" height="300"></canvas>
                         </div>
                     </div>
                     <div class="row zmd-hierarchical-display in paymentinfo-row" data-animation="hierarchical-display">
                         <div class="col-sm-12 zoomIn animated" style="animation-delay: 0.12s;">
                             <h1 class="daily_report" >Daily Profit Report</h1>
-                            {{-- <div class="igFrameBar">
-                                <div class="igData igData1"></div>
-                                <div class="igData igData2"></div>
-                                <div class="igData igData3"></div>
-                                <div class="igData igData4"></div>
-                                <div class="igData igData5"></div>
-                                <div class="igData igData6"></div>
-                                <div class="igData igData7"></div>
-                            </div> --}}
                             <canvas id="profitChart" width="1099" height="300"></canvas>
                         </div>
                     </div>      
@@ -70,7 +49,6 @@
 @endsection
 
 @section('script')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+    <script src="{{asset('assets/admin/js/chart/2.5.0/Chart.min.js')}}"></script>
     <script src="{{asset('assets/admin/js/payment/report.js')}}"></script>
-    
 @endsection

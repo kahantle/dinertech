@@ -4,18 +4,16 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
-use App\Http\Requests\Frontend\ForgotPasswordRequest;
-use App\Http\Requests\Frontend\ResetPasswordRequest;
+use App\Http\Requests\ForgotPasswordRequest;
+use App\Http\Requests\ResetPasswordRequest;
 use Illuminate\Support\Str;
 use DB;
-use Auth;
 use Hash;
 use Carbon\Carbon;
-use Config;
 use App\Models\User;
-use App\Mail\SendEmail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
+use App\Mail\ForgotMail;
 
 class ForgotPasswordController extends Controller
 {
@@ -48,14 +46,11 @@ class ForgotPasswordController extends Controller
             'created_at' => Carbon::now()
         ]);
 
-        $tokenData = DB::table('password_resets')
-            ->where('email_id', $req->email)->first();
-
-        if ($this->sendResetEmail($req->email, $tokenData->token)) {
-            return redirect()->back()->with('success', trans('A reset link has been sent to your email address.'));
-        } else {
-            return redirect()->back()->withErrors(['error' => trans('A Network Error occurred. Please try again.')]);
-        }
+        $tokenData = DB::table('password_resets')->where('email_id', $req->email)->first();
+        $data['user'] = $user;
+        $data['link'] = url('reset-password'. '/' .$tokenData->token) ;
+        Mail::to($req->email)->send(new ForgotMail($data));
+        return redirect()->route('login')->with('success', trans('A reset link has been sent to your email address.'));
     }   
 
     private function sendResetEmail($email, $token)

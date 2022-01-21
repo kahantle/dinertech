@@ -9,6 +9,7 @@ use App\Models\MenuItem;
 use App\Models\Restaurant;
 use App\Models\MenuModifierItem;
 use App\Models\ModifierGroup;
+use App\Models\PromotionCategoryItem;
 use Carbon\Carbon;
 use Config;
 use Hash;
@@ -182,6 +183,7 @@ class MenuItemController extends Controller
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
             }
             MenuItem::where('menu_id', $request->post('menu_id'))->delete();
+            PromotionCategoryItem::where('item_id',$request->post('menu_id'))->delete();
             return response()->json(['message'=> "Menu delete successfully.",'success' => true], 200);
         } catch (\Throwable $th) {
             $errors['success'] = false;

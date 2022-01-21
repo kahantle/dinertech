@@ -73,8 +73,7 @@ class Factory
 
     protected ?ServiceAccount $serviceAccount = null;
 
-    /** @var ServiceAccountCredentials|UserRefreshCredentials|AppIdentityCredentials|GCECredentials|CredentialsLoader|null */
-    protected $googleAuthTokenCredentials;
+    protected ?CredentialsLoader $googleAuthTokenCredentials = null;
 
     protected ?ProjectId $projectId = null;
 
@@ -226,7 +225,7 @@ class Factory
     {
         $factory = clone $this;
 
-        if ($logger) {
+        if ($logger !== null) {
             $factory = $factory->withHttpDebugLogger($logger);
         } else {
             Firebase\Util\Deprecation::trigger(__METHOD__.' without a '.LoggerInterface::class);
@@ -291,7 +290,7 @@ class Factory
 
     protected function getServiceAccount(): ?ServiceAccount
     {
-        if ($this->serviceAccount) {
+        if ($this->serviceAccount !== null) {
             return $this->serviceAccount;
         }
 
@@ -328,11 +327,13 @@ class Factory
 
     protected function getProjectId(): ?ProjectId
     {
-        if ($this->projectId) {
+        if ($this->projectId !== null) {
             return $this->projectId;
         }
 
-        if ($serviceAccount = $this->getServiceAccount()) {
+        $serviceAccount = $this->getServiceAccount();
+
+        if ($serviceAccount !== null) {
             return $this->projectId = ProjectId::fromString($serviceAccount->getProjectId());
         }
 
@@ -361,11 +362,13 @@ class Factory
 
     protected function getClientEmail(): ?Email
     {
-        if ($this->clientEmail) {
+        if ($this->clientEmail !== null) {
             return $this->clientEmail;
         }
 
-        if ($serviceAccount = $this->getServiceAccount()) {
+        $serviceAccount = $this->getServiceAccount();
+
+        if ($serviceAccount !== null) {
             return $this->clientEmail = new Email($serviceAccount->getClientEmail());
         }
 
@@ -390,11 +393,13 @@ class Factory
 
     protected function getDatabaseUri(): UriInterface
     {
-        if ($this->databaseUri) {
+        if ($this->databaseUri !== null) {
             return $this->databaseUri;
         }
 
-        if ($projectId = $this->getProjectId()) {
+        $projectId = $this->getProjectId();
+
+        if ($projectId !== null) {
             return $this->databaseUri = GuzzleUtils::uriFor(\sprintf(self::$databaseUriPattern, $projectId->sanitizedValue()));
         }
 
@@ -407,7 +412,9 @@ class Factory
             return $this->defaultStorageBucket;
         }
 
-        if ($projectId = $this->getProjectId()) {
+        $projectId = $this->getProjectId();
+
+        if ($projectId !== null) {
             return $this->defaultStorageBucket = \sprintf(self::$storageBucketNamePattern, $projectId->sanitizedValue());
         }
 
@@ -435,17 +442,17 @@ class Factory
     {
         $serviceAccount = $this->getServiceAccount();
         $clientEmail = $this->getClientEmail();
-        $privateKey = $serviceAccount ? $serviceAccount->getPrivateKey() : '';
+        $privateKey = $serviceAccount !== null ? $serviceAccount->getPrivateKey() : '';
 
         if ($clientEmail && $privateKey !== '') {
-            if ($this->tenantId) {
+            if ($this->tenantId !== null) {
                 return new TenantAwareGenerator($this->tenantId->toString(), (string) $clientEmail, $privateKey);
             }
 
             return new CustomTokenGenerator((string) $clientEmail, $privateKey);
         }
 
-        if ($clientEmail) {
+        if ($clientEmail !== null) {
             return new CustomTokenViaGoogleIam((string) $clientEmail, $this->createApiClient(), $this->tenantId);
         }
 
@@ -456,7 +463,9 @@ class Factory
 
     public function createIdTokenVerifier(): Verifier
     {
-        if (!($projectId = $this->getProjectId())) {
+        $projectId = $this->getProjectId();
+
+        if (!($projectId instanceof ProjectId)) {
             return new DisabledLegacyIdTokenVerifier(
                 'ID Token Verification is disabled because no project ID was provided'
             );
@@ -466,7 +475,7 @@ class Factory
 
         $baseVerifier = new LegacyIdTokenVerifier($projectId->sanitizedValue(), $keyStore);
 
-        if ($this->tenantId) {
+        if ($this->tenantId !== null) {
             $baseVerifier = new TenantAwareVerifier($this->tenantId->toString(), $baseVerifier);
         }
 
@@ -490,7 +499,9 @@ class Factory
 
     public function createRemoteConfig(): Contract\RemoteConfig
     {
-        if (!($projectId = $this->getProjectId())) {
+        $projectId = $this->getProjectId();
+
+        if (!($projectId instanceof ProjectId)) {
             throw new RuntimeException('Unable to create the messaging service without a project ID');
         }
 
@@ -503,7 +514,9 @@ class Factory
 
     public function createMessaging(): Contract\Messaging
     {
-        if (!($projectId = $this->getProjectId())) {
+        $projectId = $this->getProjectId();
+
+        if (!($projectId instanceof ProjectId)) {
             throw new RuntimeException('Unable to create the messaging service without a project ID');
         }
 
@@ -546,18 +559,20 @@ class Factory
     public function createFirestore(): Contract\Firestore
     {
         $config = [];
+        $projectId = $this->getProjectId();
+        $serviceAccount = $this->getServiceAccount();
 
-        if ($serviceAccount = $this->getServiceAccount()) {
+        if ($serviceAccount !== null) {
             $config['keyFile'] = $serviceAccount->asArray();
         } elseif ($this->discoveryIsDisabled) {
             throw new RuntimeException('Unable to create a Firestore Client without credentials');
         }
 
-        if ($projectId = $this->getProjectId()) {
+        if ($projectId !== null) {
             $config['projectId'] = $projectId->value();
         }
 
-        if (!$projectId) {
+        if (!($projectId instanceof ProjectId)) {
             // This is the case with user refresh credentials
             $config['suppressKeyFileNotice'] = true;
         }
@@ -574,18 +589,18 @@ class Factory
     public function createStorage(): Contract\Storage
     {
         $config = [];
+        $projectId = $this->getProjectId();
+        $serviceAccount = $this->getServiceAccount();
 
-        if ($serviceAccount = $this->getServiceAccount()) {
+        if ($serviceAccount !== null) {
             $config['keyFile'] = $serviceAccount->asArray();
         } elseif ($this->discoveryIsDisabled) {
             throw new RuntimeException('Unable to create a Storage Client without credentials');
         }
 
-        if ($projectId = $this->getProjectId()) {
+        if ($projectId instanceof ProjectId) {
             $config['projectId'] = $projectId->value();
-        }
-
-        if (!$projectId) {
+        } else {
             // This is the case with user refresh credentials
             $config['suppressKeyFileNotice'] = true;
         }
@@ -600,13 +615,61 @@ class Factory
     }
 
     /**
+     * @codeCoverageIgnore
+     *
+     * @return array{
+     *     credentialsType: class-string|null,
+     *     databaseUrl: string,
+     *     defaultStorageBucket: string|null,
+     *     serviceAccount: array{
+     *         client_email: string|null,
+     *         private_key: string|null,
+     *         project_id: string|null,
+     *         type: string
+     *     }|array<string, string|null>|null,
+     *     projectId: string|null,
+     *     tenantId: string|null,
+     *     verifierCacheType: class-string|null,
+     * }
+     */
+    public function getDebugInfo(): array
+    {
+        $credentials = $this->getGoogleAuthTokenCredentials();
+        $projectId = $this->getProjectId();
+        $serviceAccount = $this->getServiceAccount();
+
+        try {
+            $databaseUrl = (string) $this->getDatabaseUri();
+        } catch (Throwable $e) {
+            $databaseUrl = $e->getMessage();
+        }
+
+        $serviceAccountInfo = null;
+        if ($serviceAccount !== null) {
+            $serviceAccountInfo = $serviceAccount->asArray();
+            $serviceAccountInfo['private_key'] = $serviceAccountInfo['private_key'] ? '{exists, redacted}' : '{not set}';
+        }
+
+        return [
+            'credentialsType' => $credentials !== null ? \get_class($credentials) : null,
+            'databaseUrl' => $databaseUrl,
+            'defaultStorageBucket' => $this->defaultStorageBucket,
+            'projectId' => $projectId !== null ? $projectId->value() : null,
+            'serviceAccount' => $serviceAccountInfo,
+            'tenantId' => $this->tenantId !== null ? $this->tenantId->toString() : null,
+            'tokenCacheType' => \get_class($this->authTokenCache),
+            'verifierCacheType' => \get_class($this->verifierCache),
+        ];
+    }
+
+    /**
      * @internal
      *
      * @param array<string, mixed>|null $config
      */
     public function createApiClient(?array $config = null): Client
     {
-        $config = $config ?? [];
+        $config ??= [];
 
         // @codeCoverageIgnoreStart
         if ($this->guzzleDebugModeIsEnabled) {
@@ -636,17 +699,17 @@ class Factory
             $handler = HandlerStack::create($handler);
         }
 
-        if ($handler instanceof HandlerStack) {
-            if ($this->httpLogMiddleware) {
-                $handler->push($this->httpLogMiddleware, 'http_logs');
-            }
-
-            if ($this->httpDebugLogMiddleware) {
-                $handler->push($this->httpDebugLogMiddleware, 'http_debug_logs');
-            }
+        if ($this->httpLogMiddleware) {
+            $handler->push($this->httpLogMiddleware, 'http_logs');
         }
 
-        if ($credentials = $this->getGoogleAuthTokenCredentials()) {
+        if ($this->httpDebugLogMiddleware) {
+            $handler->push($this->httpDebugLogMiddleware, 'http_debug_logs');
+        }
+
+        $credentials = $this->getGoogleAuthTokenCredentials();
+
+        if ($credentials !== null) {
             $credentials = new FetchAuthTokenCache($credentials, null, $this->authTokenCache);
             $authTokenHandlerConfig = $config;
             $authTokenHandlerConfig['handler'] = clone $handler;
@@ -682,11 +745,13 @@ class Factory
      */
     protected function getGoogleAuthTokenCredentials()
     {
-        if ($this->googleAuthTokenCredentials) {
+        if ($this->googleAuthTokenCredentials !== null) {
             return $this->googleAuthTokenCredentials;
         }
 
-        if ($serviceAccount = $this->getServiceAccount()) {
+        $serviceAccount = $this->getServiceAccount();
+
+        if ($serviceAccount !== null) {
             return $this->googleAuthTokenCredentials = new ServiceAccountCredentials(self::API_CLIENT_SCOPES, $serviceAccount->asArray());
         }
 

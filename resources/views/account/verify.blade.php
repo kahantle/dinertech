@@ -6,8 +6,10 @@
     <nav class="navbar navbar-inverse">
       <div class="container-fluid">
         <div class="navbar-header">
+          <div class="profile-title-new">
           <a href="#" class="navbar-brand" id="sidebar-toggle"><i class="fa fa-bars"></i></a>
           <h2>Verify Pin</h2>
+          </div>
           <div class="clear reset_form">
             <span>Clear</span>
             <i class="fa fa-repeat " aria-hidden="true"></i>

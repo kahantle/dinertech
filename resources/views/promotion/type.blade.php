@@ -7,8 +7,10 @@
     <nav class="navbar navbar-inverse">
       <div class="container-fluid">
         <div class="navbar-header">
+          <div class="profile-title-new">
           <a href="#" class="navbar-brand" id="sidebar-toggle"><i class="fa fa-bars"></i></a>
           <h2>Select Promotion Type</h2>
+          </div>
           <!-- <div class="form-group">
             <i class="fa fa-search" aria-hidden="true"></i>
             <input type="text" name="item-name" class="form-control" placeholder="Search Menu">

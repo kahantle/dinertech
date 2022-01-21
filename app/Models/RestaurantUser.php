@@ -17,6 +17,4 @@ class RestaurantUser extends Model
         return $this->hasMany(User::class,'uid','uid')->where('role',Config::get('constants.ROLES.CUSTOMER'));
     }
 
-
-    
 }

@@ -275,12 +275,11 @@ class RestaurantController extends Controller
         return view('admin.restaurant.edit_restaurant',$data);
     }
 
-    public function updateDetail(RestaurantRequest $request,User $users)
+    public function updateDetail(RestaurantRequest $request,$uid)
     {
-        $uid = $request->restaurantUid;
         $user = User::find($uid);
         $user->mobile_number = $request->mobile_number;
-        $user->email_id = $request->email;
+        $user->email_id = $request->email_id;
 
         if ($request->hasFile('restaurant_image')) {
             $image = $request->file('restaurant_image');

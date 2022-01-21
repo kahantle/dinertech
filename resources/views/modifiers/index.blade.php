@@ -6,16 +6,18 @@
       <nav class="navbar navbar-inverse">
         <div class="container-fluid">
           <div class="navbar-header">
-            <a href="javaScript:Void(0);" class="navbar-brand" id="sidebar-toggle"><i class="fa fa-bars"></i></a>
+            <div class="profile-title-new">
+            <a href="javaScript:void(0);" class="navbar-brand" id="sidebar-toggle"><i class="fa fa-bars"></i></a>
             <h2>Modifiers / Add- ons</h2>
+            </div>
             <div class="plus">
-              <a href="javaScript:Void(0);" class="openModifierForm open"><i class="fa fa-plus" aria-hidden="true"></i></a>
+              <a href="javaScript:void(0);" class="openModifierForm open"><i class="fa fa-plus" aria-hidden="true"></i></a>
             </div>
           </div>
         </div>
       </nav>
     </div>
-    <div class="dashboard category content-wrapper">
+    <div class="dashboard category modifiers-ctm content-wrapper">
       <div class="container">
         @include('common.flashMessage')
         @if($modifiers)
@@ -26,14 +28,14 @@
             <div class="collapsed a-order" data-toggle="collapse" href="#collapseOne{{$item->modifier_group_name}}">
               <div class="order-name">
                 <div class="circle"></div>
-              <h4>{{$item->modifier_group_name}}<a href="javaScript:Void(0);" class="ml-1 badge badge-info">{{$item->modifier_item->count()}}</a>
+              <h4>{{$item->modifier_group_name}}<a href="javaScript:void(0);" class="ml-1 badge badge-info">{{$item->modifier_item->count()}}</a>
               </h4>
               </div>
               <div class="order-detail">
                 <a href="#modifierItem" class="openModifierItemForm open" data-id={{$item->modifier_group_id}}>Add Item <i class="fa fa-plus" aria-hidden="true"></i></a>
                 <div class="order-icons">
-                  <a  data-route="{{route('edit.modifier.post',[$item->modifier_group_id])}}" href="javaScript:Void(0);" class="openModifierForm action-edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                  <a  data-route="{{route('delete.modifier.post',[$item->modifier_group_id])}}" href="javaScript:Void(0);" class="delete action-delete"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                  <a  data-route="{{route('edit.modifier.post',[$item->modifier_group_id])}}" href="javaScript:void(0);" class="openModifierForm action-edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                  <a  data-route="{{route('delete.modifier.post',[$item->modifier_group_id])}}" href="javaScript:void(0);" class="delete action-delete"><i class="fa fa-trash" aria-hidden="true"></i></a>
             </div>
               </div>
             </div>
@@ -46,11 +48,11 @@
                 </div>
                 <div class="order-detail">
                   <div class="number">
-                    <p>${{$item->modifier_group_item_price}}</p>
+                    <p>${{ number_format($item->modifier_group_item_price,2)}}</p>
                   </div>
                   <div class="order-icons">
-                    <a  data-route="{{route('edit.modifier.item.post',$item->modifier_item_id)}}" href="javaScript:Void(0);" class="openModifierItemForm action-edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                    <a  data-route="{{route('delete.modifier.item.post',[$item->modifier_item_id])}}" href="javaScript:Void(0);" class="delete action-delete"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                    <a  data-route="{{route('edit.modifier.item.post',$item->modifier_item_id)}}" href="javaScript:void(0);" class="openModifierItemForm action-edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                    <a  data-route="{{route('delete.modifier.item.post',[$item->modifier_item_id])}}" href="javaScript:void(0);" class="delete action-delete"><i class="fa fa-trash" aria-hidden="true"></i></a>
                   </div>
                 </div>
               </div>
@@ -69,7 +71,7 @@
 
     <div id="modifierGroupPopUp" class="modifierGroupPopUp closeAllModal overlay w-100">
       <div class="popup text-center">
-        <a class="close closeModal" href="javaScript:Void(0);">&times;</a>
+        <a class="close closeModal" href="javaScript:void(0);">&times;</a>
         <div class="content">
           <h5 class="groupHeading">Add Modifier Group</h5>
           {{ Form::open(array('route' => array('add.modifier.post'),'id'=>'modifierForm','method'=>'POST',
@@ -79,8 +81,8 @@
               <input type="text" class="form-control" id="modifier_group_name" name="modifier_group_name" placeholder="Modifier Group Name">
             </div>
             <div class="form-group">                
-                <input type="checkbox"  id="allow_multiple" name="allow_multiple" />
-                Allow Multiple
+                <input type="checkbox" class="styled-checkbox"  id="allow_multiple" name="allow_multiple" />
+                <label for="allow_multiple">Allow Multiple</label>
             </div>
           <div class="btn-custom">
             <button class="groupBtn btn-blue"><span>Add</span></button>
@@ -93,7 +95,7 @@
     <div id="openModifierItemFormPopUp" class="openModifierItemFormPopUp closeAllModal overlay w-100">
       @include('common.flashMessage')
       <div class="popup text-center">
-        <a class="close closeModal" href="javaScript:Void(0);">&times;</a>
+        <a class="close closeModal" href="javaScript:void(0);">&times;</a>
         <div class="content">
           <h5 class="itemHeading">Add modifier item</h5>
           {{ Form::open(array('route' => array('add.modifier.item.post'),'id'=>'modifierItemForm','method'=>'POST',

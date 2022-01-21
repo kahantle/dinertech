@@ -14,11 +14,25 @@ class CreateUsersTable extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
+            $table->id('uid');
+            $table->string('role')->default('CUSTOMER');
+            $table->string('first_name');
+            $table->string('last_name');
+            $table->string('email_id')->unique();
+            $table->string('mobile_number')->unique();
+            $table->string('profile_image')->nullable();
+            $table->string('fcm_id')->nullable();
+            $table->enum('status', ['ACTIVE', 'INACTIVE'])->default('ACTIVE');
+            $table->timestamp('is_verified_at')->nullable();
             $table->string('password');
+            $table->string('otp')->nullable();
+            $table->datetime('otp_valid_time')->nullable();
+            $table->boolean('app_notifications');
+            $table->boolean('chat_notifications');
+            $table->boolean('location_tracking');
+            $table->integer('subscription_id')->unsigned()->nullable()->default(12);
+            $table->boolean('loyalty_subscription')->nullable()->default(false);
+            $table->string('google_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

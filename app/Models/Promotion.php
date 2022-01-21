@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Config;
 
 class Promotion extends Model
 {
@@ -75,4 +76,23 @@ class Promotion extends Model
     protected $casts = [
         'created_at' => 'datetime:d-m-Y h:s A',
     ];
+
+    public function getPromotionFunctionAttribute($value)
+    {
+        foreach(Config::get('constants.PROMOTION_FUNCTION') as $key => $function)
+        {
+            if($value == $key)
+            {
+                return $function;
+            }
+        }
+    }
+
+    public function getAvailabilityAttribute($value){
+        foreach(Config::get('constants.AVAILABILITY') as $key => $availability){
+            if($value == $key){
+                return $availability;
+            }
+        }
+    }
 }

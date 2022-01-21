@@ -45,7 +45,10 @@ $(document).ready(function() {
     $(".closeAllModal").css('opacity', 0);
   });
 
-$(".makeActionRequest").bind( "click", function(e) {
+  $("#orderTimePickup").on("submit", function(event) {
+    event.preventDefault();
+    var $form = $(this);
+    if(! $form.valid()) return false;
       $.ajax({
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

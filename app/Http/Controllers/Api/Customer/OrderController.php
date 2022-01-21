@@ -12,6 +12,11 @@ use App\Models\Order;
 use App\Models\OrderMenuItem;
 use App\Models\OrderMenuGroup;
 use App\Models\OrderMenuGroupItem;
+use App\Models\User;
+use App\Notifications\PlaceOrderCash;
+use App\Notifications\PlaceOrderCard;
+use App\Notifications\PlaceFutureOrderCash;
+use App\Notifications\PlaceFutureOrderCard;
 use DB;
 
 class OrderController extends Controller
@@ -84,8 +89,9 @@ class OrderController extends Controller
                 'is_feature' => 'required',
                 'order_date' => 'required',
                 'order_time' => 'required',
-                'payment_card_id' => 'required',
-                'stripe_payment_id' => 'required',
+                // 'payment_card_id' => 'required',
+                'isCash'          => 'required',
+                // 'stripe_payment_id' => 'required',
                 'menu_item'=>'required'
             ]);
             if ($validator->fails()) {
@@ -98,8 +104,9 @@ class OrderController extends Controller
             $order->uid = $uid;
             $order->restaurant_id = $request->post('restaurant_id');
             $order->order_number = random_int(1000,1000000000000000);
-            $order->payment_card_id = $request->post('payment_card_id');
-            $order->stripe_payment_id = $request->post('stripe_payment_id');
+            $order->payment_card_id = ($request->post('isCash') == 1) ? $request->post('payment_card_id') : NULL;
+            $order->isCash = $request->post('isCash');
+            $order->stripe_payment_id = ($request->post('isCash') == 1) ? $request->post('stripe_payment_id') : null;
             $order->cart_charge = $request->post('cart_charge');
             $order->delivery_charge = $request->post('delivery_charge');
             $order->discount_charge = $request->post('discount_charge');
@@ -134,7 +141,7 @@ class OrderController extends Controller
                             $menuModifier->menu_id =    $menuItem['menu_id']; 
                             $menuModifier->order_id =$order->order_id;
                             if($menuModifier->save()){
-                            foreach ($modifierGroup['modifier_item'] as $key => $modierMenu) {
+                                foreach ($modifierGroup['modifier_item'] as $key => $modierMenu) {
                                     $menuModifierMenu = New OrderMenuGroupItem;
                                     $menuModifierMenu->order_menu_item_id = $menuItemData->order_menu_item_id;
                                     $menuModifierMenu->order_modifier_group_id = $menuModifier->order_modifier_group_id;
@@ -155,6 +162,33 @@ class OrderController extends Controller
                     }
                 }
                 DB::commit();
+                $orderNumber = $order->order_number;
+                $restaurant = Restaurant::with(['order' => function($order) use($uid,$orderNumber){
+                    $order->with('user')->where('uid',$uid)->where('order_number',$orderNumber)->first();
+                }])->find($request->post('restaurant_id'));
+                
+                if($request->post('is_feature') == 1)
+                {
+                    if($request->post('isCash') == 0)
+                    {
+                        $restaurant->notify(new PlaceFutureOrderCash($restaurant));
+                    }
+                    else
+                    {
+                        $restaurant->notify(new PlaceFutureOrderCard($restaurant));
+                    }
+                }
+                else
+                {
+                    if($request->post('isCash') == 0)
+                    {
+                        $restaurant->notify(new PlaceOrderCash($restaurant));
+                    }
+                    else
+                    {
+                        $restaurant->notify(new PlaceOrderCard($restaurant));
+                    }
+                }
                 return response()->json(['message' => "Order added successfully.", 'order_id'=>$order->order_id, 'order_number'=>$order->order_number,  'success' => true], 200);
             }else{
                 DB::rollBack();

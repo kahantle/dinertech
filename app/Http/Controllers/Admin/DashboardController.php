@@ -31,7 +31,7 @@ class DashboardController extends Controller
         $data['orders'] = Order::whereMonth('order_date',date('m'))->count();
         $data['activeOrders'] = Order::where('order_progress_status','!=',Config::get('constants.ORDER_STATUS.COMPLETED'))->where('order_progress_status','!=',Config::get('constants.ORDER_STATUS.CANCEL'))->whereMonth('order_date',date('m'))->count();
         $data['declinedOrders'] = Order::where('order_progress_status','!=',Config::get('constants.ORDER_STATUS.CANCEL'))->whereMonth('order_date',date('m'))->count();
-        $totalSales = RestaurantPayments::where('status','SUCCESS')->whereMonth('created_at',date('m'))->sum('amount');
+        $totalSales = RestaurantPayments::where('status','SUCCESS')->sum('amount');
         $data['totalSales'] = $totalSales;
         $data['percentage'] = ($totalSales * 1) / 100;
         $data['liveSales'] = Order::where('order_progress_status',Config::get('constants.ORDER_STATUS.COMPLETED'))->whereMonth('order_date',date('m'))->sum('grand_total');
@@ -66,7 +66,7 @@ class DashboardController extends Controller
                 $data['orders'] = Order::whereMonth('order_date',date('m'))->count();
                 $data['activeOrders'] = Order::where('order_progress_status','!=',Config::get('constants.ORDER_STATUS.COMPLETED'))->where('order_progress_status','!=',Config::get('constants.ORDER_STATUS.CANCEL'))->whereMonth('order_date',date('m'))->count();
                 $data['declinedOrders'] = Order::where('order_progress_status','!=',Config::get('constants.ORDER_STATUS.CANCEL'))->whereMonth('order_date',date('m'))->count();
-                $totalSales = RestaurantPayments::where('status','SUCCESS')->whereMonth('created_at',date('m'))->sum('amount');
+                $totalSales = RestaurantPayments::where('status','SUCCESS')->sum('amount');
                 $data['totalSales'] = number_format($totalSales,2);
                 $data['percentage'] = number_format(($totalSales * 1) / 100);
                 $data['liveSales'] = number_format(Order::where('order_progress_status',Config::get('constants.ORDER_STATUS.COMPLETED'))->whereMonth('order_date',date('m'))->sum('grand_total'),2);
@@ -91,7 +91,7 @@ class DashboardController extends Controller
                 $data['orders'] = Order::whereYear('order_date',date('Y'))->count();
                 $data['activeOrders'] = Order::where('order_progress_status','!=',Config::get('constants.ORDER_STATUS.COMPLETED'))->where('order_progress_status','!=',Config::get('constants.ORDER_STATUS.CANCEL'))->whereYear('order_date',date('Y'))->count();
                 $data['declinedOrders'] = Order::where('order_progress_status','!=',Config::get('constants.ORDER_STATUS.CANCEL'))->whereYear('order_date',date('Y'))->count();
-                $totalSales = RestaurantPayments::where('status','SUCCESS')->whereYear('created_at',date('Y'))->sum('amount');
+                $totalSales = RestaurantPayments::where('status','SUCCESS')->sum('amount');
                 $data['totalSales'] = number_format($totalSales,2);
                 $data['percentage'] = number_format(($totalSales * 1) / 100);
                 $data['liveSales'] = number_format(Order::where('order_progress_status',Config::get('constants.ORDER_STATUS.COMPLETED'))->whereYear('order_date',date('Y'))->sum('grand_total'),2);
@@ -116,7 +116,7 @@ class DashboardController extends Controller
                 $data['orders'] = Order::whereDate('order_date',$day)->count();
                 $data['activeOrders'] = Order::where('order_progress_status','!=',Config::get('constants.ORDER_STATUS.COMPLETED'))->where('order_progress_status','!=',Config::get('constants.ORDER_STATUS.CANCEL'))->whereDate('order_date',$day)->count();
                 $data['declinedOrders'] = Order::where('order_progress_status','!=',Config::get('constants.ORDER_STATUS.CANCEL'))->whereDate('order_date',$day)->count();
-                $totalSales = RestaurantPayments::where('status','SUCCESS')->whereDate('created_at',date('Y-m-d'))->sum('amount');
+                $totalSales = RestaurantPayments::where('status','SUCCESS')->sum('amount');
                 $data['totalSales'] = number_format($totalSales,2);
                 $data['percentage'] = number_format(($totalSales * 1) / 100);
                 $data['liveSales'] = number_format(Order::where('order_progress_status',Config::get('constants.ORDER_STATUS.COMPLETED'))->whereDate('order_date',$day)->sum('grand_total'),2);
@@ -137,7 +137,7 @@ class DashboardController extends Controller
                 $data['orders'] = Order::whereBetween('order_date',[$fromDate,$toDate])->count();
                 $data['activeOrders'] = Order::where('order_progress_status','!=',Config::get('constants.ORDER_STATUS.COMPLETED'))->where('order_progress_status','!=',Config::get('constants.ORDER_STATUS.CANCEL'))->whereBetween('order_date',[$fromDate,$toDate])->count();
                 $data['declinedOrders'] = Order::where('order_progress_status','!=',Config::get('constants.ORDER_STATUS.CANCEL'))->whereBetween('order_date',[$fromDate,$toDate])->count();
-                $totalSales = RestaurantPayments::where('status','SUCCESS')->whereBetween('created_at',[$fromDate,$toDate])->sum('amount');
+                $totalSales = RestaurantPayments::where('status','SUCCESS')->sum('amount');
                 $data['totalSales'] = number_format($totalSales,2);
                 $data['percentage'] = number_format(($totalSales * 1) / 100);
                 $data['liveSales'] = number_format(Order::where('order_progress_status',Config::get('constants.ORDER_STATUS.COMPLETED'))->whereBetween('order_date',[$fromDate,$toDate])->sum('grand_total'),2);
@@ -169,7 +169,7 @@ class DashboardController extends Controller
                 $data['orders'] = Order::whereBetween('order_date',[$fromDate->format('Y-m-d'),$toDate->format('Y-m-d')])->count();
                 $data['activeOrders'] = Order::where('order_progress_status','!=',Config::get('constants.ORDER_STATUS.COMPLETED'))->where('order_progress_status','!=',Config::get('constants.ORDER_STATUS.CANCEL'))->whereBetween('order_date',[$fromDate->format('Y-m-d'),$toDate->format('Y-m-d')])->count();
                 $data['declinedOrders'] = Order::where('order_progress_status','!=',Config::get('constants.ORDER_STATUS.CANCEL'))->whereBetween('order_date',[$fromDate->format('Y-m-d'),$toDate->format('Y-m-d')])->count();
-                $totalSales = RestaurantPayments::where('status','SUCCESS')->whereBetween('created_at',[$fromDate->format('Y-m-d'),$toDate->format('Y-m-d')])->sum('amount');
+                $totalSales = RestaurantPayments::where('status','SUCCESS')->sum('amount');
                 $data['totalSales'] = number_format($totalSales,2);
                 $data['percentage'] = number_format(($totalSales * 1) / 100);
                 $data['liveSales'] = number_format(Order::where('order_progress_status',Config::get('constants.ORDER_STATUS.COMPLETED'))->whereBetween('order_date',[$fromDate->format('Y-m-d'),$toDate->format('Y-m-d')])->sum('grand_total'),2);

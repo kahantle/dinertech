@@ -1,4 +1,4 @@
-@extends('customer-layouts.app')
+@extends('customer-layouts-old.app')
 
 @section('css')
 	<link rel="stylesheet" href="{{asset('assets/customer/css/bootstrap-datetimepicker.min.css')}}">

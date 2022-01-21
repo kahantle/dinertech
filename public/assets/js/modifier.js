@@ -1,6 +1,6 @@
 $(document).ready(function(e) {
   $( ".openModifierForm" ).bind( "click", function(e) {
-    e.preventDefault();
+    e.stopPropagation();
     $('#modifierForm')[0].reset();
     $(".closeAllModal").css('visibility', 'hidden');
     $(".closeAllModal").css('opacity', 0);
@@ -51,24 +51,21 @@ $(document).ready(function(e) {
   });
 
   $( ".openModifierItemForm" ).bind( "click", function(e) {
-    e.preventDefault();
+    e.stopPropagation();
     $('#modifierItemForm')[0].reset();
     $(".closeAllModal").css('visibility', 'hidden');
     $(".closeAllModal").css('opacity', 0);
     var url = $(this).data('route');
-
     if($(this).hasClass("open")){
       $(".itemHeading").html('Add modifier group item');
-      $(".itemBtn").html('Update');
+      $(".itemBtn").html('Add');
 
     }else{
+      $(".error-help-block").remove();
       $(".itemHeading").html('Edit modifier group item');
       $(".itemBtn").html('Update');
     }
-
-
     if(url){
-     
       $.ajax({
         headers: {
           "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
@@ -104,7 +101,8 @@ $(document).ready(function(e) {
   });
 
 
-  $(document).on('click', '.delete', function() {
+  $(document).on('click', '.delete', function(e) {
+    e.stopPropagation();
     var url = $(this).data('route');
     Swal.fire({
       title: "Are you sure?",

@@ -53,7 +53,7 @@ class VerificationController extends Controller
                 Toastr::success('You have successfully verified account.','', Config::get('constants.toster'));
                 return redirect()->route('login');
             } else {
-                Toastr::success('Please enter valid otp.','', Config::get('constants.toster'));
+                Toastr::error('Please enter valid otp.','', Config::get('constants.toster'));
                 return redirect()->route('verify', ['username' =>  $request->post('username')]);
             }
         } catch (\Throwable $th) {

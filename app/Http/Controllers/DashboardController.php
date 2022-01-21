@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\Restaurant;
 use App\Models\User;
 use Auth;
-use DB;
-USE Config;
+use Config;
 
 class DashboardController extends Controller
 {
@@ -30,15 +28,16 @@ class DashboardController extends Controller
     {
         $uid = Auth::user()->uid;
         $restaurant = Restaurant::where('uid', $uid)->first();
-        $orders = Order::where('restaurant_id',$restaurant->restaurant_id)
-                        ->where(function($query){
-                            $query->whereNull('order_status');
-                            $query->orWhereIn('order_progress_status',[
-                                Config::get('constants.ORDER_STATUS.INTIAL'),
-                                Config::get('constants.ORDER_STATUS.PREPARED'),
-                                Config::get('constants.ORDER_STATUS.ACCEPTED')
-                            ]);
-                })->orderByDesc('order_date')->paginate(6);        
-        return view('dashboard',compact('orders'));
+        $orders = Order::where('restaurant_id', $restaurant->restaurant_id)
+            ->where(function ($query) {
+                $query->whereNull('order_status');
+                $query->orWhereIn('order_progress_status', [
+                    Config::get('constants.ORDER_STATUS.INTIAL'),
+                    Config::get('constants.ORDER_STATUS.PREPARED'),
+                    Config::get('constants.ORDER_STATUS.ACCEPTED'),
+                ]);
+            })->orderByDesc('order_date')->paginate(7);
+        return view('dashboard', compact('orders'));
     }
+
 }

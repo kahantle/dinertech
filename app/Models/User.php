@@ -1,17 +1,16 @@
 <?php
+
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
-    // use HasApiTokens, Notifiable;
-    use HasApiTokens,Notifiable;
-    protected $appends = ['full_name','image_path'];
-    
+    use HasApiTokens, Notifiable;
+    protected $appends = ['full_name', 'image_path'];
+    protected $primaryKey = 'uid';
 
     /**
      * The attributes that are mass assignable.
@@ -19,22 +18,9 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        // 'name', 'email', 'password',
-        'email_id',
-        'password',
-        'first_name',
-        'last_name',
-        'role',
-        'mobile_number',
-        'profile_image',
-        'fcm_id',
-        'status',
-        'is_verified_at',
-        'otp',
-        'otp_valid_time'
+        'first_name', 'last_name', 'email_id', 'mobile_number', 'profile_image', 'fcm_id', 'device', 'status', 'is_verified_at', 'password', 'otp', 'otp_valid_time', 'app_notifications', 'chat_notifications', 'location_tracking',
     ];
 
-    protected $primaryKey = 'uid';
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -80,14 +66,14 @@ class User extends Authenticatable
 
     public function getProfileImagePathAttribute()
     {
-        if($this->profile_image){
-            return route('display.image',[config("constants.IMAGES.RESTAURANT_USER_IMAGE_PATH"),$this->profile_image]);
+        if ($this->profile_image) {
+            return route('display.image', [config("constants.IMAGES.RESTAURANT_USER_IMAGE_PATH"), $this->profile_image]);
         }
     }
     public function getImagePathAttribute()
     {
-        if($this->profile_image){
-            return route('display.image',[config("constants.IMAGES.USER_IMAGE_PATH"),$this->profile_image]) ;
+        if ($this->profile_image) {
+            return route('display.image', [config("constants.IMAGES.USER_IMAGE_PATH"), $this->profile_image]);
         }
     }
 
@@ -96,4 +82,10 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\Order', 'uid');
     }
 
+    public function routeNotificationForFcm()
+    {
+        $fcm_ids = CustomerFcmTokens::where('uid', $this->uid)->pluck('fcm_id')->toArray();
+        // return $this->fcm_id;
+        return $fcm_ids;
+    }
 }

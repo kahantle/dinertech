@@ -8,6 +8,7 @@ use Kreait\Firebase\ServiceAccount;
 use Carbon\Carbon;
 use Kreait\Firebase\Database;
 use App\Models\Order;
+use App\Models\User;
 use App\Models\Restaurant;
 use Config;
 use Auth;
@@ -22,18 +23,21 @@ class ChatController extends Controller
 
     public function index(Request $request){
         try{
-          
             $user = Auth::user()->uid;
             $restaurant = Restaurant::where('uid', $user)->first();
             $orders = Order::where('restaurant_id', $restaurant->restaurant_id)
-            ->where('order_progress_status','!=',Config::get('constants.ORDER_STATUS.COMPLETED'))
+            ->whereIn('order_progress_status',[
+                Config::get('constants.ORDER_STATUS.PREPARED'),
+                Config::get('constants.ORDER_STATUS.ACCEPTED')
+            ])
             ->with('user');
+            $order_number = $request->order_id;
             if($request->order_id){
-                $orders = $orders->where('order_id',$request->order_id);
+                $orders = $orders->where('order_number','like','%'.$order_number.'%');
             }
             $orders = $orders->get();
             $resturant_id = $restaurant->restaurant_id;
-            return view('chat.index',compact('orders','resturant_id'));
+            return view('chat.index',compact('orders','resturant_id','order_number'));
         }catch (ApiException $e) {
             $request = $e->getRequest();
         }
@@ -44,17 +48,24 @@ class ChatController extends Controller
         try{
                 $database = app('firebase.database');
                 $order_id =  $request->order_id;
+                $customer_id = $request->customer_id;
+                $user = User::where('uid',$customer_id)->first();
+                  // Create a key for a new post
+                $user_id = Auth::user()->uid;
                 $postData =(object) [
-                    'text' => $request->message,
-                    'date_time'=>date("Y-m-d h:i:s"),
-                    'is_read'=>1,
-                    'created_by'=> Config::get('constants.ROLES.RESTAURANT'),
+                    'full_name' => $user->first_name." ".$user->last_name,
+                    'message' => $request->message,
+                    'message_date'=>date("Y-m-d h:i:A"),
+                    'isseen'=>true,
+                    'order_number'=>$order_id,
+                    'receiver'=>$customer_id,
+                    'sender'=>$user_id,
+                    'sent_from'=> Config::get('constants.ROLES.RESTAURANT'),
+                    'user_id'=>$customer_id
                 ];
-                // Create a key for a new post
-                $user = Auth::user()->uid;
-                $restaurant = Restaurant::where('uid', $user)->first();
+                $restaurant = Restaurant::where('uid', $user_id)->first();
                 $newPostKey = $database->getReference(Config::get('constants.FIREBASE_DB_NAME'))->push()->getKey();
-                $url = Config::get('constants.FIREBASE_DB_NAME').'/'.$restaurant->restaurant_id.'/'.$order_id."/";
+                $url = Config::get('constants.FIREBASE_DB_NAME').'/'.$restaurant->restaurant_id.'/'.$order_id."/"."/".$customer_id."/" ;
                 $updates = [$url.$newPostKey  => $postData];
                 $database->getReference()->update($updates);
                 return response()->json(['success'=> true,'message'=> 'Message successfully sent!']);

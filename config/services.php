@@ -38,5 +38,11 @@ return [
         'storage_bucket' => 'dinnertech-customer-a1ad9.appspot.com',
         'project_id' => 'dinnertech-customer-a1ad9',
         'messaging_sender_id' => 'G-CQCME6WE0F'
-    ]
+    ],
+
+    'google' => [
+        'client_id' => '877680709-t9rhotg153sn1gae90q7rutpc5r6avcc.apps.googleusercontent.com',
+        'client_secret' => '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',
+        'redirect' => 'http://localhost:8000/customer/auth/google/callback',
+    ],
 ];

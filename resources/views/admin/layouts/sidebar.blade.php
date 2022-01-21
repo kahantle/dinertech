@@ -20,8 +20,6 @@
                     <button type="button" class="btn btn-default-bright btn-flat dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{Auth::guard('admin')->user()->full_name}} <i class="material-icons">arrow_drop_down</i>
                         </button>
                     <ul class="dropdown-menu">
-                        <li><a href="#"><i class="material-icons">person</i> <span data-i18n="userinfo.profile">Your Profile</span></a></li>
-                        <li class="divider-horizontal"></li>
                         <li><a href="#"><i class="material-icons">lock</i> <span data-i18n="userinfo.lock">Lock</span></a></li>
                         <li class="divider-horizontal"></li>
                         <li>

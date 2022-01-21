@@ -6,11 +6,13 @@
     <nav class="navbar navbar-inverse">
       <div class="container-fluid">
         <div class="navbar-header">
+          <div class="profile-title-new">
           <a href="#" class="navbar-brand" id="sidebar-toggle"><i class="fa fa-bars"></i></a>
           <h2>Hours</h2>
-        </div>
-        <div class="plus">
+          </div>
+          <div class="plus">
           <a href="{{route('add.hours')}}" ><i class="fa fa-plus" aria-hidden="true"></i></a>
+        </div>
         </div>
       </div>
     </nav>
@@ -28,7 +30,7 @@
                 </div>
                 <div class="order-detail">
                   <div class="time">
-                    <p>{{$data->opening_time}} - {{$data->closing_time}}</p>
+                    <p>{{date("h:i:a",strtotime($data->opening_time))}} - {{date("h:i:a",strtotime($data->closing_time))}}</p>
                   </div>
                   <div class="order-icons">
                     <a class="action-edit" href="{{route('edit.hour',$data->hours_group_id)}}">

@@ -22,26 +22,7 @@ class PromotionController extends Controller
     {
         try {
             $request_data = $request->json()->all();
-            // $validator = Validator::make($request_data, [ 
-            //     'restaurant_id' => 'required',
-            //     'promotion_type_id' => 'required',
-            //     'promotion_name' => 'required',
-            //     'promotion_details'=>'required',
-            //     'discount_type'=>'required',
-            //     'discount'=>'required',
-            //     'client_type'=>'required',
-            //     'order_type'=>'required',
-            //     'selected_payment_status'=>"required",
-            //     "mark_promoas_status"=>"required",
-            //     'promotion_code' => 'required',
-            //     'promotion_status' => 'required',
-            //     'display_time' => 'required',
-            //     'minimum_order_status' => 'required',
-            //     'no_extra_charge_type' => 'required',
-            //     'set_minimum_order_amount' => 'required',
-            //     'only_once_per_client'   => 'required',
-            //     // "eligible_item"=>"required",
-            // ]);
+            
             $validator = Validator::make($request_data, [ 
                 'restaurant_id' => 'required',
                 'promotion_type_id' => 'required',
@@ -129,25 +110,7 @@ class PromotionController extends Controller
     {
         try {
             $request_data = $request->json()->all();
-            // $validator = Validator::make($request_data, [ 
-            //     'restaurant_id' => 'required',
-            //     'promotion_type_id' => 'required',
-            //     'promotion_name' => 'required',
-            //     'promotion_details'=>'required',
-            //     'discount_type'=>'required',
-            //     'discount'=>'required',
-            //     'client_type'=>'required',
-            //     'order_type'=>'required',
-            //     'selected_payment_status'=>"required",
-            //     "mark_promoas_status"=>"required",
-            //     'promotion_code' => 'required',
-            //     'promotion_status' => 'required',
-            //     'display_time' => 'required',
-            //     'minimum_order_status' => 'required',
-            //     'no_extra_charge_type' => 'required',
-            //     'set_minimum_order_amount' => 'required',
-            //     'only_once_per_client'   => 'required',
-            // ]);
+            
             $validator = Validator::make($request_data, [ 
                 'restaurant_id' => 'required',
                 'promotion_type_id' => 'required',
@@ -276,54 +239,16 @@ class PromotionController extends Controller
     }
 
     public function getRecords(Request $request)
-    {   try { 
+    {   
+        try { 
             $request_data = $request->json()->all();
                 $validator = Validator::make($request_data, [ 'restaurant_id' => 'required'
             ]);
             if ($validator->fails()) {
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
             }
-            $result = array();
-            $promotionList = Promotion::where('restaurant_id',$request->post('restaurant_id'))->get(['promotion_id','promotion_type_id','restaurant_id','promotion_code','promotion_name','promotion_details','discount','discount_type','client_type','order_type','selected_payment_status','mark_promoas_status','display_time','promotion_status','minimum_order_status','set_minimum_order_amount','created_at','no_extra_charge_type','discount_expensive','discount_cheapest','only_once_per_client']);
-            foreach ($promotionList as $promotionKey => $promotion) {
-                $result[$promotionKey] = $promotion;
-                $promotionCategoryItems = PromotionCategoryItem::where('promotion_category_items.promotion_id',$promotion->promotion_id)
-                                        ->with('category_item')
-                                        ->get();
-                foreach($promotionCategoryItems as $key => $value)
-                {
-                    foreach ($value->category_item as $key1 => $value1) {
-                        $result[$promotionKey]['eligible_items'][] = $value1;
-                    }
-                }
-                
-                // $promotionEligibleList = PromotionEligibleItem:: where('promotion_id',$promotion->promotion_id)->get();
-                // foreach ($promotionEligibleList as $key => $value) {
-                //         $result[$promotionKey]['eligible_items'][$key] = $value;
-                //         $category_items =  Category::select('*')
-                //             ->join('promotion_category','promotion_category.category_id','=','categories.category_id')
-                //             ->where('promotion_category.promotion_id',$request->post('promotion_id'))
-                //             ->where('promotion_category.promotion_eligible_item_id',$value->promotion_eligible_item_id)
-                //             ->get();     
-                //             $result[$promotionKey]['eligible_items'][$key]['eligible_category'] = $category_items ;
-
-                          
-                //             if( $category_items){
-                //                 // dd( $promotionList);
-                //                 foreach ($category_items as $key1 => $value1) {
-                //                     if($value){
-                //                     $category_items =  MenuItem::select('*')
-                //                         ->join('promotion_category_items','promotion_category_items.item_id','=','menu_items.menu_id')
-                //                         ->where('promotion_category_items.promotion_id',$request->post('promotion_id'))
-                //                         ->where('menu_items.category_id',$value1->category_id)
-                //                         ->get(); 
-                //                         $result[$promotionKey]['eligible_items'][$key]['eligible_category'][$key1]['category_item'] = $category_items;
-                //                     }
-                //                 }
-                //             }
-                // }
-            }
-            return response()->json(['promotion_list' => $result, 'success' => true], 200);
+            $promotionList = Promotion::where('restaurant_id',$request->post('restaurant_id'))->get(['promotion_id','promotion_type_id','restaurant_id','promotion_code','promotion_name','promotion_details','discount','discount_type','client_type','order_type','selected_payment_status','mark_promoas_status','display_time','promotion_status','minimum_order_status','set_minimum_order_amount','created_at','no_extra_charge_type','discount_expensive','discount_cheapest','only_once_per_client','promotion_function','availability']);
+            return response()->json(['promotion_list' => $promotionList, 'success' => true], 200);
         } catch (\Throwable $th) {
             $errors['success'] = false;
             $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
@@ -335,7 +260,8 @@ class PromotionController extends Controller
     }
 
     public function getRecordById(Request $request)
-    {   try { 
+    {   
+        try { 
             $request_data = $request->json()->all();
                 $validator = Validator::make($request_data, 
                 [ 'restaurant_id' => 'required',
@@ -370,7 +296,7 @@ class PromotionController extends Controller
                                         $result['eligible_items'][$key]['eligible_category'][$key1]['category_item'] = $category_items;
                                     }
                                 }
-                        }
+                            }
                 }
             
             return response()->json(['data' => $result, 'success' => true], 200);
@@ -385,7 +311,8 @@ class PromotionController extends Controller
     }
 
     public function status(Request $request)
-    {   try { 
+    {   
+        try { 
             $request_data = $request->json()->all();
                 $validator = Validator::make($request_data, [
                      'restaurant_id' => 'required',
@@ -448,4 +375,55 @@ class PromotionController extends Controller
             return response()->json($errors, 500);
         }
     }
+
+    public function getWebview(Request $request)
+    {
+        try{
+            $request_data = $request->json()->all();
+            $validator = Validator::make($request_data, [
+                'type'          => 'required|string', 
+                'restaurant_id' => 'required',
+                'promotion_type_id' => 'required',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json(['success' => false, 'message' => $validator->errors()], 400);
+            }
+            $promotionTypeId = $request->post('promotion_type_id');
+            $formType = $request->post('type');
+            $promotionId = $request->post('promotion_id');
+            $promotionType = PromotionType::where('promotion_type_id',$promotionTypeId)->first();
+            $uid = auth('api')->user()->uid;
+            $webviewUrl = '';
+            if($formType == 'Add')
+            {
+                $promotion = $promotionType->promotion_name;
+                $webviewUrl = route('promotion.type.webViewForm',[$promotionTypeId,$uid,$formType]);
+            }
+            else if($formType == 'Edit')
+            {
+                $validator = Validator::make($request_data, [
+                    'promotion_id' => 'required',
+                ]);
+    
+                if ($validator->fails()) {
+                    return response()->json(['success' => false, 'message' => $validator->errors()], 400);
+                }
+                $formType = 'Edit';
+                $getPromotion = Promotion::where('restaurant_id', $request->post('restaurant_id'))->where('promotion_id',$promotionId)->first();
+                $promotion = $getPromotion->promotion_name;
+                $webviewUrl = route('promotion.type.webViewForm',[$promotionTypeId,$uid,$formType,$promotionId]);
+            }
+            return response()->json(['promotion_name' => $promotion,'link' => $webviewUrl, 'type' => $formType,'success' => true], 200);
+        }catch(\Throwable $th){
+            $errors['success'] = false;
+            $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
+            if ($request->debug_mode == 'ON') {
+                $errors['debug'] = $th->getMessage();
+            }
+            return response()->json($errors, 500);
+        }
+    }
+
+   
 }

@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests\ModifierGroupRequest;
 use App\Http\Requests\PromotionRequest;
 use App\Http\Requests\PromotionCartRequest;
+use App\Http\Requests\PromotionFreedeliveryRequest;
+use App\Http\Requests\PromotionPaymentmethodRequest;
 use App\Models\PromotionType;
 use App\Models\Promotion;
 use App\Models\PromotionItem;
@@ -64,44 +66,54 @@ class PromotionController extends Controller
     }
 
     public function listTypeForm(Request $request){
+
         $type = $request->id;
         $uid = Auth::user()->uid;
         $restaurant = Restaurant::where('uid', $uid)->first();
         $category = Category::where('restaurant_id', $restaurant->restaurant_id)->with('category_item')->get();
-
+        $webview = 0;
         if($type==1){//DONE
             $promotion = [];
-            return view('promotion.cart.add',compact('promotion'));
+            return view('promotion.cart.add',compact('promotion','webview'));
         }else if($type==2){//DONE
-            return view('promotion.discount_selected_item.add',compact('category'));
+            return view('promotion.discount_selected_item.add',compact('category','webview'));
         }else if($type==3){//DONE
             $promotion = [];
-            return view('promotion.freedelivery.add',compact('promotion'));
+            return view('promotion.freedelivery.add',compact('promotion','webview'));
         }else if($type==4){//DONE
             $promotion = [];
-            return view('promotion.paymentmethod.add',compact('promotion'));
+            return view('promotion.paymentmethod.add',compact('promotion','webview'));
         }else if($type==5){//DONE
-            return view('promotion.freeitem.add',compact('category'));
+            return view('promotion.freeitem.add',compact('category','webview'));
         }else if($type==6){//DONE
-            return view('promotion.getonefree.add',compact('category'));
+            return view('promotion.getonefree.add',compact('category','webview'));
         }else if($type==7){//DONE
-            return view('promotion.mealbundle.add',compact('category'));
-        }else if($type==8){//
-            return view('promotion.buytwothree.add',compact('category'));
-        }else if($type==9){
-            return view('promotion.fixeddiscount.add',compact('category'));
-        }else if($type==10){
-            return view('promotion.discountcombo.add',compact('category'));
+            return view('promotion.mealbundle.add',compact('category','webview'));
+        }else if($type==8){//DONE
+            return view('promotion.buytwothree.add',compact('category','webview'));
+        }else if($type==9){//DONE
+            return view('promotion.fixeddiscount.add',compact('category','webview'));
+        }else if($type==10){//DONE
+            return view('promotion.discountcombo.add',compact('category','webview'));
         }
     }
 
     public function editCart(Request $request){
         $promotion = Promotion::where('promotion_id',$request->id)->first();
-        return view('promotion.cart.edit',compact('promotion'));
+        $webview = 0;
+        return view('promotion.cart.edit',compact('promotion','webview'));
     }
-    public function storeCart(PromotionCartRequest $request){
+
+    public function storeCart(Request $request){
         try {
-            $uid = Auth::user()->uid;
+            if(isset($request->restaurant_user_id))
+            {
+                $uid = $request->restaurant_user_id;
+            }
+            else
+            {
+                $uid = Auth::user()->uid;
+            }
             $restaurant = Restaurant::where('uid', $uid)->first();
             if (!$restaurant) {
                 return redirect()->route('promotion')->with('error', 'Invalid users for this restaurant.');
@@ -116,11 +128,11 @@ class PromotionController extends Controller
             
             $promotion->restaurant_id = $restaurant->restaurant_id;
             $promotion->promotion_type_id = 1 ;
-            $promotion->promotion_code = $request->promotion_code;
+            $promotion->promotion_code = ($request->promotion_code) ? $request->promotion_code : null;
             $promotion->promotion_name = $request->promotion_name;
-            $promotion->promotion_details = $request->promotion_details;
-            $promotion->dicount_usd_percentage = $request->dicount_usd_percentage;
-            $promotion->dicount_usd_percentage_amount = $request->dicount_usd_percentage_amount;
+            $promotion->promotion_details = ($request->promotion_details) ? $request->promotion_details : null;
+            $promotion->discount_type = $request->discount_usd_percentage;
+            $promotion->discount = $request->discount_usd_percentage_amount;
             $promotion->set_minimum_order = ($request->set_minimum_order)?1:0;
             $promotion->set_minimum_order_amount = $request->set_minimum_order_amount;
             $promotion->client_type = $request->client_type;
@@ -129,15 +141,24 @@ class PromotionController extends Controller
             $promotion->only_selected_cash_delivery_person = ($request->only_selected_cash_delivery_person)?1:0;
             $promotion->only_selected_cash = ($request->only_selected_cash)?1:0;
             $promotion->only_once_per_client = ($request->only_once_per_client)?1:0;
-            $promotion->mark_promo_as = $request->mark_promo_as;
-            $promotion->display_time = $request->display_time;
-            if ($promotion->save()) {
-                Toastr::success( $message,'', Config::get('constants.toster'));
-                return redirect()->route('promotion');
-            }else{
-                Toastr::error( $message,'', Config::get('constants.toster'));
-                return redirect()->route('promotion');
-            }            
+            $promotion->no_extra_charge_type = $request->no_extra_charge;
+            $promotion->promotion_function = $request->promotion_function;
+            $promotion->availability = $request->availability;
+            if(isset($request->restaurant_user_id))
+            {
+                $promotion->save();
+                return redirect()->back();
+            }
+            else
+            {
+                if ($promotion->save()) {
+                    Toastr::success( $message,'', Config::get('constants.toster'));
+                    return redirect()->route('promotion');
+                }else{
+                    Toastr::error( $message,'', Config::get('constants.toster'));
+                    return redirect()->route('promotion');
+                }   
+            }
         } catch (\Throwable $th) {
             Toastr::success('Please try again something wrong.','', Config::get('constants.toster'));
             return redirect()->route('promotion');
@@ -147,15 +168,24 @@ class PromotionController extends Controller
 
     public function editSelectedItem(Request $request){
         $uid = Auth::user()->uid;
+        $webview = 0;
         $promotion = Promotion::where('promotion_id',$request->id)->first();
         $restaurant = Restaurant::where('uid', $uid)->first();
         $category = Category::where('restaurant_id', $restaurant->restaurant_id)->with('category_item')->get();
-        return view('promotion.discount_selected_item.edit',compact('promotion','category'));
+        return view('promotion.discount_selected_item.edit',compact('promotion','category','webview'));
     }
 
     public function storeSelectedItems(Request $request){
         try {
-            $uid = Auth::user()->uid;
+            
+            if(isset($request->restaurant_user_id))
+            {
+                $uid = $request->restaurant_user_id;
+            }
+            else
+            {
+                $uid = Auth::user()->uid;
+            }
             $restaurant = Restaurant::where('uid', $uid)->first();
             if (!$restaurant) {
                 return redirect()->route('promotion')->with('error', 'Invalid users for this restaurant.');
@@ -172,21 +202,22 @@ class PromotionController extends Controller
             }
             $promotion->restaurant_id = $restaurant->restaurant_id;
             $promotion->promotion_type_id = 2 ;
-            $promotion->promotion_code = $request->promotion_code;
+            $promotion->promotion_code = ($request->promotion_code) ? $request->promotion_code : null;
             $promotion->promotion_name = $request->promotion_name;
-            $promotion->promotion_details = $request->promotion_details;
-            $promotion->dicount_usd_percentage = $request->dicount_usd_percentage;
-            $promotion->dicount_usd_percentage_amount = $request->dicount_usd_percentage_amount;
+            $promotion->promotion_details = ($request->promotion_details) ? $request->promotion_details : null;
+            $promotion->discount_type =  Config::get('constants.DISCOUNT_TYPE.USD');
+            $promotion->discount = $request->discount_usd_percentage_amount;
+            $promotion->set_minimum_order = ($request->set_minimum_order)?1:0;
             $promotion->set_minimum_order_amount = $request->set_minimum_order_amount;
             $promotion->client_type = $request->client_type;
-            $promotion->no_extra_charge = $request->no_extra_charge;
+            $promotion->no_extra_charge_type = $request->no_extra_charge;
             $promotion->order_type = $request->order_type;
             $promotion->only_selected_payment_method = ($request->only_selected_payment_method)?1:0;
             $promotion->only_selected_cash_delivery_person = ($request->only_selected_cash_delivery_person)?1:0;
             $promotion->only_selected_cash = ($request->only_selected_cash)?1:0;
             $promotion->only_once_per_client = ($request->only_once_per_client)?1:0;
-            $promotion->mark_promo_as = $request->mark_promo_as;
-            $promotion->display_time = $request->display_time;
+            $promotion->promotion_function = $request->promotion_function;
+            $promotion->availability = $request->availability;
             if ($promotion->save()) {
                 if(is_array($request->category)){
                     $eligible_item = New PromotionEligibleItem;
@@ -216,11 +247,26 @@ class PromotionController extends Controller
                         }
                     }
                 }
-                Toastr::success( $message,'', Config::get('constants.toster'));
-                return redirect()->route('promotion');
+                
+                if(isset($request->restaurant_user_id))
+                {
+                    return redirect()->back();
+                }
+                else
+                {
+                    Toastr::success( $message,'', Config::get('constants.toster'));
+                    return redirect()->route('promotion');
+                }
             }else{
-                Toastr::error( $message,'', Config::get('constants.toster'));
-                return redirect()->route('promotion');
+                if(isset($request->restaurant_user_id))
+                {
+                    return redirect()->back();
+                }
+                else
+                {
+                    Toastr::error( $message,'', Config::get('constants.toster'));
+                    return redirect()->route('promotion');
+                }
             }            
         } catch (\Throwable $th) {
             
@@ -231,12 +277,21 @@ class PromotionController extends Controller
 
     public function editFreeMethod(Request $request){
         $promotion = Promotion::where('promotion_id',$request->id)->first();
-        return view('promotion.freedelivery.edit',compact('promotion'));
+        $webview = 0;
+        return view('promotion.freedelivery.edit',compact('promotion','webview'));
     }
 
-    public function storefreedelivery(PromotionCartRequest $request){
+    public function storefreedelivery(Request $request){
+        
         try {
-            $uid = Auth::user()->uid;
+            if(isset($request->restaurant_user_id))
+            {
+                $uid = $request->restaurant_user_id;
+            }
+            else
+            {
+                $uid = Auth::user()->uid;
+            }
             $restaurant = Restaurant::where('uid', $uid)->first();
             if (!$restaurant) {
                 return redirect()->route('promotion')->with('error', 'Invalid users for this restaurant.');
@@ -254,8 +309,8 @@ class PromotionController extends Controller
             $promotion->promotion_code = $request->promotion_code;
             $promotion->promotion_name = $request->promotion_name;
             $promotion->promotion_details = $request->promotion_details;
-            $promotion->dicount_usd_percentage = $request->dicount_usd_percentage;
-            $promotion->dicount_usd_percentage_amount = $request->dicount_usd_percentage_amount;
+            $promotion->discount_type = Config::get('constants.DISCOUNT_TYPE.PERCENT');
+            $promotion->discount = $request->discount_usd_percentage_amount;
             $promotion->set_minimum_order = ($request->set_minimum_order)?1:0;
             $promotion->set_minimum_order_amount = $request->set_minimum_order_amount;
             $promotion->client_type = $request->client_type;
@@ -264,14 +319,29 @@ class PromotionController extends Controller
             $promotion->only_selected_cash_delivery_person = ($request->only_selected_cash_delivery_person)?1:0;
             $promotion->only_selected_cash = ($request->only_selected_cash)?1:0;
             $promotion->only_once_per_client = ($request->only_once_per_client)?1:0;
-            $promotion->mark_promo_as = $request->mark_promo_as;
-            $promotion->display_time = $request->display_time;
+            $promotion->mark_promoas_status = $request->mark_promo_as;
+            $promotion->availability = $request->availability;
             if ($promotion->save()) {
-                Toastr::success( $message,'', Config::get('constants.toster'));
-                return redirect()->route('promotion');
+                if(isset($request->restaurant_user_id))
+                {
+                    return redirect()->back();
+                }
+                else
+                {
+                    Toastr::success( $message,'', Config::get('constants.toster'));
+                    return redirect()->route('promotion');
+                }
             }else{
-                Toastr::error( $message,'', Config::get('constants.toster'));
-                return redirect()->route('promotion');
+
+                if(isset($request->restaurant_user_id))
+                {
+                    return redirect()->back();
+                }
+                else
+                {
+                    Toastr::error( $message,'', Config::get('constants.toster'));
+                    return redirect()->route('promotion');
+                }
             }            
         } catch (\Throwable $th) {
             Toastr::success('Please try again something wrong.','', Config::get('constants.toster'));
@@ -282,12 +352,21 @@ class PromotionController extends Controller
 
     public function editPaymentMethod(Request $request){
         $promotion = Promotion::where('promotion_id',$request->id)->first();
-        return view('promotion.paymentmethod.edit',compact('promotion'));
+        $webview = 0;
+        return view('promotion.paymentmethod.edit',compact('promotion','webview'));
     }
 
-    public function storePaymentMethod(PromotionCartRequest $request){
+    public function storePaymentMethod(Request $request){
         try {
-            $uid = Auth::user()->uid;
+            if(isset($request->restaurant_user_id))
+            {
+                $uid = $request->restaurant_user_id;
+            }
+            else
+            {
+                $uid = Auth::user()->uid;
+            }
+            
             $restaurant = Restaurant::where('uid', $uid)->first();
             if (!$restaurant) {
                 return redirect()->route('promotion')->with('error', 'Invalid users for this restaurant.');
@@ -305,8 +384,8 @@ class PromotionController extends Controller
             $promotion->promotion_code = $request->promotion_code;
             $promotion->promotion_name = $request->promotion_name;
             $promotion->promotion_details = $request->promotion_details;
-            $promotion->dicount_usd_percentage = $request->dicount_usd_percentage;
-            $promotion->dicount_usd_percentage_amount = $request->dicount_usd_percentage_amount;
+            $promotion->discount = $request->discount_usd_percentage;
+            $promotion->discount_type        = Config::get('constants.DISCOUNT_TYPE.PERCENT');
             $promotion->set_minimum_order = ($request->set_minimum_order)?1:0;
             $promotion->set_minimum_order_amount = $request->set_minimum_order_amount;
             $promotion->client_type = $request->client_type;
@@ -315,14 +394,28 @@ class PromotionController extends Controller
             $promotion->only_selected_cash_delivery_person = ($request->only_selected_cash_delivery_person)?1:0;
             $promotion->only_selected_cash = ($request->only_selected_cash)?1:0;
             $promotion->only_once_per_client = ($request->only_once_per_client)?1:0;
-            $promotion->mark_promo_as = $request->mark_promo_as;
-            $promotion->display_time = $request->display_time;
+            $promotion->mark_promoas_status = $request->mark_promo_as;
+            $promotion->availability = $request->availability;
             if ($promotion->save()) {
-                Toastr::success( $message,'', Config::get('constants.toster'));
-                return redirect()->route('promotion');
+                if(isset($request->restaurant_user_id))
+                {
+                    return redirect()->back();
+                }
+                else
+                {
+                    Toastr::success( $message,'', Config::get('constants.toster'));
+                    return redirect()->route('promotion');
+                }
             }else{
-                Toastr::error( $message,'', Config::get('constants.toster'));
-                return redirect()->route('promotion');
+                if(isset($request->restaurant_user_id))
+                {
+                    return redirect()->back();
+                }
+                else
+                {
+                    Toastr::error( $message,'', Config::get('constants.toster'));
+                    return redirect()->route('promotion');
+                }
             }            
         } catch (\Throwable $th) {
             Toastr::success('Please try again something wrong.','', Config::get('constants.toster'));
@@ -330,19 +423,27 @@ class PromotionController extends Controller
         }
     }
 
-
-
     public function editFreeItem(Request $request){
         $uid = Auth::user()->uid;
+        $webview = 0;
         $promotion = Promotion::where('promotion_id',$request->id)->first();
         $restaurant = Restaurant::where('uid', $uid)->first();
         $category = Category::where('restaurant_id', $restaurant->restaurant_id)->with('category_item')->get();
-        return view('promotion.freeitem.edit',compact('promotion','category'));
+        return view('promotion.freeitem.edit',compact('promotion','category','webview'));
     }
 
     public function storeFreeItems(Request $request){
         try {
-            $uid = Auth::user()->uid;
+
+            if(isset($request->restaurant_user_id))
+            {
+                $uid = $request->restaurant_user_id;
+            }
+            else
+            {
+                $uid = Auth::user()->uid;
+            }
+
             $restaurant = Restaurant::where('uid', $uid)->first();
             if (!$restaurant) {
                 return redirect()->route('promotion')->with('error', 'Invalid users for this restaurant.');
@@ -362,18 +463,19 @@ class PromotionController extends Controller
             $promotion->promotion_code = $request->promotion_code;
             $promotion->promotion_name = $request->promotion_name;
             $promotion->promotion_details = $request->promotion_details;
-            $promotion->dicount_usd_percentage = $request->dicount_usd_percentage;
-            $promotion->dicount_usd_percentage_amount = $request->dicount_usd_percentage_amount;
+            $promotion->discount_type = Config::get('constants.DISCOUNT_TYPE.PERCENT');
+            $promotion->discount = $request->discount_usd_percentage_amount;
+            $promotion->set_minimum_order = ($request->set_minimum_order)?1:0;
             $promotion->set_minimum_order_amount = $request->set_minimum_order_amount;
             $promotion->client_type = $request->client_type;
-            $promotion->no_extra_charge = $request->no_extra_charge;
+            $promotion->no_extra_charge_type = $request->no_extra_charge;
             $promotion->order_type = $request->order_type;
             $promotion->only_selected_payment_method = ($request->only_selected_payment_method)?1:0;
             $promotion->only_selected_cash_delivery_person = ($request->only_selected_cash_delivery_person)?1:0;
             $promotion->only_selected_cash = ($request->only_selected_cash)?1:0;
             $promotion->only_once_per_client = ($request->only_once_per_client)?1:0;
-            $promotion->mark_promo_as = $request->mark_promo_as;
-            $promotion->display_time = $request->display_time;
+            $promotion->mark_promoas_status = $request->mark_promo_as;
+            $promotion->availability = $request->availability;
             if ($promotion->save()) {
                 if(is_array($request->category)){
                     $eligible_item = New PromotionEligibleItem;
@@ -403,11 +505,26 @@ class PromotionController extends Controller
                         }
                     }
                 }
-                Toastr::success( $message,'', Config::get('constants.toster'));
-                return redirect()->route('promotion');
+
+                if(isset($request->restaurant_user_id))
+                {
+                    return redirect()->back();
+                }
+                else
+                {
+                    Toastr::success( $message,'', Config::get('constants.toster'));
+                    return redirect()->route('promotion');
+                }
             }else{
-                Toastr::error( $message,'', Config::get('constants.toster'));
-                return redirect()->route('promotion');
+                if(isset($request->restaurant_user_id))
+                {
+                    return redirect()->back();
+                }
+                else
+                {
+                    Toastr::error( $message,'', Config::get('constants.toster'));
+                    return redirect()->route('promotion');
+                }
             }            
         } catch (\Throwable $th) {
             Toastr::error('Please try again something wrong.','', Config::get('constants.toster'));
@@ -418,15 +535,26 @@ class PromotionController extends Controller
 
     public function editGetOneFreeItem(Request $request){
         $uid = Auth::user()->uid;
+        $webview = 0;
         $promotion = Promotion::where('promotion_id',$request->id)->first();
         $restaurant = Restaurant::where('uid', $uid)->first();
         $category = Category::where('restaurant_id', $restaurant->restaurant_id)->with('category_item')->get();
-        return view('promotion.getonefree.edit',compact('promotion','category'));
+        $eligibleItems = PromotionEligibleItem::where('promotion_id',$request->id)->get();
+        return view('promotion.getonefree.edit',compact('promotion','webview','category','eligibleItems'));
     }
 
     public function storeGetOneFreeItems(Request $request){
         try {
-            $uid = Auth::user()->uid;
+            
+            if(isset($request->restaurant_user_id))
+            {
+                $uid = $request->restaurant_user_id;
+            }
+            else
+            {
+                $uid = Auth::user()->uid;
+            }
+
             $restaurant = Restaurant::where('uid', $uid)->first();
             if (!$restaurant) {
                 return redirect()->route('promotion')->with('error', 'Invalid users for this restaurant.');
@@ -446,83 +574,145 @@ class PromotionController extends Controller
             $promotion->promotion_code = $request->promotion_code;
             $promotion->promotion_name = $request->promotion_name;
             $promotion->promotion_details = $request->promotion_details;
-            $promotion->dicount_usd_percentage = $request->dicount_usd_percentage;
-            $promotion->dicount_usd_percentage_amount = $request->dicount_usd_percentage_amount;
+            $promotion->set_minimum_order = ($request->set_minimum_order)?1:0;
             $promotion->set_minimum_order_amount = $request->set_minimum_order_amount;
             $promotion->client_type = $request->client_type;
-            $promotion->no_extra_charge = $request->no_extra_charge;
+            $promotion->no_extra_charge_type = $request->no_extra_charge;
             $promotion->order_type = $request->order_type;
             $promotion->only_selected_payment_method = ($request->only_selected_payment_method)?1:0;
             $promotion->only_selected_cash_delivery_person = ($request->only_selected_cash_delivery_person)?1:0;
             $promotion->only_selected_cash = ($request->only_selected_cash)?1:0;
             $promotion->only_once_per_client = ($request->only_once_per_client)?1:0;
-            $promotion->mark_promo_as = $request->mark_promo_as;
-            $promotion->display_time = $request->display_time;
+            $promotion->mark_promoas_status = $request->mark_promo_as;
+            $promotion->availability = $request->availability;
 
             $promotion->auto_manually_discount = $request->auto_manually_discount;
-            $promotion->discount_cheapest = $request->discount_cheapest;
-            $promotion->discount_expensive = $request->discount_expensive;
-            $promotion->item_group_1 = $request->item_group_1;
-            $promotion->item_group_2 = $request->item_group_2;
+            if($request->auto_manually_discount == 1){
+                $promotion->discount_cheapest = $request->discount_cheapest;
+                $promotion->discount_expensive = $request->discount_expensive;
+            }
+            
+            // $promotion->item_group_1 = $request->item_group_1;
+            // $promotion->item_group_2 = $request->item_group_2;
 
 
             if ($promotion->save()) {
-                if(is_array($request->eligible_item)){
-                    foreach($request->eligible_item as $key=>$value){
-                            $eligible_item = New PromotionEligibleItem;
-                            $eligible_item->eligible_item_id  = $key;
-                            $eligible_item->promotion_id = $promotion->promotion_id;
-                            if($eligible_item->save()){
-                                foreach($value as $key1=>$value1){
-                                    $category = New PromotionCategory;
-                                    $category->promotion_id = $promotion->promotion_id;
-                                    $category->eligible_item_id  = $key;
-                                    $category->category_id = $key1;
-                                    $category->promotion_eligible_item_id = $eligible_item->promotion_eligible_item_id;
-                                    if($category->save()){
-                                        if(is_array($value1)){
-                                            foreach ($value1 as $key2 => $value2) {
-                                                $categoryItem = New PromotionCategoryItem;
-                                                $categoryItem->promotion_id = $promotion->promotion_id;
-                                                $categoryItem->category_id = $key1;
-                                                $categoryItem->eligible_item_id  = $key;
-                                                $categoryItem->promotion_category_id = $category->promotion_category_id;
-                                                $categoryItem->promotion_eligible_item_id = $eligible_item->promotion_eligible_item_id;
-                                                $categoryItem->item_id = $key2;
-                                                $categoryItem->save();
-                                            }
-                                        }
+                if(is_array($request->category)){
+                    $eligible_item = New PromotionEligibleItem;
+                    $eligible_item->eligible_item_id  = 1;
+                    $eligible_item->promotion_id = $promotion->promotion_id;
+                    if($request->auto_manually_discount == 2){
+                        $eligible_item->item_group_discount = $request->item_group_1;
+                    }else{
+                        $eligible_item->item_group_discount = NULL;
+                    }
+                    
+                    if($eligible_item->save()){
+                        foreach($request->category as $key=>$value){
+                            $category = New PromotionCategory;
+                            $category->promotion_id = $promotion->promotion_id;
+                            $category->eligible_item_id  = 1;
+                            $category->category_id = $key;
+                            $category->promotion_eligible_item_id = $eligible_item->promotion_eligible_item_id;
+                            if($category->save()){
+                                if(is_array($value)){
+                                    foreach ($value as $key1 => $value1) {
+                                        $categoryItem = New PromotionCategoryItem;
+                                        $categoryItem->promotion_id = $promotion->promotion_id;
+                                        $categoryItem->category_id = $key;
+                                        $categoryItem->eligible_item_id  = 1;
+                                        $categoryItem->promotion_category_id = $category->promotion_category_id;
+                                        $categoryItem->promotion_eligible_item_id = $eligible_item->promotion_eligible_item_id;
+                                        $categoryItem->item_id = $key1;
+                                        $categoryItem->save();
                                     }
                                 }
                             }
-                    }   
+                        }
+                    }
                 }
-                Toastr::success( $message,'', Config::get('constants.toster'));
-                return redirect()->route('promotion');
+
+                if(is_array($request->category_two)){
+                    $eligible_item = New PromotionEligibleItem;
+                    $eligible_item->eligible_item_id  = 2;
+                    $eligible_item->promotion_id = $promotion->promotion_id;
+                    if($request->auto_manually_discount == 2){
+                        $eligible_item->item_group_discount = $request->item_group_1;
+                    }else{
+                        $eligible_item->item_group_discount = NULL;
+                    }
+                    if($eligible_item->save()){
+                        foreach($request->category_two as $key=>$value){
+                            $category = New PromotionCategory;
+                            $category->promotion_id = $promotion->promotion_id;
+                            $category->eligible_item_id  = 2;
+                            $category->category_id = $key;
+                            $category->promotion_eligible_item_id = $eligible_item->promotion_eligible_item_id;
+                            if($category->save()){
+                                if(is_array($value)){
+                                    foreach ($value as $key1 => $value1) {
+                                        $categoryItem = New PromotionCategoryItem;
+                                        $categoryItem->promotion_id = $promotion->promotion_id;
+                                        $categoryItem->category_id = $key;
+                                        $categoryItem->eligible_item_id  = 2;
+                                        $categoryItem->promotion_category_id = $category->promotion_category_id;
+                                        $categoryItem->promotion_eligible_item_id = $eligible_item->promotion_eligible_item_id;
+                                        $categoryItem->item_id = $key1;
+                                        $categoryItem->save();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if(isset($request->restaurant_user_id))
+                {
+                    return redirect()->back();
+                }
+                else
+                {
+                    Toastr::success( $message,'', Config::get('constants.toster'));
+                    return redirect()->route('promotion');
+                }
             }else{
-                Toastr::error( $message,'', Config::get('constants.toster'));
-                return redirect()->route('promotion');
+                if(isset($request->restaurant_user_id))
+                {
+                    return redirect()->back();
+                }
+                else
+                {
+                    Toastr::error( $message,'', Config::get('constants.toster'));
+                    return redirect()->route('promotion');
+                }
             }            
         } catch (\Throwable $th) {
-            
             Toastr::success('Please try again something wrong.','', Config::get('constants.toster'));
             return redirect()->route('promotion');
         }
     }
 
-
-
     public function editMealBundleItem(Request $request){
         $uid = Auth::user()->uid;
+        $webview = 0;
         $promotion = Promotion::where('promotion_id',$request->id)->first();
         $restaurant = Restaurant::where('uid', $uid)->first();
         $category = Category::where('restaurant_id', $restaurant->restaurant_id)->with('category_item')->get();
-        return view('promotion.mealbundle.edit',compact('promotion','category'));
+        $eligibleItems = PromotionEligibleItem::where('promotion_id',$request->id)->count();
+        return view('promotion.mealbundle.edit',compact('promotion','category','webview','eligibleItems'));
     }
 
     public function storeMealBundleItems(Request $request){
         try {
-            $uid = Auth::user()->uid;
+            
+            if(isset($request->restaurant_user_id))
+            {
+                $uid = $request->restaurant_user_id;
+            }
+            else
+            {
+                $uid = Auth::user()->uid;
+            }
             $restaurant = Restaurant::where('uid', $uid)->first();
             if (!$restaurant) {
                 return redirect()->route('promotion')->with('error', 'Invalid users for this restaurant.');
@@ -542,82 +732,101 @@ class PromotionController extends Controller
             $promotion->promotion_code = $request->promotion_code;
             $promotion->promotion_name = $request->promotion_name;
             $promotion->promotion_details = $request->promotion_details;
-            $promotion->dicount_usd_percentage = $request->dicount_usd_percentage;
-            $promotion->dicount_usd_percentage_amount = $request->dicount_usd_percentage_amount;
-            $promotion->set_minimum_order_amount = $request->set_minimum_order_amount;
+            $promotion->minimum_order_status = ($request->set_minimum_order_amount) ? 'TRUE' : 'FALSE';
+            $promotion->discount = $request->flat_price;
+            $promotion->discount_type  = Config::get('constants.DISCOUNT_TYPE.USD');
             $promotion->client_type = $request->client_type;
-            $promotion->no_extra_charge = $request->no_extra_charge;
+            $promotion->no_extra_charge_type = $request->no_extra_charge;
             $promotion->order_type = $request->order_type;
             $promotion->only_selected_payment_method = ($request->only_selected_payment_method)?1:0;
             $promotion->only_selected_cash_delivery_person = ($request->only_selected_cash_delivery_person)?1:0;
             $promotion->only_selected_cash = ($request->only_selected_cash)?1:0;
             $promotion->only_once_per_client = ($request->only_once_per_client)?1:0;
-            $promotion->mark_promo_as = $request->mark_promo_as;
-            $promotion->display_time = $request->display_time;
-            $promotion->discount_usd= $request->discount_usd;
-            $promotion->auto_manually_discount = $request->auto_manually_discount;
-            $promotion->discount_cheapest = $request->discount_cheapest;
-            $promotion->discount_expensive = $request->discount_expensive;
-            $promotion->item_group_1 = $request->item_group_1;
-            $promotion->item_group_2 = $request->item_group_2;
+            $promotion->mark_promoas_status = $request->mark_promo_as;
+            $promotion->availability = $request->availability;
             
+            $counter = 1;
             if ($promotion->save()) {
-                if(is_array($request->eligible_item)){
-                    foreach($request->eligible_item as $key=>$value){
-                            $eligible_item = New PromotionEligibleItem;
-                            $eligible_item->eligible_item_id  = $key;
-                            $eligible_item->promotion_id = $promotion->promotion_id;
-                            if($eligible_item->save()){
-                                foreach($value as $key1=>$value1){
-                                    $category = New PromotionCategory;
-                                    $category->promotion_id = $promotion->promotion_id;
-                                    $category->eligible_item_id  = $key;
-                                    $category->category_id = $key1;
-                                    $category->promotion_eligible_item_id = $eligible_item->promotion_eligible_item_id;
-                                    if($category->save()){
-                                        if(is_array($value1)){
-                                            foreach ($value1 as $key2 => $value2) {
-                                                $categoryItem = New PromotionCategoryItem;
-                                                $categoryItem->promotion_id = $promotion->promotion_id;
-                                                $categoryItem->category_id = $key1;
-                                                $categoryItem->eligible_item_id  = $key;
-                                                $categoryItem->promotion_category_id = $category->promotion_category_id;
-                                                $categoryItem->promotion_eligible_item_id = $eligible_item->promotion_eligible_item_id;
-                                                $categoryItem->item_id = $key2;
-                                                $categoryItem->save();
-                                            }
+                if(is_array($request->category)){
+                    foreach($request->category as $categoryKey => $categories)
+                    {
+                        $eligible_item = New PromotionEligibleItem;
+                        $eligible_item->eligible_item_id  = $counter;
+                        $eligible_item->promotion_id = $promotion->promotion_id;
+                        if($eligible_item->save()){
+                            foreach($categories as $key=>$value){
+                                $category = New PromotionCategory;
+                                $category->promotion_id = $promotion->promotion_id;
+                                $category->eligible_item_id  = $counter;
+                                $category->category_id = $key;
+                                $category->promotion_eligible_item_id = $eligible_item->promotion_eligible_item_id;
+                                if($category->save()){
+                                    if(is_array($value)){
+                                        foreach ($value as $key1 => $value1) {
+                                            $categoryItem = New PromotionCategoryItem;
+                                            $categoryItem->promotion_id = $promotion->promotion_id;
+                                            $categoryItem->category_id = $key;
+                                            $categoryItem->eligible_item_id  = $counter;
+                                            $categoryItem->promotion_category_id = $category->promotion_category_id;
+                                            $categoryItem->promotion_eligible_item_id = $eligible_item->promotion_eligible_item_id;
+                                            $categoryItem->item_id = $key1;
+                                            $categoryItem->save();
                                         }
                                     }
                                 }
                             }
-                    }   
+                        }
+                        $counter++;
+                    }
                 }
-                Toastr::success( $message,'', Config::get('constants.toster'));
-                return redirect()->route('promotion');
+
+                if(isset($request->restaurant_user_id))
+                {
+                    return redirect()->back();
+                }
+                else
+                {
+                    Toastr::success( $message,'', Config::get('constants.toster'));
+                    return redirect()->route('promotion');
+                }
             }else{
-                Toastr::error( $message,'', Config::get('constants.toster'));
-                return redirect()->route('promotion');
+                if(isset($request->restaurant_user_id))
+                {
+                    return redirect()->back();
+                }
+                else
+                {
+                    Toastr::error( $message,'', Config::get('constants.toster'));
+                    return redirect()->route('promotion');
+                }
             }            
         } catch (\Throwable $th) {
-            dd($th->getMessage());
             Toastr::success('Please try again something wrong.','', Config::get('constants.toster'));
             return redirect()->route('promotion');
         }
     }
 
-
-
     public function editBuyTwoThreeItem(Request $request){
         $uid = Auth::user()->uid;
+        $webview = 0;
         $promotion = Promotion::where('promotion_id',$request->id)->first();
         $restaurant = Restaurant::where('uid', $uid)->first();
         $category = Category::where('restaurant_id', $restaurant->restaurant_id)->with('category_item')->get();
-        return view('promotion.buytwothree.edit',compact('promotion','category'));
+        $eligibleItems = PromotionEligibleItem::where('promotion_id',$request->id)->count();
+        return view('promotion.buytwothree.edit',compact('promotion','category','webview','eligibleItems'));
     }
 
     public function storeBuyTwoThreeItems(Request $request){
         try {
-            $uid = Auth::user()->uid;
+            
+            if(isset($request->restaurant_user_id))
+            {
+                $uid = $request->restaurant_user_id;
+            }
+            else
+            {
+                $uid = Auth::user()->uid;
+            }
             $restaurant = Restaurant::where('uid', $uid)->first();
             if (!$restaurant) {
                 return redirect()->route('promotion')->with('error', 'Invalid users for this restaurant.');
@@ -637,63 +846,94 @@ class PromotionController extends Controller
             $promotion->promotion_code = $request->promotion_code;
             $promotion->promotion_name = $request->promotion_name;
             $promotion->promotion_details = $request->promotion_details;
-            $promotion->dicount_usd_percentage = $request->dicount_usd_percentage;
-            $promotion->dicount_usd_percentage_amount = $request->dicount_usd_percentage_amount;
-            $promotion->set_minimum_order_amount = $request->set_minimum_order_amount;
+            $promotion->discount_type  = Config::get('constants.DISCOUNT_TYPE.PERCENT');
             $promotion->client_type = $request->client_type;
-            $promotion->no_extra_charge = $request->no_extra_charge;
+            $promotion->no_extra_charge_type = $request->no_extra_charge;
             $promotion->order_type = $request->order_type;
             $promotion->only_selected_payment_method = ($request->only_selected_payment_method)?1:0;
             $promotion->only_selected_cash_delivery_person = ($request->only_selected_cash_delivery_person)?1:0;
             $promotion->only_selected_cash = ($request->only_selected_cash)?1:0;
             $promotion->only_once_per_client = ($request->only_once_per_client)?1:0;
-            $promotion->mark_promo_as = $request->mark_promo_as;
-            $promotion->display_time = $request->display_time;
-            $promotion->discount_usd= $request->discount_usd;
+            $promotion->mark_promoas_status = $request->mark_promo_as;
+            $promotion->availability = $request->availability;
             $promotion->auto_manually_discount = $request->auto_manually_discount;
-            $promotion->discount_cheapest = $request->discount_cheapest;
-            $promotion->discount_expensive = $request->discount_expensive;
-            $promotion->item_group_1 = $request->item_group_1;
-            $promotion->item_group_2 = $request->item_group_2;
+
+            if($request->auto_manually_discount == 1)
+            {
+                $promotion->discount_cheapest = $request->discount_cheapest;
+                $promotion->discount_expensive = $request->discount_expensive;
+            }
+            else
+            {
+                $promotion->discount_cheapest = NULL;
+                $promotion->discount_expensive = NULL;
+            }
+            
             if ($promotion->save()) {
-                if(is_array($request->eligible_item)){
-                    foreach($request->eligible_item as $key=>$value){
-                            $eligible_item = New PromotionEligibleItem;
-                            $eligible_item->eligible_item_id  = $key;
-                            $eligible_item->promotion_id = $promotion->promotion_id;
-                            if($eligible_item->save()){
-                                foreach($value as $key1=>$value1){
-                                    $category = New PromotionCategory;
-                                    $category->promotion_id = $promotion->promotion_id;
-                                    $category->eligible_item_id  = $key;
-                                    $category->category_id = $key1;
-                                    $category->promotion_eligible_item_id = $eligible_item->promotion_eligible_item_id;
-                                    if($category->save()){
-                                        if(is_array($value1)){
-                                            foreach ($value1 as $key2 => $value2) {
-                                                $categoryItem = New PromotionCategoryItem;
-                                                $categoryItem->promotion_id = $promotion->promotion_id;
-                                                $categoryItem->category_id = $key1;
-                                                $categoryItem->eligible_item_id  = $key;
-                                                $categoryItem->promotion_category_id = $category->promotion_category_id;
-                                                $categoryItem->promotion_eligible_item_id = $eligible_item->promotion_eligible_item_id;
-                                                $categoryItem->item_id = $key2;
-                                                $categoryItem->save();
-                                            }
+                $counter = 1;
+                if(is_array($request->category)){
+                    foreach($request->category as $categoryKey => $categories)
+                    {
+                        $eligible_item = New PromotionEligibleItem;
+                        $eligible_item->eligible_item_id  = $counter;
+                        $eligible_item->promotion_id = $promotion->promotion_id;
+                        if($request->auto_manually_discount == 1)
+                        {
+                            $eligible_item->item_group_discount = (isset($request->item_discount[$categoryKey]))?$request->item_discount[$categoryKey]:NULL;
+                        }
+                        else
+                        {
+                            $eligible_item->item_group_discount = $request->item_group_discount[$categoryKey];
+                        }
+                        if($eligible_item->save()){
+                            foreach($categories as $key=>$value){
+                                $category = New PromotionCategory;
+                                $category->promotion_id = $promotion->promotion_id;
+                                $category->eligible_item_id  = $counter;
+                                $category->category_id = $key;
+                                $category->promotion_eligible_item_id = $eligible_item->promotion_eligible_item_id;
+                                if($category->save()){
+                                    if(is_array($value)){
+                                        foreach ($value as $key1 => $value1) {
+                                            $categoryItem = New PromotionCategoryItem;
+                                            $categoryItem->promotion_id = $promotion->promotion_id;
+                                            $categoryItem->category_id = $key;
+                                            $categoryItem->eligible_item_id  = $counter;
+                                            $categoryItem->promotion_category_id = $category->promotion_category_id;
+                                            $categoryItem->promotion_eligible_item_id = $eligible_item->promotion_eligible_item_id;
+                                            $categoryItem->item_id = $key1;
+                                            $categoryItem->save();
                                         }
                                     }
                                 }
                             }
-                    }   
+                        }
+                        $counter++;
+                    }
                 }
-                Toastr::success( $message,'', Config::get('constants.toster'));
-                return redirect()->route('promotion');
+
+                if(isset($request->restaurant_user_id))
+                {
+                    return redirect()->back();
+                }
+                else
+                {
+                    Toastr::success( $message,'', Config::get('constants.toster'));
+                    return redirect()->route('promotion');
+                }
             }else{
-                Toastr::error( $message,'', Config::get('constants.toster'));
-                return redirect()->route('promotion');
+
+                if(isset($request->restaurant_user_id))
+                {
+                    return redirect()->back();
+                }
+                else
+                {
+                    Toastr::error( $message,'', Config::get('constants.toster'));
+                    return redirect()->route('promotion');
+                }
             }            
         } catch (\Throwable $th) {
-            dd($th->getMessage());
             Toastr::success('Please try again something wrong.','', Config::get('constants.toster'));
             return redirect()->route('promotion');
         }
@@ -702,15 +942,26 @@ class PromotionController extends Controller
 
     public function editFixedDiscountItem(Request $request){
         $uid = Auth::user()->uid;
+        $webview = 0;
         $promotion = Promotion::where('promotion_id',$request->id)->first();
         $restaurant = Restaurant::where('uid', $uid)->first();
         $category = Category::where('restaurant_id', $restaurant->restaurant_id)->with('category_item')->get();
-        return view('promotion.fixeddiscount.edit',compact('promotion','category'));
+        $eligibleItems = PromotionEligibleItem::where('promotion_id',$request->id)->count();
+        return view('promotion.fixeddiscount.edit',compact('promotion','category','webview','eligibleItems'));
     }
 
     public function storeFixedDiscountItems(Request $request){
         try {
-            $uid = Auth::user()->uid;
+
+            if(isset($request->restaurant_user_id))
+            {
+                $uid = $request->restaurant_user_id;
+            }
+            else
+            {
+                $uid = Auth::user()->uid;
+            }
+
             $restaurant = Restaurant::where('uid', $uid)->first();
             if (!$restaurant) {
                 return redirect()->route('promotion')->with('error', 'Invalid users for this restaurant.');
@@ -730,83 +981,99 @@ class PromotionController extends Controller
             $promotion->promotion_code = $request->promotion_code;
             $promotion->promotion_name = $request->promotion_name;
             $promotion->promotion_details = $request->promotion_details;
-            $promotion->dicount_usd_percentage = $request->dicount_usd_percentage;
-            $promotion->dicount_usd_percentage_amount = $request->dicount_usd_percentage_amount;
+            $promotion->discount = $request->discount_usd_percentage_amount;
+            $promotion->discount_type = Config::get('constants.DISCOUNT_TYPE.USD');
+            $promotion->set_minimum_order = ($request->set_minimum_order)?1:0;
             $promotion->set_minimum_order_amount = $request->set_minimum_order_amount;
             $promotion->client_type = $request->client_type;
-            $promotion->no_extra_charge = $request->no_extra_charge;
+            $promotion->no_extra_charge_type = $request->no_extra_charge;
             $promotion->order_type = $request->order_type;
             $promotion->only_selected_payment_method = ($request->only_selected_payment_method)?1:0;
             $promotion->only_selected_cash_delivery_person = ($request->only_selected_cash_delivery_person)?1:0;
             $promotion->only_selected_cash = ($request->only_selected_cash)?1:0;
             $promotion->only_once_per_client = ($request->only_once_per_client)?1:0;
-            $promotion->mark_promo_as = $request->mark_promo_as;
-            $promotion->display_time = $request->display_time;
-            $promotion->discount_usd= $request->discount_usd;
-            $promotion->auto_manually_discount = $request->auto_manually_discount;
-            $promotion->discount_cheapest = $request->discount_cheapest;
-            $promotion->discount_expensive = $request->discount_expensive;
-            $promotion->item_group_1 = $request->item_group_1;
-            $promotion->item_group_2 = $request->item_group_2;
+            $promotion->mark_promoas_status = $request->mark_promo_as;
+            $promotion->availability = $request->availability;
+            
             if ($promotion->save()) {
-                if(is_array($request->eligible_item)){
-                    foreach($request->eligible_item as $key=>$value){
-                            $eligible_item = New PromotionEligibleItem;
-                            $eligible_item->eligible_item_id  = $key;
-                            $eligible_item->promotion_id = $promotion->promotion_id;
-                            if($eligible_item->save()){
-                                foreach($value as $key1=>$value1){
-                                    $category = New PromotionCategory;
-                                    $category->promotion_id = $promotion->promotion_id;
-                                    $category->eligible_item_id  = $key;
-                                    $category->category_id = $key1;
-                                    $category->promotion_eligible_item_id = $eligible_item->promotion_eligible_item_id;
-                                    if($category->save()){
-                                        if(is_array($value1)){
-                                            foreach ($value1 as $key2 => $value2) {
-                                                $categoryItem = New PromotionCategoryItem;
-                                                $categoryItem->promotion_id = $promotion->promotion_id;
-                                                $categoryItem->category_id = $key1;
-                                                $categoryItem->eligible_item_id  = $key;
-                                                $categoryItem->promotion_category_id = $category->promotion_category_id;
-                                                $categoryItem->promotion_eligible_item_id = $eligible_item->promotion_eligible_item_id;
-                                                $categoryItem->item_id = $key2;
-                                                $categoryItem->save();
-                                            }
+                $counter = 1;
+                if(is_array($request->category)){
+                     foreach($request->category as $categoryKey => $categories)
+                     {
+                        $eligible_item = New PromotionEligibleItem;
+                        $eligible_item->eligible_item_id  = $counter;
+                        $eligible_item->promotion_id = $promotion->promotion_id;
+                        if($eligible_item->save()){
+                            foreach($categories as $key=>$value){
+                                $category = New PromotionCategory;
+                                $category->promotion_id = $promotion->promotion_id;
+                                $category->eligible_item_id  = $counter;
+                                $category->category_id = $key;
+                                $category->promotion_eligible_item_id = $eligible_item->promotion_eligible_item_id;
+                                if($category->save()){
+                                    if(is_array($value)){
+                                        foreach ($value as $key1 => $value1) {
+                                            $categoryItem = New PromotionCategoryItem;
+                                            $categoryItem->promotion_id = $promotion->promotion_id;
+                                            $categoryItem->category_id = $key;
+                                            $categoryItem->eligible_item_id  = $counter;
+                                            $categoryItem->promotion_category_id = $category->promotion_category_id;
+                                            $categoryItem->promotion_eligible_item_id = $eligible_item->promotion_eligible_item_id;
+                                            $categoryItem->item_id = $key1;
+                                            $categoryItem->save();
                                         }
                                     }
                                 }
                             }
-                    }   
+                        }
+                        $counter++;
+                    }
                 }
-                Toastr::success( $message,'', Config::get('constants.toster'));
-                return redirect()->route('promotion');
+
+                if(isset($request->restaurant_user_id)){
+                    return redirect()->back();
+                }
+                else{
+                    Toastr::success( $message,'', Config::get('constants.toster'));
+                    return redirect()->route('promotion');
+                }
             }else{
-                Toastr::error( $message,'', Config::get('constants.toster'));
-                return redirect()->route('promotion');
+                if(isset($request->restaurant_user_id)){
+                    return redirect()->back();
+                }else{
+                    Toastr::error( $message,'', Config::get('constants.toster'));
+                    return redirect()->route('promotion');
+                }
             }            
         } catch (\Throwable $th) {
-            dd($th->getMessage());
             Toastr::success('Please try again something wrong.','', Config::get('constants.toster'));
             return redirect()->route('promotion');
         }
     }
 
 
-
-
-
     public function editDiscountComboItem(Request $request){
         $uid = Auth::user()->uid;
+        $webview = 0;
         $promotion = Promotion::where('promotion_id',$request->id)->first();
         $restaurant = Restaurant::where('uid', $uid)->first();
         $category = Category::where('restaurant_id', $restaurant->restaurant_id)->with('category_item')->get();
-        return view('promotion.fixeddiscount.edit',compact('promotion','category'));
+        $eligibleItems = PromotionEligibleItem::where('promotion_id',$request->id)->count();
+        return view('promotion.discountcombo.edit',compact('promotion','category','webview','eligibleItems'));
     }
 
     public function storeDiscountComboItems(Request $request){
         try {
-            $uid = Auth::user()->uid;
+            
+            if(isset($request->restaurant_user_id))
+            {
+                $uid = $request->restaurant_user_id;
+            }
+            else
+            {
+                $uid = Auth::user()->uid;
+            }
+
             $restaurant = Restaurant::where('uid', $uid)->first();
             if (!$restaurant) {
                 return redirect()->route('promotion')->with('error', 'Invalid users for this restaurant.');
@@ -826,9 +1093,8 @@ class PromotionController extends Controller
             $promotion->promotion_code = $request->promotion_code;
             $promotion->promotion_name = $request->promotion_name;
             $promotion->promotion_details = $request->promotion_details;
-            $promotion->dicount_usd_percentage = $request->dicount_usd_percentage;
-            $promotion->dicount_usd_percentage_amount = $request->dicount_usd_percentage_amount;
-            $promotion->set_minimum_order_amount = $request->set_minimum_order_amount;
+            $promotion->discount = $request->discount_usd_percentage_amount;
+            $promotion->discount_type = Config::get('constants.DISCOUNT_TYPE.PERCENT');
             $promotion->client_type = $request->client_type;
             $promotion->no_extra_charge = $request->no_extra_charge;
             $promotion->order_type = $request->order_type;
@@ -836,61 +1102,64 @@ class PromotionController extends Controller
             $promotion->only_selected_cash_delivery_person = ($request->only_selected_cash_delivery_person)?1:0;
             $promotion->only_selected_cash = ($request->only_selected_cash)?1:0;
             $promotion->only_once_per_client = ($request->only_once_per_client)?1:0;
-            $promotion->mark_promo_as = $request->mark_promo_as;
-            $promotion->display_time = $request->display_time;
-            $promotion->discount_usd= $request->discount_usd;
-            $promotion->auto_manually_discount = $request->auto_manually_discount;
-            $promotion->discount_cheapest = $request->discount_cheapest;
-            $promotion->discount_expensive = $request->discount_expensive;
-            $promotion->item_group_1 = $request->item_group_1;
-            $promotion->item_group_2 = $request->item_group_2;
+            $promotion->mark_promoas_status = $request->mark_promo_as;
+            $promotion->availability = $request->availability;
+            
             if ($promotion->save()) {
-                if(is_array($request->eligible_item)){
-                    foreach($request->eligible_item as $key=>$value){
-                            $eligible_item = New PromotionEligibleItem;
-                            $eligible_item->eligible_item_id  = $key;
-                            $eligible_item->promotion_id = $promotion->promotion_id;
-                            if($eligible_item->save()){
-                                foreach($value as $key1=>$value1){
-                                    $category = New PromotionCategory;
-                                    $category->promotion_id = $promotion->promotion_id;
-                                    $category->eligible_item_id  = $key;
-                                    $category->category_id = $key1;
-                                    $category->promotion_eligible_item_id = $eligible_item->promotion_eligible_item_id;
-                                    if($category->save()){
-                                        if(is_array($value1)){
-                                            foreach ($value1 as $key2 => $value2) {
-                                                $categoryItem = New PromotionCategoryItem;
-                                                $categoryItem->promotion_id = $promotion->promotion_id;
-                                                $categoryItem->category_id = $key1;
-                                                $categoryItem->eligible_item_id  = $key;
-                                                $categoryItem->promotion_category_id = $category->promotion_category_id;
-                                                $categoryItem->promotion_eligible_item_id = $eligible_item->promotion_eligible_item_id;
-                                                $categoryItem->item_id = $key2;
-                                                $categoryItem->save();
-                                            }
+                $counter = 1;
+                if(is_array($request->category)){
+                     foreach($request->category as $categoryKey => $categories)
+                     {
+                        $eligible_item = New PromotionEligibleItem;
+                        $eligible_item->eligible_item_id  = $counter;
+                        $eligible_item->promotion_id = $promotion->promotion_id;
+                        if($eligible_item->save()){
+                            foreach($categories as $key=>$value){
+                                $category = New PromotionCategory;
+                                $category->promotion_id = $promotion->promotion_id;
+                                $category->eligible_item_id  = $counter;
+                                $category->category_id = $key;
+                                $category->promotion_eligible_item_id = $eligible_item->promotion_eligible_item_id;
+                                if($category->save()){
+                                    if(is_array($value)){
+                                        foreach ($value as $key1 => $value1) {
+                                            $categoryItem = New PromotionCategoryItem;
+                                            $categoryItem->promotion_id = $promotion->promotion_id;
+                                            $categoryItem->category_id = $key;
+                                            $categoryItem->eligible_item_id  = $counter;
+                                            $categoryItem->promotion_category_id = $category->promotion_category_id;
+                                            $categoryItem->promotion_eligible_item_id = $eligible_item->promotion_eligible_item_id;
+                                            $categoryItem->item_id = $key1;
+                                            $categoryItem->save();
                                         }
                                     }
                                 }
                             }
-                    }   
+                        }
+                        $counter++;
+                    }
                 }
-                Toastr::success( $message,'', Config::get('constants.toster'));
-                return redirect()->route('promotion');
+                
+                if(isset($request->restaurant_user_id)){
+                    return redirect()->back();
+                }
+                else{
+                    Toastr::success( $message,'', Config::get('constants.toster'));
+                    return redirect()->route('promotion');
+                }
             }else{
-                Toastr::error( $message,'', Config::get('constants.toster'));
-                return redirect()->route('promotion');
+                if(isset($request->restaurant_user_id)){
+                    return redirect()->back();
+                }else{
+                    Toastr::error( $message,'', Config::get('constants.toster'));
+                    return redirect()->route('promotion');
+                }
             }            
         } catch (\Throwable $th) {
-            dd($th->getMessage());
             Toastr::success('Please try again something wrong.','', Config::get('constants.toster'));
             return redirect()->route('promotion');
         }
     }
-
-
-
-
 
 
     public function delete($id)
@@ -928,5 +1197,101 @@ class PromotionController extends Controller
             $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
             return response()->json($errors, 500);
         }
+    }
+
+    public function webViewForm($promotionTypeId,$restaurantId,$formType,$promotionId = null)
+    {
+        $type = $promotionTypeId;
+        $uid = $restaurantId;
+        $restaurant = Restaurant::where('uid', $uid)->first();
+        $category = Category::where('restaurant_id', $restaurant->restaurant_id)->with('category_item')->get();
+        $webview = 1;
+        $promotion = Promotion::where('promotion_id',$promotionId)->first();
+        try {
+            if($type==1){//DONE
+                if($formType == 'Add'){
+                    return view('promotion.cart.add',compact('webview','uid'));
+                } else {   
+                    return view('promotion.cart.edit',compact('promotion','webview','uid'));
+                }
+            }else if($type==2){//DONE
+                if($formType == 'Add'){
+                    return view('promotion.discount_selected_item.add',compact('category','webview','uid'));
+                } else {
+                    return view('promotion.discount_selected_item.edit',compact('promotion','webview','uid','category'));
+                }
+            }else if($type==3){//DONE
+                if($formType == 'Add'){
+                    return view('promotion.freedelivery.add',compact('webview','uid'));
+                }else{
+                    return view('promotion.freedelivery.edit',compact('promotion','webview','uid'));
+                }
+            }else if($type==4){//DONE
+                if($formType == 'Add'){
+                    return view('promotion.paymentmethod.add',compact('webview','uid'));
+                }else{
+                    return view('promotion.paymentmethod.edit',compact('promotion','webview','uid'));
+                }
+            }else if($type==5){//DONE
+                if($formType == 'Add'){
+                    return view('promotion.freeitem.add',compact('category','webview','uid'));
+                }else{
+                    return view('promotion.freeitem.edit',compact('promotion','category','webview','uid'));
+                }
+            }else if($type==6){//DONE
+                if($formType == 'Add'){
+                    return view('promotion.getonefree.add',compact('category','webview','uid'));
+                }else{
+                    $eligibleItems = PromotionEligibleItem::where('promotion_id',$promotion->promotion_id)->count();
+                    return view('promotion.getonefree.edit',compact('promotion','category','webview','uid','eligibleItems'));
+                }
+            }else if($type==7){//DONE
+                if($formType == 'Add'){
+                    return view('promotion.mealbundle.add',compact('category','webview','uid'));
+                }else{
+                    $eligibleItems = PromotionEligibleItem::where('promotion_id',$promotion->promotion_id)->count();
+                    return view('promotion.mealbundle.edit',compact('promotion','category','webview','uid','eligibleItems'));
+                }
+            }else if($type==8){//DONE
+                if($formType == 'Add'){
+                    return view('promotion.buytwothree.add',compact('category','webview','uid'));
+                }else{
+                    $eligibleItems = PromotionEligibleItem::where('promotion_id',$promotion->promotion_id)->count();
+                    return view('promotion.buytwothree.edit',compact('promotion','category','webview','uid','eligibleItems'));
+                }
+            }else if($type==9){//DONE
+                if($formType == 'Add'){
+                    return view('promotion.fixeddiscount.add',compact('category','webview','uid'));
+                }else{
+                    $eligibleItems = PromotionEligibleItem::where('promotion_id',$promotion->promotion_id)->count();
+                    return view('promotion.fixeddiscount.edit',compact('promotion','category','webview','uid','eligibleItems'));
+                }
+            }else if($type==10){//DONE
+                if($formType == 'Add'){
+                    return view('promotion.discountcombo.add',compact('category','webview','uid'));
+                }else{
+                    $eligibleItems = PromotionEligibleItem::where('promotion_id',$promotion->promotion_id)->count();
+                    return view('promotion.discountcombo.edit',compact('promotion','category','webview','uid','eligibleItems'));
+                }
+            }
+        } catch (\Throwable $th) {
+            $errors['success'] = false;
+            $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
+            $errors['debug'] = $th->getMessage();
+            return response()->json($errors, 500);
+        }
+    }
+
+    public function getCategories(Request $request)
+    {
+        if(Auth::check()){
+            $uid = Auth::user()->uid;
+        }
+        else{
+            $uid = $request->post('uid');
+        }
+        $restaurant = Restaurant::where('uid', $uid)->first();
+        $category = Category::where('restaurant_id', $restaurant->restaurant_id)->with('category_item')->get();
+        return response()->json($category, 200);
     }
 }

@@ -7,8 +7,10 @@
     <nav class="navbar navbar-inverse">
       <div class="container-fluid">
         <div class="navbar-header">
+          <div class="profile-title-new">
           <a href="#" class="navbar-brand" id="sidebar-toggle"><i class="fa fa-bars"></i></a>
           <h2>Feedbacks</h2>
+          </div>
         </div>
         <div class="plus">
           <a href="{{route('feedback.add')}}" ><i class="fa fa-plus" aria-hidden="true"></i></a>
@@ -33,7 +35,7 @@
                   </div>
                   <div class="order-icons ">
                     <a class="action-edit" href="{{route('feedback.edit',$feedbackRecord->id)}}"><i class="fa fa-pencil" aria-hidden="true"></i> </a>
-                    <a href="javaScript:Void(0);" class="delete action-delete" data-route="{{route('feedback.delete',$feedbackRecord->id)}}"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                    <a href="javaScript:void(0);" class="delete action-delete" data-route="{{route('feedback.delete',$feedbackRecord->id)}}"><i class="fa fa-trash" aria-hidden="true"></i></a>
                   </div>
                 </div>
               </div>

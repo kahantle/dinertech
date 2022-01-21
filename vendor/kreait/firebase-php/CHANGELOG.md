@@ -2,6 +2,27 @@
 
 ## [Unreleased]
 
+## [5.25.0] - 2021-11-01
+### Added
+* Added support for providing a nonce when signing in with IdP credentials
+* Added methods:
+    * `Kreait\Firebase\Auth::signInWithAppleIdToken()`
+### Changed
+* When building the RTDB Url from the service account's project ID, the SDK will not replace
+  colons (`:`) and dots (`.`) with dashes (`-`) anymore.
+  ([#351 (comment)](https://github.com/kreait/firebase-php/issues/351#issuecomment-946536698))
+
+## [5.24.0] - 2021-10-05
+### Added
+* Added `Factory::getDebugInfo()` to display information about the currently configured factory.
+  ([Documentation](https://firebase-php.readthedocs.io/en/latest/troubleshooting.html#debugging))
+### Changed
+* Bumped `kreait/firebase-tokens` to `^1.16.1` to ensure a minor security fix in `lcobucci/jwt` 
+  (More info: [GHSA-7322-jrq4-x5hf](https://github.com/lcobucci/jwt/security/advisories/GHSA-7322-jrq4-x5hf))
+### Fixed
+* Fixed a bug that occurs when using Realtime Database Paths without a leading slash with newer
+  releases of `guzzle/psr7`
+
 ## [5.23.0] - 2021-08-26
 ### Added
 * Added `screenName` property to the provider data of a user record
@@ -292,7 +313,9 @@ to upgrade from a 4.x release to 5.0 without changes to your code.**
 * Support for PHP `<7.2`
 * Deprecated methods and classes
 
-[Unreleased]: https://github.com/kreait/firebase-php/compare/5.23.0...HEAD
+[Unreleased]: https://github.com/kreait/firebase-php/compare/5.25.0...HEAD
+[5.25.0]: https://github.com/kreait/firebase-php/compare/5.24.0...5.25.0
+[5.24.0]: https://github.com/kreait/firebase-php/compare/5.23.0...5.24.0
 [5.23.0]: https://github.com/kreait/firebase-php/compare/5.22.0...5.23.0
 [5.22.0]: https://github.com/kreait/firebase-php/compare/5.21.0...5.22.0
 [5.21.0]: https://github.com/kreait/firebase-php/compare/5.20.1...5.21.0

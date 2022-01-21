@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-
 class OrderMenuItem extends Model
 {
     protected $primaryKey = 'order_menu_item_id';
@@ -15,11 +14,11 @@ class OrderMenuItem extends Model
     public function getImagePathAttribute()
     {
         $menu = $this->image($this->menu_id);
-        if($menu){
-            if(!$menu->image){
+        if ($menu) {
+            if (!$menu->image) {
                 return '';
             }
-            return route('display.image',[config("constants.IMAGES.MENU_IMAGE_PATH"),$menu->image]) ;
+            return route('display.image', [config("constants.IMAGES.MENU_IMAGE_PATH"), $menu->image]);
         }
     }
 
@@ -35,7 +34,7 @@ class OrderMenuItem extends Model
 
     public function image($id)
     {
-        return $this->hasOne('App\Models\MenuItem', 'menu_id')->where('menu_id',$id)->first();
+        return $this->hasOne('App\Models\MenuItem', 'menu_id')->where('menu_id', $id)->first();
     }
 
     public function modifier()
@@ -50,6 +49,6 @@ class OrderMenuItem extends Model
 
     public function menuItems()
     {
-        return $this->hasMany('App\Models\MenuItem','menu_id', 'menu_id');
+        return $this->hasMany('App\Models\MenuItem', 'menu_id', 'menu_id');
     }
 }

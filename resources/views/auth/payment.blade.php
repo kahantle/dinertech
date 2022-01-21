@@ -1,8 +1,8 @@
 @extends('layouts.app')
 @section('content')
 <section class="lrForm">
-    <div class="container-fluid pl-0">
-      <div class="row align-items-center align-items-lg-start">
+    <div class="w-100">
+      <div class="row align-items-center align-items-lg-start no-gutters">
         <div class="col-lg-5 col-md-6">
           <div class="left-pattern">
             <div class="logo">
@@ -30,8 +30,8 @@
                       <input type="text" id="digit-4" name="digit[4]"  data-next="digit-5" data-previous="digit-4" class="form-control digit-card-input" ></li>
                   </ul>
                 </div>
-              <div class="form-group select-input">   
-                <select id="ccExpiryMonth" name="ccExpiryMonth" class="form-control ">
+              <div class="form-group ">   
+                <select id="ccExpiryMonth" name="ccExpiryMonth" class="form-control select-input">
                   <option value="">Select Month</option>
                   <option value="01">Jan</option>
                   <option value="02">Feb</option>
@@ -50,14 +50,14 @@
               <div class="form-group">   
                 <select id="ccExpiryYear" class="form-control select-input" name="ccExpiryYear">
                   <option value="">Select Year</option>
-                  @for ($i = date('y'); $i <= date('y')+10 ; $i++) <option value="{{ $i }}">
-                      {{date('y').$i }}</option>
+                  @for ($i = date('Y'); $i <= date('Y')+10 ; $i++) <option value="{{ $i }}">
+                      {{$i }}</option>
                       @endfor
               </select>
               </div>
               <div class="form-group">   
-                <i class="fa fa-envelope"></i>               
-                <input type="email" class="form-control" id="cvvNumber" name="cvvNumber" placeholder="Cvv">
+                <i class="fa fa-credit-card-alt"></i>               
+                <input type="email" class="form-control" id="cvvNumber" name="cvvNumber" placeholder="CVV">
               <input type="hidden" class="form-control" id="username" name="username" value="{{$username}}" placeholder="username">
               </div>
               <div class="form-group">

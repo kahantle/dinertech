@@ -8,6 +8,4 @@ class PromotionItem extends Model
 {
     protected $primaryKey = 'promotion_item_id';
 
-   
-
 }

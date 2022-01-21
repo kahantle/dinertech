@@ -1,13 +1,13 @@
 <?php
 
 namespace App\Models;
-use Illuminate\Database\Eloquent\Model;
 
+use Illuminate\Database\Eloquent\Model;
 
 class MenuItem extends Model
 {
     protected $primaryKey = 'menu_id';
-    protected $appends = ['menu_img','category_name'];
+    protected $appends = ['menu_img', 'category_name'];
 
     public function category()
     {
@@ -30,31 +30,36 @@ class MenuItem extends Model
             'App\Models\ModifierGroup',
             'App\Models\MenuModifierItem',
             'menu_id',
-             'modifier_group_id',
-             'menu_id',
-             'modifier_id',
+            'modifier_group_id',
+            'menu_id',
+            'modifier_id',
         );
     }
 
     public function getMenuImgAttribute()
     {
-        if($this->item_img){
-            return route('display.image',[config("constants.IMAGES.MENU_IMAGE_PATH"),$this->item_img]) ;
+        if ($this->item_img) {
+            return route('display.image', [config("constants.IMAGES.MENU_IMAGE_PATH"), $this->item_img]);
         }
+    }
+
+    public function getDefaultImage()
+    {
+        return route('display.image', [config("constants.IMAGES.MENU_IMAGE_PATH"), 'default.jpg']);
     }
 
     public function getCategoryNameAttribute()
     {
-        if($this->category){
+        if ($this->category) {
             return $this->category->category_name;
-        }else{
+
+        } else {
             return '';
         }
     }
 
     public function restaurant()
     {
-        return $this->belongsTo(Restaurant::class,'restaurant_id');
+        return $this->belongsTo(Restaurant::class, 'restaurant_id');
     }
-
 }

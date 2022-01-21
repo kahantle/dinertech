@@ -18,11 +18,11 @@ final class ApiRequest implements RequestInterface
     public function __construct(ShortenLongDynamicLink $action)
     {
         $uri = Utils::uriFor('https://firebasedynamiclinks.googleapis.com/v1/shortLinks');
-        $body = Utils::streamFor(JSON::encode($action, \JSON_FORCE_OBJECT));
+        $body = Utils::streamFor(JSON::encode($action, JSON_FORCE_OBJECT));
 
         $headers = [
             'Content-Type' => 'application/json; charset=UTF-8',
-            'Content-Length' => $body->getSize(),
+            'Content-Length' => (string) $body->getSize(),
         ];
 
         $this->wrappedRequest = new Request('POST', $uri, $headers, $body);

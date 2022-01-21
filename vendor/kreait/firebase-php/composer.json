@@ -29,7 +29,7 @@
         "guzzlehttp/promises": "^1.4",
         "guzzlehttp/psr7": "^1.7|^2.0",
         "kreait/clock": "^1.1",
-        "kreait/firebase-tokens": "^1.16",
+        "kreait/firebase-tokens": "^1.16.1",
         "mtdowling/jmespath.php": "^2.6.1",
         "psr/cache": "^1.0.1|^2.0|^3.0",
         "psr/http-message": "^1.0.1",
@@ -44,8 +44,10 @@
         "phpstan/extension-installer": "^1.1",
         "phpstan/phpstan": "^0.12.92",
         "phpstan/phpstan-phpunit": "^0.12.21",
-        "phpunit/phpunit": "^9.5.6",
-        "symfony/var-dumper": "^5.3.3"
+        "phpunit/phpunit": "^9.5.10",
+        "rector/rector": "^0.11.57",
+        "symfony/var-dumper": "^5.3.3",
+        "symplify/easy-coding-standard": "^9.4"
     },
     "suggest": {
         "google/cloud-firestore": "^1.0 to use the Firestore component",

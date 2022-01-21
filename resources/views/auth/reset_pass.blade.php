@@ -53,11 +53,8 @@
                 </div>
                 <div class="form-group">
                   <div class="btn-custom">
-                    <button type="submit" href="#" class="btn-blue"><span>Reset Password</span></button>
+                    <button type="submit" class="btn-blue"><span>Reset Password</span></button>
                   </div>
-                </div>
-                <div class="form-group text-center">
-                  <a href="#">Cancel</a>
                 </div>
               </form>
             </div>  
@@ -69,5 +66,5 @@
 @endsection
 @section('scripts')
 <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js')}}"></script>
-{!! JsValidator::formRequest('App\Http\Requests\Frontend\ResetPasswordRequest','#update_profile_form'); !!}
+{!! JsValidator::formRequest('App\Http\Requests\ResetPasswordRequest','#update_profile_form'); !!}
 @endsection

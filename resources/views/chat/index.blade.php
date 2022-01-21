@@ -6,8 +6,10 @@
         <nav class="navbar navbar-inverse">
           <div class="container-fluid">
             <div class="navbar-header">
+              <div class="profile-title-new">
               <a href="#" class="navbar-brand" id="sidebar-toggle"><i class="fa fa-bars"></i></a>
               <h2>Messages</h2>
+              </div>
             </div>
           </div>
         </nav>
@@ -20,11 +22,11 @@
             <div class="col-lg-4 p-0">
               <div class="chat-table">
                 <div class="chat-search">
-                  <i class="fa fa-search" aria-hidden="true"></i>
-                  <input type="search" id="chat-search" placeholder="Search here">
+                  <i class="fa fa-search searchTextBtn" aria-hidden="true"></i>
+                  <input type="search" id="chat-search" class="searchText" value="{{$order_number}}" placeholder="Search here">
                 </div>
                   @foreach($orders as $key=>$item)
-                  <div class="chat-content @if($key==0) active @endif" data-user_name="{{$item->user->full_name}}" data-order_id="{{$item->order_number}}" data-id="{{$item->order_id}}" >
+                  <div class="chat-content @if($key==0) active @endif" data-customer_id="{{$item->user->uid}}" data-user_name="{{$item->user->full_name}}" data-order_id="{{$item->order_number}}" data-id="{{$item->order_id}}" >
                   <img src="{{ asset('assets/images/person.png') }}" class="img-fluid">
                   <div class="chat-name">
                     <div class="cn-left">
@@ -37,7 +39,6 @@
                     </div>
                   </div>
                   </div>
-
                   @endforeach
               </div>
             </div>
@@ -46,8 +47,13 @@
 
                 <div class="chat-header ">
                   <div class="ch-left">
+                    @if($orders->count())
                     <h5 id="order_user">{{$orders[0]->user->full_name}} </h5>
-                    <span id="order_id">{{$orders[0]->order_number}}</span>
+                    <span id="order_id" >{{$orders[0]->order_number}}</span>
+                    @else
+                    <h5 id="order_user">-</h5>
+                    <span id="order_id" >-</span>
+                    @endif
                   </div>
                   <div class="ch-right">
                     <a href="#0"><img src="{{ asset('assets/images/bell.png') }}" class="img-fluid"></a>
@@ -90,7 +96,21 @@ var resturant_id = {!! json_encode($resturant_id) !!};
 </script>
 <script>
 $('document').ready(function() {
+  $(document).on('click', '.searchTextBtn', function() {
+    var text = $(".searchText").val();
+    window.location.href = "http://" + window.location.host + window.location.pathname + '?order_id=' + text;
+  });
+
+  $(document).on('change', '.searchText', function() {
+    var text = $(".searchText").val();
+    if(text){
+      window.location.href = "http://" + window.location.host + window.location.pathname + '?order_id=' + text;
+    }else{
+      window.location.href = "http://" + window.location.host + window.location.pathname ;
+    }
+  });
   $(document).on("click",".sendMessage",function(){
+      if(!$("#message").val()) return
         $.ajax({
             headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -100,7 +120,8 @@ $('document').ready(function() {
             dataType: "json",
             data:{
                 message:$("#message").val(),
-                order_id:$(".active").data('order_id')
+                order_id:$(".active").data('order_id'),
+                customer_id:$(".active").data('customer_id')
             },
             beforeSend: function() {
               $("body").preloader();
@@ -132,29 +153,29 @@ $('document').ready(function() {
         storageBucket: "{{config('services.firebase.storage_bucket')}}",
         messagingSenderId: "{{config('services.firebase.messaging_sender_id')}}"
     };
-    console.log(config);
     firebase.initializeApp(config);
     var order_id=$(".active").data('order_id');
-    var url = '/'+db_name+'/'+resturant_id+'/'+order_id;
+    var customer_id = $(".active").data('customer_id');
+    var url = '/'+db_name+'/'+resturant_id+'/'+order_id+'/'+customer_id;
     $(".msg-body").html("<h5>No Conversion Found.</h5>");
     firebase.database().ref(url).on('value', function(snapshot) {
         var chat_element = "";
         var value = snapshot.val();
         $.each(value, function(index, value){
-          if(value.created_by=='RESTAURANT'){
+          if(value.sent_from=='RESTAURANT'){
           chat_element += ' <li class="company-msg">';
           chat_element += '      <img src="{{ asset("assets/images/person.png") }}" class="img-fluid">';
           chat_element += '     <div class="cht-msg">'
-          chat_element += '       <p>'+value.text+'</p>';
-          chat_element += '        <span>'+value.date_time+'</span>';
+          chat_element += '       <p>'+value.message+'</p>';
+          chat_element += '        <span>'+value.message_date+'</span>';
           chat_element += '      </div>'
           chat_element += '    </li>'
         }else{
           chat_element += ' <li class="client-msg">';
           chat_element += '      <img src="{{ asset("assets/images/person.png") }}" class="img-fluid">';
           chat_element += '     <div class="cht-msg">'
-          chat_element += '       <p>'+value.text+'</p>';
-          chat_element += '        <span>'+value.date_time+'</span>';
+          chat_element += '       <p>'+value.message+'</p>';
+          chat_element += '        <span>'+value.message_date+'</span>';
           chat_element += '      </div>'
           chat_element += '    </li>'
         }
@@ -169,29 +190,30 @@ $('document').ready(function() {
         $(this).addClass('active');
         order_id=$(this).data('order_id');
         var user = $(this).data('user_name');
+        var customer_id = $(this).data('customer_id');
         $("#order_id").text(order_id);
         $("#order_user").text(user);
         $(".msg-body").html('');
-        var url = '/'+db_name+'/'+resturant_id+'/'+order_id;
+        var url = '/'+db_name+'/'+resturant_id+'/'+order_id+'/'+customer_id;
         firebase.database().ref(url).on('value', function(snapshot) {
         var chat_element = "";
         var value = snapshot.val();
         $(".msg-body").html("<h5>No Conversion Found.</h5>");
         $.each(value, function(index, value){
-          if(value.created_by=='RESTAURANT'){
+          if(value.sent_from=='RESTAURANT'){
           chat_element += ' <li class="company-msg">';
           chat_element += '      <img src="{{ asset("assets/images/person.png") }}" class="img-fluid">';
           chat_element += '     <div class="cht-msg">'
-          chat_element += '       <p>'+value.text+'</p>';
-          chat_element += '        <span>'+value.time+'</span>';
+          chat_element += '       <p>'+value.message+'</p>';
+          chat_element += '        <span>'+value.message_date+'</span>';
           chat_element += '      </div>'
           chat_element += '    </li>'
         }else{
           chat_element += ' <li class="client-msg">';
           chat_element += '      <img src="{{ asset("assets/images/person.png") }}" class="img-fluid">';
           chat_element += '     <div class="cht-msg">'
-          chat_element += '       <p>'+value.text+'</p>';
-          chat_element += '        <span>'+value.time+'</span>';
+          chat_element += '       <p>'+value.message+'</p>';
+          chat_element += '        <span>'+value.message_date+'</span>';
           chat_element += '      </div>'
           chat_element += '    </li>'
         }

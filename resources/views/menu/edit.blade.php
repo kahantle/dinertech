@@ -6,8 +6,10 @@
     <nav class="navbar navbar-inverse">
       <div class="container-fluid">
         <div class="navbar-header">
+          <div class="profile-title-new">
           <a href="#" class="navbar-brand" id="sidebar-toggle"><i class="fa fa-bars"></i></a>
           <h2>Edit Menu</h2>
+          </div>
           <div class="clear">
             <a href="{{route('edit.menu',$menuItem->menu_id)}}">
               <span>Clear</span>
@@ -18,7 +20,7 @@
       </div>
     </nav>
   </div>
-  <div class="add-category Promotion dashboard content-wrapper category">
+  <div class="add-category Promotion menu dashboard content-wrapper category">
     @include('common.flashMessage')
   
     <div class="container-fluid p-0">
@@ -81,7 +83,7 @@
             <h6>Modifiers / Add-ons</h6>
           </div>
           <div class="plus">
-            <a href="javaScript:Void(0);" class="openModifierForm"><i class="fa fa-plus" aria-hidden="true"></i></a>
+            <a href="javaScript:void(0);" class="openModifierForm"><i class="fa fa-plus" aria-hidden="true"></i></a>
           </div>
         </div>
         <div id="accordion" class="accordion">
@@ -105,7 +107,7 @@
 </div>
 <div id="modifierGroupPopUp" class="modifierGroupPopUp closeAllModal overlay w-100">
   <div class="popup text-center">
-    <a class="close closeModal" href="javaScript:Void(0);">&times;</a>
+    <a class="close closeModal" href="javaScript:void(0);">&times;</a>
     <div class="content">
       <h5 class="groupHeading">Add Modifier Group</h5>
       {{ Form::open(array('route' => array('add.menu.modifier.post'),'id'=>'modifierForm','method'=>'POST',
@@ -129,7 +131,7 @@
 <div id="openModifierItemFormPopUp" class="openModifierItemFormPopUp closeAllModal overlay w-100">
   @include('common.flashMessage')
   <div class="popup text-center">
-    <a class="close closeModal" href="javaScript:Void(0);">&times;</a>
+    <a class="close closeModal" href="javaScript:void(0);">&times;</a>
     <div class="content">
       <h5 class="itemHeading">Add modifier item</h5>
       {{ Form::open(array('route' => array('add.menu.modifier.item.post'),'id'=>'modifierItemForm','method'=>'POST',

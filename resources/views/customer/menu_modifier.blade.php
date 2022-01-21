@@ -1,56 +1,54 @@
-<div class="modal fade modifier-menu-{{$menuItem->menu_id}}" tabindex="-1"  role="dialog" aria-labelledby="modifier-btn">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header modifier-header">
-                <button type="button" class="close modalClose" aria-label="Close" data-menu-id="{{$menuItem->menu_id}}"><span aria-hidden="true">&times;</span></button>
-                <h4>{{$menuItem->item_name}}</h4>
-            </div>
-            <form action="{{route('customer.addToCart')}}" method="post" class="cartform">
-                @csrf
+<form action="{{ route('customer.addToCart') }}" method="POST" id="addToCart">
+    @csrf
+    <input type="hidden" value="{{ $item->menu_id }}" name="menuId">
+    <div class="modal fade modal-second-inner modifier-modal-{{ $item->menu_id }}" id="exampleModalCenter"
+        tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">{{ $item->item_name }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
                 <div class="modal-body">
-                    <input type="hidden" name="menuId" class="menuId">
-                    <input type="hidden" name="categoryId" value="{{$menuItem->category_id}}">
-                    <input type="hidden" name="menuName" value="{{$menuItem->item_name}}">
-                    @foreach($menuItem->modifierList as $modifirelist)
-                        <input type="hidden" name="modifierGroupId[]" value="{{$modifirelist->modifier_group_id}}">
-                        <ul class="modifier-list">
-                            <li>
-                                {{$modifirelist->modifier_group_name}}
-                                @if($modifirelist->allow_multiple == 1)
-                                    @foreach($modifirelist->modifier_item as $modifireItem)
-    	                                <div class="checkbox">
-    	                                    <label>
-    	                                        <input type="checkbox" name="modifierItems[{{$modifirelist->modifier_group_id}}][]" value="{{$modifireItem->modifier_item_id}}"> {{$modifireItem->modifier_group_item_name}}
-    	                                        <span class="mark"></span>
-    	                                    </label>
-    	                                    <label class="modifier-price">
-    	                                        $ {{$modifireItem->modifier_group_item_price}}
-    	                                    </label>
-    	                                </div>
-                                    @endforeach
-                                @else
-                                    @foreach($modifirelist->modifier_item as $modifireItem)
-                                        <div class="form-check">
-                                          <input class="form-check-input" type="radio" name="modifierItems[{{$modifirelist->modifier_group_id}}][]" id="flexRadioDefault1" value="{{$modifireItem->modifier_item_id}}">
-                                          <label class="form-check-label" for="flexRadioDefault1" style="font-weight: unset;">
-                                            {{$modifireItem->modifier_group_item_name}}
-                                          </label>
-                                          <label class="modifier-price" style="font-weight: unset;">
-                                              $ {{$modifireItem->modifier_group_item_price}}
-                                          </label>
-                                        </div>
-                                    @endforeach
-                                @endif
-                            </li>
-                        </ul>
+                    @foreach ($item->modifierList as $modifierlist)
+                        <input type="hidden" name="modifierGroupId[]" value="{{ $modifierlist->modifier_group_id }}">
+                        <h6>{{ $modifierlist->modifier_group_name }}</h6>
+                        @if ($modifierlist->allow_multiple == 0)
+                            @foreach ($modifierlist->modifier_item as $modifierItem)
+                                <div class="wd-check-input">
+                                    <input type="radio" name="modifierItems[{{ $modifierlist->modifier_group_id }}][]"
+                                        class="radioModifierItem" value="{{ $modifierItem->modifier_item_id }}"
+                                        data-modifier-item="{{ $modifierItem->modifier_group_item_name }}" />
+                                    <label>{{ $modifierItem->modifier_group_item_name }}</label>
+                                    <span>$ {{ $modifierItem->modifier_group_item_price }}</span>
+                                </div>
+                            @endforeach
+                        @else
+                            @foreach ($modifierlist->modifier_item as $modifierItem)
+                                <div class="wd-check-input">
+                                    <input type="checkbox"
+                                        name="modifierItems[{{ $modifierlist->modifier_group_id }}][]"
+                                        class="modifierItem" value="{{ $modifierItem->modifier_item_id }}"
+                                        data-modifier-item="{{ $modifierItem->modifier_group_item_name }}" /><label>{{ $modifierItem->modifier_group_item_name }}</label>
+                                    <span>$ {{ $modifierItem->modifier_group_item_price }}</span>
+                                </div>
+                            @endforeach
+                        @endif
                     @endforeach
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary btn-block add-item add-item-{{Str::of($menuItem->item_name)->replace(' ', '-')}}" data-menu-name="{{Str::of($menuItem->item_name)->replace(' ', '-')}}" data-menu-id="{{$menuItem->menu_id}}" alt="Add Item"> Add
-                        Item</button>
-                     <!-- <button type="submit" class="btn btn-primary btn-block" alt="Add Item"> Add Item</button> -->
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4">
+                            <p> Select items: <span class="radiobuttonItem"></span> <span class="primarycardnow"></span>
+                            </p>
+                        </div>
+                    </div>
+                    <button class="btn btn-submit-inner my-3 with-modifier-add" type="button"
+                        data-menu-id="{{ $item->menu_id }}">Add to order</button>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
-</div>
+</form>

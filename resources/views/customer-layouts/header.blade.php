@@ -1,424 +1,176 @@
-<div class="container-fluid">
-    <header>
-        <nav class="navbar navbar-default">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" alt="Toggle navigation" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="{{route('customer.index')}}" alt="Navigation Bar">
-                    <img alt="Brand" src="{{asset('assets/customer/images/logo.jpg')}}">
-                </a>
+<!-- HEADER STRAT -->
+<nav class="sidebar-ar" id="sidebar">
+    <div class="wd-sl-headerall">
+        <div class="logo-img-ar">
+            <img class="lazy" data-src="{{ asset('assets/customer/images/chat/logo.png') }}">
+        </div>
+        @auth
+            <div class="wd-dr-sec-das">
+                @if (Auth::user()->profile_image)
+                    <img src="{{ route('display.image', [Config::get('constants.IMAGES.USER_IMAGE_PATH'), Auth::user()->profile_image]) }}"
+                        class="img-fluid mb-3">
+                @endif
+                <h3 class="m-0">{{ \Auth::user()->full_name }}</h3>
+                <p class="mt-1">My Profile </p>
             </div>
-
-            <!--w3 collapse menu-->
-            <div class="w3-sidebar w3-bar-block w3-border-right" style="display:none" id="LoginSidebar">
-                <img src="{{asset('assets/customer/images/logo.jpg')}}">
-                <button onclick="closeLogin()" class="w3-bar-item w3-large close-btn" alt="Close Login">&times;</button>
-                <div style="clear: both;"></div>
-                <h1>
-                    Login
-                </h1>
-                <p id="login-error" class="error"></p>
-                <a href="#" class="forgot-pass-link" onclick="openForgotPassword()" alt="Forgot Password">Forgot Password ?</a>
-                <form class="login-form" action="{{route('customer.login')}}" method="post" id="login">
-                    {!! csrf_field() !!}
-                    <div class="form-group">
-                        <input type="text" class="form-control" name="username" aria-describedby="emailHelp" placeholder="Enter email or Mobile number">
-                    </div>
-                    <div class="form-group">
-                        <input type="password" class="form-control" name="password" placeholder="Enter Password">
-                    </div>
-                    <button type="submit" class="btn btn-primary loginbtntooltip" alt="Login">Login
-                        <div class="tooltiptext">
-                            <h4>Login</h4>
-                            <span>
-                                Enter your email or password and login in Dinertech
-                            </span>
-                        </div>
-                    </button>
-
-                    <div class="form-group signup-link">
-                        <label>Don't have account ? </label><a href="#" class="signin-link" onclick="openSignup()" alt="SignUp">Signup</a>
-                    </div>
-                    <button type="submit" class="btn btn-default google-signin-link" alt="G Signin with Google"> G Signin with Google</button>
-                </form>
-            </div>
-
-            @if(Auth::check())
-            <!--menu-logedin-->
-            <div class="w3-sidebar w3-bar-block w3-border-right" style="display:none" id="menu-icon-menu">
-                <img src="{{asset('assets/customer/images/logo.jpg')}}">
-                
-                <button onclick="closeMenu()" class="w3-bar-item w3-large close-btn" alt="Close Menu">&times;</button>
-                <div style="clear: both;"></div>
-                <div class="collapse-user-name">
-                    @if(Auth::user()->profile_image)
-                        <img src="{{route('display.image',[Config::get('constants.IMAGES.USER_IMAGE_PATH'),Auth::user()->profile_image])}}" class="collapse-boy">
-                    @endif
-                    <label style="display: block;">{{\Auth::user()->first_name}} {{\Auth::user()->last_name}}</label>
-                    <span>{{Auth::user()->mobile_number}}</span>
-                </div>
-                <ul class="collapse-menu">
-                    <li>
-                        <a href="{{route('customer.orders')}}" alt="Orders"><span class="collapse-icon-order"></span>Orders</a>
-                    </li>
-                    <li>
-                        <a href="{{route('customer.restaurant.hours')}}" alt="Hours"><span class="collapse-icon-hour"></span>Hours</a>
-                    </li>
-                    <li>
-                        <a href="{{route('customer.contacts')}}" alt="Contact Us"><span class="collapse-icon-contact"></span>Contact Us</a>
-                    </li>
-                    <li>
-                        <a href="{{route('customer.feedback.index')}}" alt="Send Feedback"><span class="menu-icon-chat"></span>Send Feedback</a>
-                    </li>
-                    <li>
-                        <a href="#" alt="Rate Us"><span class="collapse-icon-rate"></span>Rate Us</a>
-                    </li>
-                    <li>
-                        <a href="#" onclick="openSettingMenu()" alt="Setting"><span class="collapse-icon-setting"></span>Setting</a>
-                    </li>
-                    <li>
-                        <a href="{{route('customer.profile',Auth::user()->uid)}}" alt="User Profile"><span class="collapse-icon-user"></span>User Profile</a>
-                    </li>
+        @endauth
+        <div class="nav-list-ar">
+            <ul class="nav-list-ul">
+                <li class="{{ Request::is('customer') ? 'active' : '' }}">
+                    <a href="{{ route('customer.index') }}">
+                        <i data-feather="grid"></i>
+                        <span>Menu</span>
+                    </a>
+                </li>
+                <li class="{{ Request::is('customer/orders*') ? 'active' : '' }}">
+                    <a href="{{ route('customer.orders') }}">
+                        <i data-feather="user-plus"></i>
+                        <span>Orders</span>
+                    </a>
+                </li>
+                <li class="{{ Request::is('customer/restaurant/information') ? 'active' : '' }}">
+                    <a href="{{ route('customer.restaurant.information') }}">
+                        <i data-feather="alert-circle"></i>
+                        <span>Information</span>
+                    </a>
+                </li>
+                <li class="{{ Request::is('customer/cards/*') ? 'active' : '' }}">
+                    <a href="{{ route('customer.cards.list') }}">
+                        <i data-feather="archive"></i>
+                        <span>Payment Methods</span>
+                    </a>
+                </li>
+                <li class="{{ Request::is('customer/chats*') ? 'active' : '' }}">
+                    <a href="{{ route('customer.chat.index') }}">
+                        <i data-feather="message-square"></i>
+                        <span>Chats</span>
+                    </a>
+                </li>
+            </ul>
+            @auth
+                <ul class="nav-list-ul mt-4">
                     <li>
                         <form method="POST" action="{{ route('customer.logout') }}">
-                        @csrf
-                        <a  href="{{ route('customer.logout') }}"
-                                   onclick="event.preventDefault();
-                                    this.closest('form').submit();" class="logouttooltip" alt="Logout">
-                            <div class="tooltiptext">
-                                <h4>Logout</h4>
-                                <span>
-                                    Enter your email or password and login in Dinertech
-                                </span>
-                            </div>
-                            <span class="collapse-icon-logout "></span>Logout
-                        </a>
+                            @csrf
+                            <a href="{{ route('customer.logout') }}"
+                                onclick="event.preventDefault();this.closest('form').submit();" alt="Logout">
+                                <i data-feather="log-out"></i>
+                                <span>Logout</span>
+                            </a>
                         </form>
                     </li>
                 </ul>
-                <div class="version">
-                    <span>0.0.12.V</span>
-                </div>
-            </div>
-            @endif
-            @auth
-                <!--menu-setting-->
-                <div class="w3-sidebar w3-bar-block w3-border-right" style="display:none" id="settingmenu">
-                    <img src="{{asset('assets/customer/images/logo.jpg')}}">
-                    <button onclick="closeSettingMenu()" class="w3-bar-item w3-large close-btn" alt="Close Setting Menu">&times;</button>
-                    <div style="clear: both;"></div>
-                    <div class="collapse-user-name">
-                        @if(Auth::user()->profile_image)
-                            <img src="{{route('display.image',[Config::get('constants.IMAGES.USER_IMAGE_PATH'),Auth::user()->profile_image])}}" class="collapse-boy" width="30">
-                        @endif
-                        <label style="display: block;">{{Auth::user()->first_name}} {{Auth::user()->last_name}}</label>
-                        <span>+91-{{Auth::user()->mobile_number}}</span>
-                    </div>
-                    <button type="button" class="btn btn-default btn-back" onclick="closeSettingMenu()" alt="Back to Menu">
-                        <img src="{{asset('assets/customer/images/back.png')}}">back to menu
-                    </button>
-                    <ul class="collapse-menu-setting">
-                        <li>
-                            <label class="setting-icon-notification"></label>
-                            <div class="notification-text">
-                                <label>App Notification</label><br>
-                                <span>Get Application Notifications.</span>
-                            </div>
-                            <label class="switch">
-                                <input type="checkbox" id="app_notification" @if(Auth::user()->app_notifications == 1) checked @endif>
-                                <span class="slider round"></span>
-                            </label>
-                        </li>
-                        <li class="setting-padding">
-                            <label class="setting-icon-chat"></label>
-                            <div class="notification-text">
-                                <label>Chat Notification</label><br>
-                                <span>Get Application Notifications.</span>
-                            </div>
-                            <label class="switch">
-                                <input type="checkbox" id="chat_notification" @if(Auth::user()->chat_notifications == 1) checked @endif>
-                                <span class="slider round"></span>
-                            </label>
-                        </li>
-                        <li class="setting-padding">
-                            <label class="setting-icon-location"></label>
-                            <div class="notification-text">
-                                <label>Location Tracking</label><br>
-                                <span>Get Application Notifications.</span>
-                            </div>
-                            <label class="switch">
-                                <input type="checkbox" id="location_tracking" @if(Auth::user()->location_tracking == 1) checked @endif>
-                                <span class="slider round"></span>
-                            </label>
-                        </li>
-                    </ul>
-                    <div class="version">
-                        <span>0.0.12.V</span>
-                    </div>
-                </div>
             @endauth
-            <!--verification-->
-            <div class="w3-sidebar w3-bar-block w3-border-right" style="display:none" id="verification">
-                <img src="{{asset('assets/customer/images/logo.jpg')}}">
-                <button onclick="closeVerification()" class="w3-bar-item w3-large close-btn" alt="Close Verification">&times;</button>
-                <div style="clear: both;"></div>
-                <h1>
-                    Verification
-                </h1>
-                <span>Enter Verification code from recieved In you email xxx@xxx.com</span>
-                <form class="login-form" action="{{route('customer.verifyOtp')}}" method="post" id="verifyOtp">
-                    @csrf
-                    <div class="form-group form-group-verify-input">
-                        <input type="password" class="form-control verify-input" name="number_one" aria-describedby="emailHelp" placeholder="">
-                    </div>
-                    <div class="form-group form-group-verify-input">
-                        <input type="password" class="form-control verify-input" name="number_two" aria-describedby="emailHelp" placeholder="">
-                    </div>
-                    <div class="form-group form-group-verify-input">
-                        <input type="password" class="form-control verify-input" name="number_three" aria-describedby="emailHelp" placeholder="">
-                    </div>
-                    <div class="form-group form-group-verify-input">
-                        <input type="password" class="form-control verify-input" name="number_fourth" aria-describedby="emailHelp" placeholder="">
-                    </div>
-                    {{--<button class="btn btn-primary" data-toggle="modal" data-target="#verification-success" alt="Send">Send
-                        Verification</button> --}}
-                    <span class="error otp-error hide">Please Enter OTP.</span>
-                    <button class="btn btn-primary" id="submitOtp" alt="Send">Send
-                        Verification</button>
-                </form>
-            </div>
-            <div class="modal fade" id="verification-success" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" alt="Modal Close"><span
-                                    aria-hidden="true">&times;</span></button>
-                            <img src="{{asset('assets/customer/images/logo.jpg')}}">
-                        </div>
-                        <div class="modal-body">
-                            <h3> Success </h3>
-                            <p>
-                                Your verification process has been Successfull. Please change or set you new password.
-                            </p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary btn-block" alt="Okay" onclick="openForgotPasswordForm()">Okay</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!--Forgot Password Form-->
-            <div class="w3-sidebar w3-bar-block w3-border-right" style="display:none" id="forgotPasswordForm">
-                <img src="{{asset('assets/customer/images/logo.jpg')}}">
-                <button onclick="closeForgotPassword()" class="w3-bar-item w3-large close-btn" alt="Close Forgot Password">&times;</button>
-                <div style="clear: both;"></div>
-                <h1>
-                    Forgot Password ?
-                </h1>
-                <form class="login-form" action="{{route('customer.resetPassword')}}" method="post" id="reset-password">
-                    @csrf
-                    <input type="hidden" name="uid" id="uid">
-                    <div class="form-group">
-                        <input type="password" class="form-control" name="password"  placeholder="Enter New Password" id="password">
-                    </div>
-                    <div class="form-group">
-                        <input type="password" class="form-control" name="password_confirmation" placeholder="Enter Confirmation Password">
-                    </div>
-                    <!-- <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#verification-btn" alt="Send Verification">Send Verification</button> -->
-                    <button type="submit" class="btn btn-primary" alt="Change Password">Change Password</button>
-                </form>
-            </div>
-            <!--Forgot Password-->
-            <div class="w3-sidebar w3-bar-block w3-border-right" style="display:none" id="forgotPassword">
-                <img src="{{asset('assets/customer/images/logo.jpg')}}">
-                <button onclick="closeForgotPassword()" class="w3-bar-item w3-large close-btn" alt="Close Forgot Password">&times;</button>
-                <div style="clear: both;"></div>
-                <h1>
-                    Forgot Password ?
-                </h1>
-                <form class="login-form" action="{{route('customer.forgotPassword')}}" method="post" id="forget-password">
-                    @csrf
-                    <div class="form-group">
-                        <input type="text" class="form-control" name="email_mobile_number"  aria-describedby="emailHelp" placeholder="Enter email or Mobile number">
-                    </div>
-                    <!-- <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#verification-btn" alt="Send Verification">Send Verification</button> -->
-                    <button type="submit" class="btn btn-primary" alt="Send Verification">Send Verification</button>
-                </form>
-            </div>
-            <div class="modal fade" id="verification-btn" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                    aria-hidden="true">&times;</span></button>
-                            <img src="{{asset('assets/customer/images/logo.jpg')}}">
-                        </div>
-                        <div class="modal-body">
-                            <h3> Success </h3>
-                            <p>
-                                We've sent verification code in you registered email address, please check your email address.(and possibly spam folder).
-                            </p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary btn-block" onclick="openVerification()" alt="Okay">Okay</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!--Signup collapsed-->
-            <div class="w3-sidebar w3-bar-block w3-border-right" style="display:none" id="SignupSidebar">
-                <img src="{{asset('assets/customer/images/logo.jpg')}}">
-                <button onclick="closeSignup()" class="w3-bar-item w3-large close-btn">&times;</button>
-                <div style="clear: both;"></div>
-                <h1>
-                    Signup
-                </h1>
-                <p id="register-error" class="error"></p>
-                <form class="login-form" id="customer-signup" method="post" action="{{route('customer.signup')}}">
-                    @csrf
-                    <div class="form-group">
-                        <label>Your Information </label>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" name="first_name" aria-describedby="emailHelp" placeholder="First Name" id="firstname">
-                        @error('first_name')
-                            {{$message}}
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" name="last_name" placeholder="Last Name" id="lastname">
-                        @error('last_name')
-                            {{$message}}
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" name="physical_address" placeholder="Physical Address" id="physicaladdress">
-                        @error('physical_address')
-                            {{$message}}
-                        @enderror
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <input type="text" class="form-control" name="city" placeholder="City" id="city">
-                                @error('city')
-                                    {{$message}}
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <input type="text" class="form-control" name="state" placeholder="state" id="state">
-                                @error('state')
-                                    {{$message}}
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" name="zipcode" placeholder="Zip code" id="zipcode">
-                        @error('zipcode')
-                            {{$message}}
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                        <label>Contact Information </label>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" name="mobile_number" aria-describedby="emailHelp" placeholder="Mobile Number" id="mobilenumber">
-                        @error('mobile_number')
-                            {{$message}}
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                        <input type="email" class="form-control" name="email_id"  aria-describedby="emailHelp" placeholder="Email Address" id="email">
-                        @error('email')
-                            {{$message}}
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                        <label>Password </label>
-                        <small class="password-validation-text">
-                            Password must contain 8 charactor or more, one uppercase letter and one number
-                        </small>
-                    </div>
-                    <div class="form-group">
-                        <input type="password" class="form-control" name="password" id="exampleInputPassword1" placeholder="Password" id="password">
-                        @error('password')
-                            {{$message}}
-                        @enderror
-                    </div>
-                    <button type="submit" class="btn btn-primary" alt="Sign Up" id="signup-submit">Signup</button>
-                    <div class="form-group signup-link">
-                        <label>You have allready account ? <a href="#" class="signin-link"
-                                onclick="closeSignup()" alt="Login">Login</a></label>
-                    </div>
-                    <button type="button" class="btn btn-default google-signin-link" alt="G Signin with Google"> G Signin with Google</button>
-                </form>
-            </div>
-            <!--Signup collapsed-->
-            <!--w3 collapse menu over-->
-
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right dropdown">
-                    @guest
-                        <li onclick="openLogin()">
-                            <a href="#" alt="Chat"><span class="menu-icon-chat"></span>Chat</a>
-                        </li>
-                    @endguest
-                    @auth
-                        <li>
-                            <a href="{{route('customer.chat.index')}}" alt="Chat"><span class="menu-icon-chat"></span>Chat</a>
-                        </li>
-                    @endauth
-                    <li>
-                        <a href="{{route('customer.promotions')}}" alt="Promotions"><span class="menu-icon-promo"></span>Promotions</a>
+        </div>
+    </div>
+</nav>
+<!-- mobile responsive start -->
+<div class="wd-dr-right-toogle">
+    <button class="sidebar-toggle">
+        <i class="fas fa-align-left"></i>
+    </button>
+    <div class="wd-dr-res-img">
+        <img class="lazy" data-src="{{ asset('assets/customer/images/chat/logo.png') }}">
+    </div>
+    <div class="wd-sl-resright">
+        <!-- <button class="wd-sl-serchtoggle" id="show-hidden-menu30"><i class="fas fa-ellipsis-h"></i></button> -->
+        <div class="top-nav-ar hidden-menu30" style="display: none;">
+            <div class="inncol-ar-list">
+                <ul>
+                    <li class="search-container">
+                        <form action="" class="search-form">
+                            <input type="text" placeholder="" name="search">
+                            <button class="search-btn" type="submit">
+                                <svg width="15" height="16" viewBox="0 0 15 16" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.7"
+                                        d="M6.89766 0.919067C10.2493 0.919067 12.9766 3.65042 12.9766 7.00202C12.9766 8.49615 12.4325 9.86382 11.5348 10.9236L14.8246 14.2134C14.8728 14.2601 14.9113 14.3159 14.9377 14.3775C14.9642 14.4392 14.978 14.5056 14.9785 14.5727C14.979 14.6398 14.9661 14.7063 14.9405 14.7684C14.915 14.8304 14.8773 14.8868 14.8297 14.9341C14.7821 14.9814 14.7256 15.0188 14.6634 15.044C14.6012 15.0692 14.5346 15.0817 14.4675 15.0809C14.4004 15.08 14.3341 15.0658 14.2726 15.039C14.211 15.0123 14.1554 14.9735 14.1091 14.925L10.8212 11.6371C9.76126 12.5357 8.39252 13.081 6.89766 13.081C3.54606 13.081 0.818675 10.3536 0.818675 7.00202C0.818675 3.65042 3.54606 0.919067 6.89766 0.919067ZM6.89766 1.98057C4.1181 1.98057 1.87619 4.22246 1.87619 7.00202C1.87619 9.78158 4.1181 12.0225 6.89766 12.0225C9.67722 12.0225 11.9191 9.78158 11.9191 7.00202C11.9191 4.22246 9.67722 1.98057 6.89766 1.98057Z"
+                                        fill="#67748E"></path>
+                                </svg>
+                            </button>
+                        </form>
                     </li>
-                    @guest
-                        <li onclick="openLogin()">
-                            <a href="#" alt="Cart"><span class="menu-icon-cart"></span>Cart <span class='badge badge-warning' id='lblCartCount'>@if(!empty(session()->get('cart'))) {{count(session()->get('cart'))}} @endif</span></a>
-                        </li>
-                        <li class="menu_line">
-                            |
-                        </li>
-                        <li onclick="openLogin()">
-                            <a href="#" alt="Login/Signin"><span class="menu-icon-login"></span>Login / Signin</a>
-                        </li>
-                    @endguest
-                    @auth
-                        <li>
-                            <a href="{{route('customer.cart')}}" alt="Cart"><span class="menu-icon-cart"></span>Cart <span class='badge badge-warning' id='lblCartCount'>@if(!empty(session()->get('cart'))) {{count(session()->get('cart'))}} @endif</span></a>
-                        </li>
-                        <li class="menu_line">
-                            |
-                        </li>
-                        <li class="dropdown">
-                            <a href="#" aria-haspopup="true" class="dropdown-toggle" data-toggle="dropdown" role="button"aria-expanded="true">
-                                @if(Auth::user()->profile_image)
-                                    <img src="{{route('display.image',[Config::get('constants.IMAGES.USER_IMAGE_PATH'),Auth::user()->profile_image])}}" class="rounded-circle" width="30">
-                                @endif
-                                {{Auth::user()->first_name}} {{Auth::user()->last_name}}
-                            </a>
-                            <ul class="dropdown-menu">
-                               <li><a href="{{route('customer.address.index')}}"><img src="{{asset('assets/customer/images/map_icon.png')}}"> Manage Address</a></li>
-                               <li><a href="{{route('customer.changepassword')}}"><img src="{{asset('assets/customer/images/padlock.png')}}"> Change Password</a></li>
-                               <li><a href="{{route('customer.cards')}}"><img src="{{asset('assets/customer/images/credit-card.png')}}"> Payment Method</a></li>
-                               <li><a href="{{route('customer.orders')}}"><img src="{{asset('assets/customer/images/order-icon.png')}}"> Orders</a></li>
-                           </ul>
-                        </li>
-                        <li onclick="openMenu()">
-                            <a href="#"><span class="menu-icon-menu"><span class="menu-icon-data">More</span></a>
-                        </li>
-                    @endauth
+                    <li class="wd-svg-position">
+                        <a href="#">
+                            <svg width="27" height="31" viewBox="0 0 27 31" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M13.125 0.760254C6.91185 0.760254 1.87506 5.79705 1.87506 12.0103V18.7336L0.549226 20.0594C0.0129758 20.5957 -0.147431 21.4021 0.142782 22.1028C0.432994 22.8035 1.11669 23.2603 1.87506 23.2603H24.375C25.1334 23.2603 25.8171 22.8035 26.1073 22.1028C26.3976 21.4021 26.2371 20.5957 25.7008 20.0594L24.375 18.7336V12.0103C24.375 5.79705 19.3382 0.760254 13.125 0.760254Z"
+                                    fill="white"></path>
+                                <path
+                                    d="M13.125 30.7603C10.0184 30.7603 7.5 28.2419 7.5 25.1353H18.75C18.75 28.2419 16.2317 30.7603 13.125 30.7603Z"
+                                    fill="white"></path>
+                            </svg>
+                        </a>
+                        <span class="cart-count badge-circle">4</span>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <svg width="30" height="31" viewBox="0 0 30 31" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                    d="M17.7922 2.95576C17.0816 0.0284179 12.9184 0.0284179 12.2077 2.95576C11.7486 4.84679 9.58209 5.74421 7.9203 4.73167C5.34783 3.16422 2.40397 6.10809 3.97141 8.68055C4.98395 10.3423 4.08654 12.5089 2.19551 12.968C-0.731836 13.6786 -0.731836 17.8419 2.19551 18.5525C4.08654 19.0117 4.98395 21.1783 3.97141 22.8399C2.40397 25.4124 5.34783 28.3563 7.92031 26.7888C9.58209 25.7763 11.7486 26.6737 12.2077 28.5648C12.9184 31.4921 17.0816 31.4921 17.7922 28.5648C18.2514 26.6737 20.418 25.7763 22.0796 26.7888C24.6521 28.3563 27.5961 25.4124 26.0286 22.8399C25.0161 21.1783 25.9134 19.0117 27.8046 18.5525C30.7318 17.8419 30.7318 13.6786 27.8046 12.968C25.9134 12.5089 25.0161 10.3423 26.0286 8.68055C27.5961 6.10809 24.6521 3.16422 22.0796 4.73167C20.418 5.74421 18.2514 4.84679 17.7922 2.95576ZM15 21.3853C18.1067 21.3853 20.625 18.8669 20.625 15.7603C20.625 12.6537 18.1067 10.1353 15 10.1353C11.8934 10.1353 9.375 12.6537 9.375 15.7603C9.375 18.8669 11.8934 21.3853 15 21.3853Z"
+                                    fill="white"></path>
+                            </svg>
+                        </a>
+                    </li>
                 </ul>
             </div>
-            <!-- /.navbar-collapse -->
-        </nav>
-    </header>
+        </div>
+    </div>
 </div>
+<aside class="sidebar">
+    <div class="inner-res">
+        <div class="sidebar-header">
+            <button class="close-btn"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="nav-list-ar">
+            <ul class="nav-list-ul">
+                <li class="{{ Request::is('customer') ? 'active' : '' }}">
+                    <a href="{{ route('customer.index') }}">
+                        <i data-feather="grid"></i>
+                        <span>Menu</span>
+                    </a>
+                </li>
+                <li class="{{ Request::is('customer/orders*') ? 'active' : '' }}">
+                    <a href="{{ route('customer.orders') }}">
+                        <i data-feather="user-plus"></i>
+                        <span>Orders</span>
+                    </a>
+                </li>
+                <li class="{{ Request::is('customer/restaurant/information') ? 'active' : '' }}">
+                    <a href="{{ route('customer.restaurant.information') }}">
+                        <i data-feather="alert-circle"></i>
+                        <span>Information</span>
+                    </a>
+                </li>
+                <li class="{{ Request::is('customer/cards/*') ? 'active' : '' }}">
+                    <a href="{{ route('customer.cards.list') }}">
+                        <i data-feather="archive"></i>
+                        <span>Payment Methods</span>
+                    </a>
+                </li>
+                <li class="{{ Request::is('customer/chats*') ? 'active' : '' }}">
+                    <a href="{{ route('customer.chat.index') }}">
+                        <i data-feather="message-square"></i>
+                        <span>Chats</span>
+                    </a>
+                </li>
+            </ul>
+            <ul class="nav-list-ul mt-4">
+                <li>
+                    <form method="POST" action="{{ route('customer.logout') }}">
+                        @csrf
+                        <a href="{{ route('customer.logout') }}"
+                            onclick="event.preventDefault();this.closest('form').submit();" alt="Logout">
+                            <i data-feather="log-out"></i>
+                            <span>Logout</span>
+                        </a>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+</aside>
+<!-- mobile responsive sidebar -->
+<!-- HEADER END -->

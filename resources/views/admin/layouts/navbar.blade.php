@@ -28,7 +28,6 @@
                         <span class="expand-ico"><i class="material-icons">expand_more</i></span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right">
-                        <li><a href="#"><i class="material-icons">person</i> <span data-i18n="userinfo.profile">Your Profile</span></a></li>
                         <li class="divider-horizontal"></li>
                         <li><a href="#"><i class="material-icons">lock</i> <span data-i18n="userinfo.lock">Lock</span></a></li>
                         <li class="divider-horizontal"></li>

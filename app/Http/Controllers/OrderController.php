@@ -8,6 +8,7 @@ use App\Models\Restaurant;
 use App\Models\User;
 use App\Models\CustomerAddress;
 use App\Models\OrderMenuItem;
+use Kreait\Firebase\Database;
 use Auth;
 use DB;
 use Config;
@@ -21,10 +22,6 @@ class OrderController extends Controller
 	public function index(){
 		$uid = Auth::user()->uid;
 		$restaurant = Restaurant::where('uid', $uid)->first();
-        // if(session()->get('restaurantId') != '')
-        // {
-        //     $restaurant->restaurant_id = session()->get('restaurantId');
-        // }
         $completedOrders = Order::where('restaurant_id',$restaurant->restaurant_id)->where('order_progress_status','COMPLETED')->get();
         $canceldOrders = Order::where('restaurant_id',$restaurant->restaurant_id)->where('order_progress_status','CANCEL')->get();
         return view('orders.index',compact('completedOrders','canceldOrders'));
@@ -50,6 +47,30 @@ class OrderController extends Controller
             $order->order_progress_status = $action;
             $order->action_time =  date('Y-m-d h:i:s');
             if($action==='ACCEPTED'){
+                $database = app('firebase.database');
+                $order_id =  $id;
+                $customer_id = $order->uid;
+                $user = User::where('uid',$customer_id)->first();
+                  // Create a key for a new post
+                $user_id = Auth::user()->uid;
+                $postData =(object) [
+                    'full_name' => $user->first_name." ".$user->last_name,
+                    'message' => 'How may I help you',
+                    'message_date'=>date("Y-m-d h:i:A"),
+                    'isseen'=>true,
+                    'order_number'=>$order_id,
+                    'receiver'=>$customer_id,
+                    'sender'=>$user_id,
+                    'sent_from'=> Config::get('constants.ROLES.RESTAURANT'),
+                    'user_id'=>$customer_id
+                ];
+                $restaurant = Restaurant::where('uid', $user_id)->first();
+                $newPostKey = $database->getReference(Config::get('constants.FIREBASE_DB_NAME'))->push()->getKey();
+                $url = Config::get('constants.FIREBASE_DB_NAME').'/'.$restaurant->restaurant_id.'/'.$order->order_number."/"."/".$order->uid."/" ;
+                $updates = [$url.$newPostKey  => $postData];
+                $database->getReference()->update($updates);
+
+
                 if($request->post('type')==='hours'){
                     $order->pickup_time = $request->post('minutes')." Hours";
                 }else{
@@ -61,7 +82,7 @@ class OrderController extends Controller
             //removed if order completed 
             if($action==Config::get('constants.ORDER_STATUS.COMPLETED')){
                 $database = app('firebase.database');
-                $url = Config::get('constants.FIREBASE_DB_NAME').'/'.$restaurant->restaurant_id."/".$order->order_number."/";
+                $url = Config::get('constants.FIREBASE_DB_NAME').'/'.$restaurant->restaurant_id."/".$order->order_number."/".$order->uid."/";
                 $database->getReference($url)->remove();
             }
 
@@ -77,8 +98,10 @@ class OrderController extends Controller
         try{
 
                 $order = Order::where('order_id',$id)->with('orderItems')->first();
-                $pdf = PDF::loadView('orders.pdf',compact('order'));
-                $pdf_name =$order->order_number.'.pdf';
+                $uid = Auth::user()->uid;
+                $user = User::where('uid', $uid)->first();
+        		$restaurant = Restaurant::where('uid', $uid)->first();
+                $pdf = PDF::loadView('orders.pdf',compact('order','restaurant','user'));
                 return $pdf->download('dinertech_'.$order->order_number.'.pdf');
         }catch(Exception $e){
                 echo '<pre>',print_r($e),'</pre>';

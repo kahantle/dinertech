@@ -20,7 +20,7 @@ class CardController extends Controller
 
             $uid = Auth::user()->uid;
             $restaurantId = session()->get('restaurantId');
-            $data['cards'] = Card::where('uid',$uid)->where('restaurant_id',$restaurantId)->get(['card_id','card_holder_name','card_number','card_expire_date','card_cvv','card_type','status']);
+            $data['cards'] = getUserCards($restaurantId,$uid);
             $data['orderDetails'] = $orderDetails;
             $data['title'] = 'Payment Cards - Dinertech';
             return view('customer.card.index',$data);
@@ -36,16 +36,22 @@ class CardController extends Controller
         
         $uid = Auth::user()->uid;
         $restaurantId = session()->get('restaurantId');
-        $data['cards'] = Card::where('uid',$uid)->where('restaurant_id',$restaurantId)->get(['card_id','card_holder_name','card_number','card_expire_date','card_cvv','card_type','status']);
+        // $data['cards'] = Card::where('uid',$uid)->where('restaurant_id',$restaurantId)->get(['card_id','card_holder_name','card_number','card_expire_date','card_cvv','card_type','status']);
+        $data['cards'] = getUserCards($restaurantId,$uid);
         $data['orderDetails'] = array();
-        $data['title'] = 'Payment Cards - Dinertech';
+        $data['cartMenus'] = getCartItem();
+        $data['title'] = 'Payment Cards';
         return view('customer.card.index',$data);
         
     }
 
     public function create()
     {
-        $data['title'] = 'Add Card - Dinertech';
+        $data['title'] = 'Add Card';
+        $data['cartMenus'] = getCartItem();
+        $restaurantId = session()->get('restaurantId');
+        $uid = Auth::user()->uid;
+        $data['cards'] = getUserCards($restaurantId,$uid);
         return view('customer.card.create',$data);
     }
 
@@ -100,8 +106,24 @@ class CardController extends Controller
         $card->card_type = $cardType;
         $card->save();
 
-        return redirect()->route('customer.cards');
+        return redirect()->route('customer.cards')->with('success','Card Add Successfully.');
     }
 
-    
+    public function delete(Request $request)
+    {
+        if($request->ajax())
+        {
+            $cardId = $request->cardId;
+            $card = Card::findOrFail($cardId);
+            if($card)
+            {
+                $card->delete();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
 }

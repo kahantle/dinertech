@@ -3,23 +3,26 @@
 namespace App\Http\Controllers\Api\Customer;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Validator;
-use App\Models\User;
 use App\Models\CustomerAddress;
+use App\Models\CustomerFcmTokens;
+use App\Models\Restaurant;
 use App\Models\RestaurantUser;
+use App\Models\User;
 use App\Notifications\Otp;
+use App\Notifications\RestaurantChat;
 use Carbon\Carbon;
 use Config;
-use Hash;
 use DB;
+use Hash;
+use Illuminate\Http\Request;
+use Validator;
 
 class UserController extends Controller
 {
 
     /**
      * @method login
-     * 
+     *
      */
 
     public function login(Request $request)
@@ -28,24 +31,25 @@ class UserController extends Controller
             $request_data = $request->json()->all();
 
             $validator = Validator::make($request_data, [
-                'email_id'  =>  'required_without:mobile_number|email',
+                'email_id' => 'required_without:mobile_number|email',
                 'mobile_number' => 'required_without:email_id|numeric',
                 'restaurant_id' => 'required',
                 'fcm_id' => 'required',
+                'device' => 'required',
                 'password' => 'required|min:6',
             ]);
             if ($validator->fails()) {
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
             }
             $email = $request->post('email_id');
-            $mobile =  $request->post('mobile_number');
+            $mobile = $request->post('mobile_number');
             $restaurantId = $request->post('restaurant_id');
             $user = User::where('role', Config::get('constants.ROLES.CUSTOMER'))
                 ->whereHas('restaurant_user', function ($query) use ($restaurantId) {
                     $query->where('restaurant_id', $restaurantId);
                 })
                 ->where(function ($query) use ($email, $mobile) {
-                    $query->where('email_id',  $email);
+                    $query->where('email_id', $email);
                     $query->orWhere('mobile_number', $mobile);
                 })->first();
             if (!$user) {
@@ -57,10 +61,21 @@ class UserController extends Controller
             if ($user) {
                 if (Hash::check($request->post('password'), $user->password)) {
                     $token = $user->createToken('Laravel Password Grant Client')->accessToken;
-                    $user =  $user->with('address')
+                    $user = $user->with('address')
                         ->where('uid', $user->uid)
                         ->first(['uid', 'first_name', 'last_name', 'email_id', 'mobile_number', 'profile_image',
-                        'app_notifications', 'chat_notifications', 'location_tracking']);
+                            'app_notifications', 'chat_notifications', 'location_tracking']);
+                    $fcmId = $request->post('fcm_id');
+                    $device = $request->post('device');
+                    $customerFcmToken = CustomerFcmTokens::where('uid', $user->uid)->where('fcm_id', $fcmId)->first();
+                    if ($customerFcmToken == null) {
+                        $customerFcmToken = new CustomerFcmTokens;
+                        $customerFcmToken->uid = $user->uid;
+                        $customerFcmToken->fcm_id = $fcmId;
+                        $customerFcmToken->device = $device;
+                        $customerFcmToken->save();
+                    }
+                    // User::where('uid',$user->uid)->update(['fcm_id' => $request->post('fcm_id'),'device' => $request->post('device')]);
                     return response()->json(['token' => $token, 'user' => $user, 'message' => 'You have succcessfuly login.', 'success' => true], 200);
                 } else {
                     return response()->json(['success' => false, 'message' => "Please enter a valid email or mobile and password."], 400);
@@ -87,7 +102,7 @@ class UserController extends Controller
                 'restaurant_id' => 'required',
                 'first_name' => 'required',
                 'last_name' => 'required',
-                'email_id'  =>  'required|email|unique:users,email_id',
+                'email_id' => 'required|email|unique:users,email_id',
                 'mobile_number' => 'required|phone:US,IN|unique:users,mobile_number',
                 'password' => 'required|min:6',
                 'physical_address' => 'required',
@@ -126,7 +141,18 @@ class UserController extends Controller
             $user_address->zip = $request->post('zip_code');
             $user_address->save();
             DB::commit();
-            return response()->json(['message' => 'You have succcessfully signup.', 'success' => true], 200);
+
+            $restaurant_detail = Restaurant::where('restaurant_id', $request->post('restaurant_id'))->first();
+            if ($restaurant_detail->cm_client_id) {
+                $customer = [
+                    'email' => $user->email_id,
+                    'name' => $user->getFullNameAttribute(),
+                    'uid' => $user->uid,
+                ];
+                create_subscriber($restaurant_detail->cm_client_id, $customer, $restaurant_detail->restaurant_id);
+            }
+
+            return response()->json(['message' => 'You have successfully signup.', 'success' => true], 200);
         } catch (\Throwable $th) {
             DB::rollBack();
             $errors['success'] = false;
@@ -138,7 +164,6 @@ class UserController extends Controller
         }
     }
 
-
     public function verifyOtp(Request $request)
     {
         try {
@@ -147,7 +172,7 @@ class UserController extends Controller
             $validator = Validator::make($request_data, [
                 'restaurant_id' => 'required',
                 'otp' => 'required',
-                'email_id'  =>  'required_without:mobile_number|email',
+                'email_id' => 'required_without:mobile_number|email',
                 'mobile_number' => 'required_without:email_id|numeric',
             ]);
             if ($validator->fails()) {
@@ -155,22 +180,22 @@ class UserController extends Controller
             }
             $restaurantId = $request->post('restaurant_id');
             $email = $request->post('email_id');
-            $mobile =  $request->post('mobile_number');
+            $mobile = $request->post('mobile_number');
             $user = User::where('role', Config::get('constants.ROLES.CUSTOMER'))
                 ->where('otp', $request->post('otp'))
                 ->whereHas('restaurant_user', function ($query) use ($restaurantId) {
                     $query->where('restaurant_id', $restaurantId);
                 })
                 ->where(function ($query) use ($email, $mobile) {
-                    $query->where('email_id',  $email);
+                    $query->where('email_id', $email);
                     $query->orWhere('mobile_number', $mobile);
                 })
                 ->first();
             if ($user) {
                 DB::beginTransaction();
                 $user->is_verified_at = Carbon::now();
-                $user->otp = NULL;
-                $user->otp_valid_time = NULL;
+                $user->otp = null;
+                $user->otp_valid_time = null;
                 $user->status = Config::get('constants.STATUS.ACTIVE');
                 $user->save();
                 DB::commit();
@@ -190,24 +215,24 @@ class UserController extends Controller
     }
 
     public function forgotPassword(Request $request)
-    { 
+    {
         try {
             $request_data = $request->json()->all();
 
             $validator = Validator::make($request_data, [
                 'restaurant_id' => 'required',
-                'email_id'  =>  'required_without:mobile_number|email',
-                'mobile_number' => 'required_without:email_id|numeric'
+                'email_id' => 'required_without:mobile_number|email',
+                'mobile_number' => 'required_without:email_id|numeric',
             ]);
             if ($validator->fails()) {
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
             }
             $restaurantId = $request->post('restaurant_id');
             $email = $request->post('email_id');
-            $mobile =  $request->post('mobile_number');
+            $mobile = $request->post('mobile_number');
             $user = User::where('role', Config::get('constants.ROLES.CUSTOMER'))
                 ->where(function ($query) use ($email, $mobile) {
-                    $query->where('email_id',  $email);
+                    $query->where('email_id', $email);
                     $query->orWhere('mobile_number', $mobile);
                 })
                 ->whereHas('restaurant_user', function ($query) use ($restaurantId) {
@@ -236,8 +261,6 @@ class UserController extends Controller
             return response()->json($errors, 401);
         }
     }
-
-
 
     public function resetPassword(Request $request)
     {
@@ -281,9 +304,31 @@ class UserController extends Controller
 
     public function logout(Request $request)
     {
-        $token = auth('api')->user()->token();
-        $token->revoke();
-        return response()->json(['message' => 'You have been successfully logged out!', 'success' => true], 200);
+        try {
+            $request_data = $request->json()->all();
+
+            $validator = Validator::make($request_data, [
+                'fcm_id' => 'required',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json(['success' => false, 'message' => $validator->errors()], 400);
+            }
+
+            $uid = auth('api')->user()->uid;
+            $fcmId = $request->post('fcm_id');
+            CustomerFcmTokens::where('uid', $uid)->where('fcm_id', $fcmId)->delete();
+            $token = auth('api')->user()->token();
+            $token->revoke();
+            return response()->json(['message' => 'You have been successfully logged out!', 'success' => true], 200);
+        } catch (\Throwable $th) {
+            $errors['success'] = false;
+            $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
+            if ($request->debug_mode == 'ON') {
+                $errors['debug'] = $th->getMessage();
+            }
+            return response()->json($errors, 401);
+        }
     }
 
     public function changePassword(Request $request)
@@ -294,7 +339,7 @@ class UserController extends Controller
             $validator = Validator::make($request_data, [
                 'restaurant_id' => 'required',
                 'current_password' => 'required|min:6',
-                'new_password' => 'required|min:6', 
+                'new_password' => 'required|min:6',
             ]);
             if ($validator->fails()) {
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
@@ -327,45 +372,77 @@ class UserController extends Controller
         }
     }
 
-
     public function profile(Request $request)
-    {          
+    {
         try {
             $validator = Validator::make($request->all(), [
                 'restaurant_id' => 'required',
                 'first_name' => 'required',
                 'last_name' => 'required',
-                'physical_address' => 'required'
+                'physical_address' => 'required',
             ]);
             if ($validator->fails()) {
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
             }
             DB::beginTransaction();
             $uid = auth('api')->user()->uid;
-            $user =  User::where('uid',$uid )->first();
+            $user = User::where('uid', $uid)->first();
             if ($request->hasFile('item_img')) {
                 $image = $request->file('item_img');
-                $save_name = $uid.'.'.$image->getClientOriginalExtension();
+                $save_name = $uid . '.' . $image->getClientOriginalExtension();
                 $image->storeAs(Config::get('constants.IMAGES.USER_IMAGE_PATH'), $save_name);
                 $user->profile_image = $save_name;
             }
             $user->first_name = $request->post('first_name');
             $user->last_name = $request->post('last_name');
             $user->save();
-            $user_address = CustomerAddress::where('uid',$uid)->first();
-            if(!$user_address){
-                $user_address = New CustomerAddress;
+            $user_address = CustomerAddress::where('uid', $uid)->first();
+            if (!$user_address) {
+                $user_address = new CustomerAddress;
             }
             $user_address->address = $request->post('physical_address');
             $user_address->uid = $uid;
             $user_address->save();
             DB::commit();
-            $user =  $user->with('address')
-            ->where('uid', $user->uid)
-            ->first(['uid', 'first_name', 'last_name', 'email_id', 'mobile_number', 'profile_image','app_notifications', 'chat_notifications', 'location_tracking']);
-            return response()->json(['message' => 'You have succcessfully update profile.', 'success' => true , 'user' =>  $user ], 200);
+            $user = $user->with('address')
+                ->where('uid', $user->uid)
+                ->first(['uid', 'first_name', 'last_name', 'email_id', 'mobile_number', 'profile_image', 'app_notifications', 'chat_notifications', 'location_tracking']);
+            return response()->json(['message' => 'You have succcessfully update profile.', 'success' => true, 'user' => $user], 200);
         } catch (\Throwable $th) {
             DB::rollBack();
+            $errors['success'] = false;
+            $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
+            if ($request->debug_mode == 'ON') {
+                $errors['debug'] = $th->getMessage();
+            }
+            return response()->json($errors, 401);
+        }
+    }
+
+    public function sendChatNotification(Request $request)
+    {
+        try {
+            $request_data = $request->json()->all();
+
+            $validator = Validator::make($request_data, [
+                'restaurant_id' => 'required',
+                'order_id' => 'required',
+                'message' => 'required',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json(['success' => false, 'message' => $validator->errors()], 400);
+            }
+            $orderId = $request->post('order_id');
+            $restaurantId = $request->post('restaurant_id');
+            $message = $request->post('message');
+            $restaurant = Restaurant::with(['order' => function ($order) use ($orderId, $restaurantId) {
+                $order->where('order_id', $orderId)->where('restaurant_id', $restaurantId)->first();
+            }])->first();
+            $messageData = ['message' => $message, 'order_id' => (string) $restaurant->order->order_id, 'order_number' => (string) $restaurant->order->order_number];
+            $restaurant->notify(new RestaurantChat($messageData));
+            return response()->json(['message' => 'Chat notification send successfully.', 'success' => true], 200);
+        } catch (\Throwable $th) {
             $errors['success'] = false;
             $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
             if ($request->debug_mode == 'ON') {

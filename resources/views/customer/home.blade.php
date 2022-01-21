@@ -1,764 +1,351 @@
 @extends('customer-layouts.app')
 
+@section('css')
+    <!-- Rating bar css -->
+    <link rel="stylesheet" href="{{ asset('assets/customer/css/rateYo/2.3.2/jquery.rateyo.min.css') }}">
+@endsection
 @section('content')
-	@include('customer-layouts.banner')
+    <section class="dash-body-ar wd-dr-dash-inner">
+        <div class="wrp-ar-nav-body">
+            @include('customer-layouts.navbar')
+            <div id="chatdesk" class="chart-board ">
+                @include('customer.messages')
+                <div class="row">
+                    <div class="col-xl-8 col-lg-12 col-md-12">
+                        <div id="searchItems" class="scrollbar"></div>
+                        <div id="menuItems">
+                            <div class="content">
+                                <div id="testinomial" class="banner-container">
+                                    <div class="owl-carousel owl-first-blog  owl-theme">
+                                        @foreach ($promotionLists as $promotion)
+                                            <div class="item">
+                                                <div class="card-main-blog @if ($promotion->promotion_type_id == 1 || $promotion->promotion_type_id == 3 || $promotion->promotion_type_id == 4 || $promotion->promotion_type_id == 5) card-v-inner-sys-five @elseif($promotion->promotion_type_id == 2) card-v-inner-sys-first @elseif($promotion->promotion_type_id == 6) card-v-inner-sys-seven @elseif($promotion->promotion_type_id == 7) card-v-inner-sys-six @elseif ($promotion->promotion_type_id == 8) card-v-inner-sys-four @elseif ($promotion->promotion_type_id == 9) card-v-inner-sys-third @elseif ($promotion->promotion_type_id == 10) card-v-inner-sys-second @endif">
+                                                    <div class="wp-inner-st">
+                                                        <h5 class="card-title">{{ $promotion->promotion_name }}</h5>
+                                                        <p class="card-text">{{ $promotion->promotion_details }}</p>
+                                                    </div>
+                                                    <div class="rowinner row-ib-blog">
+                                                        <a href="javascript:void(0);" class="openPromotion"
+                                                            data-promotion-id="{{ $promotion->promotion_id }}"
+                                                            data-promotion-type="{{ $promotion->promotion_type_id }}"><button
+                                                                class="cancel-btn">Learn More</button></a>
+                                                        <span class="get-border"></span>
+                                                        <a
+                                                            href="{{ route('customer.promotions.getEligibleItems', $promotion->promotion_id) }}"><button
+                                                                class="cancel-btn">Get it Now</button></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                                @foreach ($promotionLists as $promotion)
+                                    <div class="modal fade modal-type-{{ $promotion->promotion_type_id }}"
+                                        id="exampleModal-{{ $promotion->promotion_id }}" tabindex="-1" role="dialog"
+                                        aria-labelledby="exampleModal-{{ $promotion->promotion_id }}" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div
+                                                class="modal-content  card-first background-{{ $promotion->promotion_id }}">
+                                                <div class="modal-header p-0">
+                                                    <div class="d-flex flex-column">
+                                                        <h5 class="card-title">{{ $promotion->promotion_name }}</h5>
+                                                        <p class="card-text pb-3">{{ $promotion->promotion_details }}</p>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-body pt-3 pb-0 px-0">
+                                                    <p class="promote-blog"><b>Promotion Code :</b>
+                                                        {{ $promotion->promotion_code }}</p>
+                                                    <p class="promote-blog"><b>Discount :</b>
+                                                        {{ $promotion->discount }}
+                                                    </p>
+                                                    <p class="promote-blog"><b>Charges :</b>
+                                                        {{ $promotion->no_extra_charge_type }}</p>
+                                                    <p class="promote-blog"><b>Minimum Order Value :</b>
+                                                        {{ $promotion->set_minimum_order_amount }}</p>
+                                                    <p class="promote-blog"><b>Client Type :</b>
+                                                        {{ $promotion->client_type }}</p>
+                                                    <p class="promote-blog"><b>Order Type :</b>
+                                                        {{ $promotion->order_type }}
+                                                    </p>
+                                                    <p class="promote-blog"><b>Payment Methods :</b>
+                                                        {{ $promotion->promotion_code }}</p>
+                                                </div>
+                                                <div class="modal-footer border-0 p-0">
+                                                    <div class="rowinner">
+                                                        <a href="javascript:;"><button
+                                                                class="cancel-btn btn-inner-first cancel-modal-{{ $promotion->promotion_id }}"
+                                                                data-promotion-id="{{ $promotion->promotion_id }}">Cancel</button></a>
+                                                        <a
+                                                            href="{{ route('customer.promotions.getEligibleItems', $promotion->promotion_id) }}"><button
+                                                                class="cancel-btn btn-inner-first remove-select-{{ $promotion->promotion_id }} selected-blog">Get
+                                                                it Now</button></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                                <h2>What are you hungry for? </h2>
+                                <div id="testinomial" class="banner-container">
+                                    <div class="owl-carousel owl-theme owl-drag">
+                                        @foreach ($categories as $key => $category)
+                                            <div class="item category" data-category-id="{{ $category->category_id }}">
+                                                <div class="card">
+                                                    <img class="card-img-top lazy"
+                                                        data-src="{{ $category->getImagePathAttribute() ? $category->getImagePathAttribute() : $category->getDefaultImage() }}"
+                                                        alt="Card image cap">
+                                                    <div class="card-body category">
+                                                        <h5 class="card-title">{{ $category->category_name }}</h5>
+                                                        <p class="card-text">{{ $category->category_details }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                                <div class="scrollbar" id="style-4"></div>
+                            </div>
+                        </div>
+                    </div>
+                    @include('customer-layouts.right-sidebar')
+                </div>
+            </div>
+    </section>
 
-		{{-- <div class="container home-search">
-	        <div class="row">
-	            <div class="col-sm-6">
-	                <form>
-	                    <input type="text" placeholder="Search menu item" id="searchItem">
-	                </form>
-	            </div>
-	            <div class="col-sm-6">
-	                <div class="search-button">
-	                    <div id="myDIV">
-							@foreach($categories as $key => $category)
-	                    		@php
-	                    			if($key == 0)
-	                    			{
-	                    				$active = 'active';
-	                    			}
-	                    			else
-	                    			{
-	                    				$active = '';	
-	                    			}
-	                    		@endphp
-	                        	<button class="btn item-type category {{$active}} category-{{$category->category_id}}" alt="{{$category->category_name}}" data-category-id="{{$category->category_id}}" data-restaurant-id="{{$category->restaurant_id}}">{{$category->category_name}}</button>
-	                        @endforeach
-	                    </div>
-	                </div>
-	            </div>
-	        </div>
-	    </div> --}}
-		<div class="container-fluid home-search">
-			<div class="wd-dr-border">
-				<div class="wd-der-inoutting-blog">
-       				<div class="wd-dr-input-form">
-						<form>
-							<img src="{{asset('assets/customer/images/loupe.png')}}">
-							<input type="text" placeholder="Search menu item" id="searchItem">
-						</form>
-					</div>
-					<div class="search-input-form">
-						<div class="search-button">
-							<div id="myDIV">
-								@foreach($categories as $key => $category)
-									@php
-										if($key == 0)
-										{
-											$active = 'active';
-										}
-										else
-										{
-											$active = '';	
-										}
-									@endphp
-	                        		<button class="btn item-type category {{$active}} category-{{$category->category_id}}" alt="{{$category->category_name}}" data-category-id="{{$category->category_id}}" data-restaurant-id="{{$category->restaurant_id}}">{{$category->category_name}}</button>
-	                        	@endforeach
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		{{-- <div class="container">
-		    <div class="row" id="menuIteams">
-		    	@foreach($menuItems as $key => $iteam)
-		    		<div class="col-sm-3 col-md-3">
-		    		    <div class="food-item tooltip1">
-		    		        <div class="tooltiptext">
-		    		            <h4>{{$iteam->item_name}}</h4>
-		    		            <span>
-		    		                {{$iteam->item_details}}
-		    		            </span>
-		    		        </div>
-							<div class="food-img" style="background-image: url('{{(empty($iteam->getMenuImgAttribute())) ? asset('assets/customer/images/Logo-Round.png') : $iteam->getMenuImgAttribute()}}');background-repeat: no-repeat;background-size: 100% 100%;height: 200px;">
-		    		        	<div class="cart-quantity-counter-{{$iteam->menu_id}}">
-									@if($iteam->modifierList->count() > 0)
-										@if(in_array($iteam->menu_id,$menuIds))
-												@php $menuCount = 1; @endphp
-												@if(in_array($iteam->menu_id,$menuIds))
-													@php $menuCount++; @endphp
-												@endif
-												@if($menuCount == 2)
-													@php $cartClass = 'decrease-with-modifire'; @endphp
-												@else
-													@php $cartClass = 'cart-decrease'; @endphp
-												@endif
-												<div class="add quantity-counter quantity-counter-{{Str::of($iteam->item_name)->replace(' ', '-')}}">
-													<div class="value-button {{$cartClass}}" id="decrease-{{$iteam->menu_id}}" value="Decrease Value" data-menu-id="{{$iteam->menu_id}}">-</div>
-														@php
-															$itemQuantity = 0;
-														@endphp
-														@foreach($quantityArray as $quantity)
-															@if($quantity['menu_id'] == $iteam->menu_id)
-																@php
-																	$itemQuantity += $quantity['quantity'];
-																@endphp
-															@endif
-														@endforeach
-														<input type="number" id="quantity-{{$iteam->menu_id}}" value="{{$itemQuantity}}" class="number"/>
-													<div class="value-button increase-with-modifire" id="increase-{{$iteam->menu_id}}" value="Increase Value" data-menu-id="{{$iteam->menu_id}}">+</div>
-												</div>
-												<div class="cart-alert-popup"></div>
-										@else
-											<button type="button" class="btn btn-primary add cart cart-{{Str::of($iteam->item_name)->replace(' ', '-')}}" data-menu-id="{{$iteam->menu_id}}" data-menu-name="{{Str::of($iteam->item_name)->replace(' ', '-')}}" data-category-id="{{$iteam->category_id}}" alt="Add+">
-												Add+
-											</button>
-											<div class="add quantity-counter hide quantity-counter-{{Str::of($iteam->item_name)->replace(' ', '-')}}">
-												<div class="value-button decrease modifier-decrease" id="decrease-{{$iteam->menu_id}}" value="Decrease Value" data-menu-id="{{$iteam->menu_id}}">-</div>
-													<input type="number" id="quantity-{{$iteam->menu_id}}" value="0" class="number"/>
-												<div class="value-button increase modifier-increase" id="increase-{{$iteam->menu_id}}" value="Increase Value" data-menu-id="{{$iteam->menu_id}}">+</div>
-											</div>
-										@endif
-									@else
-										@if(in_array($iteam->menu_id,$menuIds))
-											<div class="add quantity-counter quantity-counter-{{Str::of($iteam->item_name)->replace(' ', '-')}}">
-												<div class="value-button decrease" id="decrease-{{$iteam->menu_id}}" value="Decrease Value" data-menu-id="{{$iteam->menu_id}}">-</div>
-													@foreach($quantityArray as $quantity)
-														@if($quantity['menu_id'] == $iteam->menu_id)
-															<input type="number" id="quantity-{{$iteam->menu_id}}" value="{{$quantity['quantity']}}" class="number" max="10"/>
-														@endif
-													@endforeach	
-												<div class="value-button increase" id="increase-{{$iteam->menu_id}}" value="Increase Value" data-menu-id="{{$iteam->menu_id}}">+</div>
-											</div>
-										@else
-											<button type="button" class="btn btn-primary add add-to-cart cart-{{Str::of($iteam->item_name)->replace(' ', '-')}}" data-menu-id="{{$iteam->menu_id}}" data-menu-name="{{Str::of($iteam->item_name)->replace(' ', '-')}}" data-category-id="{{$iteam->category_id}}" alt="Add+">
-												Add+
-											</button>
-											<div class="add quantity-counter hide quantity-counter-{{Str::of($iteam->item_name)->replace(' ', '-')}}">
-												<div class="value-button decrease" id="decrease-{{$iteam->menu_id}}" value="Decrease Value" data-menu-id="{{$iteam->menu_id}}">-</div>
-													<input type="number" id="quantity-{{$iteam->menu_id}}" value="0" class="number" max="10"/>
-												<div class="value-button increase" id="increase-{{$iteam->menu_id}}" value="Increase Value" data-menu-id="{{$iteam->menu_id}}">+</div>
-											</div>
-										@endif
-									@endif
-								</div>
-								<div class="modifierItems-{{$iteam->menu_id}}"></div>
-		    		        </div>
-		    		        <ul>
-		    		            <li>
-		    		                <h4>{{$iteam->item_name}}</h4>
-		    		                <div class="price">
-		    		                    ${{number_format($iteam->item_price,'2')}}
-		    		                </div>
-		    		                <div class="clearfix">
+    <div class="modal menu-plus-add-header" id="cart-alert-modal" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0 menu-modal-blog pt-3 pb-0">
+                    <h4 class="modal-title" id="myModalLabel">Remove Item From cart</h4>
+                </div>
+                <div class="modal-body py-0">
+                    <p class="text-center">This item has multiple customizations added.<br>Proceed to cart to remove
+                        item?</p>
+                </div>
+                <div class="modal-footer border-0 menu-footer-inner pt-0">
+                    <button type="button" class="btn menu-cancle" data-dismiss="modal">Cancle</button>
+                    {{-- <button type="button" class="btn menu-yes">Yes</button> --}}
+                </div>
 
-		    		                </div>
-		    		            </li>
-		    		        </ul>
-		    		        <p style="height: 40px;">
-		    		            {{$iteam->item_details}}
-		    		        </p>
-		    			</div>
-		    		</div>
-		    	@endforeach
-			</div>
-			<div class="row" id="searchIteams"></div>
-			<div id="snackbar"></div>
-		    <div class="modal fade" id="decrease-modal" tabindex="-1" role="dialog" aria-labelledby="modifier-btn">
-		        <div class="modal-dialog" role="document">
-		            <div class="modal-content">
-		                <div class="modal-header">
-		                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-		                            aria-hidden="true">&times;</span></button>
-		                </div>
-		                <div class="modal-body">
-		                	<p>This item have different modifiers Please go to cart to minus.</p>
-		                </div>
-		                <div class="modal-footer">
-		                    <a href="{{route('customer.cart')}}" class="btn btn-primary btn-block">
-		                        <h4>
-		                            Go to cart
-		                        </h4>
-		                    </a>
-		                </div>
-		            </div>
-		        </div>
-		    </div>
-		</div> --}}
-		<div class="container-fluid">
-			<div class="wd-dr-home-page">
-				<div class="row" id="menuIteams">
-					@foreach($menuItems as $key => $iteam)
-						<div class="col-sm-3 col-md-3">
-							<div class="food-item tooltip1">
-								<div class="tooltiptext">
-									<h4>{{$iteam->item_name}}</h4>
-									<span>
-										{{$iteam->item_details}}
-									</span>
-								</div>
-								<div class="food-img food-item-1">
-									<img src="{{(empty($iteam->getMenuImgAttribute())) ? asset('assets/customer/images/Logo-Round.png') : $iteam->getMenuImgAttribute()}}">
-									<button type="button" class="btn btn-primary add" data-toggle="modal" data-target="#modifier" alt="Add+">
-										Add+
-									</button>
-									<div class="cart-quantity-counter-{{$iteam->menu_id}}">
-										@if($iteam->modifierList->count() > 0)
-											@if(in_array($iteam->menu_id,$menuIds))
-													@php $menuCount = 1; @endphp
-													@if(in_array($iteam->menu_id,$menuIds))
-														@php $menuCount++; @endphp
-													@endif
-													@if($menuCount == 2)
-														@php $cartClass = 'decrease-with-modifire'; @endphp
-													@else
-														@php $cartClass = 'cart-decrease'; @endphp
-													@endif
-													<div class="add quantity-counter quantity-counter-{{Str::of($iteam->item_name)->replace(' ', '-')}}">
-														<div class="value-button {{$cartClass}}" id="decrease-{{$iteam->menu_id}}" value="Decrease Value" data-menu-id="{{$iteam->menu_id}}">-</div>
-															@php
-																$itemQuantity = 0;
-															@endphp
-															@foreach($quantityArray as $quantity)
-																@if($quantity['menu_id'] == $iteam->menu_id)
-																	@php
-																		$itemQuantity += $quantity['quantity'];
-																	@endphp
-																@endif
-															@endforeach
-															<input type="number" id="quantity-{{$iteam->menu_id}}" value="{{$itemQuantity}}" class="number"/>
-														<div class="value-button increase-with-modifire" id="increase-{{$iteam->menu_id}}" value="Increase Value" data-menu-id="{{$iteam->menu_id}}">+</div>
-													</div>
-													<div class="cart-alert-popup"></div>
-											@else
-												<button type="button" class="btn btn-primary add cart cart-{{Str::of($iteam->item_name)->replace(' ', '-')}}" data-menu-id="{{$iteam->menu_id}}" data-menu-name="{{Str::of($iteam->item_name)->replace(' ', '-')}}" data-category-id="{{$iteam->category_id}}" alt="Add+">
-													Add+
-												</button>
-												<div class="add quantity-counter hide quantity-counter-{{Str::of($iteam->item_name)->replace(' ', '-')}}">
-													<div class="value-button decrease modifier-decrease" id="decrease-{{$iteam->menu_id}}" value="Decrease Value" data-menu-id="{{$iteam->menu_id}}">-</div>
-														<input type="number" id="quantity-{{$iteam->menu_id}}" value="0" class="number"/>
-													<div class="value-button increase modifier-increase" id="increase-{{$iteam->menu_id}}" value="Increase Value" data-menu-id="{{$iteam->menu_id}}">+</div>
-												</div>
-											@endif
-										@else
-											@if(in_array($iteam->menu_id,$menuIds))
-												<div class="add quantity-counter quantity-counter-{{Str::of($iteam->item_name)->replace(' ', '-')}}">
-													<div class="value-button decrease" id="decrease-{{$iteam->menu_id}}" value="Decrease Value" data-menu-id="{{$iteam->menu_id}}">-</div>
-														@foreach($quantityArray as $quantity)
-															@if($quantity['menu_id'] == $iteam->menu_id)
-																<input type="number" id="quantity-{{$iteam->menu_id}}" value="{{$quantity['quantity']}}" class="number" max="10"/>
-															@endif
-														@endforeach	
-													<div class="value-button increase" id="increase-{{$iteam->menu_id}}" value="Increase Value" data-menu-id="{{$iteam->menu_id}}">+</div>
-												</div>
-											@else
-												<button type="button" class="btn btn-primary add add-to-cart cart-{{Str::of($iteam->item_name)->replace(' ', '-')}}" data-menu-id="{{$iteam->menu_id}}" data-menu-name="{{Str::of($iteam->item_name)->replace(' ', '-')}}" data-category-id="{{$iteam->category_id}}" alt="Add+">
-													Add+
-												</button>
-												<div class="add quantity-counter hide quantity-counter-{{Str::of($iteam->item_name)->replace(' ', '-')}}">
-													<div class="value-button decrease" id="decrease-{{$iteam->menu_id}}" value="Decrease Value" data-menu-id="{{$iteam->menu_id}}">-</div>
-														<input type="number" id="quantity-{{$iteam->menu_id}}" value="0" class="number" max="10"/>
-													<div class="value-button increase" id="increase-{{$iteam->menu_id}}" value="Increase Value" data-menu-id="{{$iteam->menu_id}}">+</div>
-												</div>
-											@endif
-										@endif
-									</div>
-									<div class="modifierItems-{{$iteam->menu_id}}"></div>
-								</div>
-								<ul>
-									<li>
-										<h4>{{$iteam->item_name}}</h4>
-										<div class="price">
-											${{number_format($iteam->item_price,'2')}}
-										</div>
-										<div class="clearfix">
-	
-										</div>
-									</li>
-								</ul>
-								<p>
-									{{mb_strimwidth($iteam->item_details,0,50,"....")}}
-								</p>
-		
-							</div>
-						</div>
-					@endforeach
-				</div>
-				<div class="row" id="searchIteams"></div>
-				<div id="snackbar"></div>
-				{{-- <div class="row">
-					<div class="col-sm-3 col-md-3">
-						<div class="food-item tooltip1">
-							<div class="tooltiptext">
-								<h4>Bark Shrimp Boiled</h4>
-								<span>
-									Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-								</span>
-							</div>
-							<div class="food-img food-item-1">
-								<img src="images/item_f.jpg">
-								<button type="button" class="btn btn-primary add" data-toggle="modal" data-target="#BarkShrimpBoiled" alt="Add+">
-									Add+
-								</button>
-								<div class="modal fade" id="BarkShrimpBoiled" tabindex="-1" role="dialog" aria-labelledby="modifier-btn">
-									<div class="modal-dialog" role="document">
-										<div class="modal-content">
-											<div class="modal-header modifier-header">
-												<button type="button" class="close" data-dismiss="modal" aria-label="Close" alt="Modal Close"><span aria-hidden="true">&times;</span></button>
-												<h4>Bark Shrimp Boiled</h4>
-											</div>
-											<div class="modal-body">
-												<form>
-													<ul class="modifier-list">
-														<li>
-															Ice Cream
-															<div class="checkbox">
-																<label>
-																	<input type="checkbox"> Thin Crust
-																	<span class="mark"></span>
-																</label>
-																<label class="modifier-price">
-																	$ 14.00
-																</label>
-															</div>
-															<div class="checkbox">
-																<label>
-																	<input type="checkbox"> Mizari Cream
-																	<span class="mark"></span>
-																</label>
-																<label class="modifier-price">
-																	$ 16.00
-																</label>
-															</div>
-															<div class="checkbox">
-																<label>
-																	<input type="checkbox"> Metal Paper Grace
-																	<span class="mark"></span>
-																</label>
-																<label class="modifier-price">
-																	$ 18.00
-																</label>
-															</div>
-														</li>
-													</ul>
-													<ul class="modifier-list">
-														<li>
-															Dry Fruits
-															<div class="checkbox">
-																<label>
-																	<input type="checkbox"> American Dry Fruits
-																	<span class="mark"></span>
-																</label>
-																<label class="modifier-price">
-																	$ 12.00
-																</label>
-															</div>
-															<div class="checkbox">
-																<label>
-																	<input type="checkbox"> All Others ans Cream
-																	<span class="mark"></span>
-																</label>
-																<label class="modifier-price">
-																	$ 61.00
-																</label>
-															</div>
-														</li>
-													</ul>
-													<ul class="modifier-list modifier-list-last">
-														<li>
-															Crrimal Balls
-															<div class="checkbox">
-																<label>
-																	<input type="checkbox"> Aarcher star Ball
-																	<span class="mark"></span>
-																</label>
-																<label class="modifier-price">
-																	$ 61.00
-																</label>
-															</div>
-	
-														</li>
-													</ul>
-												</form>
-											</div>
-											<div class="modal-footer">
-												<button type="button" class="btn btn-primary btn-block" alt="Add Item"> Add
-													Item</button>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<ul>
-								<li>
-									<h4>Bark Shrimp Boiled</h4>
-									<div class="price">
-										$12.00
-									</div>
-									<div class="clearfix">
-	
-									</div>
-								</li>
-							</ul>
-							<p>
-								Lorem Ipsum is simply dummy text of the printing a
-							</p>
-						</div>
-					</div>
-					<div class="col-sm-3 col-md-3">
-						<div class="food-item tooltip1">
-							<div class="tooltiptext">
-								<h4>Grapes Whites Wine</h4>
-								<span>
-									Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-								</span>
-							</div>
-							<div class="food-img food-item-2">
-								<img src="images/item_g.jpg">
-								<button type="button" class="btn btn-primary add" data-toggle="modal" data-target="#GrapesWhitesWine" alt="Add+">
-									Add+
-								</button>
-								<div class="modal fade" id="GrapesWhitesWine" tabindex="-1" role="dialog" aria-labelledby="modifier-btn">
-									<div class="modal-dialog" role="document">
-										<div class="modal-content">
-											<div class="modal-header modifier-header">
-												<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-												<h4>Grapes Whites Wine</h4>
-											</div>
-											<div class="modal-body">
-												<form>
-													<ul class="modifier-list">
-														<li>
-															Ice Cream
-															<div class="checkbox">
-																<label>
-																	<input type="checkbox"> Thin Crust
-																	<span class="mark"></span>
-																</label>
-																<label class="modifier-price">
-																	$ 14.00
-																</label>
-															</div>
-															<div class="checkbox">
-																<label>
-																	<input type="checkbox"> Mizari Cream
-																	<span class="mark"></span>
-																</label>
-																<label class="modifier-price">
-																	$ 16.00
-																</label>
-															</div>
-															<div class="checkbox">
-																<label>
-																	<input type="checkbox"> Metal Paper Grace
-																	<span class="mark"></span>
-																</label>
-																<label class="modifier-price">
-																	$ 18.00
-																</label>
-															</div>
-														</li>
-													</ul>
-													<ul class="modifier-list">
-														<li>
-															Dry Fruits
-															<div class="checkbox">
-																<label>
-																	<input type="checkbox"> American Dry Fruits
-																	<span class="mark"></span>
-																</label>
-																<label class="modifier-price">
-																	$ 12.00
-																</label>
-															</div>
-															<div class="checkbox">
-																<label>
-																	<input type="checkbox"> All Others ans Cream
-																	<span class="mark"></span>
-																</label>
-																<label class="modifier-price">
-																	$ 61.00
-																</label>
-															</div>
-														</li>
-													</ul>
-													<ul class="modifier-list modifier-list-last">
-														<li>
-															Crrimal Balls
-															<div class="checkbox">
-																<label>
-																	<input type="checkbox"> Aarcher star Ball
-																	<span class="mark"></span>
-																</label>
-																<label class="modifier-price">
-																	$ 61.00
-																</label>
-															</div>
-	
-														</li>
-													</ul>
-												</form>
-											</div>
-											<div class="modal-footer">
-												<button type="button" class="btn btn-primary btn-block" alt="Add Item"> Add
-													Item</button>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<ul>
-								<li>
-									<h4>Grapes Whites Wine</h4>
-									<div class="price">
-										$09.00
-									</div>
-									<div class="clearfix">
-	
-									</div>
-								</li>
-							</ul>
-							<p>
-								Lorem Ipsum is simply dummy text of the printing a
-							</p>
-						</div>
-					</div>
-					<div class="col-sm-3 col-md-3">
-						<div class="food-item tooltip1">
-							<div class="tooltiptext">
-								<h4>Shishini Prestry</h4>
-								<span>
-									Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-								</span>
-							</div>
-							<div class="food-img food-item-3">
-								<img src="images/item_h.jpg">
-								<button type="button" class="btn btn-primary add" data-toggle="modal" data-target="#ShishiniPrestry" alt="Add+">
-									Add+
-								</button>
-								<div class="modal fade" id="ShishiniPrestry" tabindex="-1" role="dialog" aria-labelledby="modifier-btn">
-									<div class="modal-dialog" role="document">
-										<div class="modal-content">
-											<div class="modal-header modifier-header">
-												<button type="button" class="close" data-dismiss="modal" aria-label="Close" alt="Modal Close"><span aria-hidden="true">&times;</span></button>
-												<h4>Shishini Prestry</h4>
-											</div>
-											<div class="modal-body">
-												<form>
-													<ul class="modifier-list">
-														<li>
-															Ice Cream
-															<div class="checkbox">
-																<label>
-																	<input type="checkbox"> Thin Crust
-																	<span class="mark"></span>
-																</label>
-																<label class="modifier-price">
-																	$ 14.00
-																</label>
-															</div>
-															<div class="checkbox">
-																<label>
-																	<input type="checkbox"> Mizari Cream
-																	<span class="mark"></span>
-																</label>
-																<label class="modifier-price">
-																	$ 16.00
-																</label>
-															</div>
-															<div class="checkbox">
-																<label>
-																	<input type="checkbox"> Metal Paper Grace
-																	<span class="mark"></span>
-																</label>
-																<label class="modifier-price">
-																	$ 18.00
-																</label>
-															</div>
-														</li>
-													</ul>
-													<ul class="modifier-list">
-														<li>
-															Dry Fruits
-															<div class="checkbox">
-																<label>
-																	<input type="checkbox"> American Dry Fruits
-																	<span class="mark"></span>
-																</label>
-																<label class="modifier-price">
-																	$ 12.00
-																</label>
-															</div>
-															<div class="checkbox">
-																<label>
-																	<input type="checkbox"> All Others ans Cream
-																	<span class="mark"></span>
-																</label>
-																<label class="modifier-price">
-																	$ 61.00
-																</label>
-															</div>
-														</li>
-													</ul>
-													<ul class="modifier-list modifier-list-last">
-														<li>
-															Crrimal Balls
-															<div class="checkbox">
-																<label>
-																	<input type="checkbox"> Aarcher star Ball
-																	<span class="mark"></span>
-																</label>
-																<label class="modifier-price">
-																	$ 61.00
-																</label>
-															</div>
-	
-														</li>
-													</ul>
-												</form>
-											</div>
-											<div class="modal-footer">
-												<button type="button" class="btn btn-primary btn-block" alt="Add Item"> Add
-													Item</button>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<ul>
-								<li>
-									<h4>Shishini Prestry</h4>
-									<div class="price">
-										$11.00
-									</div>
-									<div class="clearfix">
-	
-									</div>
-								</li>
-							</ul>
-							<p>
-								Lorem Ipsum is simply dummy text of the printing a
-							</p>
-						</div>
-					</div>
-					<div class="col-sm-3 col-md-3">
-						<div class="food-item tooltip1">
-							<div class="tooltiptext">
-								<h4>Tikka Madurai</h4>
-								<span>
-									Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-								</span>
-							</div>
-							<div class="food-img food-item-4">
-								<img src="images/item_i.jpg">
-								<button type="button" class="btn btn-primary add" data-toggle="modal" data-target="#TikkaMadurai" alt="Add+">
-									Add+
-								</button>
-								<div class="modal fade" id="TikkaMadurai" tabindex="-1" role="dialog" aria-labelledby="modifier-btn">
-									<div class="modal-dialog" role="document">
-										<div class="modal-content">
-											<div class="modal-header modifier-header">
-												<button type="button" class="close" data-dismiss="modal" aria-label="Close" alt="Modal Close"><span aria-hidden="true">&times;</span></button>
-												<h4>Tikka Madurai</h4>
-											</div>
-											<div class="modal-body">
-												<form>
-													<ul class="modifier-list">
-														<li>
-															Ice Cream
-															<div class="checkbox">
-																<label>
-																	<input type="checkbox"> Thin Crust
-																	<span class="mark"></span>
-																</label>
-																<label class="modifier-price">
-																	$ 14.00
-																</label>
-															</div>
-															<div class="checkbox">
-																<label>
-																	<input type="checkbox"> Mizari Cream
-																	<span class="mark"></span>
-																</label>
-																<label class="modifier-price">
-																	$ 16.00
-																</label>
-															</div>
-															<div class="checkbox">
-																<label>
-																	<input type="checkbox"> Metal Paper Grace
-																	<span class="mark"></span>
-																</label>
-																<label class="modifier-price">
-																	$ 18.00
-																</label>
-															</div>
-														</li>
-													</ul>
-													<ul class="modifier-list">
-														<li>
-															Dry Fruits
-															<div class="checkbox">
-																<label>
-																	<input type="checkbox"> American Dry Fruits
-																	<span class="mark"></span>
-																</label>
-																<label class="modifier-price">
-																	$ 12.00
-																</label>
-															</div>
-															<div class="checkbox">
-																<label>
-																	<input type="checkbox"> All Others ans Cream
-																	<span class="mark"></span>
-																</label>
-																<label class="modifier-price">
-																	$ 61.00
-																</label>
-															</div>
-														</li>
-													</ul>
-													<ul class="modifier-list modifier-list-last">
-														<li>
-															Crrimal Balls
-															<div class="checkbox">
-																<label>
-																	<input type="checkbox"> Aarcher star Ball
-																	<span class="mark"></span>
-																</label>
-																<label class="modifier-price">
-																	$ 61.00
-																</label>
-															</div>
-	
-														</li>
-													</ul>
-												</form>
-											</div>
-											<div class="modal-footer">
-												<button type="button" class="btn btn-primary btn-block" alt="Add Item"> Add
-													Item</button>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<ul>
-								<li>
-									<h4>Tikka Madurai</h4>
-									<div class="price">
-										$15.00
-									</div>
-									<div class="clearfix">
-	
-									</div>
-								</li>
-							</ul>
-							<p>
-								Lorem Ipsum is simply dummy text of the printing a
-							</p>
-						</div>
-					</div>
-				</div> --}}
-			</div>
-		</div>
+            </div>
+        </div>
+    </div>
+
+    @guest
+        <div class="modal modal-sign-up" id="first-modal" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel"><b>Login</b></h4>
+                        {{-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> --}}
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-danger" id="login-error"></div>
+                        <a href="javascript:;" class="sign-up-inner float-right btn-third within-third-modal">Forgot Password
+                            ?</a>
+                        <form action="{{ route('customer.login') }}" method="post" id="loginForm">
+                            @csrf
+                            <div class="form-group">
+                                <input type="email" class="form-control" name="username" aria-describedby="emailHelp"
+                                    placeholder="Enter Email">
+                            </div>
+                            <div class="form-group">
+                                <input type="password" class="form-control" name="password" placeholder="Enter Password">
+                            </div>
+                            <button type="submit" class="btn btn-login-modal btn-submit-inner"><b>Login</b></button>
+
+                            <p>Don't have account ? <a href="javascript:;"
+                                    class="sign-up-inner btn-second-modal within-first-modal">Sign up</a></p>
+                            <a href="{{ route('customer.google.login') }}" class="google-signin-link"
+                                alt="G Signin with Google"><i class="fab fa-google"></i>Signin with Google</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal modal-sign-up" id="second-modal" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title"><b>Sign up</b></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-danger" id="register-error"></div>
+                        <form action="{{ route('customer.signup') }}" method="post" id="customer-signup">
+                            @csrf
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" name="first_name" placeholder="First Name">
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" name="last_name" placeholder="Last Name">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Physical Address"
+                                    name="physical_address">
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" placeholder="City" name="city">
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" placeholder="State" name="state">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Zip code" name="zipcode">
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" placeholder="Mobile Number" name="mobile_number">
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="email" class="form-control" placeholder="Email Address" name="email_id">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="password" class="form-control" placeholder="Password" name="password">
+                            </div>
+                            <button type="submit" class="btn btn-login-modal btn-submit-inner"><b>Signup</b></button>
+                            <p class="mt-2 text-center">Account already exists ? <a href="javascript:;"
+                                    class="sign-up-inner btn-second-modal-close">Login</a></p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal modal-sign-up" id="third-modal" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title"><b>Forgot Password</b></h4>
+                    </div>
+                    <div class="modal-body text-center">
+                        <div class="alert alert-danger" id="forgot-error"></div>
+                        <form action="{{ route('customer.forgotPassword') }}" method="post" id="forget-password">
+                            @csrf
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="email_mobile_number"
+                                    placeholder="Enter email or Mobile number">
+                            </div>
+                            <button type="submit" class="btn btn-four-msg with-fourth btn-login-modal btn-submit-inner">Send
+                                Verification</button>
+                            <p class="mt-2">Back to ? <a href="javascript:;"
+                                    class="sign-up-inner btn-party-modal-close"> Login </a></p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Otp Send Message Modal -->
+        <div class="modal modal-sign-up" id="four-modal" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body pt-0 pb-4">
+                        <h6 class="sucess-blog">Success</h6>
+                        <p class="mt-0">We've sent verification code in you registered email address, please check
+                            your email address.(and possibly spam folder).</p>
+                        <button type="button" class="btn btn-login-modal btn-five-msg with-five">Ok</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enter Otp Modal -->
+        <div class="modal modal-sign-up" id="five-modal" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header border-0 pt-3 pb-0">
+                    </div>
+                    <div class="modal-body pt-0 pb-4">
+                        <div class="alert alert-danger" id="otp-error"></div>
+                        <form action="{{ route('customer.verifyOtp') }}" method="POST" id="OtpVerify">
+                            @csrf
+                            <input type="hidden" name="email_id" id="email_id">
+                            <h6 class="verify-code text-center">Enter verifiaction code</h6>
+                            <div id="wrapper">
+                                <div id="dialog">
+                                    <div id="form">
+                                        <input type="text" class="otpInput" maxLength="1" size="1" min="0" max="9"
+                                            pattern="[0-9]{1}" required name="otp_digit[1]" />
+                                        <input type="text" class="otpInput" maxLength="1" size="1" min="0" max="9"
+                                            pattern="[0-9]{1}" required name="otp_digit[2]" />
+                                        <input type="text" class="otpInput" maxLength="1" size="1" min="0" max="9"
+                                            pattern="[0-9]{1}" required name="otp_digit[3]" />
+                                        <input type="text" class="otpInput" maxLength="1" size="1" min="0" max="9"
+                                            pattern="[0-9]{1}" required name="otp_digit[4]" />
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-login-modal btn-six-msg with-six">Send Verification</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Otp verification success modal -->
+        <div class="modal modal-sign-up" id="six-modal" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header border-0 pt-3 pb-0">
+                    </div>
+                    <div class="modal-body pt-0 pb-4">
+                        {{-- <form> --}}
+                        <h6 class="sucess-blog">Success</h6>
+                        <p class="pt-0">Your verification process has been Successfull. Please change or set you
+                            new password.</p>
+
+                        <button type="button" class="btn btn-login-modal btn-seven-msg with-seven">Ok</button>
+                        {{-- </form> --}}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reset Password Modal -->
+        <div class="modal modal-sign-up" id="seven-modal" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">ForgotPassword</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-danger" id="reset-password-error"></div>
+                        <form action="{{ route('customer.resetPassword') }}" method="POST" id="chage-password">
+                            @csrf
+                            <input type="hidden" name="email_id" id="customer_email_id">
+                            <div class="form-group">
+                                <input type="password" class="form-control" name="password" aria-describedby="emailHelp"
+                                    placeholder="Password" id="new-password">
+                            </div>
+                            <div class="form-group">
+                                <input type="password" class="form-control" name="retype_password"
+                                    aria-describedby="emailHelp" placeholder="Confirm Password">
+                            </div>
+
+                            <button type="submit" class="btn btn-login-modal change-password">Change Password</button>
+                            <p>Back to ? <a href="javascript:;" class="sign-up-inner btn-partyware-modal-close"> Login</a></p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    @endguest
 @endsection
 
 @section('scripts')
-	<script src="{{asset('assets/customer/js/jquery.validate.min.js')}}"></script>
-	<script src="{{asset('assets/customer/js/additional-methods.min.js')}}"></script>
-	<script src="{{asset('assets/customer/js/home/index.js')}}"></script>
+    <script src="{{ asset('assets/customer/js/toastr.min.js') }}"></script>
+    <script src="{{ asset('assets/customer/js/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('assets/customer/js/additional-methods.min.js') }}"></script>
+    <!-- Rating bar js -->
+    <script src="{{ asset('assets/customer/js/rateYo/2.3.2/jquery.rateyo.min.js') }}"></script>
+    <script src="{{ asset('assets/customer/js/custom-js/home/index.js') }}"></script>
 @endsection

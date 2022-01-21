@@ -6,8 +6,10 @@
       <nav class="navbar navbar-inverse">
         <div class="container-fluid">
           <div class="navbar-header">
-            <a href="javaScript:Void(0);" class="navbar-brand" id="sidebar-toggle"><i class="fa fa-bars"></i></a>
+            <div class="profile-title-new">
+            <a href="javaScript:void(0);" class="navbar-brand" id="sidebar-toggle"><i class="fa fa-bars"></i></a>
             <h2>Promotion / Add</h2>
+            </div>
             <div class="plus">
             <a href="{{route('promotion.add')}}" ><i class="fa fa-plus" aria-hidden="true"></i></a>
             </div>

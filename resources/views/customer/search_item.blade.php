@@ -1,54 +1,225 @@
-@forelse($menuItems as $key => $item)
-    <div class="col-sm-3 col-md-3">
-        <div class="food-item tooltip1">
-            <div class="tooltiptext">
-                <h4>{{$item->item_name}}</h4>
-                <span>
-                    {{$item->item_details}}
-                </span>
-            </div>
-            <div class="food-img" style="background-image: url('{{(empty($item->getMenuImgAttribute())) ? asset('assets/customer/images/Logo-Round.png') : $item->getMenuImgAttribute()}}');background-repeat: no-repeat;background-size: 100% 100%;height: 200px;">
-                <div class="cart-quantity-counter-{{$item->menu_id}}">
-                    @if($item->modifierList->count() > 0)
-                        <button type="button" class="btn btn-primary add cart cart-{{Str::of($item->item_name)->replace(' ', '-')}}" data-menu-id="{{$item->menu_id}}" data-menu-name="{{Str::of($item->item_name)->replace(' ', '-')}}" data-category-id="{{$item->category_id}}" alt="Add+">
-                            Add+
-                        </button>
-                        <div class="add quantity-counter hide quantity-counter-{{Str::of($item->item_name)->replace(' ', '-')}}">
-                            <div class="value-button decrease modifier-decrease" id="decrease-{{$item->menu_id}}" value="Decrease Value" data-menu-id="{{$item->menu_id}}">-</div>
-                                <input type="number" id="quantity-{{$item->menu_id}}" value="0" class="number"/>
-                            <div class="value-button increase modifier-increase" id="increase-{{$item->menu_id}}" value="Increase Value" data-menu-id="{{$item->menu_id}}">+</div>
+@php
+$counter = 1;
+@endphp
+
+@forelse($menuItems as $item)
+    @if ($counter == 1)
+        <div class="row">
+    @endif
+
+    @if ($item->item_img != null)
+        <div class="col-md-6">
+            <div class="card">
+                <img class="card-img-top" src="{{ $item->getMenuImgAttribute() }}" alt="Card image cap" width="489"
+                    height="224">
+                <div class="card-body" id="{{ $item->menu_id }}">
+                    <div class="d-flex align-items-center justify-content-between w-100 wd-dr-menu-item mb-1">
+                        <p>{{ $item->item_name }}</p>
+                        <p>$ {{ number_format($item->item_price, 2) }}</p>
+                    </div>
+                    <div class="p-0 rateYo" data-rating="3.6"></div>
+                    <p class="more wd-dr-lor">{{ $item->item_details }}</p>
+                    @if ($item->modifierList->count() == 0)
+                        <div class="d-flex justify-content-end w-100 align-items-center"
+                            id="menu-{{ $item->menu_id }}">
+                            @if (in_array($item->menu_id, $menuIds))
+                                @php
+                                    $itemQuantity = 0;
+                                    foreach ($quantities as $quantity) {
+                                        if ($quantity['menu_id'] == $item->menu_id) {
+                                            $itemQuantity += $quantity['quantity'];
+                                        }
+                                    }
+                                @endphp
+                                <div class="product-quantity without-modifier-quantity-{{ $item->menu_id }}">
+                                    <span class="product-quantity-minus without-modifier-minus"
+                                        data-menu-id="{{ $item->menu_id }}"
+                                        data-cart-item="{{ getCartKey('without-modifier', $item->menu_id) }}"></span>
+                                    <input type="number" value="{{ $itemQuantity }}"
+                                        class="quantity-{{ $item->menu_id }}" readonly />
+                                    <span class="product-quantity-plus without-modifier-plus"
+                                        data-menu-id="{{ $item->menu_id }}"
+                                        data-cart-item="{{ getCartKey('without-modifier', $item->menu_id) }}"></span>
+                                </div>
+                                <button type="button" class="btn d-none btn-dark without-modifier"
+                                    id="add-order-{{ $item->menu_id }}" data-menu-id="{{ $item->menu_id }}">Add To
+                                    Order</button>
+                            @else
+                                <button type="button" class="btn btn-dark without-modifier"
+                                    id="add-order-{{ $item->menu_id }}" data-menu-id="{{ $item->menu_id }}">Add To
+                                    Order</button>
+                                <div class="product-quantity d-none without-modifier-quantity-{{ $item->menu_id }}">
+                                    <span class="product-quantity-minus without-modifier-minus"
+                                        data-menu-id="{{ $item->menu_id }}"
+                                        data-cart-item="{{ getCartKey('without-modifier', $item->menu_id) }}"></span>
+                                    <input type="number" value="1" class="quantity-{{ $item->menu_id }}" readonly />
+                                    <span class="product-quantity-plus without-modifier-plus"
+                                        data-menu-id="{{ $item->menu_id }}"
+                                        data-cart-item="{{ getCartKey('without-modifier', $item->menu_id) }}"></span>
+                                </div>
+                            @endif
                         </div>
                     @else
-                        <button type="button" class="btn btn-primary add add-to-cart cart-{{Str::of($item->item_name)->replace(' ', '-')}}" data-menu-id="{{$item->menu_id}}" data-menu-name="{{Str::of($item->item_name)->replace(' ', '-')}}" data-category-id="{{$item->category_id}}" alt="Add+">
-                            Add+
-                        </button>
-                        <div class="add quantity-counter hide quantity-counter-{{Str::of($item->item_name)->replace(' ', '-')}}">
-                            <div class="value-button decrease" id="decrease-{{$item->menu_id}}" value="Decrease Value" data-menu-id="{{$item->menu_id}}">-</div>
-                                <input type="number" id="quantity-{{$item->menu_id}}" value="0" class="number" max="10"/>
-                            <div class="value-button increase" id="increase-{{$item->menu_id}}" value="Increase Value" data-menu-id="{{$item->menu_id}}">+</div>
+                        <div class="d-flex justify-content-end w-100 align-items-center">
+                            @php $menuCount = 1; @endphp
+                            @if (in_array($item->menu_id, $menuIds))
+                                @php
+                                    $menuCount++;
+                                    
+                                    if ($menuCount == 2) {
+                                        $cartClass = 'decrease-repeat-last';
+                                    } else {
+                                        $cartClass = 'with-modifier-minus';
+                                    }
+                                    $itemQuantity = 0;
+                                    
+                                    foreach ($quantities as $quantity) {
+                                        if ($quantity['menu_id'] == $item->menu_id) {
+                                            $itemQuantity += $quantity['quantity'];
+                                        }
+                                    }
+                                @endphp
+                                <div class="product-quantity modifier-quantity-{{ $item->menu_id }}">
+                                    <span class="product-quantity-minus {{ $cartClass }}"
+                                        data-menu-id="{{ $item->menu_id }}"
+                                        data-cart-item="{{ getCartKey('with-modifier', $item->menu_id) }}"></span>
+                                    <input type="number" value="{{ $itemQuantity }}"
+                                        class="quantity-{{ $item->menu_id }}" readonly />
+                                    <span class="product-quantity-plus with-modifier-plus"
+                                        data-menu-id="{{ $item->menu_id }}"
+                                        data-cart-item="{{ getCartKey('with-modifier', $item->menu_id) }}"></span>
+                                </div>
+                            @else
+                                <button type="button"
+                                    class="btn btn-dark with-modifier add-order-{{ $item->menu_id }}"
+                                    data-menu-id="{{ $item->menu_id }}">Add To Order</button>
+                                <div class="product-quantity d-none modifier-quantity-{{ $item->menu_id }}">
+                                    <span class="product-quantity-minus with-modifier-minus"
+                                        data-menu-id="{{ $item->menu_id }}"
+                                        data-cart-item="{{ getCartKey('with-modifier', $item->menu_id) }}"></span>
+                                    <input type="number" value="1" class="quantity-{{ $item->menu_id }}" readonly />
+                                    <span class="product-quantity-plus with-modifier-plus"
+                                        data-menu-id="{{ $item->menu_id }}"
+                                        data-cart-item="{{ getCartKey('with-modifier', $item->menu_id) }}"></span>
+                                </div>
+                            @endif
+                            <div class="repeat-last-add-modal-{{ $item->menu_id }}"></div>
                         </div>
+                        <div class="modifiers-{{ $item->menu_id }}"></div>
                     @endif
                 </div>
-                <div class="modifierItems-{{$item->menu_id}}"></div>
             </div>
-            <ul>
-                <li>
-                    <h4>{{$item->item_name}}</h4>
-                    <div class="price">
-                        ${{number_format($item->item_price,'2')}}
-                    </div>
-                    <div class="clearfix">
-
-                    </div>
-                </li>
-            </ul>
-            <p style="height: 40px;">
-                {{mb_strimwidth($iteam->item_details,0,50,"....")}}
-            </p>
         </div>
-    </div>
+    @else
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between w-100 wd-dr-menu-item mb-1">
+                        <p>{{ $item->item_name }}</p>
+                        <p>$ {{ number_format($item->item_price, 2) }}</p>
+                    </div>
+                    <div class="p-0 rateYo" data-rating="3.6"></div>
+                    <p class="more wd-dr-lor">{{ $item->item_details }}</p>
+                    @if ($item->modifierList->count() == 0)
+                        <div class="d-flex justify-content-end w-100 align-items-center">
+                            @if (in_array($item->menu_id, $menuIds))
+                                @php
+                                    $itemQuantity = 0;
+                                    foreach ($quantities as $quantity) {
+                                        if ($quantity['menu_id'] == $item->menu_id) {
+                                            $itemQuantity += $quantity['quantity'];
+                                        }
+                                    }
+                                @endphp
+                                <div class="product-quantity without-modifier-quantity-{{ $item->menu_id }}">
+                                    <span class="product-quantity-minus without-modifier-minus"
+                                        data-menu-id="{{ $item->menu_id }}"
+                                        data-cart-item="{{ getCartKey('without-modifier', $item->menu_id) }}"></span>
+                                    <input type="number" value="{{ $itemQuantity }}"
+                                        class="quantity-{{ $item->menu_id }}" readonly />
+                                    <span class="product-quantity-plus without-modifier-plus"
+                                        data-menu-id="{{ $item->menu_id }}"
+                                        data-cart-item="{{ getCartKey('without-modifier', $item->menu_id) }}"></span>
+                                </div>
+                            @else
+                                <button type="button" class="btn btn-dark without-modifier"
+                                    id="add-order-{{ $item->menu_id }}" data-menu-id="{{ $item->menu_id }}">Add To
+                                    Order</button>
+                                <div class="product-quantity d-none without-modifier-quantity-{{ $item->menu_id }}">
+                                    <span class="product-quantity-minus without-modifier-minus"
+                                        data-menu-id="{{ $item->menu_id }}"
+                                        data-cart-item="{{ getCartKey('without-modifier', $item->menu_id) }}"></span>
+                                    <input type="number" value="1" class="quantity-{{ $item->menu_id }}" readonly />
+                                    <span class="product-quantity-plus without-modifier-plus"
+                                        data-menu-id="{{ $item->menu_id }}"
+                                        data-cart-item="{{ getCartKey('without-modifier', $item->menu_id) }}"></span>
+                                </div>
+                            @endif
+                        </div>
+                    @else
+                        <div class="d-flex justify-content-end w-100 align-items-center">
+                            @php $menuCount = 1; @endphp
+                            @if (in_array($item->menu_id, $menuIds))
+                                @php
+                                    $menuCount++;
+                                    
+                                    if ($menuCount == 2) {
+                                        $cartClass = 'decrease-repeat-last';
+                                    } else {
+                                        $cartClass = 'with-modifier-minus';
+                                    }
+                                    
+                                    $itemQuantity = 0;
+                                @endphp
+                                @foreach ($quantities as $quantity)
+                                    @if ($quantity['menu_id'] == $item->menu_id)
+                                        @php
+                                            $itemQuantity += $quantity['quantity'];
+                                        @endphp
+                                    @endif
+                                @endforeach
+                                <div class="product-quantity modifier-quantity-{{ $item->menu_id }}">
+                                    <span class="product-quantity-minus {{ $cartClass }}"
+                                        data-menu-id="{{ $item->menu_id }}"
+                                        data-cart-item="{{ getCartKey('with-modifier', $item->menu_id) }}"></span>
+                                    <input type="number" value="{{ $itemQuantity }}"
+                                        class="quantity-{{ $item->menu_id }}" readonly />
+                                    <span class="product-quantity-plus with-modifier-plus"
+                                        data-menu-id="{{ $item->menu_id }}"
+                                        data-cart-item="{{ getCartKey('with-modifier', $item->menu_id) }}"></span>
+                                </div>
+                            @else
+                                <button type="button" class="btn btn-dark with-modifier"
+                                    id="add-order-{{ $item->menu_id }}" data-menu-id="{{ $item->menu_id }}">Add To
+                                    Order</button>
+                                <div class="product-quantity d-none modifier-quantity-{{ $item->menu_id }}">
+                                    <span class="product-quantity-minus with-modifier-minus"
+                                        data-menu-id="{{ $item->menu_id }}"
+                                        data-cart-item="{{ getCartKey('with-modifier', $item->menu_id) }}"></span>
+                                    <input type="number" value="1" class="quantity-{{ $item->menu_id }}" readonly />
+                                    <span class="product-quantity-plus with-modifier-plus"
+                                        data-menu-id="{{ $item->menu_id }}"
+                                        data-cart-item="{{ getCartKey('with-modifier', $item->menu_id) }}"></span>
+                                </div>
+                            @endif
+                            <div class="repeat-last-add-modal-{{ $item->menu_id }}"></div>
+                        </div>
+                        <div class="modifiers-{{ $item->menu_id }}"></div>
+                    @endif
+                </div>
+            </div>
+        </div>
+    @endif
+    @php
+        if ($counter == 2) {
+            echo '</div>';
+            $counter = 1;
+        } else {
+            $counter++;
+        }
+    @endphp
 @empty
-    <div class="text-center not_found">
-        <span>No Item Found</span>
+    <div class="menu-item-found-blog">
+        <h4>No Item Found</h4>
     </div>
 @endforelse

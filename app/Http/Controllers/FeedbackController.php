@@ -22,7 +22,8 @@ class FeedbackController extends Controller
 
  	public function add()
  	{
- 		return view('feedback.add');
+        $user = Auth::user();
+ 		return view('feedback.add',compact('user'));
  	}
 
  	public function edit($id)

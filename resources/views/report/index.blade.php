@@ -6,13 +6,15 @@
     <nav class="navbar navbar-inverse">
       <div class="container-fluid">
         <div class="navbar-header">
+          <div class="profile-title-new">
           <a href="#" class="navbar-brand" id="sidebar-toggle"><i class="fa fa-bars"></i></a>
      
           <h2>Reports</h2>
+          </div>
           <div class="report-days">
             <select class="duration_change form-control">
+              <option value="1" @if($result['time_duration']==="1") selected @endif>Today</option>
               <option value="7"  @if($result['time_duration']==="7") selected @endif>Last 7 Day’s </option>
-              <option value="15" @if($result['time_duration']==="15") selected @endif>Last 15 Day’s </option>
               <option value="30" @if($result['time_duration']==="30") selected @endif>Last Months </option>
             </select>
           </div>
@@ -30,7 +32,11 @@
              <div class="report-numbers">
                <div class="left-numbers">
                  <p class="first">{{ $result['get_order']}}</p>
-                 <p class="down secound"><i class="fa fa-caret-down" aria-hidden="true"></i>  {{$result['order_pr_status']}} %</p>
+                 @if(abs($result['order_pr_status']))
+                 <p class="up secound"><i class="fa fa-caret-up" aria-hidden="true"></i>  {{number_format($result['order_pr_status'],2)}} %</p>
+                 @else
+                 <p class="down secound"><i class="fa fa-caret-down" aria-hidden="true"></i>  {{number_format($result['order_pr_status'],2)}} %</p>
+                 @endif
                </div>
                <div class="right-numbers">
                  <span>All Time</span>
@@ -44,16 +50,19 @@
              <h5>Pending Orders</h5>
              <span>Last {{$result['time_duration']}}  Days</span>
              <div class="report-numbers">
-               <div class="left-numbers">
-                 <p class="first">{{  $result['get_pendingorder']}}</p>
-                 <p class="center">0%</p>
-                 <p class="up secound"><i class="fa fa-caret-up" aria-hidden="true"></i> {{  $result['pending_order_pr_status']}} %</p>
-               </div>
-               <div class="right-numbers">
-                 <span>All Time</span>
-                 <p class="report-time">{{$result['all_pendingorder']}}</p>
-               </div>
-             </div>
+              <div class="left-numbers">
+                <p class="first">{{ $result['get_pendingorder']}}</p>
+                @if(abs($result['pending_order_pr_status']))
+                <p class="up secound"><i class="fa fa-caret-up" aria-hidden="true"></i>  {{number_format($result['pending_order_pr_status'],2)}} %</p>
+                @else
+                <p class="down secound"><i class="fa fa-caret-down" aria-hidden="true"></i>  {{number_format($result['pending_order_pr_status'],2)}} %</p>
+                @endif
+              </div>
+              <div class="right-numbers">
+                <span>All Time</span>
+                <p class="report-time">{{$result['all_pendingorder']}}</p>
+              </div>
+            </div>
            </div>
          </div>
          <div class="col-lg-4">
@@ -80,7 +89,11 @@
              <div class="report-numbers">
                <div class="left-numbers">
                  <p class="first">{{ $result['sales_total']}}</p>
-                 <p class="down secound"><i class="fa fa-caret-down" aria-hidden="true"></i> {{$result['sales_pr_status']}} %</p>
+                 @if(abs($result['sales_per']))
+                <p class="up secound"><i class="fa fa-caret-up" aria-hidden="true"></i>  {{number_format($result['sales_per'],2)}} %</p>
+                @else
+                <p class="down secound"><i class="fa fa-caret-down" aria-hidden="true"></i>  {{number_format($result['sales_per'],2)}} %</p>
+                @endif
                </div>
                <div class="right-numbers">
                   <div class="avg-value">

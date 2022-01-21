@@ -6,8 +6,10 @@
         <nav class="navbar navbar-inverse">
           <div class="container-fluid">
             <div class="navbar-header">
+              <div class="profile-title-new">
               <a href="#" class="navbar-brand" id="sidebar-toggle"><i class="fa fa-bars"></i></a>
               <h2>Category</h2>
+              </div>
               <div class="form-group">
                 <i class="fa fa-search searchTextBtn" aria-hidden="true"></i>
                 <input type="text" name="searchText" id="searchText" value="{{$params}}" class="form-control searchText" placeholder="Search Here">
@@ -53,7 +55,7 @@
           </div>
         </div>    
         @endforeach
-        <div class="float-right"> {{ $categories->links() }}</div>
+        <div class="w-100 pagination-links"> {{ $categories->links() }}</div>
     @else
         <p>No records found.</p>
     @endif

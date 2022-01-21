@@ -36,7 +36,7 @@
                     <div class="row zmd-hierarchical-display in" data-animation="hierarchical-display">
                         {{-- <form class="res-edit-form" method="POST" action="{{route('admin.restaurants.update')}}" enctype="multipart/form-data" id="">
                             @csrf --}}
-                        {{ Form::open(array('route' => array('admin.restaurants.update'),'id'=>'restaurantDetailUpdate','method'=>'POST','class'=>'res-edit-form','files'=> true,
+                        {{ Form::open(array('route' => array('admin.restaurants.update',$restaurant->uid),'id'=>'restaurantDetailUpdate','method'=>'put','class'=>'res-edit-form','files'=> true,
                             )) }}
                             <div class="col-sm-6 zoomIn animated right-border" style="animation-delay: 0.12s;">
                                 {{-- <div class="res_logo">
@@ -63,7 +63,7 @@
                                     <input type="text" class="form-control" name="restaurant_name"  placeholder="Restaurant Name" value="{{$restaurant->restaurant->restaurant_name}}">
                                     <textarea class="form-control" rows="3" name="restaurant_address">{{$restaurant->restaurant->restaurant_address}}</textarea>
                                     <input type="text" class="form-control" name="mobile_number"  placeholder="Mobile Number" value="{{$restaurant->mobile_number}}" >
-                                    <input type="text" class="form-control" name="email"  placeholder="Email" value="{{$restaurant->email_id}}" >
+                                    <input type="text" class="form-control" name="email_id"  placeholder="Email" value="{{$restaurant->email_id}}" >
                                 </div>
                                 <div class="form-group">
                                     <input type="submit" name="submit" value="Update" class="btn btn-default btn-lg res-add-btn">
@@ -123,7 +123,6 @@
                     </div>
                 </section>
                 <!-- /#page-content -->
-                
             </div>
         </div>
     </section>

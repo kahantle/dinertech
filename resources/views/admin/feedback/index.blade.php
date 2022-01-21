@@ -39,13 +39,14 @@
                     <div class="row zmd-hierarchical-display in paymentinfo-row" data-animation="hierarchical-display">
                         <div class="bs-example">
                             <div class="accordion" id="accordionExample">
+                                @php $i = ($feedbacks->currentpage()-1)* $feedbacks->perpage() + 1;@endphp
                                 @forelse ($feedbacks as $key => $feedback)
                                     <div class="card panel panel-default panel-user">
                                         <div class="card-header" id="headingOne">
                                             <h2 class="mb-0">
                                                 <button type="button" class="btn btn-link collapse-btn" data-toggle="collapse" data-target="#collapse{{$feedback->id}}">
                                                     <div class="col-sm-1 zoomIn animated" style="animation-delay: 0.12s;">
-                                                        <h2 class="" >{{$key + 1}}</h2>
+                                                        <h2 class="" >{{$key + $i}}</h2>
                                                     </div>
                                                     <div class="col-sm-3 zoomIn animated" style="animation-delay: 0.12s;">
                                                         <h2 class="" >{{$feedback->name}}</h2>

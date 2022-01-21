@@ -7,8 +7,10 @@
     <nav class="navbar navbar-inverse">
       <div class="container-fluid">
         <div class="navbar-header">
+          <div class="profile-title-new">
           <a href="#" class="navbar-brand" id="sidebar-toggle"><i class="fa fa-bars"></i></a>
           <h2>Select Promotion Type</h2>
+          </div>
         </div>
         <div class="plus">
           <a href="{{route('feedback.add')}}" ><i class="fa fa-plus" aria-hidden="true"></i></a>
