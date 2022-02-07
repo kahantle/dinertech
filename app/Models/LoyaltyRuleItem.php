@@ -30,4 +30,16 @@ class LoyaltyRuleItem extends Model
         return $this->hasMany(MenuItem::class, 'menu_id', 'menu_id');
     }
 
+    
+    /**
+     * Get the user associated with the LoyaltyRuleItem
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function loyaltyRule()
+    {
+        return $this->hasOne(LoyaltyRule::class, 'rules_id', 'loyalty_rule_id');
+    }
+    
+
 }

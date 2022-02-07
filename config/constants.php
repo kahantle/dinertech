@@ -162,4 +162,8 @@ return [
         'AMOUNT_SPENT' => 'AMOUNT SPENT',
         'CATEGORY_BASED' => 'CATEGORY BASED',
     ],
+    'LOYALTY_MENU_STATUS' => [
+        'ELIGIBLE' => 'ELIGIBLE',
+        'NOT_ELIGIBLE' => 'NOT ELIGIBLE'
+    ],
 ];

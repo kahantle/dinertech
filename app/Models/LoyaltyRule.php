@@ -20,14 +20,27 @@ class LoyaltyRule extends Model
         return $this->hasMany(LoyaltyRuleItem::class, 'loyalty_rule_id', 'rules_id')->with(['categories', 'menuItems']);
     }
 
-    // /**
-    //  * Get all of the comments for the LoyaltyRule
-    //  *
-    //  * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
-    //  */
-    // public function rulesItems()
-    // {
-    //     return $this->hasManyThrough(LoyaltyRuleItem::class, Category::class, 'category_id', 'loyalty_rule_id', 'rules_id');
-    // }
 
+    // public function loyaltyRulesItems()
+    // {
+    //     return $this->hasMany(LoyaltyRuleItem::class, 'loyalty_rule_id', 'rules_id')->with('menuItems');
+    // }
+    
+    /**
+     * Get all of the comments for the LoyaltyRule
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function menuItems()
+    {
+        return $this->hasManyThrough(
+              'App\Models\MenuItem',
+              'App\Models\LoyaltyRuleItem',
+              'menu_id',
+              'menu_id',
+              'rules_id',
+              'loyalty_rule_id',
+        );
+    }
+    
 }

@@ -89,6 +89,9 @@ Route::namespace ('Api')->group(function () {
                 Route::post('/create/connection/token', 'StripeController@getConnectionToken')->name('customer.stripe.createConnectionToken');
                 Route::post('/create/charge', 'StripeController@createCharge')->name('customer.stripe.createCharge');
             });
+            Route::prefix('loyalties')->group(function(){
+                Route::post('/','LoyaltyRuleController@index')->name('customer.loyalties');
+            });
         });
     });
 
@@ -110,7 +113,6 @@ Route::namespace ('Api')->group(function () {
             Route::post('pay', 'EmailSubscriptionController@subscriptionPayment')->name('restaurant.email.subscription.pay');
             Route::get('/cancel/subscription/{subscription_id}/{uid}', 'EmailSubscriptionController@cancel_subscription')->name('restaurant.email.subscription.cancel');
             Route::get('/upgrade/subscription/{uid?}', 'EmailSubscriptionController@upgradeSubscription')->name('restaurant.email.subscription.upgrade');
-
         });
 
         //Campaign Route
