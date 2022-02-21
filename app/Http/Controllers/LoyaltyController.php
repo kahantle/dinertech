@@ -14,8 +14,8 @@ use Carbon\Carbon;
 use Cartalyst\Stripe\Stripe;
 use Config;
 use DB;
-use Toastr;
 use Illuminate\Http\Request;
+use Toastr;
 
 class LoyaltyController extends Controller
 {
@@ -30,14 +30,16 @@ class LoyaltyController extends Controller
             $uid = Auth::user()->uid;
             $restaurant = Restaurant::where('uid', $uid)->first();
             $stripe = Stripe::make(env('STRIPE_SECRET'));
-            $data['paymentMethods'] = $stripe->paymentMethods()->all([
-                'type' => 'card',
-                'customer' => $restaurant->stripe_customer_id,
-            ]);
+            if ($stripe) {
+                $data['paymentMethods'] = $stripe->paymentMethods()->all([
+                    'type' => 'card',
+                    'customer' => $restaurant->stripe_customer_id,
+                ]);
+            }
 
             return view('loyalty.index', $data);
         } catch (\Throwable $th) {
-            return back()->with('error',$th->getMessages());
+            // return back()->with('error', $th->getMessages());
         }
     }
 
@@ -45,28 +47,28 @@ class LoyaltyController extends Controller
     {
         if (Auth::user()->loyalty_subscription == Config::get('constants.SUBSCRIPTION.ACTIVE')) {
             $uid = Auth::user()->uid;
-            $restaurant = Restaurant::with(['subscriptions' => function($subscription){
-                $subscription->with('subscription')->where('subscription_plan',Config::get('constants.SUBSCRIPTION_PLAN.3'))->first();
+            $restaurant = Restaurant::with(['subscriptions' => function ($subscription) {
+                $subscription->with('subscription')->where('subscription_plan', Config::get('constants.SUBSCRIPTION_PLAN.3'))->first();
             }])->where('uid', $uid)->first();
             // dd($restaurant);
             $data['subscription'] = array();
-            foreach($restaurant->subscriptions as $subscription){
+            foreach ($restaurant->subscriptions as $subscription) {
                 $data['subscription']['stripe_subscription_id'] = $subscription->stripe_subscription_id;
                 $data['subscription']['price'] = $subscription->subscription->price;
                 $data['subscription']['type'] = $subscription->subscription->subscription_type;
-                if($subscription->status == Config::get('constants.STATUS.SCHEDULE')){
+                if ($subscription->status == Config::get('constants.STATUS.SCHEDULE')) {
 
                     $data['subscription']['start_date'] = \Carbon\Carbon::parse($subscription->start_date)->subMonths()->format('M d Y');
-                    $data['subscription']['end_date'] = \Carbon\Carbon::parse($subscription->start_date)->format('M d Y');                     
-                }else{
+                    $data['subscription']['end_date'] = \Carbon\Carbon::parse($subscription->start_date)->format('M d Y');
+                } else {
                     $data['subscription']['start_date'] = \Carbon\Carbon::parse($subscription->start_date)->format('M d Y');
                     $data['subscription']['end_date'] = \Carbon\Carbon::parse($subscription->end_date)->format('M d Y');
                 }
-                
+
             }
             $data['categories'] = Category::with('category_item')->where('restaurant_id', $restaurant->restaurant_id)->get();
-            $data['loyalties'] = Loyalty::where('restaurant_id',$restaurant->restaurant_id)->get();
-            return view('loyalty.list',$data);
+            $data['loyalties'] = Loyalty::where('restaurant_id', $restaurant->restaurant_id)->get();
+            return view('loyalty.list', $data);
         } else {
             return redirect()->route('loyalty.index')->with('error', 'Please purchase loyalty subscription.');
         }
@@ -94,63 +96,63 @@ class LoyaltyController extends Controller
     public function store(Request $request)
     {
         try {
-            
+
             $uid = Auth::user()->uid;
             $restaurant = Restaurant::where('uid', $uid)->first();
-            
-            if($request->post('loyaltyId') != null){
-                $loyalty = Loyalty::where('loyalty_id',$request->post('loyaltyId'))->where('restaurant_id',$restaurant->restaurant_id)->first();
+
+            if ($request->post('loyaltyId') != null) {
+                $loyalty = Loyalty::where('loyalty_id', $request->post('loyaltyId'))->where('restaurant_id', $restaurant->restaurant_id)->first();
                 $loyalty->point = $request->post('point');
                 $message = 'Loyalty update successfully.';
 
-                if($request->post('loyalty_type') == Config::get('constants.LOYALTY_TYPE.NO_OF_ORDERS')){
+                if ($request->post('loyalty_type') == Config::get('constants.LOYALTY_TYPE.NO_OF_ORDERS')) {
                     $loyalty->no_of_orders = $request->post('no_of_order');
                     $loyalty->save();
                     Toastr::success($message, '', Config::get('constants.toster'));
                 }
 
-                if($request->post('loyalty_type') == Config::get('constants.LOYALTY_TYPE.AMOUNT_SPENT')){
+                if ($request->post('loyalty_type') == Config::get('constants.LOYALTY_TYPE.AMOUNT_SPENT')) {
                     $loyalty->amount = $request->post('amount');
                     $loyalty->save();
                     Toastr::success($message, '', Config::get('constants.toster'));
                 }
 
-                if($request->post('loyalty_type') == Config::get('constants.LOYALTY_TYPE.CATEGORY_BASED')){
+                if ($request->post('loyalty_type') == Config::get('constants.LOYALTY_TYPE.CATEGORY_BASED')) {
                     $loyalty->point = $request->post('point');
                     $loyalty->save();
                     $categories = $request->post('categories');
-                    LoyaltyCategory::where('loyalty_id',$request->post('loyaltyId'))->delete();
+                    LoyaltyCategory::where('loyalty_id', $request->post('loyaltyId'))->delete();
                     foreach ($categories as $key => $value) {
                         $loyaltyCategory = new LoyaltyCategory;
                         $loyaltyCategory->restaurant_id = $restaurant->restaurant_id;
                         $loyaltyCategory->uid = $uid;
                         $loyaltyCategory->loyalty_id = $request->post('loyaltyId');
                         $loyaltyCategory->category_id = $value;
-                        $loyaltyCategory->save();    
+                        $loyaltyCategory->save();
                     }
                     Toastr::success($message, '', Config::get('constants.toster'));
                 }
-            }else{
+            } else {
                 $loyalty = new Loyalty;
                 $loyalty->restaurant_id = $restaurant->restaurant_id;
                 $loyalty->uid = $uid;
                 $loyalty->status = Config::get('constants.STATUS.INACTIVE');
                 $loyalty->point = $request->post('point');
                 $message = 'Loyalty add successfully.';
-                if($request->post('loyalty_type') == Config::get('constants.LOYALTY_TYPE.NO_OF_ORDERS')){
+                if ($request->post('loyalty_type') == Config::get('constants.LOYALTY_TYPE.NO_OF_ORDERS')) {
                     $loyalty->loyalty_type = Config::get('constants.LOYALTY_TYPE.NO_OF_ORDERS');
                     $loyalty->no_of_orders = $request->post('no_of_order');
                     $loyalty->save();
                     Toastr::success($message, '', Config::get('constants.toster'));
                 }
-                
+
                 if ($request->post('loyalty_type') == Config::get('constants.LOYALTY_TYPE.AMOUNT_SPENT')) {
                     $loyalty->loyalty_type = Config::get('constants.LOYALTY_TYPE.AMOUNT_SPENT');
                     $loyalty->amount = $request->post('amount');
                     $loyalty->save();
                     Toastr::success($message, '', Config::get('constants.toster'));
                 }
-                
+
                 if ($request->post('loyalty_type') == Config::get('constants.LOYALTY_TYPE.CATEGORY_BASED')) {
                     $loyalty->loyalty_type = Config::get('constants.LOYALTY_TYPE.CATEGORY_BASED');
                     $loyalty->save();
@@ -162,7 +164,7 @@ class LoyaltyController extends Controller
                         $loyaltyCategory->uid = $uid;
                         $loyaltyCategory->loyalty_id = $loyalty->loyalty_id;
                         $loyaltyCategory->category_id = $value;
-                        $loyaltyCategory->save();    
+                        $loyaltyCategory->save();
                     }
                     Toastr::success($message, '', Config::get('constants.toster'));
                 }
@@ -170,12 +172,11 @@ class LoyaltyController extends Controller
             return redirect()->route('loyalty.list');
         } catch (\Throwable $th) {
             // $errors['success'] = false;
-			// $errors['message'] = $th->getMessage();
-			// return response()->json($errors, 500);
-            return redirect()->route('loyalty.list')->with('error', $th->getMessage());   
+            // $errors['message'] = $th->getMessage();
+            // return response()->json($errors, 500);
+            return redirect()->route('loyalty.list')->with('error', $th->getMessage());
         }
     }
-
 
     /**
      * Show the form for editing the specified resource.
@@ -192,22 +193,21 @@ class LoyaltyController extends Controller
 
             $loyaltyId = $request->post('loyaltyId');
             $loyaltyType = $request->post('loyaltyType');
-            $loyalty = Loyalty::where('loyalty_id',$loyaltyId)->where('loyalty_type',$loyaltyType)->where('restaurant_id',$restaurant->restaurant_id);
-            if($loyaltyType == Config::get('constants.LOYALTY_TYPE.CATEGORY_BASED')){
+            $loyalty = Loyalty::where('loyalty_id', $loyaltyId)->where('loyalty_type', $loyaltyType)->where('restaurant_id', $restaurant->restaurant_id);
+            if ($loyaltyType == Config::get('constants.LOYALTY_TYPE.CATEGORY_BASED')) {
                 $loyalty = $loyalty->with('categories')->first();
-            }else{
+            } else {
                 $loyalty = $loyalty->first();
             }
-            $data = ['success' => true,'loyalty' => $loyalty];
+            $data = ['success' => true, 'loyalty' => $loyalty];
             return response()->json($data, 200);
         } catch (\Throwable $th) {
             $data['success'] = false;
-			$data['message'] = $th->getMessage();
+            $data['message'] = $th->getMessage();
             return response()->json($data, 500);
         }
     }
 
-    
     /**
      * Remove the specified resource from storage.
      *
@@ -218,17 +218,17 @@ class LoyaltyController extends Controller
     {
         try {
             $loyaltyId = $request->post('loyaltyId');
-            $loyalty = Loyalty::where('loyalty_id',$loyaltyId)->first();
-            if($loyalty->status == Config::get('constants.STATUS.ACTIVE')){
+            $loyalty = Loyalty::where('loyalty_id', $loyaltyId)->first();
+            if ($loyalty->status == Config::get('constants.STATUS.ACTIVE')) {
                 Toastr::error('This loyalty program is active.Please inactive first.', '', Config::get('constants.toster'));
-            }else{
-                if($loyalty->loyalty_type == Config::get('constants.LOYALTY_TYPE.CATEGORY_BASED')){
-                    if($loyalty->delete()){
+            } else {
+                if ($loyalty->loyalty_type == Config::get('constants.LOYALTY_TYPE.CATEGORY_BASED')) {
+                    if ($loyalty->delete()) {
                         $message = 'Loyalty delete successfully.';
-                        LoyaltyCategory::where('loyalty_id',$loyaltyId)->delete();
+                        LoyaltyCategory::where('loyalty_id', $loyaltyId)->delete();
                     }
-                }else{
-                    if($loyalty->delete()){
+                } else {
+                    if ($loyalty->delete()) {
                         $message = 'Loyalty delete successfully.';
                     }
                 }
@@ -424,24 +424,26 @@ class LoyaltyController extends Controller
         }
     }
 
-    public function changeStatus(Request $request){
+    public function changeStatus(Request $request)
+    {
         try {
             $loyaltyId = $request->post('loyaltyId');
             $uid = Auth::user()->uid;
             $restaurant = Restaurant::where('uid', $uid)->first();
-            Loyalty::where('loyalty_id',$loyaltyId)->where('restaurant_id',$restaurant->restaurant_id)->update(['status' => Config::get('constants.STATUS.ACTIVE')]);
-            Loyalty::where('loyalty_id','!=',$loyaltyId)->where('restaurant_id',$restaurant->restaurant_id)->update(['status' => Config::get('constants.STATUS.INACTIVE')]);
-            return response()->json(['success' => true,'message' => 'Status Change Successfully.'],200);
+            Loyalty::where('loyalty_id', $loyaltyId)->where('restaurant_id', $restaurant->restaurant_id)->update(['status' => Config::get('constants.STATUS.ACTIVE')]);
+            Loyalty::where('loyalty_id', '!=', $loyaltyId)->where('restaurant_id', $restaurant->restaurant_id)->update(['status' => Config::get('constants.STATUS.INACTIVE')]);
+            return response()->json(['success' => true, 'message' => 'Status Change Successfully.'], 200);
         } catch (\Throwable $th) {
-            return response()->json(['success' => false,'message' => Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS')],500);
+            return response()->json(['success' => false, 'message' => Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS')], 500);
         }
     }
 
-    public function cancelPlan($planId){
+    public function cancelPlan($planId)
+    {
         try {
             $uid = Auth::user()->uid;
             $restaurant = Restaurant::where('uid', $uid)->first();
-            $plan = RestaurantSubscription::where('stripe_subscription_id',$planId)->where('restaurant_id',$restaurant->restaurant_id)->first();
+            $plan = RestaurantSubscription::where('stripe_subscription_id', $planId)->where('restaurant_id', $restaurant->restaurant_id)->first();
             dd($plan);
         } catch (\Throwable $th) {
             Toastr::error('Some error in loyalty plan cancel.', '', Config::get('constants.toster'));

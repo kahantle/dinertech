@@ -24,16 +24,21 @@
                 <div class="dash-first">
                     <div class="container-fluid">
                         <div class="profile-inner-blog">
-                            <h2>Select Loyalty Type </h2>
-                            <p>Your Loyality type determines how your customers will earn points and rewards.</p>
+                            <h2>DinerTech Loyalty</h2>
+                            <p>Elevate your customer engagement with a loyalty program. The DinerTech Loyalty Platform
+                                offers numerous ways to keep customers engaged and coming back for more. You can mix and
+                                match different benefits to fit your business needs with our Loyalty subscription. Enroll
+                                today for just $29 to add this expanded functionality to your operation.</p>
+                            {{-- <h2>Select Loyalty Type </h2>
+                            <p>Your Loyality type determines how your customers will earn points and rewards.</p> --}}
                         </div>
 
                         <div class="row profile-two-inner">
                             <div class="col-lg-4">
                                 <div class="card">
                                     <div class="card-body">
-                                        <h6>No Of Orders</h6>
-                                        <p>Reward customers every time they make a new Orders.</p>
+                                        <h6>Number of Orders</h6>
+                                        <p>Customers earn points for each order they place.</p>
                                         <div class="add-order-button">
                                             <a href="javascript:;" class="add-loyalty-blog" data-toggle="modal"
                                                 data-target="#loyaltyPayment">Add Loyalty</a>
@@ -45,7 +50,7 @@
                                 <div class="card">
                                     <div class="card-body">
                                         <h6>Amount Spent</h6>
-                                        <p>Reward customers for purchasing specific items of services.</p>
+                                        <p>Customers earn points for each dollar they spend.</p>
                                         <div class="add-order-button">
                                             <a href="javascript:;" class="add-loyalty-blog" data-toggle="modal"
                                                 data-target="#loyaltyPayment">Add Loyalty</a>
@@ -57,7 +62,7 @@
                                 <div class="card">
                                     <div class="card-body">
                                         <h6>Category Based </h6>
-                                        <p>Reward customers for purchasing specific Categories of services.</p>
+                                        <p>Customers earn points for items purchased from select categories.</p>
                                         <div class="add-order-button">
                                             <a href="javascript:;" class="add-loyalty-blog" data-toggle="modal"
                                                 data-target="#loyaltyPayment">Add Loyalty</a>
@@ -72,7 +77,7 @@
                     <div class="container">
                         <div class="Benefits-loyalty">
                             <h5 class="my-2">Benefits Of Loyalty </h5>
-                            <span>Loyalty Program Function</span>
+                            {{-- <span>Loyalty Program Function</span>
                             <p class="mb-1">$1 = 1 Point</p>
                             <p class="mb-2">Client gets to determine how many points = rewards and different
                                 levels of rewards
@@ -85,7 +90,7 @@
                             <p class="mb-2">Client will use same promotion function to say whether customer can
                                 use ‘Redeem by Points’ by itself or with other loyalty rewards (Money, Visits).
                             </p>
-                            <span>You don’t have active subscription for Loyalty</span>
+                            <span>You don’t have active subscription for Loyalty</span> --}}
                             <div class="subscribe-btn-blog">
                                 <button type="button" data-toggle="modal" data-target="#loyaltyPayment">Subscribe
                                     Now</button>
@@ -109,9 +114,18 @@
                     </div>
 
                     <h5>$ 29.00 / Month</h5>
-                    <p>Main subscription cycle is from 15 to 15 of each month and you're subscribing for loyalty on 1st
-                        December 2021 so we will charge you $14.4 this month and from next month cycle $29.00.</p>
-                    <h4>Enter Your credit/debit card details</h4>
+                    {{-- <p>Main subscription cycle is from 15 to 15 of each month and you're subscribing for loyalty on 1st
+                        December 2021 so we will charge you $14.4 this month and from next month cycle $29.00.</p> --}}
+                    <p class="border-0">Subscribe today for just ____________ with a recurring subscription of $29.00
+                        occurring on your
+                        account bill date of the 15th.</p>
+                    <p>
+
+                        Underlined text should be conditional to the client’s account subscription date. The first should be
+                        their pro-rated price in the following format: $xx.xx and the second should be the day of their
+                        renewal in the format shown above (1st, 3rd, 7th, 15th, 21st, 23rd, etc)
+                    </p>
+                    <h4>Enter Your Credit / Debit Card Details</h4>
                     <form action="{{ route('loyalty.payment') }}" method="post" id="loyalty-payment">
                         @csrf
                         <input type="hidden" name="payment_method" id="payment-method">
