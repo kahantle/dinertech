@@ -563,7 +563,7 @@ section.lrForm .left-pattern {
     height: 100vh;
     background-size: cover;
     background-repeat-y: no-repeat;
-    /*min-height: 900px;*/
+    /*min-height       : 900px;*/
     overflow: hidden !important;
 }
 
@@ -573,7 +573,7 @@ section.lrForm .left-pattern .logo {
     left: 50%;
     transform: translate(-50%, -50%);
     top: 33%;
-    /*height: calc(100vh - 480px);*/
+    /*height  : calc(100vh - 480px);*/
     height: 50vh;
 }
 
@@ -585,7 +585,7 @@ section.lrForm .left-pattern .btm-img {
     position: absolute;
     bottom: 0;
     width: 100%;
-    /*height: calc(50vh - 50px);*/
+    /*height      : calc(50vh - 50px);*/
     text-align: center;
     padding: 80px;
     padding-bottom: 20px;
@@ -596,7 +596,7 @@ section.lrForm .left-pattern .btm-img {
 section.lrForm .left-pattern .btm-img img {
     position: relative;
     z-index: 9;
-    /*width: 90%;*/
+    /*width : 90%;*/
 }
 
 section.lrForm .left-pattern .btm-img:before {
@@ -608,7 +608,7 @@ section.lrForm .left-pattern .btm-img:before {
     width: 130%;
     height: 100%;
     background: #fff;
-    /* background: url(../images/circle-bg.png); */
+    /* background      : url(../images/circle-bg.png); */
     background-repeat: no-repeat;
     border-radius: 50% 50% 0 0;
     background-size: cover;
@@ -673,8 +673,8 @@ section.lrForm .form-info h2 {
     height: 25px;
     width: 25px;
     background-color: #666;
-    /* top: 0; */
-    /* right: 20px; */
+    /* top          : 0; */
+    /* right        : 20px; */
     border-radius: 100%;
     color: #fff;
     display: flex;
@@ -1142,7 +1142,7 @@ div#modifierGroupPopUp .content .type-row ul p {
 .sidebar-nav li:first-child a {
     font-weight: 600;
     letter-spacing: 0.6px;
-    /* padding: 10px 0; */
+    /* padding    : 10px 0; */
     font-size: 20px;
 }
 
@@ -1425,7 +1425,7 @@ div#modifierGroupPopUp .content .type-row ul p {
 
 .menu-title h4 {
     font-size: 18px;
-    /*font-family: 'SFProDisplay-Regular';*/
+    /*font-family : 'SFProDisplay-Regular';*/
     text-transform: capitalize;
 }
 
@@ -2093,7 +2093,7 @@ body .add-category textarea {
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    /* width: 100%; */
+    /* width       : 100%; */
     border-radius: 20px;
 }
 
@@ -2121,7 +2121,7 @@ body .add-category textarea {
 .orderss .order .time {
     position: absolute;
     right: 100px;
-    /*top: 10px;*/
+    /*top   : 10px;*/
 }
 
 .orderss .order .time p {
@@ -3121,7 +3121,7 @@ input#chat-search {
     border-radius: 100%;
     border: 3px solid #fff;
     display: inline-block;
-    /* width: 15%; */
+    /* width     : 15%; */
     margin-right: 15px;
     width: 50px;
     height: 50px;
@@ -3154,11 +3154,11 @@ input#chat-search {
 
 .cn-right h6 {
     position: relative;
-    /* display: inline-block; */
+    /* display     : inline-block; */
     width: 20px;
     height: 20px;
-    /* right: 0; */
-    /* float: right; */
+    /* right       : 0; */
+    /* float       : right; */
     margin-left: auto;
     display: flex;
     z-index: 1;
@@ -3421,7 +3421,7 @@ li.company-msg {
 }
 
 .repot-box .w-100 {
-    width: 100%!important;
+    width: 100% !important;
     display: block;
 }
 

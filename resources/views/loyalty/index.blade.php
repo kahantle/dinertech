@@ -34,7 +34,7 @@
                         </div>
 
                         <div class="row profile-two-inner">
-                            <div class="col-lg-4">
+                            <div class="col-xl-3 col-lg-4 col-md-4">
                                 <div class="card">
                                     <div class="card-body">
                                         <h6>Number of Orders</h6>
@@ -46,7 +46,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-4">
+                            <div class="col-xl-3 col-lg-4 col-md-4">
                                 <div class="card">
                                     <div class="card-body">
                                         <h6>Amount Spent</h6>
@@ -58,7 +58,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-4">
+                            <div class="col-xl-3 col-lg-4 col-md-4">
                                 <div class="card">
                                     <div class="card-body">
                                         <h6>Category Based </h6>

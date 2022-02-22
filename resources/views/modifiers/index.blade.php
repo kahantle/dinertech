@@ -96,7 +96,7 @@
                 {{ Form::open(['route' => ['add.modifier.post'], 'id' => 'modifierForm', 'method' => 'POST', 'class' => '']) }}
                 <div class="form-group">
                     <input type="hidden" id="modifier_group_id" name="modifier_group_id" />
-                    <input type="text" class="form-control" id="modifier_group_name" name="modifier_group_name"
+                    <input type="text" class="form-control mb-5" id="modifier_group_name" name="modifier_group_name"
                         placeholder="Modifier Group Name">
                 </div>
                 {{-- <div class="form-group">
@@ -138,8 +138,8 @@
 
 
                 </div>
-                <div class="btn-custom">
-                    <button class="groupBtn btn-blue"><span>Add</span></button>
+                <div class="btn-custom mt-5">
+                    <button class="groupBtn btn-blue group-add-blog"><span>Addgyhngnhgnjgrh</span></button>
                 </div>
 
 

@@ -56,7 +56,7 @@
 display: block!important; 
    } */
     .order-details-inner-blog {
-        flex-flow: column!important;
+        flex-flow: column !important;
     }
     .category .order-detail .order-icons a,
     .orderss .order-icons a {
@@ -262,6 +262,12 @@ display: block!important;
     }
 }
 
+@media (max-width: 575px) {
+    .popup-librate .popup {
+        padding: 40px 10px 30px;
+    }
+}
+
 @media (min-width: 576px) and (max-width: 767.98px) {
     .chat-name {
         display: inline-block;
@@ -421,7 +427,7 @@ display: block!important;
         width: 100%;
     }
     .pro-details-m-blog {
-        display: flex!important;
+        display: flex !important;
     }
     .order-content {
         padding: 0 15px;
@@ -553,7 +559,7 @@ display: block!important;
         flex-flow: row;
         /*padding-top: 20px;*/
         position: relative;
-        /*width: 100%;*/
+        /*width      : 100%;*/
     }
     .Promotion.add-category .col-lg-6:nth-child(2) {
         border-left: 0px;
@@ -619,13 +625,19 @@ display: block!important;
     }
 }
 
+@media (min-width: 1400px) and (max-width: 1920px) {
+    .profile-two-inner .card {
+        width: 90%;
+    }
+}
+
 @media (max-width: 1200px) and (min-width: 992px) {
     .Promotion.content-wrapper .form-group.form-btn-menu {
         width: 100%;
     }
     /** other pages **/
     #wrapper {
-        padding-left: 100px;
+        padding-left: 100px !important;
     }
     #wrapper #sidebar-wrapper {
         width: 100px;
@@ -637,7 +649,7 @@ display: block!important;
         text-align: center;
     }
     #wrapper .sidebar-nav img {
-        width: 35px;
+        width: 28px;
         margin-right: 0;
     }
     #sidebar-wrapper {
@@ -645,6 +657,18 @@ display: block!important;
     }
     #wrapper #sidebar-wrapper a span {
         display: none;
+    }
+    #accordion-first .card-header .btn span {
+        display: none;
+    }
+    #accordion-first .card-body .sub-menu {
+        margin-left: 0 !important;
+        padding: 0 15px !important;
+    }
+    #accordion-first .card .card-body ul li {
+        justify-content: center;
+        align-items: center;
+        margin: 20px 0;
     }
     #wrapper .sidebar-nav {
         width: 100%;
@@ -894,6 +918,6 @@ display: block!important;
 
 @media (max-width: 360px) {
     .pro-card p:first-child {
-        padding: 0 2px!important;
+        padding: 0 2px !important;
     }
 }

@@ -31,7 +31,7 @@
                 <label class="label-a"><i class="fa fa-camera" aria-hidden="true"></i>Select
                     Picture</label>
                 <div class="row">
-                    <div class="col-lg-6">
+                    <div class="col-xl-5 col-lg-6 col-md-6">
 
 
                         <div class="form-group">
@@ -46,7 +46,7 @@
                         </div>
 
                     </div>
-                    <div class="col-lg-6">
+                    <div class="col-xl-5 col-lg-6 col-md-6">
                         <div class="form-group select-input">
                             <img src="{{ asset('assets/images/catagory-black.png') }}">
                             <select type="text" class="form-control" name="category_id" placeholder="Enter Item Catagory">
