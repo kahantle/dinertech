@@ -3563,6 +3563,9 @@ p:empty {
     .nav-right li a {
         padding: 0 20px !important;
     }
+    .dashboard.category.content-wrapper .dashboard.promotions .pro-card.detail {
+        overflow-y: scroll;
+    }
 }
 
 @media (max-width:991px) {
@@ -5945,6 +5948,9 @@ a:focus {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !important;
 }
 
+
+/* modal add css start  */
+
 .menu-tinnerblog .menu-actions-ctm {
     margin-left: 0 !important;
 }
@@ -6072,6 +6078,17 @@ a:focus {
 .popup-librate .form-group {
     margin-bottom: 28px !important;
 }
+
+.pro-card.detail .left-s {
+    align-items: center;
+}
+
+.dashboard.category.content-wrapper .chat-table .cn-right h6 {
+    height: auto !important;
+}
+
+
+/* modal add css end */
 
 
 /* Loyalty End */
