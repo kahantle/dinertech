@@ -56,14 +56,15 @@
                                             <td class="reports-blog-swc">
                                                 @foreach ($rules->rulesItems as $itemkey => $items)
                                                     @if ($itemkey == 0)
-                                                        {{$items->categories->category_name}} :    
+                                                        {{ $items->categories->category_name }} :
                                                     @endif
                                                     @foreach ($items->menuItems as $menukey => $item)
-                                                        {{$item->item_name}},
-                                                    @endforeach    
+                                                        {{ $item->item_name }},
+                                                    @endforeach
                                                 @endforeach
                                             </td>
-                                            <td class="btn-blog-group btn-rules-desktop btn-rules-desktop btn-rules-desktop">
+                                            <td
+                                                class="btn-blog-group btn-rules-desktop btn-rules-desktop btn-rules-desktop">
                                                 <button class="btn-edit btn-inner product-quantity-plus1 edit-rule"
                                                     data-rule-id="{{ $rules->rules_id }}">Edit</button>
                                                 <button class="btn-delete delete-rule"

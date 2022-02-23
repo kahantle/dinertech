@@ -4733,10 +4733,6 @@ input:checked+.check-one:after {
     margin: 9px 0;
 }
 
-#accordion-first .card-body .sub-menu {
-    margin-left: 46px;
-}
-
 #accordion-first .card-body .sub-menu span {
     font-size: 16px !important;
     text-transform: capitalize;
@@ -4941,10 +4937,13 @@ li.select2-search.select2-search--inline {
         padding-left: 16px;
     }
     #wrapper.toggled #sidebar-wrapper .card-header {
-        padding-left: 0 !important;
+        padding-left: 0;
     }
     #accordion .card-header {
         padding-left: 24px !important;
+    }
+    #wrapper #sidebar-wrapper .card-header {
+        padding-left: 23px;
     }
 }
 
