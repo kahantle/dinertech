@@ -8,11 +8,14 @@ use Validator;
 use App\Models\CustomerAddress;
 use Config;
 use App\Models\Restaurant;
+use App\Models\MenuItem;
 use App\Models\Order;
 use App\Models\OrderMenuItem;
 use App\Models\OrderMenuGroup;
 use App\Models\OrderMenuGroupItem;
 use App\Models\User;
+use App\Models\Loyalty;
+use App\Models\LoyaltyCategory;
 use App\Notifications\PlaceOrderCash;
 use App\Notifications\PlaceOrderCard;
 use App\Notifications\PlaceFutureOrderCash;
@@ -98,7 +101,6 @@ class OrderController extends Controller
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
             }
             $uid = auth('api')->user()->uid;
-       
             DB::beginTransaction();
             $order = new Order;
             $order->uid = $uid;
@@ -124,11 +126,13 @@ class OrderController extends Controller
             $order->order_progress_status = Config::get('constants.ORDER_STATUS.INITIAL');
             if($order->save()){
                 foreach ($request->post('menu_item') as $key => $menuItem) {
+                    $menu_price = MenuItem::where('menu_id',$menuItem['menu_id'])->where('restaurant_id',$request->post('restaurant_id'))->first();
                     $menuItemData = New OrderMenuItem;
                     $menuItemData->menu_id =    $menuItem['menu_id']; 
                     $menuItemData->menu_name =  $menuItem['menu_name']; 
                     $menuItemData->menu_total = $menuItem['menu_total']; 
                     $menuItemData->menu_qty =   $menuItem['menu_qty'];
+                    $menuItemData->menu_price = $menu_price->item_price;
                     $menuItemData->menu_total = $menuItem['menu_total'];
                     $menuItemData->modifier_total = $menuItem['modifier_total'];
                     $menuItemData->order_id =$order->order_id;
@@ -167,26 +171,77 @@ class OrderController extends Controller
                     $order->with('user')->where('uid',$uid)->where('order_number',$orderNumber)->first();
                 }])->find($request->post('restaurant_id'));
                 
-                if($request->post('is_feature') == 1)
-                {
-                    if($request->post('isCash') == 0)
-                    {
-                        $restaurant->notify(new PlaceFutureOrderCash($restaurant));
+                if($request->post('is_feature') == 1){
+                    // if($request->post('isCash') == 0)
+                    // {
+                    //     $restaurant->notify(new PlaceFutureOrderCash($restaurant));
+                    // }
+                    // else
+                    // {
+                    //     $restaurant->notify(new PlaceFutureOrderCard($restaurant));
+                    // }
+                    switch ($request->post('isCash')) {
+                        case '0':
+                            $restaurant->notify(new PlaceFutureOrderCash($restaurant));
+                            break;
+                        
+                        default:
+                            $restaurant->notify(new PlaceFutureOrderCard($restaurant));
+                            break;
                     }
-                    else
-                    {
-                        $restaurant->notify(new PlaceFutureOrderCard($restaurant));
+                } else {
+                    switch ($request->post('isCash')) {
+                        case '0':
+                            $restaurant->notify(new PlaceOrderCash($restaurant));
+                            break;
+                        
+                        default:
+                            $restaurant->notify(new PlaceOrderCard($restaurant));
+                            break;
                     }
                 }
-                else
-                {
-                    if($request->post('isCash') == 0)
-                    {
-                        $restaurant->notify(new PlaceOrderCash($restaurant));
+                $userPoint = auth('api')->user()->total_points;
+                $redeemPoint = $request->post('point');
+                if($redeemPoint != 0){
+                    $userRedeemPoint = $userPoint - $redeemPoint;
+                    if($userRedeemPoint < 0){
+                        $userRedeemPoint = 0;
                     }
-                    else
-                    {
-                        $restaurant->notify(new PlaceOrderCard($restaurant));
+                    User::where('uid',$uid)->update(['total_points' => $userRedeemPoint]);
+                }
+                $loyalty = Loyalty::where('status',Config::get('constants.STATUS.ACTIVE'))->where('restaurant_id',$request->post('restaurant_id'))->first();
+                if($loyalty){
+                    switch ($loyalty->loyalty_type) {
+                        case Config::get('constants.LOYALTY_TYPE.NO_OF_ORDERS'):
+                                $getOrderIds = Order::where('uid',$uid)->where('order_progress_status',Config::get('constants.ORDER_STATUS.COMPLETED'))->where('point_count',Config::get('constants.ORDER_POINT_COUNT.NO'))->limit($loyalty->no_of_orders)->get()->pluck('order_id');
+                                if(count($getOrderIds) == $loyalty->no_of_orders){
+                                    $totalPoint = $userPoint + $loyalty->point;
+                                    User::where('uid',$uid)->update(['total_points' => $totalPoint]);
+                                    Order::whereIn('order_id',$getOrderIds)->update(['point_count' => Config::get('constants.ORDER_POINT_COUNT.YES')]);
+                                }
+                            break;
+                        case Config::get('constants.LOYALTY_TYPE.AMOUNT_SPENT'):
+                            $grandTotal = $request->post('grand_total');
+                            if($grandTotal > $loyalty->amount){
+                                $totalPoint = $userPoint + $loyalty->point;
+                                User::where('uid',$uid)->update(['total_points' => $totalPoint]);
+                            }
+                            break;
+                        case Config::get('constants.LOYALTY_TYPE.CATEGORY_BASED'):
+                            $loyaltyCategories = LoyaltyCategory::where('loyalty_id',$loyalty->loyalty_id)->where('restaurant_id',$request->post('restaurant_id'))->get()->pluck('category_id')->toArray();
+                            foreach ($request->post('menu_item') as $key => $menuItem) {
+                                $category_menu = MenuItem::where('menu_id',$menuItem['menu_id'])->first();
+                                $addPoint = false;
+                                if(in_array($category_menu->category_id,$loyaltyCategories)){
+                                    $addPoint = true;
+                                    break;
+                                }
+                            }
+                            if($addPoint == true){
+                                $totalPoint = $userPoint + $loyalty->point;
+                                User::where('uid',$uid)->update(['total_points' => $totalPoint]);
+                            }
+                            break;
                     }
                 }
                 return response()->json(['message' => "Order added successfully.", 'order_id'=>$order->order_id, 'order_number'=>$order->order_number,  'success' => true], 200);

@@ -113,7 +113,7 @@ return [
         '4' => 'Order Error',
     ],
     'PROMOTION_STATUS' => [
-        'AnyClient' => 'Any Client,new or Returning',
+        'AnyClient' => 'Any Customer,New or Returning',
         'NewClient' => 'Only new Clients',
         'OneOrder' => 'Only Returning',
     ],
