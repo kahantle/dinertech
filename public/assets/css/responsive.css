@@ -106,9 +106,15 @@ display: block!important;
     body section.lrForm .left-pattern .btm-img img {
         max-width: 180px;
     }
+<<<<<<< Updated upstream
     .order-detail,
     .time p {
         flex-flow: column;
+=======
+    .order-detail {
+        flex-flow: column;
+        width: 100%;
+>>>>>>> Stashed changes
     }
     .time,
     .order-icons,

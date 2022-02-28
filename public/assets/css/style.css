@@ -3559,7 +3559,11 @@ p:empty {
 
 @media (max-width:1200px) {
     .nav-right li a {
+<<<<<<< Updated upstream
         padding: 0 20px!important;
+=======
+        padding: 0 20px !important;
+>>>>>>> Stashed changes
     }
 }
 
@@ -5933,6 +5937,7 @@ a:focus {
 }
 
 .select-inst-blog .select2-container .select2-search--inline .select2-search__field {
+<<<<<<< Updated upstream
     margin-left: 18px!important;
     font-size: 17px!important;
     margin-top: 2px!important;
@@ -5940,5 +5945,142 @@ a:focus {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"!important;
 }
 
+=======
+    margin-left: 18px !important;
+    font-size: 17px !important;
+    margin-top: 2px !important;
+    margin-bottom: 2px !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !important;
+}
+
+.menu-tinnerblog .menu-actions-ctm {
+    margin-left: 0 !important;
+}
+
+.menu-tinnerblog h4 span {
+    margin-right: 10px !important;
+}
+
+.menu-tinnerblog h4 {
+    margin-right: 10px !important;
+    color: #484444;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.menu-inter-blog {
+    margin-bottom: 5px;
+}
+
+.category-insides-blog .row {
+    align-items: center;
+    margin-top: 60px;
+    justify-content: center;
+}
+
+.category-insides-blog form {
+    max-width: 100% !important;
+}
+
+.category-insides-blog .col-xl-5.col-lg-6.col-md-6:nth-child(2) {
+    padding: 0 25px 0 40px;
+}
+
+.category-insides-blog .col-xl-5.col-lg-6.col-md-6:nth-child(1) {
+    padding: 0 40px 0 25px;
+}
+
+.Promotion.add-category .col-xl-5.col-lg-6.col-md-6:nth-child(2) {
+    border-left: 2px solid #c3c3c4;
+}
+
+.has-put-prror .error-help-block {
+    display: none !important;
+}
+
+@media(max-width: 991.98px) {
+    .category-insides-blog .col-xl-5.col-lg-6.col-md-6:nth-child(1) {
+        padding: 0 25px !important;
+    }
+    .category-insides-blog .col-xl-5.col-lg-6.col-md-6:nth-child(2) {
+        padding: 0 25px !important;
+    }
+}
+
+.popup-librate .content p {
+    max-width: 100%;
+    margin: 0 0 0 34px !important;
+    color: #000;
+}
+
+.popup-librate label {
+    color: #000;
+}
+
+.popup-librate .styled-checkbox+label:before {
+    box-shadow: 0 0 0 2px #495057 !important;
+}
+
+.form-check-insides {
+    text-align: left;
+}
+
+.popup-librate h5 {
+    color: #000;
+}
+
+.input-first {
+    width: 64px;
+    height: 38px !important;
+    border-radius: 8px !important;
+    padding: 0 !important;
+    text-align: center;
+    color: #ced4da;
+    /* border    : 2px solid #ced4da !important; */
+}
+
+.popup-librate .popup .close {
+    top: unset;
+}
+
+.input-first::placeholder {
+    color: #ced4da;
+}
+
+.input-second::placeholder {
+    color: #ced4da;
+}
+
+.input-second {
+    width: 64px;
+    height: 38px !important;
+    border-radius: 8px !important;
+    padding: 0 !important;
+    color: #ced4da;
+    text-align: center;
+    /* border    : 2px solid #ced4da !important; */
+}
+
+.form-align-blog {
+    padding-left: 40px;
+}
+
+.menu-md-blog {
+    margin-bottom: 30px !important;
+}
+
+.menu-md-blog .menu-item {
+    height: 100% !important;
+}
+
+.popup-librate .popup {
+    max-width: 550px;
+}
+
+.popup-librate .form-group {
+    margin-bottom: 28px !important;
+}
+
+>>>>>>> Stashed changes
 
 /* Loyalty End */
