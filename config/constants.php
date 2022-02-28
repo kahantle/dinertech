@@ -92,7 +92,7 @@ return [
     ],
     'DISPLAY_TIME' => [
         '1' => 'Always Shows to eligible clients',
-        '2' => 'Hide for menu reedeem with coupon code',
+        '2' => 'Hide for menu redeem with coupon code',
         '3' => 'Limited to show times',
     ],
     'NO_EXTRA_CHARGES' => [
@@ -149,7 +149,7 @@ return [
         'ACTIVE_MESSAGE' => 'Email Marketing Subscription Successfully.',
         'UPGRADE_MESSAGE' => 'Subscription Upgrade Successfully.',
     ],
-    'ORDER_TYPE' => [
+    'ORDER_PAYMENT_TYPE' => [
         'CASH' => 1,
         'CARD' => 0,
     ],
@@ -166,4 +166,8 @@ return [
         'ELIGIBLE' => 'ELIGIBLE',
         'NOT_ELIGIBLE' => 'NOT ELIGIBLE'
     ],
+    'ORDER_POINT_COUNT' => [
+        'YES' => 'YES',
+        'NO'  => 'NO'
+    ]
 ];
