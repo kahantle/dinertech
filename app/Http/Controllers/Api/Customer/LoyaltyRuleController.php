@@ -28,7 +28,7 @@ class LoyaltyRuleController extends Controller
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
             }
             $totalPoints = Auth::user()->total_points;
-            $loyalties = LoyaltyRule::where('restaurant_id',$request->post('restaurant_id'))->get(['rules_id','restaurant_id','uid','point']);
+            $loyalties = LoyaltyRule::where('restaurant_id',$request->post('restaurant_id'))->get(['rules_id','restaurant_id','point']);
             if($loyalties->count() != 0){
                 foreach($loyalties as $loyaltyKey =>$loyalty){
                     $results[$loyaltyKey] = $loyalty;
