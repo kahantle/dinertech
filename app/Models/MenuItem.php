@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Auth;
 use Config;
+use Request;
 
 class MenuItem extends Model
 {
@@ -64,13 +65,4 @@ class MenuItem extends Model
         return $this->belongsTo(Restaurant::class, 'restaurant_id');
     }
 
-    public function getLoyaltyStatusAttribute(){
-        $restaurant = RestaurantUser::where('uid',Auth::user()->uid)->first();
-        $loyaltyPoint = LoyaltyRuleItem::with('loyaltyRule')->where('menu_id',$this->menu_id)->where('restaurant_id',$restaurant->restaurant_id)->first();
-        if(Auth::user()->total_points < $loyaltyPoint->loyaltyRule->point){
-            return Config::get('constants.LOYALTY_MENU_STATUS.NOT_ELIGIBLE');
-        }else{
-            return Config::get('constants.LOYALTY_MENU_STATUS.ELIGIBLE');
-        }
-    }
 }

@@ -29,14 +29,25 @@ class LoyaltyRuleController extends Controller
             }
             $totalPoints = Auth::user()->total_points;
             $loyalties = LoyaltyRule::where('restaurant_id',$request->post('restaurant_id'))->get(['rules_id','restaurant_id','uid','point']);
-            foreach($loyalties as $loyaltyKey =>$loyalty){
-                $results[$loyaltyKey] = $loyalty;
-                $items = LoyaltyRuleItem::with('menuItems')->where('loyalty_rule_id',$loyalty->rules_id)->get();
-               foreach($items as $key => $menuItems){
-                 $results[$loyaltyKey]['menuItems'] = $menuItems->menuItems;
-               }
+            if($loyalties->count() != 0){
+                foreach($loyalties as $loyaltyKey =>$loyalty){
+                    $results[$loyaltyKey] = $loyalty;
+                    $items = LoyaltyRuleItem::with('menuItems')->where('loyalty_rule_id',$loyalty->rules_id)->get();
+                    foreach($items as $key => $menuItems){
+                        foreach($menuItems->menuItems as $menu => $item){
+                            if($loyalty->point > $totalPoints){
+                                $item['loyalty_status'] = Config::get('constants.LOYALTY_MENU_STATUS.NOT_ELIGIBLE');
+                            }else {
+                                $item['loyalty_status'] = Config::get('constants.LOYALTY_MENU_STATUS.ELIGIBLE');
+                            }
+                            $menus[$menu] = $item;
+                        }
+                        $results[$loyaltyKey]['menuItems'] = $menus;
+                    }
+                }
+            }else{
+                $results = [];
             }
-            
             return response()->json(['total_points' => $totalPoints,'loyalties' => $results, 'success' => true], 200);
         } catch (\Throwable $th) {
             $errors['success'] = false;
