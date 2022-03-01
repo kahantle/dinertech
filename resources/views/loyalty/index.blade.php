@@ -72,7 +72,7 @@
                     <div class="container">
                         <div class="Benefits-loyalty">
                             <h5 class="my-2">Benefits Of Loyalty </h5>
-                            <span>Loyalty Program Function</span>
+                            {{-- <span>Loyalty Program Function</span>
                             <p class="mb-1">$1 = 1 Point</p>
                             <p class="mb-2">Client gets to determine how many points = rewards and different
                                 levels of rewards
@@ -85,7 +85,7 @@
                             <p class="mb-2">Client will use same promotion function to say whether customer can
                                 use ‘Redeem by Points’ by itself or with other loyalty rewards (Money, Visits).
                             </p>
-                            <span>You don’t have active subscription for Loyalty</span>
+                            <span>You don’t have active subscription for Loyalty</span> --}}
                             <div class="subscribe-btn-blog">
                                 <button type="button" data-toggle="modal" data-target="#loyaltyPayment">Subscribe
                                     Now</button>
@@ -109,8 +109,8 @@
                     </div>
 
                     <h5>$ 29.00 / Month</h5>
-                    <p>Main subscription cycle is from 15 to 15 of each month and you're subscribing for loyalty on 1st
-                        December 2021 so we will charge you $14.4 this month and from next month cycle $29.00.</p>
+                    {{-- <p>Main subscription cycle is from 15 to 15 of each month and you're subscribing for loyalty on 1st
+                        December 2021 so we will charge you $14.4 this month and from next month cycle $29.00.</p> --}}
                     <h4>Enter Your credit/debit card details</h4>
                     <form action="{{ route('loyalty.payment') }}" method="post" id="loyalty-payment">
                         @csrf
