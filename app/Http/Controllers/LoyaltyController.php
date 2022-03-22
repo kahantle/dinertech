@@ -27,15 +27,30 @@ class LoyaltyController extends Controller
     public function index()
     {
         try {
-            $uid = Auth::user()->uid;
-            $restaurant = Restaurant::where('uid', $uid)->first();
-            $stripe = Stripe::make(env('STRIPE_SECRET'));
-            $data['paymentMethods'] = $stripe->paymentMethods()->all([
-                'type' => 'card',
-                'customer' => $restaurant->stripe_customer_id,
-            ]);
-
-            return view('loyalty.index', $data);
+            if(Auth::user()->loyalty_subscription == Config::get('constants.SUBSCRIPTION.ACTIVE')){
+                return redirect()->route('loyalty.list');
+            }else{
+                $uid = Auth::user()->uid;
+                $restaurant = Restaurant::where('uid', $uid)->first();
+                $restaurantSubscription = RestaurantSubscription::where('restaurant_id',$restaurant->restaurant_id)->where('subscription_plan',Config::get('constants.SUBSCRIPTION_PLAN.1'))->first();
+                if($restaurantSubscription){
+                    $data['startDate'] = Carbon::parse($restaurantSubscription->start_date)->format('d');
+                    $registrationEndDate = new Carbon($restaurantSubscription->end_date);
+                    $endDate             = $registrationEndDate->format('Y-m-d');
+                    $totalSubscriptionDays = $registrationEndDate->diff($restaurantSubscription->start_date);
+                    $today = Carbon::now()->format('Y-m-d');
+                    $diff = $registrationEndDate->diff($today);
+                    $data['totalAmount'] = number_format(($diff->days * Config::get('constants.LOYALTY_CHARGE')) / $totalSubscriptionDays->days,2);
+                    $stripe = Stripe::make(env('STRIPE_SECRET'));
+                    $data['paymentMethods'] = $stripe->paymentMethods()->all([
+                        'type' => 'card',
+                        'customer' => $restaurant->stripe_customer_id,
+                    ]);
+                    return view('loyalty.index', $data);
+                }else{
+                    return back()->with('error','Restaurant Registration subscription not create.');
+                }
+            }
         } catch (\Throwable $th) {
             return back()->with('error',$th->getMessages());
         }
@@ -55,7 +70,6 @@ class LoyaltyController extends Controller
                 $data['subscription']['price'] = $subscription->subscription->price;
                 $data['subscription']['type'] = $subscription->subscription->subscription_type;
                 if($subscription->status == Config::get('constants.STATUS.SCHEDULE')){
-
                     $data['subscription']['start_date'] = \Carbon\Carbon::parse($subscription->start_date)->subMonths()->format('M d Y');
                     $data['subscription']['end_date'] = \Carbon\Carbon::parse($subscription->start_date)->format('M d Y');                     
                 }else{
@@ -246,13 +260,12 @@ class LoyaltyController extends Controller
         $uid = Auth::user()->uid;
         $subscription = Subscription::where('subscription_plan', Config::get('constants.SUBSCRIPTION_PLAN.3'))->first();
         $restaurant = Restaurant::where('uid', $uid)->first();
-        // dd($subscription);
-        $res_subscription = RestaurantSubscription::where('restaurant_id', $restaurant->restaurant_id)->where('subscription_plan', Config::get('constants.SUBSCRIPTION_PLAN.1'))->where('uid', $uid)->first();
-
-        $startDate = Carbon::parse($res_subscription->start_date)->format('Y-m-d');
-        $today = Carbon::now()->format('Y-m-d');
-
         try {
+
+            $res_subscription = RestaurantSubscription::where('restaurant_id', $restaurant->restaurant_id)->where('subscription_plan', Config::get('constants.SUBSCRIPTION_PLAN.1'))->where('uid', $uid)->first();
+            $startDate = Carbon::parse($res_subscription->start_date)->format('Y-m-d');
+            $today = Carbon::now()->format('Y-m-d');
+
             DB::beginTransaction();
 
             if ($startDate == $today) {

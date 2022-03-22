@@ -30,7 +30,7 @@
       <div class="row">
 
         @foreach ($menu as $item)
-        <div class="col-xl-4 col-md-6">
+        <div class="col-xl-4 col-md-6 menu-md-blog">
           <div class="menu-item">
             <div class="img">
               @if(!$item->item_img)

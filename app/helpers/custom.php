@@ -8,6 +8,7 @@ use App\Models\RestaurantSubscription;
 use Carbon\Carbon;
 use Cartalyst\Stripe\Stripe;
 
+
 if (!function_exists('getRestaurantId')) {
     function getRestaurantId()
     {
@@ -481,5 +482,27 @@ if (!function_exists('create_subscriber')) {
             $subscriber->save();
         }
         return true;
+    }
+}
+
+
+if(!function_exists('get_menuItems'))
+{
+    function get_menuItems($rulesItemsArray,$loyaltyPoint)
+    {
+        $totalPoints = Auth::user()->total_points;
+        $menus = array();
+        foreach($rulesItemsArray as $items)
+        {
+            foreach($items->menuItems as $item){
+                if($loyaltyPoint > $totalPoints){
+                    $item['loyalty_status'] = Config::get('constants.LOYALTY_MENU_STATUS.NOT_ELIGIBLE');
+                }else{
+                    $item['loyalty_status'] = Config::get('constants.LOYALTY_MENU_STATUS.ELIGIBLE');
+                }
+                array_push($menus,$item);
+            }
+        }
+        return $menus;
     }
 }

@@ -20,7 +20,7 @@ class HomeController extends Controller
     {
 
         \Cache::forget('cart');
-        session()->put('restaurantId', 47);
+        session()->put('restaurantId', 1);
         $restaurantId = session()->get('restaurantId');
         if (Auth::check()) {
             $uid = Auth::user()->uid;

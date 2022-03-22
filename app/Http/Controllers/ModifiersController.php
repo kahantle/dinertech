@@ -56,7 +56,11 @@ class ModifiersController extends Controller
             }
             $modifier->restaurant_id = $restaurant->restaurant_id;
             $modifier->modifier_group_name = $request->post('modifier_group_name');
-            $modifier->allow_multiple = ($request->allow_multiple)?1:0;
+            $modifier->is_required = ($request->is_required) ? 1 : 0;
+            $modifier->allow_multiple = ($request->allow_multiple == Config::get('constants.MODIFIER_TYPE.MULTIPLE_MODIFIER')) ? 1 : 0;
+            // $modifier->allow_multiple = ($request->allow_multiple)?1:0;
+            $modifier->minimum = $request->post('minimum');
+            $modifier->maximum = $request->post('maximum');
             $modifier->save();
             Toastr::success($message,'', Config::get('constants.toster'));
             return redirect()->route('modifier');

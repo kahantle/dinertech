@@ -21,48 +21,45 @@
       <div class="container">
         @include('common.flashMessage')
         @if($modifiers)
-
-        <div id="accordion" class="accordion">
-          @foreach ($modifiers as $item)
-          <div class="order">
-            <div class="collapsed a-order" data-toggle="collapse" href="#collapseOne{{$item->modifier_group_name}}">
-              <div class="order-name">
-                <div class="circle"></div>
-              <h4>{{$item->modifier_group_name}}<a href="javaScript:void(0);" class="ml-1 badge badge-info">{{$item->modifier_item->count()}}</a>
-              </h4>
-              </div>
-              <div class="order-detail">
-                <a href="#modifierItem" class="openModifierItemForm open" data-id={{$item->modifier_group_id}}>Add Item <i class="fa fa-plus" aria-hidden="true"></i></a>
-                <div class="order-icons">
-                  <a  data-route="{{route('edit.modifier.post',[$item->modifier_group_id])}}" href="javaScript:void(0);" class="openModifierForm action-edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                  <a  data-route="{{route('delete.modifier.post',[$item->modifier_group_id])}}" href="javaScript:void(0);" class="delete action-delete"><i class="fa fa-trash" aria-hidden="true"></i></a>
-            </div>
-              </div>
-            </div>
-            <div id="collapseOne{{$item->modifier_group_name}}" class="collapse c-order" data-parent="#accordion" >
-             @foreach ($item->modifier_item as $item)
-              <div class="child">
+          <div id="accordion" class="accordion">
+            @foreach ($modifiers as $item)
+            <div class="order">
+              <div class="collapsed a-order" data-toggle="collapse" href="#collapseOne{{$item->modifier_group_name}}">
                 <div class="order-name">
-                  <div class="circle"></div>
-                <h4>{{$item->modifier_group_item_name}}</h4>
+                    <div class="circle"></div>
+                    <h4>{{$item->modifier_group_name}}<a href="javaScript:void(0);" class="ml-1 badge badge-info">{{$item->modifier_item->count()}}</a></h4>
                 </div>
                 <div class="order-detail">
-                  <div class="number">
-                    <p>${{ number_format($item->modifier_group_item_price,2)}}</p>
-                  </div>
+                  <a href="#modifierItem" class="openModifierItemForm open" data-id={{$item->modifier_group_id}}>Add Item <i class="fa fa-plus" aria-hidden="true"></i></a>
                   <div class="order-icons">
-                    <a  data-route="{{route('edit.modifier.item.post',$item->modifier_item_id)}}" href="javaScript:void(0);" class="openModifierItemForm action-edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                    <a  data-route="{{route('delete.modifier.item.post',[$item->modifier_item_id])}}" href="javaScript:void(0);" class="delete action-delete"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                    <a  data-route="{{route('edit.modifier.post',[$item->modifier_group_id])}}" href="javaScript:void(0);" class="openModifierForm action-edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                    <a  data-route="{{route('delete.modifier.post',[$item->modifier_group_id])}}" href="javaScript:void(0);" class="delete action-delete"><i class="fa fa-trash" aria-hidden="true"></i></a>
                   </div>
                 </div>
               </div>
-             @endforeach
+              <div id="collapseOne{{$item->modifier_group_name}}" class="collapse c-order" data-parent="#accordion" >
+              @foreach ($item->modifier_item as $item)
+                <div class="child">
+                  <div class="order-name">
+                    <div class="circle"></div>
+                  <h4>{{$item->modifier_group_item_name}}</h4>
+                  </div>
+                  <div class="order-detail">
+                    <div class="number">
+                      <p>${{ number_format($item->modifier_group_item_price,2)}}</p>
+                    </div>
+                    <div class="order-icons">
+                      <a  data-route="{{route('edit.modifier.item.post',$item->modifier_item_id)}}" href="javaScript:void(0);" class="openModifierItemForm action-edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                      <a  data-route="{{route('delete.modifier.item.post',[$item->modifier_item_id])}}" href="javaScript:void(0);" class="delete action-delete"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                    </div>
+                  </div>
+                </div>
+              @endforeach
+              </div>
             </div>
+            @endforeach
           </div>
-          @endforeach
-        </div>
-
-        <div class="float-right"> {{ $modifiers->links() }}</div>
+          <div class="float-right"> {{ $modifiers->links() }}</div>
         @else
             <p>No records found.</p>
         @endif
@@ -76,17 +73,40 @@
           <h5 class="groupHeading">Add Modifier Group</h5>
           {{ Form::open(array('route' => array('add.modifier.post'),'id'=>'modifierForm','method'=>'POST',
           'class'=>'')) }}
-          <div class="form-group">                
+            <div class="form-group">                
               <input type="hidden" id="modifier_group_id" name="modifier_group_id"  />
               <input type="text" class="form-control" id="modifier_group_name" name="modifier_group_name" placeholder="Modifier Group Name">
             </div>
-            <div class="form-group">                
+            {{-- <div class="form-group">                
                 <input type="checkbox" class="styled-checkbox"  id="allow_multiple" name="allow_multiple" />
                 <label for="allow_multiple">Allow Multiple</label>
+            </div> --}}
+            <div class="form-group form-check-insides">
+                <input type="checkbox" class="styled-checkbox is_required" id="allow_multiple1" name="is_required" />
+                <label for="allow_multiple1">Required</label>
+                <p>If checked, this modifier group will require a selection.</p>
             </div>
-          <div class="btn-custom">
-            <button class="groupBtn btn-blue"><span>Add</span></button>
-          </div>
+            <div class="form-group form-check-insides">
+                {{-- <input type="checkbox" class="styled-checkbox" id="allow_multiple2" name="allow_multiple" /> --}}
+                <input type="radio" id="single_modifier" name="allow_multiple" checked class="modifier_type styled-radio-button"  value="{{Config::get('constants.MODIFIER_TYPE.SINGLE_MODIFIER')}}"/>
+                <label for="single_modifier">Single Modifier </label>
+                <p>Customer may select only one modifier</p>
+            </div>
+            <div class="form-group form-check-insides">
+                {{-- <input type="checkbox" class="styled-checkbox" id="allow_multiple3" name="allow_multiple" /> --}}
+                <input type="radio" id="multiple_modifier" name="allow_multiple" class="modifier_type styled-radio-button" value="{{Config::get('constants.MODIFIER_TYPE.MULTIPLE_MODIFIER')}}"/>
+                <label for="multiple_modifier">Multiple Modifiers </label>
+                <p>Customer may select multiple modifiers</p>
+            </div>
+            <div class="form-group form-align-blog row align-items-center d-none" id="min_max_modifierBox">
+                <input type="number" class="form-control input-first" id="minimum" placeholder="min" min="1" name="minimum">
+                <span class="px-3">to</span>
+                <input type="number" class="form-control input-second" id="maximum" placeholder="max" min="1" name="maximum">
+                <span class="pl-3">modifiers from this group</span>
+            </div>
+            <div class="btn-custom">
+              <button class="groupBtn btn-blue"><span>Add</span></button>
+            </div>
         </form>
         </div>
       </div>
@@ -117,8 +137,8 @@
     </div>
 @endsection
 @section('scripts')
-<script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js')}}"></script>
-{!! JsValidator::formRequest('App\Http\Requests\ModifierGroupRequest','#modifierForm'); !!}
-{!! JsValidator::formRequest('App\Http\Requests\ModifierItemPriceRequest','#modifierItemForm'); !!}
-<script src="{{asset('/assets/js/modifier.js')}}"></script>    
+  <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js')}}"></script>
+  {!! JsValidator::formRequest('App\Http\Requests\ModifierGroupRequest','#modifierForm'); !!}
+  {!! JsValidator::formRequest('App\Http\Requests\ModifierItemPriceRequest','#modifierItemForm'); !!}
+  <script src="{{asset('/assets/js/modifier.js')}}"></script>    
 @endsection

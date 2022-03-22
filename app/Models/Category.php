@@ -10,14 +10,14 @@ class Category extends Model
     protected $appends = ['image_path'];
     public function getImagePathAttribute()
     {
-        if ($this->image) {
+        if (($this->image) && ($this->image != null)) {
             return route('display.image', [config("constants.IMAGES.CATEGORY_IMAGE_PATH"), $this->image]);
         }
     }
 
     public function getDefaultImage()
     {
-        return route('display.image', [config("constants.IMAGES.CATEGORY_IMAGE_PATH"), 'default.jpg']);
+        return route('display.image', [config("constants.IMAGES.CATEGORY_IMAGE_PATH"), 'default.png']);
     }
 
     public function category_item()

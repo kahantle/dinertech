@@ -35,25 +35,26 @@ class CampaignController extends Controller
 
                 $data['currentPlan'] = $currentPlan->subscription;
                 $data['stripeSubscription'] = json_decode($currentPlan->payment->response);
-                if ($restaurant->cm_client_id != null) {
-                    $draftCampaigns = \CampaignMonitor::clients($restaurant->cm_client_id)->get_drafts();
-                    if (!empty($draftCampaigns->response)) {
-                        $data['draftCampaigns'] = $draftCampaigns->response;
-                    } else {
-                        $data['draftCampaigns'] = array();
-                    }
+                // try {
+                   $data['sentCampaigns'] = array();
+                   $data['draftCampaigns'] = array();
+                   if ($restaurant->cm_client_id != null) {
+                       $draftCampaigns = \CampaignMonitor::clients($restaurant->cm_client_id)->get_drafts();
+                       
+                       if (!$draftCampaigns->response->Code) {
+                            $data['draftCampaigns'] = $draftCampaigns->response;
+                       }
 
-                    $sentCampaigns = \CampaignMonitor::clients($restaurant->cm_client_id)->get_campaigns();
-                    if (!empty($sentCampaigns->response)) {
-                        $data['sentCampaigns'] = $sentCampaigns->response;
-                    } else {
-                        $data['sentCampaigns'] = array();
-                    }
-                } else {
-                    $data['sentCampaigns'] = array();
-                    $data['draftCampaigns'] = array();
-                }
-                return view('campaign.index', $data);
+                       $sentCampaigns = \CampaignMonitor::clients($restaurant->cm_client_id)->get_campaigns();
+                       if (!$sentCampaigns->response->Code) {
+                           $data['sentCampaigns'] = $sentCampaigns->response;
+                       }
+                   }
+                   return view('campaign.index', $data);
+                    
+                // } catch (\Throwable $th) {
+                //     return redirect()->back()->with('error',$th->getMessage());
+                // }
             }
         }
     }

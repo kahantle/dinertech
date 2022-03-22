@@ -51,7 +51,10 @@ class LoginController extends Controller
             ->where(function ($query) use ($username) {
                 $query->where('email_id', $username);
                 $query->orWhere('mobile_number', $username);
-            })->with('restaurant_user')->first();
+            })->first();
+        if (!$user) {
+            return "Customer does not exist.";
+        }
         if (!empty($user->restaurant_user)) {
             foreach ($user->restaurant_user as $restaurant) {
                 session()->put('restaurantId', $restaurant->restaurant_id);
@@ -62,9 +65,6 @@ class LoginController extends Controller
             session()->put('restaurantId', $restaurantId);
         }
 
-        if (!$user) {
-            return "Customer does not exist.";
-        }
         $login_array = array();
         if ($user->mobile_number) {
             $login_array = (['email_id' => $user->email_id, 'password' => $request->password]);

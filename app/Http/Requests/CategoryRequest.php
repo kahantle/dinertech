@@ -26,14 +26,12 @@ class CategoryRequest extends FormRequest
         $segmentId = request()->segment(4);
         if ($segmentId) {
             return [
-                'name'             =>  'required|unique:categories,name,'.$segmentId,
-                'details'          =>  'required',
+                'name'  =>  'required|unique:categories,name,'.$segmentId,
             ];
 
         } else {
             return [
-                'name'             =>  'required',
-                'details'          =>  'required',
+                'name'  =>  'required',
             ];
         }
     }
@@ -41,7 +39,6 @@ class CategoryRequest extends FormRequest
     {
         return [
             'name.required' => 'Please enter category name.',
-            'details.required'  => 'Please enter category details.',
         ];
     }
 }

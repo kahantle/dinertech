@@ -18,23 +18,20 @@
                 </div>
             </nav>
         </div>
-        <div class="add-category Promotion menu dashboard content-wrapper category">
+        <div class="add-category Promotion menu dashboard content-wrapper category category-insides-blog">
             @include('common.flashMessage')
 
             <div class="container-fluid p-0">
                 {{Form::open(['route' => ['add.menu.post'], 'id' => 'menuForm', 'method' => 'POST', 'class' => '', 'files' => 'true']) }}
+                <span class="slt-img">
+
+                </span>
+                <input id="image" type="file" name="item_img" placeholder="Photo" required="" capture=""
+                    style="display: none;">
+                <label class="label-a"><i class="fa fa-camera" aria-hidden="true"></i>Select
+                    Picture</label>
                 <div class="row">
-                    <div class="col-lg-5">
-
-                        <div class="form-group">
-                            <span class="slt-img">
-
-                            </span>
-                            <input id="image" type="file" name="item_img" placeholder="Photo" required="" capture=""
-                                style="display: none;">
-                            <label class="label-a"><i class="fa fa-camera" aria-hidden="true"></i>Select
-                                Picture</label>
-                        </div>
+                    <div class="col-xl-5 col-lg-6 col-md-6">
                         <div class="form-group">
                             <img src="{{ asset('assets/images/category-menu-icon.png') }}">
                             <input type="text" class="form-control" name="item_name" value="{{ old('item_name') }}"
@@ -44,8 +41,10 @@
                             <img src="{{ asset('assets/images/category-detail.png') }}">
                             <textarea type="text" class="form-control" name="item_details"
                                 placeholder="Enter Menu Details"></textarea>
-                        </div>
-                        <div class="form-group select-input">
+                        </div>                       
+                    </div>
+                    <div class="col-xl-5 col-lg-6 col-md-6">
+                         <div class="form-group select-input">
                             <img src="{{ asset('assets/images/catagory-black.png') }}">
                             <select type="text" class="form-control" name="category_id" placeholder="Enter Item Catagory">
                                 <option value="" disabled selected>Select Item Catagory</option>
@@ -69,20 +68,6 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-lg-7">
-                        <div class="grey-line">
-                            <div class="text-title">
-                                <h6>Modifiers / Add-ons</h6>
-                            </div>
-                            <div class="plus">
-                                <a href="javaScript:void(0);" class="openModifierForm open"><i class="fa fa-plus"
-                                        aria-hidden="true"></i></a>
-                            </div>
-                        </div>
-                        <div id="accordion" class="accordion">
-
-                        </div>
-                    </div>
                 </div>
             </div>
             <div class="form-group form-btn-menu">
@@ -94,78 +79,28 @@
                 </div>
             </div>
             </form>
-
         </div>
 
-
-        </div>
-        <div id="modifierGroupPopUp" class="modifierGroupPopUp open closeAllModal overlay w-100">
-            <div class="popup text-center">
-                <a class="close closeModal" href="javaScript:void(0);">&times;</a>
-                <div class="content">
-                    <h5 class="groupHeading">Add Modifier Group</h5>
-                    {{                     Form::open(['route' => ['add.menu.modifier.post'], 'id' => 'modifierForm', 'method' => 'POST', 'class' => '']) }}
-                    <div class="form-group">
-                        <input type="hidden" id="modifier_group_id" name="modifier_group_id" />
-                        <input type="text" class="form-control" id="modifier_group_name" name="modifier_group_name"
-                            placeholder="Modifier Group Name">
-                    </div>
-                    <div class="form-group">
-                        <input type="checkbox" class="styled-checkbox" id="allow_multiple" name="allow_multiple" />
-                        <label for="allow_multiple"> Allow Multiple </label>
-                    </div>
-                    <div class="btn-custom">
-                        <button class="groupBtn btn-blue"><span>Add</span></button>
-                    </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <div id="openModifierItemFormPopUp" class="openModifierItemFormPopUp closeAllModal overlay w-100">
-            @include('common.flashMessage')
-            <div class="popup text-center">
-                <a class="close closeModal" href="javaScript:void(0);">&times;</a>
-                <div class="content">
-                    <h5 class="itemHeading">Add modifier item</h5>
-                    {{                     Form::open(['route' => ['add.menu.modifier.item.post'], 'id' => 'modifierItemForm', 'method' => 'POST', 'class' => '']) }}
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="modifier_group_item_name"
-                            name="modifier_group_item_name" placeholder="Enter Modifier Item Name">
-                    </div>
-                    <div class="form-group">
-                        <input type="hidden" id="modifier_item_group_id" name="modifier_item_group_id" />
-                        <input type="hidden" id="modifier_item_id" name="modifier_item_id" />
-                        <input type="text" class="form-control" id="modifier_group_item_price"
-                            name="modifier_group_item_price" placeholder="Enter Modifier Price">
-                    </div>
-                    <div class="btn-custom">
-                        <button class="btn-blue itemBtn"><span>Add</span></button>
-                    </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    @section('scripts')
-        <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js') }}"></script>
-        {!! JsValidator::formRequest('App\Http\Requests\MenuItemRequest', '#menuForm') !!}
-        {!! JsValidator::formRequest('App\Http\Requests\ModifierGroupRequest', '#modifierForm') !!}
-        {!! JsValidator::formRequest('App\Http\Requests\ModifierItemPriceRequest', '#modifierItemForm') !!}
-        <script src="{{ asset('/assets/js/menu-modifier.js') }}"></script>
-        <script>
-            var route = "{{ route('ajax.modifier.list') }}";
-            $(document).ready(function() {
-                $(document).on('click', '#clearForm', function() {
-                    $('#menuForm').trigger("reset");
-                    $(".slt-img img").remove();
-                });
+@section('scripts')
+    <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js') }}"></script>
+    {!! JsValidator::formRequest('App\Http\Requests\MenuItemRequest', '#menuForm') !!}
+    {!! JsValidator::formRequest('App\Http\Requests\ModifierGroupRequest', '#modifierForm') !!}
+    {!! JsValidator::formRequest('App\Http\Requests\ModifierItemPriceRequest', '#modifierItemForm') !!}
+    <script src="{{ asset('/assets/js/menu-modifier.js') }}"></script>
+    <script>
+        var route = "{{ route('ajax.modifier.list') }}";
+        $(document).ready(function() {
+            $(document).on('click', '#clearForm', function() {
+                $('#menuForm').trigger("reset");
+                $(".slt-img img").remove();
             });
+        });
 
-            $(document).ready(function() {
-                $('.select2').select2({
-                    placeholder: "Select a Modifiers",
-                });
+        $(document).ready(function() {
+            $('.select2').select2({
+                placeholder: "Select a Modifiers",
             });
-        </script>
-        <script src="{{ asset('assets/js/common.js') }}"></script>
-    @endsection
+        });
+    </script>
+    <script src="{{ asset('assets/js/common.js') }}"></script>
+@endsection

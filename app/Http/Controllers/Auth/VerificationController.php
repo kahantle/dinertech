@@ -77,12 +77,12 @@ class VerificationController extends Controller
             if ($user) {
                 $user->otp = mt_rand(Config::get('constantsOTP_NO_OF_DIGIT'), 9999);
                 //$user->otp = 1234;
-                 $user->otp_valid_time = Carbon::now()->addMinutes(Config::get('constants.OTP_VALID_DURATION'));
+                $user->otp_valid_time = Carbon::now()->addMinutes(Config::get('constants.OTP_VALID_DURATION'));
                 $user->save();
-                 $otp = new Otp();
-                 $otp->sendOTP($user);
+                $otp = new Otp();
+                $otp->sendOTP($user);
                 DB::commit();
-                Toastr::success('OTP sent sucessfully.','', Config::get('constants.toster'));
+                Toastr::success('OTP sent successfully.','', Config::get('constants.toster'));
                 return redirect()->route('verify', ['username' => $username]);
             }
             Toastr::success('User not found.','', Config::get('constants.toster'));

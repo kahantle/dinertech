@@ -27,7 +27,9 @@
       <div class="form-group">
         <span class="slt-img">
           @if($category->image)
-          <img width="170" height="170" class="itemImage"  src="{{ route('display.image',[config("constants.IMAGES.CATEGORY_IMAGE_PATH"),$category->image]) }}" />
+            <img width="170" height="170" class="itemImage"  src="{{ $category->getImagePathAttribute() }}" />
+          @else
+            <img width="170" height="170" class="itemImage"  src="{{ $category->getDefaultImage() }}" />
           @endif
         </span>
         <input id="image" type="file" name="profile_photo" placeholder="Photo" required="" capture=""

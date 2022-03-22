@@ -30,8 +30,7 @@
                                                             data-promotion-type="{{ $promotion->promotion_type_id }}"><button
                                                                 class="cancel-btn">Learn More</button></a>
                                                         <span class="get-border"></span>
-                                                        <a
-                                                            href="{{ route('customer.promotions.getEligibleItems', $promotion->promotion_id) }}"><button
+                                                        <a href="{{ route('customer.promotions.getEligibleItems', $promotion->promotion_id) }}"><button
                                                                 class="cancel-btn">Get it Now</button></a>
                                                     </div>
                                                 </div>
@@ -75,8 +74,7 @@
                                                         <a href="javascript:;"><button
                                                                 class="cancel-btn btn-inner-first cancel-modal-{{ $promotion->promotion_id }}"
                                                                 data-promotion-id="{{ $promotion->promotion_id }}">Cancel</button></a>
-                                                        <a
-                                                            href="{{ route('customer.promotions.getEligibleItems', $promotion->promotion_id) }}"><button
+                                                        <a href="{{ route('customer.promotions.getEligibleItems', $promotion->promotion_id) }}"><button
                                                                 class="cancel-btn btn-inner-first remove-select-{{ $promotion->promotion_id }} selected-blog">Get
                                                                 it Now</button></a>
                                                     </div>
@@ -85,24 +83,26 @@
                                         </div>
                                     </div>
                                 @endforeach
-                                <h2>What are you hungry for? </h2>
-                                <div id="testinomial" class="banner-container">
-                                    <div class="owl-carousel owl-theme owl-drag">
-                                        @foreach ($categories as $key => $category)
-                                            <div class="item category" data-category-id="{{ $category->category_id }}">
-                                                <div class="card">
-                                                    <img class="card-img-top lazy"
-                                                        data-src="{{ $category->getImagePathAttribute() ? $category->getImagePathAttribute() : $category->getDefaultImage() }}"
-                                                        alt="Card image cap">
-                                                    <div class="card-body category">
-                                                        <h5 class="card-title">{{ $category->category_name }}</h5>
-                                                        <p class="card-text">{{ $category->category_details }}</p>
+                                @if ($categories->count() != 0)
+                                    <h2>What are you hungry for? </h2>
+                                    <div id="testinomial" class="banner-container">
+                                        <div class="owl-carousel owl-theme owl-drag">
+                                            @foreach ($categories as $key => $category)
+                                                <div class="item category" data-category-id="{{ $category->category_id }}">
+                                                    <div class="card">
+                                                        <img class="card-img-top lazy"
+                                                            data-src="{{ $category->getImagePathAttribute() ? $category->getImagePathAttribute() : $category->getDefaultImage() }}"
+                                                            alt="Card image cap">
+                                                        <div class="card-body category">
+                                                            <h5 class="card-title">{{ $category->category_name }}</h5>
+                                                            <p class="card-text">{{ $category->category_details }}</p>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        @endforeach
+                                            @endforeach
+                                        </div>
                                     </div>
-                                </div>
+                                 @endif
                                 <div class="scrollbar" id="style-4"></div>
                             </div>
                         </div>

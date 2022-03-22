@@ -71,6 +71,7 @@ return [
     ],
     'PUBLIC_ASSETS_PATH' => 'web/',
     'RESTAURANT_CHARGE' => '79.99',
+    'LOYALTY_CHARGE'    => '29.00',
     // 'CLIENT_TYPE' => [
     //     '1' => 'Any Client,new or Returning',
     //     '2' => 'Only new Clients',
@@ -169,5 +170,9 @@ return [
     'ORDER_POINT_COUNT' => [
         'YES' => 'YES',
         'NO'  => 'NO'
-    ]
+    ],
+    'MODIFIER_TYPE'  => [
+        'SINGLE_MODIFIER'    => 'SINGLE',
+        'MULTIPLE_MODIFIER'  => 'MULTIPLE'
+    ],
 ];

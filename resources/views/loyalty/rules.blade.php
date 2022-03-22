@@ -126,38 +126,40 @@
                             <div class="table-scroll-y-blog table-active-blog">
                                 <table class="table-inner-sec">
                                     @foreach ($categories as $item)
-                                        <tbody class="t-b-blog">
-                                            <tr class="odd">
-                                                <td class="table-tag-blog add">
-                                                    <div>
-                                                        <input type="checkbox" class="selectall inner-checkin-blog"
-                                                            data-category-id="{{ $item->category_id }}"
-                                                            id="modifier-group-{{ $item->category_id }}">
-                                                    </div>
-                                                </td>
-                                                <td class="forum-topic-blog">{{ $item->category_name }}</td>
-                                            </tr>
-                                            @foreach ($item->category_item as $menuItem)
-                                                <tr class="even">
-                                                    <td class="table-tag add">
-                                                        <div
-                                                            class="form-item form-type-checkbox form-item-node-types-forum subOption">
-                                                            <input type="checkbox" id="edit-node-types-forum"
-                                                                name="modifier_item" value="forum"
-                                                                class="form-checkbox individual inner-checkin-blog item-group-{{ $menuItem->category_id }}"
-                                                                data-item-id={{ $menuItem->menu_id }}
-                                                                data-category-id="{{ $menuItem->category_id }}">
+                                        @if (count($item->category_item) != 0)
+                                            <tbody class="t-b-blog">
+                                                <tr class="odd">
+                                                    <td class="table-tag-blog add">
+                                                        <div>
+                                                            <input type="checkbox" class="selectall inner-checkin-blog"
+                                                                data-category-id="{{ $item->category_id }}"
+                                                                id="modifier-group-{{ $item->category_id }}">
                                                         </div>
                                                     </td>
-                                                    <td class="forum-topic-blog">
-                                                        {{ $menuItem->item_name }}
-                                                    </td>
-                                                    <td class="forum-blog">
-                                                        <small>${{ number_format($menuItem->item_price, 2) }}</small>
-                                                    </td>
+                                                    <td class="forum-topic-blog">{{ $item->category_name }}</td>
                                                 </tr>
-                                            @endforeach
-                                        </tbody>
+                                                @foreach ($item->category_item as $menuItem)
+                                                    <tr class="even">
+                                                        <td class="table-tag add">
+                                                            <div
+                                                                class="form-item form-type-checkbox form-item-node-types-forum subOption">
+                                                                <input type="checkbox" id="edit-node-types-forum"
+                                                                    name="modifier_item" value="forum"
+                                                                    class="form-checkbox individual inner-checkin-blog item-group-{{ $menuItem->category_id }}"
+                                                                    data-item-id={{ $menuItem->menu_id }}
+                                                                    data-category-id="{{ $menuItem->category_id }}">
+                                                            </div>
+                                                        </td>
+                                                        <td class="forum-topic-blog">
+                                                            {{ $menuItem->item_name }}
+                                                        </td>
+                                                        <td class="forum-blog">
+                                                            <small>${{ number_format($menuItem->item_price, 2) }}</small>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        @endif
                                     @endforeach
                                 </table>
                             </div>

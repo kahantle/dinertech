@@ -27,10 +27,10 @@ class MenuItemRequest extends FormRequest
             //'modifier_group_id' => 'required',
             'item_img' =>  'mimes:jpeg,png,JFIF',
             'item_name' => 'required',
-            'item_details' => 'required',
+            // 'item_details' => 'required',
             'category_id' => 'required',
             'item_price' => 'required',
-            'modifier_group_id' => 'required',
+            // 'modifier_group_id' => 'required',
         ];
     }
     public function messages()
@@ -40,10 +40,10 @@ class MenuItemRequest extends FormRequest
             'modifier_group_id.required' => 'Please select group id',
             'item_img.mimes' => 'please select valid image.',
             'item_name.required' => 'Please enter item name',
-            'item_details.required' => 'Please enter item details.',
+            // 'item_details.required' => 'Please enter item details.',
             'category_id.required' => 'Please select any category.',
             'item_price.required' => 'Please enter price.',
-            'modifier_group_id.required' => 'Please select any modifier.'
+            // 'modifier_group_id.required' => 'Please select any modifier.'
         ];
     }
 }

@@ -26,10 +26,9 @@ class LoyaltyRuleController extends Controller
             $uid = Auth::user()->uid;
             $restaurant = Restaurant::where('uid', $uid)->first();
             $data['categories'] = Category::with('category_item')->where('restaurant_id', $restaurant->restaurant_id)->get();
-            $data['loyaltyRules'] = LoyaltyRule::with('rulesItems')->get();
+            $data['loyaltyRules'] = LoyaltyRule::with('rulesItems')->where('restaurant_id', $restaurant->restaurant_id)->get();
             // $data['loyaltyRules'] = $rules;
             // $data['ruleItems'] = $rules->pluck('rulesItems');
-            // dd($data['loyaltyRules']);
             return view('loyalty.rules', $data);
 
         } catch (\Throwable $th) {
@@ -131,9 +130,8 @@ class LoyaltyRuleController extends Controller
             $uid = Auth::user()->uid;
             $restaurant = Restaurant::where('uid', $uid)->first();
             $categories = json_decode($request->post('categoryIds'));
-            dd($categories);
             $items = json_decode($request->post('items'));
-
+            dd($items);
             $loyaltyRule = LoyaltyRule::where('rules_id', $request->post('rule_id'))->first();
             $loyaltyRule->restaurant_id = $restaurant->restaurant_id;
             $loyaltyRule->uid = $uid;

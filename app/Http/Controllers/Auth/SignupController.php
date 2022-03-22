@@ -7,6 +7,7 @@ use App\Http\Requests\SignupRequest;
 use App\Models\Restaurant;
 use App\Models\RestaurantPayment;
 use App\Models\Subscription;
+use App\Models\RestaurantSubscription;
 use App\Models\User;
 use App\Notifications\Otp;
 use Carbon\Carbon;
@@ -138,7 +139,7 @@ class SignupController extends Controller
 
             // $attachPayment = $stripe->paymentMethods()->attach($paymentMethodId, $customerId);
 
-            $subscription = $stripe->subscriptions()->create($customerId, [
+            $stripe_subscription = $stripe->subscriptions()->create($customerId, [
                 'items' => [
                     [
                         'price_data' => [
@@ -177,24 +178,39 @@ class SignupController extends Controller
                 $query->where('email_id', $username);
                 $query->orWhere('mobile_number', $username);
             })->first();
-            if ($subscription['status'] == 'active') {
+            if ($stripe_subscription['status'] == 'active') {
 
                 $restaurant = Restaurant::where('uid', $user->restaurant->uid)->first();
                 $restaurant->stripe_customer_id = $customerId;
-                $restaurant->stripe_subscription_id = $subscription['id'];
-                $restaurant->stripe_payment_method = $paymentMethodId;
+                // $restaurant->stripe_subscription_id = $subscription['id'];
+                // $restaurant->stripe_payment_method = $paymentMethodId;
                 $restaurant->save();
 
                 $payment = new RestaurantPayment;
                 $payment->uid = $user->uid;
                 $payment->restaurant_id = $user->restaurant->restaurant_id;
-                $payment->stripe_subscription_id = $subscription['id'];
+                $payment->stripe_subscription_id = $stripe_subscription['id'];
                 $payment->status = 'SUCCESS';
                 $payment->amount = Config::get('constants.RESTAURANT_CHARGE');
                 $payment->currency = 'USD';
                 $payment->response = json_encode($subscription);
                 $payment->save();
                 DB::commit();
+
+                $last_paymentId = RestaurantPayment::where('restaurant_id', $user->restaurant->restaurant_id)->where('uid', $user->uid)->orderBy('id', 'desc')->first();
+                $subscription_save = new RestaurantSubscription;
+                $subscription_save->restaurant_id = $user->restaurant->restaurant_id;
+                $subscription_save->uid = $user->uid;
+                $subscription_save->subscription_id = $subscription->subscription_id;
+                $subscription_save->stripe_subscription_id = $stripe_subscription['id'];
+                $subscription_save->stripe_payment_method = $paymentMethodId;
+                $subscription_save->start_date = \Carbon\Carbon::parse($stripe_subscription['current_period_start'])->format('Y-m-d H:i:s');
+                $subscription_save->end_date = \Carbon\Carbon::parse($stripe_subscription['current_period_end'])->format('Y-m-d H:i:s');
+                $subscription_save->status = Config::get('constants.STATUS.ACTIVE');
+                $subscription_save->restaurant_payment_id = $last_paymentId->id;
+                $subscription_save->subscription_plan = Config::get('constants.SUBSCRIPTION_PLAN.1');
+                $subscription_save->save();
+
                 return redirect()->route('verify', ['username' => ($user->email) ? $user->email : $user->mobile_number])->with('success', 'You have successfully paid please verify by otp.');
             }
             return redirect()->route('show.pay', ['username' => ($user->email) ? $user->email : $user->mobile_number])->with('error', 'Signup does not successfully please try again.');

@@ -33,10 +33,10 @@
               <div class="order">
                 <div class="order-name">
                   <div class="img">
-                    @if(!$item->image)
-                      <img src="{{ asset('assets/images/mi-3.png') }}" class="img-fluid">
+                    @if(!$item->image && $item->image == null)
+                      <img src="{{ $item->getDefaultImage() }}" class="img-fluid">
                     @else
-                      <img src="{{ route('display.image',[config("constants.IMAGES.CATEGORY_IMAGE_PATH"),$item->image]) }}" class="img-fluid">
+                      <img src="{{ $item->getImagePathAttribute() }}" class="img-fluid">
                     @endif
                   </div>
                 <h4>{{$item->category_name}}</h4>

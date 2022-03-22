@@ -37,7 +37,12 @@ class Restaurant extends Model
 
     public function routeNotificationForFcm()
     {
-        $fcm_ids = RestaurantFcmTokens::where('uid', $this->user->uid)->pluck('fcm_id')->toArray();
+        if($this->user){
+            $uid = $this->user->uid;
+        }else{
+            $uid = $this->order->uid;
+        }
+        $fcm_ids = RestaurantFcmTokens::where('uid', $uid)->pluck('fcm_id')->toArray();
         return $fcm_ids;
         // return $this->user->fcm_id;
     }

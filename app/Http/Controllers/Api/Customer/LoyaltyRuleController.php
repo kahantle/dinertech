@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\LoyaltyRule;
 use App\Models\LoyaltyRuleItem;
 use App\Models\Restaurant;
+use App\Models\MenuItem;
 use Illuminate\Http\Request;
 use Config;
 use Validator;
@@ -28,22 +29,14 @@ class LoyaltyRuleController extends Controller
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
             }
             $totalPoints = Auth::user()->total_points;
-            $loyalties = LoyaltyRule::where('restaurant_id',$request->post('restaurant_id'))->get(['rules_id','restaurant_id','point']);
+            $loyalties = LoyaltyRule::with('rulesItems')->where('restaurant_id',$request->post('restaurant_id'))->get(['rules_id','restaurant_id','point']);
+            $restaurantId = $request->post('restaurant_id');
+            $results = array();
+            $loyaltiesItems = array();
             if($loyalties->count() != 0){
-                foreach($loyalties as $loyaltyKey =>$loyalty){
-                    $results[$loyaltyKey] = $loyalty;
-                    $items = LoyaltyRuleItem::with('menuItems')->where('loyalty_rule_id',$loyalty->rules_id)->get();
-                    foreach($items as $key => $menuItems){
-                        foreach($menuItems->menuItems as $menu => $item){
-                            if($loyalty->point > $totalPoints){
-                                $item['loyalty_status'] = Config::get('constants.LOYALTY_MENU_STATUS.NOT_ELIGIBLE');
-                            }else {
-                                $item['loyalty_status'] = Config::get('constants.LOYALTY_MENU_STATUS.ELIGIBLE');
-                            }
-                            $menus[$menu] = $item;
-                        }
-                        $results[$loyaltyKey]['menuItems'] = $menus;
-                    }
+                foreach($loyalties as $loyaltyKey => $loyalty){
+                    $results[$loyaltyKey] = ['rules_id' => $loyalty->rules_id,'restaurant_id' => $loyalty->restaurant_id,'point' => $loyalty->point];
+                    $results[$loyaltyKey]['menuItems'] = get_menuItems($loyalty->rulesItems,$loyalty->point);
                 }
             }else{
                 $results = [];

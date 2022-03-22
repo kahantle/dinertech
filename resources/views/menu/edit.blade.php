@@ -20,75 +20,64 @@
       </div>
     </nav>
   </div>
-  <div class="add-category Promotion menu dashboard content-wrapper category">
+  <div class="add-category Promotion menu dashboard content-wrapper category category-insides-blog">
     @include('common.flashMessage')
   
     <div class="container-fluid p-0">
       {{ Form::open(array('route' => array('update.menu.post'),'id'=>'menuForm','method'=>'POST','class'=>'form','files'=>'true',
       )) }}
       <input type="hidden" name="hidden_id" value="{{$menuItem->menu_id}}">
-      <div class="row m-0">
-        <div class="col-lg-5">
-
-          <div class="form-group">
-            <span class="slt-img">
-             @if($menuItem->item_img)
-             <img src="{{ route('display.image',[config("constants.IMAGES.MENU_IMAGE_PATH"),$menuItem->item_img]) }}" class="img-fluid">
-             @endif
-           </span>
-           <input id="image" type="file" name="item_img" placeholder="Photo" required="" capture="" style="display: none;">
-           <label class="label-a"><i class="fa fa-camera" aria-hidden="true"></i>Select Picture</label>
-         </div>
-         <div class="form-group">   
-          <img src="{{ asset('assets/images/category-menu-icon.png') }}">              
-          <input type="text" class="form-control" name="item_name" placeholder="Enter Menu Item" value="{{$menuItem->item_name}}">
-        </div>
-        <div class="form-group">   
-          <img src="{{ asset('assets/images/category-detail.png') }}">              
-          <textarea type="text" class="form-control" name="item_details" placeholder="Enter Menu Details">{{$menuItem->item_details}}</textarea>
-        </div>
-        <div class="form-group select-input">   
-          <img src="{{ asset('assets/images/catagory-black.png') }}">              
-          <select type="text" class="form-control" name="category_id" placeholder="Enter Item Catagory">
-            <option value="{{$menuItem->category_id}}" selected>{{$menuItem->category_name}}</option>
-            @foreach($categories as $category)
-            <option value="{{$category->category_id}}">{{$category->category_name}}</option>
-            @endforeach
-          </select>
-        </div>
-        <div class="form-group">   
-          <img src="{{ asset('assets/images/modifiers-black.png') }}">              
-          <input type="text" class="form-control" name="item_price" placeholder="Enter Item Price" value="{{$menuItem->item_price}}"></input>
-        </div>
-        <div class="form-group select-input">   
-          <img  style="    z-index: 1;" src="{{ asset('assets/images/category-detail.png') }}">              
-
-          <select type="text" class="form-control select2" name="modifier_group_id[]" multiple id="modifier_id" placeholder="Select Modifiers">
-            @foreach($modifiers as $modifier)
-            <option value="{{$modifier->modifier_group_id}}" 
-              @php
-               $modifers = $menuItem->modifiers->pluck('modifier_id')->toArray();
-              @endphp
-              @if(in_array($modifier->modifier_group_id, $modifers))
-                    selected='selected'
-              @endif>{{$modifier->modifier_group_name}}
-            </option>
-            @endforeach
-          </select>
-        </div>
-      </div>
-      <div class="col-lg-7">
-        <div class="grey-line">
-          <div class="text-title">
-            <h6>Modifiers / Add-ons</h6>
+      
+      <span class="slt-img">
+        @if($menuItem->item_img)
+          <img src="{{ route('display.image',[config("constants.IMAGES.MENU_IMAGE_PATH"),$menuItem->item_img]) }}" class="img-fluid">
+        @endif
+      </span>
+      <input id="image" type="file" name="item_img" placeholder="Photo" required="" capture="" style="display: none;">
+      <label class="label-a"><i class="fa fa-camera" aria-hidden="true"></i>Select Picture</label>
+      
+      <div class="row">
+        <div class="col-xl-5 col-lg-6 col-md-6">
+          <div class="form-group">   
+            <img src="{{ asset('assets/images/category-menu-icon.png') }}">              
+            <input type="text" class="form-control" name="item_name" placeholder="Enter Menu Item" value="{{$menuItem->item_name}}">
           </div>
-          <div class="plus">
-            <a href="javaScript:void(0);" class="openModifierForm"><i class="fa fa-plus" aria-hidden="true"></i></a>
+          <div class="form-group">   
+            <img src="{{ asset('assets/images/category-detail.png') }}">              
+            <textarea type="text" class="form-control" name="item_details" placeholder="Enter Menu Details">{{$menuItem->item_details}}</textarea>
           </div>
         </div>
-        <div id="accordion" class="accordion">
+        <div class="col-xl-5 col-lg-6 col-md-6">
+          <div class="form-group select-input">   
+            <img src="{{ asset('assets/images/catagory-black.png') }}">              
+            <select type="text" class="form-control" name="category_id" placeholder="Enter Item Catagory">
+              <option value="{{$menuItem->category_id}}" selected>{{$menuItem->category_name}}</option>
+              @foreach($categories as $category)
+              <option value="{{$category->category_id}}">{{$category->category_name}}</option>
+              @endforeach
+            </select>
+          </div>
+          <div class="form-group">   
+            <img src="{{ asset('assets/images/modifiers-black.png') }}">              
+            <input type="text" class="form-control" name="item_price" placeholder="Enter Item Price" value="{{$menuItem->item_price}}"></input>
+          </div>
+          <div class="form-group select-input">   
+            <img  style="z-index: 1;" src="{{ asset('assets/images/category-detail.png') }}">              
+
+            <select type="text" class="form-control select2" name="modifier_group_id[]" multiple id="modifier_id" placeholder="Select Modifiers">
+              @foreach($modifiers as $modifier)
+              <option value="{{$modifier->modifier_group_id}}" 
+                @php
+                $modifers = $menuItem->modifiers->pluck('modifier_id')->toArray();
+                @endphp
+                @if(in_array($modifier->modifier_group_id, $modifers))
+                      selected='selected'
+                @endif>{{$modifier->modifier_group_name}}
+              </option>
+              @endforeach
+            </select>
+          </div>
         </div>
-      </div>
       </div>
     </div>
     <div class="form-group form-btn-menu">   
@@ -100,7 +89,6 @@
       </div>
     </div>
     </form>
- 
 </div>
 
 
@@ -151,6 +139,7 @@
   </div>
 </div>
 </div>
+
 @section('scripts')
 <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js')}}"></script>
 {!! JsValidator::formRequest('App\Http\Requests\MenuItemRequest','#menuForm'); !!}

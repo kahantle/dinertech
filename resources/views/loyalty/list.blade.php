@@ -41,8 +41,8 @@
                                 <div class="col-lg-4">
                                     <div class="card">
                                         <div class="card-body">
-                                            <h6>No Of Orders</h6>
-                                            <p>Reward customers every time they make a new Orders.</p>
+                                            <h6>Number of Orders</h6>
+                                            <p>Customers earn points for each order they place.</p>
                                             <div class="add-order-button">
                                                 <a href="javascript:;" class="add-loyalty-blog" data-toggle="modal"
                                                     data-target="#orderLoyalty">Add Loyalty</a>
@@ -54,7 +54,7 @@
                                     <div class="card">
                                         <div class="card-body">
                                             <h6>Amount Spent</h6>
-                                            <p>Reward customers for purchasing specific items of services.</p>
+                                            <p>Customers earn points for each dollar they spend.</p>
                                             <div class="add-order-button">
                                                 <a href="javascript:;" class="add-loyalty-blog" data-toggle="modal"
                                                     data-target="#amount_spent">Add Loyalty</a>
@@ -66,7 +66,7 @@
                                     <div class="card">
                                         <div class="card-body">
                                             <h6>Category Based </h6>
-                                            <p>Reward customers for purchasing specific Categories of services.</p>
+                                            <p>Customers earn points for items purchased from select categories.</p>
                                             <div class="add-order-button">
                                                 <a href="javascript:;" class="add-loyalty-blog" data-toggle="modal"
                                                     data-target="#category_based">Add Loyalty</a>

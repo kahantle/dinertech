@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Card;
 use App\Models\CustomerAddress;
 use App\Models\Order;
+use App\Models\Loyalty;
 use App\Models\OrderMenuGroup;
 use App\Models\OrderMenuGroupItem;
 use App\Models\OrderMenuItem;
@@ -103,7 +104,20 @@ class OrdersController extends Controller
         // $orderDetails = session()->get('orderDetails');
         $uid = Auth::user()->uid;
         $restaurantId = session()->get('restaurantId');
+        $loyalty = Loyalty::where('status',Config::get('constants.STATUS.ACTIVE'))->first();
+        if($loyalty){
+            if($loyalty->loyalty_type == Config::get('constants.LOYALTY_TYPE.NO_OF_ORDERS')){
+                $noOfOrders = Order::where('uid',$uid)->count();
+                dd($noOfOrders->no_of_orders);
+            }else if($loyalty->loyalty_type == Config::get('constants.LOYALTY_TYPE.AMOUNT_SPENT')){
 
+            }else if($loyalty->loyalty_type == Config::get('constants.LOYALTY_TYPE.CATEGORY_BASED')){
+
+            }else{
+
+            }
+        }
+        // dd($loyalty);
         $address = CustomerAddress::where('uid', $uid)->first();
         if ($address) {
             $addressId = $address->customer_address_id;
@@ -342,7 +356,6 @@ class OrdersController extends Controller
                 DB::rollBack();
                 return redirect()->back()->with('error', $th->getMessage());
             }
-
         }
     }
 }

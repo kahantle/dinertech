@@ -76,7 +76,7 @@ class MenuController extends Controller
             $menu->restaurant_id = $restaurant->restaurant_id;
             $menu->category_id = $request->post('category_id');
             $menu->item_name = $request->post('item_name');
-            $menu->item_details = $request->post('item_details');
+            $menu->item_details = ($request->post('item_details'))? $request->post('item_details') : null;
             $menu->item_price = $request->post('item_price');
             if ($request->hasFile('item_img')) {
                 $image = $request->file('item_img');
