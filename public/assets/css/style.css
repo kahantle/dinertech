@@ -124,7 +124,7 @@ ul li {
     right: 0;
     bottom: 0;
     left: 0;
-    background-color: #4034b4;
+    /* background-color: #4034b4; */
     z-index: 8;
     transition: 0.5s ease-in-out;
 }
@@ -1076,7 +1076,7 @@ div#modifierGroupPopUp .content .type-row ul p {
 }
 
 .sidebar-nav>li {
-    text-indent: 10px;
+    /* text-indent: 10px; */
     line-height: 42px;
     text-transform: capitalize;
     padding: 0 15px;
@@ -1090,12 +1090,13 @@ div#modifierGroupPopUp .content .type-row ul p {
     padding: 10px 10px 0;
 }
 
-.sidebar-nav li:first-child a {
+
+/* .sidebar-nav li:first-child a {
     font-weight: 600;
     letter-spacing: 0.6px;
-    /* padding: 10px 0; */
+    padding    : 10px 0;
     font-size: 20px;
-}
+} */
 
 .sidebar-nav img {
     width: 20px;
@@ -1387,6 +1388,8 @@ div#modifierGroupPopUp .content .type-row ul p {
 .menu-title h4 {
     font-size: 18px;
     text-transform: capitalize;
+    font-weight: 600;
+    font-family: unset !important;
 }
 
 .menu-title p {
@@ -1458,6 +1461,7 @@ div#modifierGroupPopUp .content .type-row ul p {
     right: 15px;
     transform: translateY(-50%);
     color: #888;
+    font-size: 18px;
 }
 
 .navbar-header i.fa.fa-times {
@@ -3617,6 +3621,9 @@ p:empty {
     .nav-right li a {
         padding: 0 20px !important;
     }
+    .dashboard.category.content-wrapper .dashboard.promotions .pro-card.detail {
+        overflow-y: scroll;
+    }
 }
 
 @media (max-width:991px) {
@@ -3776,12 +3783,14 @@ p:empty {
 .d-campaign-inner {
     text-align: center !important;
     /* width: 14%; */
+    /* width  : 14%; */
 }
 
 .d-status-inner-blog {
     font-size: 16px;
     color: #000;
     /* width: 67%; */
+    /* width  : 67%; */
     text-align: center !important;
 }
 
@@ -4818,10 +4827,6 @@ input:checked+.check-one:after {
     margin: 9px 0;
 }
 
-#accordion-first .card-body .sub-menu {
-    margin-left: 46px;
-}
-
 #accordion-first .card-body .sub-menu span {
     font-size: 16px !important;
     text-transform: capitalize;
@@ -4958,6 +4963,7 @@ li.select2-search.select2-search--inline {
 .select2-container .select2-search--inline .select2-search__field {
     margin-left: 18px !important;
     /* font-size: 17px!important; */
+    /* font-size  : 17px!important; */
     margin-top: 2px !important;
     margin-bottom: 2px !important;
     /* font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"!important; */
@@ -5031,10 +5037,14 @@ li.select2-search.select2-search--inline {
 
     #wrapper.toggled #sidebar-wrapper .card-header {
         padding-left: 0 !important;
+        padding-left: 0;
     }
 
     #accordion .card-header {
         padding-left: 24px !important;
+    }
+    #wrapper #sidebar-wrapper .card-header {
+        padding-left: 23px;
     }
 }
 
@@ -5970,6 +5980,7 @@ a:focus {
 
 .sidebar-nav #accordion-first li:first-child a {
     padding: 0 0 !important;
+    opacity: unset !important;
 }
 
 #accordion-first .card-header .btn span {
@@ -6001,14 +6012,16 @@ a:focus {
 #accordion-first .card-body ul li a {
     display: flex !important;
     align-items: center;
+    opacity: unset !important;
 }
 
-.sidebar-nav li:first-child a {
+
+/* .sidebar-nav li:first-child a {
     font-weight: 600;
     letter-spacing: 0.6px;
     padding: 10px 0;
     font-size: 20px;
-}
+} */
 
 #accordion-first .card .card-body span {
     padding-left: 8px;
@@ -6028,6 +6041,7 @@ a:focus {
 
 
 /* side bar accordian end */
+
 
 /* Loyalty Start */
 
@@ -6103,6 +6117,30 @@ a:focus {
 
 .menu-inter-blog {
     margin-bottom: 5px;
+}
+
+.category-insides-blog .row {
+    align-items: center;
+    margin-top: 60px;
+    justify-content: center;
+}
+
+.category-insides-blog form {
+    max-width: 100% !important;
+}
+
+.category-insides-blog .col-xl-5.col-lg-6.col-md-6:nth-child(2) {
+    padding: 0 25px 0 40px;
+}
+
+.category-insides-blog .col-xl-5.col-lg-6.col-md-6:nth-child(1) {
+    padding: 0 40px 0 25px;
+}
+
+.Promotion.add-category .col-xl-5.col-lg-6.col-md-6:nth-child(2) {
+    border-left: 2px solid #c3c3c4;
+}
+
 }
 
 .category-insides-blog .row {
@@ -6222,6 +6260,10 @@ a:focus {
 .dashboard.category.content-wrapper .chat-table .cn-right h6 {
     height: auto !important;
 }
+
+
+/* modal add css end */
+
 
 
 /* modal add css end */
