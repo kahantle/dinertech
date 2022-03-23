@@ -18,6 +18,7 @@
     </nav>
   </div>
   <div class="dashboard orders content-wrapper">
+    @include('common.flashMessage')
     <div class="container">
       <div class="row">
         <div class="col-lg-12">

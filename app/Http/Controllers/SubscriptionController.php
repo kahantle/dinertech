@@ -24,9 +24,7 @@ class SubscriptionController extends Controller
             if ($checkSubscription == Config::get("constants.SUBSCRIPTION.INACTIVE")) {
                 $data['subscriptions'] = Subscription::where('subscription_plan', Config::get('constants.SUBSCRIPTION_PLAN.2'))->get();
                 $data['upgrade_subscription'] = false;
-
                 return view('subscription.index', $data);
-
             } else {
                 return redirect()->route('campaigns');
             }

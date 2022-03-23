@@ -9,6 +9,7 @@ use App\Models\Restaurant;
 use App\Models\RestaurantPayment;
 use App\Models\RestaurantSubscription;
 use App\Models\Subscription;
+use App\Models\User;
 use Auth;
 use Carbon\Carbon;
 use Cartalyst\Stripe\Stripe;
@@ -455,10 +456,16 @@ class LoyaltyController extends Controller
             $uid = Auth::user()->uid;
             $restaurant = Restaurant::where('uid', $uid)->first();
             $plan = RestaurantSubscription::where('stripe_subscription_id',$planId)->where('restaurant_id',$restaurant->restaurant_id)->first();
-            dd($plan);
+            $stripe = Stripe::make(env('STRIPE_SECRET'));
+            $cancel_subscription = $stripe->subscriptions()->cancel($restaurant->stripe_customer_id, $plan->stripe_subscription_id);
+            if($cancel_subscription){
+                User::where('uid',$uid)->update(['loyalty_subscription' => Config::get('constants.SUBSCRIPTION.INACTIVE')]);
+                Toastr::success('Loyalty plan cancel successfully.', '', Config::get('constants.toster'));
+                return redirect()->route('loyalty.index');
+            }
         } catch (\Throwable $th) {
-            Toastr::error('Some error in loyalty plan cancel.', '', Config::get('constants.toster'));
-            return redirect()->route('loyalty.list');
+            // Toastr::error('Some error in loyalty plan cancel.', '', Config::get('constants.toster'));
+            return redirect()->back()->with('error',$th->getMessage());
         }
     }
 }
