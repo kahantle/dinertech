@@ -10,10 +10,21 @@
                     </button>
                 </div>
                 <h5>$ {{ $subscription->price }} / {{ $sub_type }}</h5>
-                <p>Main subscription cycle is from 15 to 15 of each month and you're
+                {{-- <p>Main subscription cycle is from 15 to 15 of each month and you're
                     subscribing for loyalty on 1st December 2021 so we will charge you $14.4
-                    this month and from next month cycle $29.00.</p>
-                <h4>Enter Your credit/debit card details</h4>
+                    this month and from next month cycle $29.00.</p> --}}
+
+                <p class="border-0">Subscribe today for just ____________ with a recurring subscription of $29.00
+                    occurring on your
+                    account bill date of the 15th.</p>
+                <p>
+
+                    Underlined text should be conditional to the client’s account subscription date. The first should be
+                    their pro-rated price in the following format: $xx.xx and the second should be the day of their
+                    renewal in the format shown above (1st, 3rd, 7th, 15th, 21st, 23rd, etc)
+                </p>
+                <h4>Enter Your Credit / Debit Card Details</h4>
+                {{-- <h4>Enter Your credit/debit card details</h4> --}}
                 <form action="{{ route('subscription.pay') }}" method="POST" class="paymentForm">
                     @csrf
                     <input type="hidden" name="subscription_id" value="{{ $subscription->subscription_id }}">
