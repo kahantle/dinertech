@@ -22,14 +22,14 @@
             @include('common.flashMessage')
 
             <div class="container-fluid p-0">
-                {{Form::open(['route' => ['add.menu.post'], 'id' => 'menuForm', 'method' => 'POST', 'class' => '', 'files' => 'true']) }}
-                <span class="slt-img">
-
-                </span>
-                <input id="image" type="file" name="item_img" placeholder="Photo" required="" capture=""
-                    style="display: none;">
-                <label class="label-a"><i class="fa fa-camera" aria-hidden="true"></i>Select
-                    Picture</label>
+                {{ Form::open(['route' => ['add.menu.post'],'id' => 'menuForm','method' => 'POST','class' => '','files' => 'true']) }}
+                <div class="form-group">
+                    <span class="slt-img"></span>
+                    <input id="image" type="file" name="item_img" placeholder="Photo" required="" capture=""
+                        style="display: none;">
+                    <label class="label-a"><i class="fa fa-camera" aria-hidden="true"></i>Select
+                        Picture</label>
+                </div>
                 <div class="row">
                     <div class="col-xl-5 col-lg-6 col-md-6">
                         <div class="form-group">
@@ -39,12 +39,11 @@
                         </div>
                         <div class="form-group">
                             <img src="{{ asset('assets/images/category-detail.png') }}">
-                            <textarea type="text" class="form-control" name="item_details"
-                                placeholder="Enter Menu Details"></textarea>
-                        </div>                       
+                            <textarea type="text" class="form-control" name="item_details" placeholder="Enter Menu Details"></textarea>
+                        </div>
                     </div>
                     <div class="col-xl-5 col-lg-6 col-md-6">
-                         <div class="form-group select-input">
+                        <div class="form-group select-input">
                             <img src="{{ asset('assets/images/catagory-black.png') }}">
                             <select type="text" class="form-control" name="category_id" placeholder="Enter Item Catagory">
                                 <option value="" disabled selected>Select Item Catagory</option>
@@ -62,7 +61,8 @@
                             <select type="text" class="select2 form-control " name="modifier_group_id[]" id="modifier_id"
                                 multiple="multiple" placeholder="Enter Modifiers">
                                 @foreach ($modifiers as $modifier)
-                                    <option value="{{ $modifier->modifier_group_id }}">{{ $modifier->modifier_group_name }}
+                                    <option value="{{ $modifier->modifier_group_id }}">
+                                        {{ $modifier->modifier_group_name }}
                                     </option>
                                 @endforeach
                             </select>
@@ -81,26 +81,26 @@
             </form>
         </div>
 
-@section('scripts')
-    <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js') }}"></script>
-    {!! JsValidator::formRequest('App\Http\Requests\MenuItemRequest', '#menuForm') !!}
-    {!! JsValidator::formRequest('App\Http\Requests\ModifierGroupRequest', '#modifierForm') !!}
-    {!! JsValidator::formRequest('App\Http\Requests\ModifierItemPriceRequest', '#modifierItemForm') !!}
-    <script src="{{ asset('/assets/js/menu-modifier.js') }}"></script>
-    <script>
-        var route = "{{ route('ajax.modifier.list') }}";
-        $(document).ready(function() {
-            $(document).on('click', '#clearForm', function() {
-                $('#menuForm').trigger("reset");
-                $(".slt-img img").remove();
+    @section('scripts')
+        <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js') }}"></script>
+        {!! JsValidator::formRequest('App\Http\Requests\MenuItemRequest', '#menuForm') !!}
+        {!! JsValidator::formRequest('App\Http\Requests\ModifierGroupRequest', '#modifierForm') !!}
+        {!! JsValidator::formRequest('App\Http\Requests\ModifierItemPriceRequest', '#modifierItemForm') !!}
+        <script src="{{ asset('/assets/js/menu-modifier.js') }}"></script>
+        <script>
+            var route = "{{ route('ajax.modifier.list') }}";
+            $(document).ready(function() {
+                $(document).on('click', '#clearForm', function() {
+                    $('#menuForm').trigger("reset");
+                    $(".slt-img img").remove();
+                });
             });
-        });
 
-        $(document).ready(function() {
-            $('.select2').select2({
-                placeholder: "Select a Modifiers",
+            $(document).ready(function() {
+                $('.select2').select2({
+                    placeholder: "Select a Modifiers",
+                });
             });
-        });
-    </script>
-    <script src="{{ asset('assets/js/common.js') }}"></script>
-@endsection
+        </script>
+        <script src="{{ asset('assets/js/common.js') }}"></script>
+    @endsection
