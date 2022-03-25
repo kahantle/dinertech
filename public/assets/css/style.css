@@ -1077,7 +1077,6 @@
     padding    : 10px 0;
     font-size: 20px;
 } */
-<<<<<<< Updated upstream
     
     .sidebar-nav img {
         width: 20px;
@@ -3494,7 +3493,6 @@
         width: 9%;
     }
     /* .d-creates {
-=======
 
 .sidebar-nav img {
     width: 20px;
@@ -5970,7 +5968,6 @@ p:empty {
 
 
 /* .d-creates {
->>>>>>> Stashed changes
     width: 39%;
 } */
     
@@ -7536,16 +7533,13 @@ p:empty {
     #accordion .card-body .sub-menu span {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     }
-<<<<<<< Updated upstream
     
     .Benefits-loyalty {
         text-align: center;
         padding-top: 30px;
-=======
-
+    }
     #wrapper #sidebar-wrapper .card-header {
         padding-left: 23px;
->>>>>>> Stashed changes
     }
     
     .Benefits-loyalty h5 {
