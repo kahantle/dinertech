@@ -70,7 +70,7 @@ class RestaurantHoursController extends Controller
             if ($request->debug_mode == 'ON') {
                 $errors['debug'] = $th->getMessage();
             }
-            print_r($th->getMessage());
+            // print_r($th->getMessage());
             return response()->json($errors, 500);
         }
     }
@@ -142,11 +142,14 @@ class RestaurantHoursController extends Controller
             if ($validator->fails()) {
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
             }
-            $list = RestaurantHours::
-            select('restaurant_hours.*',DB::raw('group_concat(day) as days'))
-            ->where('restaurant_id', $request->post('restaurant_id'))
-            ->groupBy('restaurant_hours.hours_group_id')
-            ->get();
+            // $list = RestaurantHours::
+            // select('restaurant_hours.*',DB::raw('group_concat(day) as days'))
+            // ->where('restaurant_id', $request->post('restaurant_id'))
+            // ->groupBy('restaurant_hours.hours_group_id')
+            // ->get();
+            $list  = RestaurantHours::select('restaurant_hour_id','restaurant_id',\DB::raw("GROUP_CONCAT(day) as `groupDayS`"))->with(['allTimes' => function($query){
+                $query->select('restaurant_time_id','restaurant_hour_id','opening_time','closing_time');
+            }])->groupBy('hours_group_id')->where('restaurant_id', $request->post('restaurant_id'))->get();
             return response()->json(['list' => $list, 'success' => true], 200);
         } catch (\Throwable $th) {
             $errors['success'] = false;

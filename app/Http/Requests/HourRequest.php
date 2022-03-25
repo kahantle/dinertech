@@ -27,9 +27,11 @@ class HourRequest extends FormRequest
     {
         $user = Auth::user();
         return [
-            'opening_hours' => 'required',
-            'closing_hours' => 'required',
+            // 'opening_hours' => 'required',
+            // 'closing_hours' => 'required',
             'day.*' =>'required|min:1',
+            'opening_hours.*' => 'required',
+            'closing_hours.*' => 'required'
         ];
     }
 
@@ -37,8 +39,10 @@ class HourRequest extends FormRequest
     {
         return [
             'day.*.required' => 'Please select at least one day.',
-            'opening_hours.required' => 'select time.',
-            'closing_hours.required' => 'Select time.',
+            'opening_hours.*.required' => 'select time.',
+            'closing_hours.*.required' => 'select time.'
+            // 'opening_hours.required' => 'select time.',
+            // 'closing_hours.required' => 'Select time.',
         ];
     }
 }

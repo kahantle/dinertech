@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\HourRequest;
 use App\Models\User;
 use App\Models\RestaurantHours;
+use App\Models\RestaurantHoursTimes;
 use App\Models\Restaurant;
 use Config;
 use Auth;
@@ -19,10 +20,9 @@ class HoursController extends Controller
     {
       $uid = Auth::user()->uid;
       $restaurant = Restaurant::where('uid', $uid)->first();
-      $hoursdata = RestaurantHours::select("hours_group_id","opening_time","closing_time",DB::raw("GROUP_CONCAT(day) as `groupDays`"))
+      $hoursdata = RestaurantHours::select("restaurant_hour_id","hours_group_id","opening_time","closing_time",DB::raw("GROUP_CONCAT(day) as `groupDays`"))
+      ->with('allTimes')
       ->groupBy('hours_group_id')
-      ->groupBy('opening_time')
-      ->groupBy('closing_time')
       ->where('restaurant_id', $restaurant->restaurant_id)
       ->get();
       return view('hours.index',compact('hoursdata'));
@@ -42,24 +42,31 @@ class HoursController extends Controller
       $restaurant = Restaurant::where('uid', $uid)->first();
         try {
           if($request->post('day') ){
-            $countRestaurantHours = RestaurantHours::where('restaurant_id',$restaurant->restaurant_id)
+              $countRestaurantHours = RestaurantHours::where('restaurant_id',$restaurant->restaurant_id)
                 ->orderBy('hours_group_id','desc')
                 ->get();
 
                 $groupId = ($countRestaurantHours)?$countRestaurantHours->count()+1:1;
-                $data=array();
                 foreach ($request->post('day') as $key => $value) {
-                  $data[$key]['restaurant_id'] = $restaurant->restaurant_id;
-                  $data[$key]['hours_group_id'] = $groupId;
-                  $data[$key]['day'] =  strtolower($value);
-                  $data[$key]['opening_time'] = $request->post('opening_hours');
-                  $data[$key]['closing_time'] = $request->post('closing_hours');
+                  $hour = new RestaurantHours;
+                  $hour->restaurant_id = $restaurant->restaurant_id;
+                  $hour->hours_group_id = $groupId;
+                  $hour->day            = strtolower($value);
+                  $hour->save();
+
+                  foreach($request->post('opening_hours') as $timeKey => $timeValue){
+                      $hour_time = new RestaurantHoursTimes;
+                      $hour_time->restaurant_hour_id = $hour->restaurant_hour_id;
+                      $hour_time->hours_group_id = $groupId;
+                      $hour_time->restaurant_id = $restaurant->restaurant_id;
+                      $hour_time->opening_time = $timeValue;
+                      $hour_time->closing_time = $request->post('closing_hours')[$timeKey];
+                      $hour_time->save();
+                  }
                 }
-                $hour = new RestaurantHours;
-                if($hour->insert($data)){
-                  Toastr::success('Hours added successfully.','', Config::get('constants.toster'));
-                  return redirect()->route('hours');
-                }
+
+                Toastr::success('Hours added successfully.','', Config::get('constants.toster'));
+                return redirect()->route('hours');
           }else{
             Toastr::error('Please select at least one day.','', Config::get('constants.toster'));
             return redirect()->route('add.hour.post');
@@ -74,13 +81,16 @@ class HoursController extends Controller
   {
     $uid = Auth::user()->uid;
     $restaurant = Restaurant::where('uid', $uid)->first();
-    $hoursdata = RestaurantHours::select("hours_group_id","opening_time","closing_time")
+    $hoursdata = RestaurantHours::select("restaurant_hour_id","hours_group_id","opening_time","closing_time")
+    ->with("allTimes")
     ->groupBy('hours_group_id')
-    ->groupBy('opening_time')
-    ->groupBy('closing_time')
     ->where('hours_group_id', $id)
     ->where('restaurant_id', $restaurant->restaurant_id)
     ->get();
+    foreach($hoursdata as $hour){
+      $hoursdata = $hour->allTimes;
+    }
+    $hours_group_id = $id;
     $days = RestaurantHours::where('hours_group_id', $id)
     ->where('restaurant_id', $restaurant->restaurant_id)
     ->pluck('day')->toArray();
@@ -88,7 +98,7 @@ class HoursController extends Controller
     $restaurantHours = RestaurantHours::where('hours_group_id','!=', $id)
     ->where('restaurant_id',$restaurant->restaurant_id)->pluck('day')->toArray();
   
-    return view('hours.edit',compact('days','hoursdata','restaurantHours'));
+    return view('hours.edit',compact('days','hoursdata','restaurantHours','hours_group_id'));
   }
 
   public function update(HourRequest $request)
@@ -96,24 +106,31 @@ class HoursController extends Controller
     $uid = Auth::user()->uid;
     $restaurant = Restaurant::where('uid', $uid)->first();
     $hourdata = RestaurantHours::where('hours_group_id', $request->hidden_id)->where('restaurant_id', $restaurant->restaurant_id)->delete();
+    $hourTimedata = RestaurantHoursTimes::where('hours_group_id', $request->hidden_id)->where('restaurant_id', $restaurant->restaurant_id)->delete();
     try {
          $days='';
          $groupId = $request->hidden_id;
-         $data=array();
          foreach ($request->post('day') as $key => $value) {
-          $data[$key]['restaurant_id'] = $restaurant->restaurant_id;
-          $data[$key]['hours_group_id'] =$request->hidden_id;
-          $data[$key]['day'] =  strtolower($value);
-          $data[$key]['opening_time'] = $request->post('opening_hours');
-          $data[$key]['closing_time'] = $request->post('closing_hours');
+          $hour = new RestaurantHours;
+          $hour->restaurant_id = $restaurant->restaurant_id;
+          $hour->hours_group_id = $groupId;
+          $hour->day            = strtolower($value);
+          $hour->save();
+
+          foreach($request->post('opening_hours') as $timeKey => $timeValue){
+              $hour_time = new RestaurantHoursTimes;
+              $hour_time->restaurant_hour_id = $hour->restaurant_hour_id;
+              $hour_time->hours_group_id = $groupId;
+              $hour_time->restaurant_id = $restaurant->restaurant_id;
+              $hour_time->opening_time = $timeValue;
+              $hour_time->closing_time = $request->post('closing_hours')[$timeKey];
+              $hour_time->save();
+          }
         }
-        $hour = new RestaurantHours;
-        if($hour->insert($data)){
-          Toastr::success('Hours updated successfully.','', Config::get('constants.toster'));
-          return redirect()->route('hours');
-        }
+        Toastr::success('Hours updated successfully.','', Config::get('constants.toster'));
+        return redirect()->route('hours');
+        
     } catch (\Throwable $th) {
-      dd($th);
         $errors['success'] = false;
         $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
         if ($request->debug_mode == 'ON') {
@@ -121,7 +138,7 @@ class HoursController extends Controller
         }
         Toastr::error('Hours not updated successfully.','', Config::get('constants.toster'));
         return redirect()->route('hours');
-      }   
+    }   
   }
 
   public function delete($id)
@@ -130,6 +147,7 @@ class HoursController extends Controller
         $alert =['Hours does not delete successfully','', Config::get('constants.toster')];
         $category = RestaurantHours::where('hours_group_id', $id);
         if($category){
+          RestaurantHoursTimes::where('hours_group_id', $id)->delete();
           $category->delete();
           $alert =['Hours delete successfully','', Config::get('constants.toster')];
         }
@@ -139,6 +157,22 @@ class HoursController extends Controller
         $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
         return response()->json($errors, 401);
       }
-    }
+  }
+
+  public function delete_time($id){
+    try {
+        $message = "Time does not delete successfully.";
+        $hour_time = RestaurantHoursTimes::where('restaurant_time_id', $id);
+        if($hour_time){
+          $hour_time->delete();
+          $message = "Time delete successfully.";
+        }
+        Toastr::success($message,'', Config::get('constants.toster'));
+        return redirect()->back();
+      } catch (\Throwable $th) {
+        Toastr::error('Time not delete successfully.','', Config::get('constants.toster'));
+        return redirect()->back();
+      }
+  }
 }
 

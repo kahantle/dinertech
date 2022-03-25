@@ -28,37 +28,72 @@
           
               <div class="form-group">
                 @for ($i =0; $i<7; $i++)
-                @php
-              $day = \Carbon\Carbon::now()->startOfWeek(\Carbon\Carbon::MONDAY)->addDays($i)->isoFormat('dddd','D');
-                @endphp
-                @if(in_array(strtolower($day),$days))
-                <div class="form-check">
-                  <input type="checkbox" name="day[]" value="{{$day}}" checked>
-                  <label for="{{$day}}">{{$day}}</label>
-                </div>
-                @elseif(in_array(strtolower($day),$restaurantHours))
-                <div class="form-check">
-                  <input type="checkbox" class="hours-disable" title="It's already selected for this resturant" disabled name="day[]" value="{{$day}}">
-                  <label for="{{$day}}">{{$day}}</label>
-                </div>
-                @else 
-                <div class="form-check">
-                  <input type="checkbox" name="day[]" value="{{$day}}">
-                  <label for="{{$day}}">{{$day}}</label>
-                </div>
-                @endif
+                  @php
+                    $day = \Carbon\Carbon::now()->startOfWeek(\Carbon\Carbon::MONDAY)->addDays($i)->isoFormat('dddd','D');
+                  @endphp
+                  @if(in_array(strtolower($day),$days))
+                    <div class="form-check">
+                      <input type="checkbox" name="day[]" value="{{$day}}" checked>
+                      <label for="{{$day}}">{{$day}}</label>
+                    </div>
+                  @elseif(in_array(strtolower($day),$restaurantHours))
+                    <div class="form-check">
+                      <input type="checkbox" class="hours-disable" title="It's already selected for this resturant" disabled name="day[]" value="{{$day}}">
+                      <label for="{{$day}}">{{$day}}</label>
+                    </div>
+                  @else 
+                    <div class="form-check">
+                      <input type="checkbox" name="day[]" value="{{$day}}">
+                      <label for="{{$day}}">{{$day}}</label>
+                    </div>
+                  @endif
                 @endfor
               </div>
-              @foreach($hoursdata as $hours)
-              <input type="hidden" name="hidden_id" value="{{$hours->hours_group_id}}">
-              <div class="time-buttons">                
-                <input type="time" class="add-time" id="opening_hours" name="opening_hours" placeholder="Time" value="{{$hours->opening_time}}">
-                <span> -- </span>
-                <span> 
-                  <input type="time" class="add-time" id="closing_hours" name="closing_hours" placeholder="Time" value="{{$hours->closing_time}}">
-                </span>
-              </div>
-              @endforeach
+              {{-- @foreach($hoursdata as $hours) --}}
+                  <input type="hidden" name="hidden_id" value="{{$hours_group_id}}">
+                  <div class="time-buttons">                
+                      @forelse ($hoursdata as $key => $time)
+                        <div class="row">
+                          <div class="col-xl-2 col-md-3 col-sm-4 col-5">
+                             <div class="form-group" style="display: inline-block">
+                                <input type="time" class="add-time" id="opening_hours" name="opening_hours[]" placeholder="Time" value="{{date('h:i',strtotime($time->opening_time))}}">
+                             </div>
+                          </div>
+                          <div class="col-xl-2 col-md-3 col-sm-4 col-5">
+                            <div class="form-group" style="display: inline-block">
+                              <input type="time" class="add-time" id="closing_hours" name="closing_hours[]" placeholder="Time" value="{{date('h:i',strtotime($time->closing_time))}}">
+                            </div>
+                          </div>
+                          @if ($key == 0)
+                            <div class="col-xl-2 col-md-2 col-sm-3 mt-3">
+                              <button class="btn btn-primary" id="add-more" type="button">Add More</button>
+                            </div>
+                          @else
+                            <div class="col-xl-2 col-md-2 col-sm-3 mt-3">
+                              <a class="btn btn-danger" href="{{route('delete_time.hour.post',$time->restaurant_time_id)}}">Remove</a>
+                            </div>
+                          @endif
+                        </div>
+                      @empty
+                        <div class="row">
+                          <div class="col-xl-2 col-md-3 col-sm-4 col-5">
+                             <div class="form-group" style="display: inline-block">
+                                <input type="time" class="add-time" id="opening_hours" name="opening_hours[]" placeholder="Time">
+                             </div>
+                          </div>
+                          <div class="col-xl-2 col-md-3 col-sm-4 col-5">
+                            <div class="form-group" style="display: inline-block">
+                              <input type="time" class="add-time" id="closing_hours" name="closing_hours[]" placeholder="Time">
+                            </div>
+                          </div>
+                          <div class="col-xl-2 col-md-2 col-sm-3 mt-3">
+                            <button class="btn btn-primary" id="add-more" type="button">Add More</button>
+                          </div>
+                        </div>
+                      @endforelse
+                      <div class="add-more-times"></div>
+                    </div>
+              {{-- @endforeach --}}
               <div class="error">
                 @if($errors->all())
                 <ul class="alert alert-danger">
@@ -84,4 +119,5 @@
 @section('scripts')
 <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js')}}"></script>
 {!! JsValidator::formRequest('App\Http\Requests\HourRequest','#hourForm'); !!} 
+<script src="{{asset('/assets/js/add-hours.js')}}"></script>
 @endsection

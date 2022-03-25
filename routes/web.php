@@ -69,6 +69,7 @@ Route::group(['middleware' => ['auth:web']], function () {
         Route::get('edit/{id}', 'HoursController@edit')->name('edit.hour');
         Route::post('update', 'HoursController@update')->name('update.hours.post');
         Route::get('delete/{id}', 'HoursController@delete')->name('delete.hour.post');
+        Route::get('delete-time/{id}','HoursController@delete_time')->name('delete_time.hour.post');
     });
     Route::group(['middleware' => ['auth:web']], function () {
         Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
