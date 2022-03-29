@@ -28,7 +28,7 @@ class RestaurantHoursController extends Controller
             //           'day',
             //           'opening_time',
             //           'closing_time']);
-            $list  = RestaurantHours::select('restaurant_hour_id','restaurant_id',\DB::raw("GROUP_CONCAT(day) as `groupDayS`"))->with(['allTimes' => function($query){
+            $list  = RestaurantHours::select('restaurant_hour_id','hours_group_id','restaurant_id',\DB::raw("GROUP_CONCAT(day) as `groupDayS`"))->with(['allTimes' => function($query){
                 $query->select('restaurant_time_id','restaurant_hour_id','opening_time','closing_time');
             }])->groupBy('hours_group_id')->where('restaurant_id', $request->post('restaurant_id'))->get();
             
