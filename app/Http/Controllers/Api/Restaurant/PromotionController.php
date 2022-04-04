@@ -216,7 +216,7 @@ class PromotionController extends Controller
     {
         try {
             $request_data = $request->json()->all();
-                $validator = Validator::make($request_data, [ 
+            $validator = Validator::make($request_data, [ 
                 'restaurant_id' => 'required',
                 'promotion_id' => 'required',
                 'status' => 'required'
@@ -327,8 +327,8 @@ class PromotionController extends Controller
             ->where('promotion_id',$request->promotion_id)
             ->first();
             if($promotionList){
-                $status = ($request->status==true)?'ACTIVE':'INACTIVE';
-                $promotionList->status = $status ;
+                $status = ($request->status==true)? Config::get('constants.STATUS.ACTIVE'):Config::get('constants.STATUS.INACTIVE');
+                $promotionList->promotion_status = $status ;
                 $promotionList->save();
             }
             return response()->json(['message' =>'Promotion update successfully.', 'success' => true], 200);
