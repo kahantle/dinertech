@@ -44,6 +44,7 @@ Route::namespace ('Auth')->group(function () {
     Route::get('/reset-password/{token}', 'ForgotPasswordController@showPasswordResetForm')->name('reset_password');
     Route::post('/updatePassword', 'ForgotPasswordController@updatePassword')->name('updatePassword.post');
     Route::view('/status', 'auth.login')->name('status');
+    Route::get('/active-request', 'VerificationController@accountActiveRequest')->name('account.active.request');
 });
 Route::group(['middleware' => ['auth:web']], function () {
 
@@ -328,6 +329,7 @@ Route::prefix('customer')->group(function () {
 //-------------------------- Admin Route ---------------------------------------------- //
 
 Route::prefix('admin')->group(function () {
+    Route::get('/', 'Admin\LoginController@showLogin')->name('admin.show.login');
     Route::get('/login', 'Admin\LoginController@showLogin')->name('admin.login');
     Route::post('/login', 'Admin\LoginController@attemptLogin')->name('admin.auth.login');
     Route::post('/logout', 'Admin\LoginController@logout')->name('admin.logout');

@@ -46,7 +46,7 @@ class LoginController extends Controller
         if (!$user) {
             return redirect()->route('login')->with('error', 'Please enter valid email or phone.');
         } else if (!$user->is_verified_at) {
-            return redirect()->route('login')->with('error', 'Please verify this account.');
+            return redirect()->route('login')->with('error-verify', 'Please verify this account. <a class="verify-link" href="'.route('account.active.request').'">Verify Now</a>');
         }
         $payment = RestaurantPayment::where('restaurant_id', $user->restaurant->restaurant_id)->where('uid', $user->uid)->first();
         // if ($payment->status != 'SUCCESS') {

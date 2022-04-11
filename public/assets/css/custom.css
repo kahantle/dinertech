@@ -68,3 +68,9 @@
     font-size: 18px !important;
     -webkit-appearance: none;
 }
+
+/* Login page */
+.verify-link:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}

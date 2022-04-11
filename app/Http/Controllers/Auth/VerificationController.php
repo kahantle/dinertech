@@ -6,10 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\VerifyRequest;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Notifications\Otp;
 use DB;
 use Config;
 use Illuminate\Support\Carbon;
 use Toastr;
+use Validator;
 
 class VerificationController extends Controller
 {
@@ -67,6 +69,17 @@ class VerificationController extends Controller
     {
         try {
             DB::beginTransaction();
+
+            $validator = Validator::make($request->post(),[
+                'username' => 'required'
+            ],[
+                'username.required' => 'Please enter your register email or phone number.'
+            ]);
+
+            if($validator->fails()){
+                return redirect()->back()->withErrors($validator->errors());
+            }
+
             $username = $request->post('username');
             $user = User::where('role', Config::get('constants.ROLES.RESTAURANT'))
                 ->where(function ($query) use ($username) {
@@ -85,11 +98,17 @@ class VerificationController extends Controller
                 Toastr::success('OTP sent successfully.','', Config::get('constants.toster'));
                 return redirect()->route('verify', ['username' => $username]);
             }
-            Toastr::success('User not found.','', Config::get('constants.toster'));
-            return redirect()->route('verify', ['username' => $username])->with('error', 'User not found');
+            Toastr::error('User not found.','', Config::get('constants.toster'));
+            // return redirect()->route('verify', ['username' => $username])->with('error', 'User not found');
+            return redirect()->back()->withInput($request->all());
         } catch (\Throwable $th) {
             DB::rollBack();
-            return redirect()->route('verify', ['username' => $username])->with('error',  $th->getMessage());
+            // return redirect()->route('verify', ['username' => $username])->with('error',  $th->getMessage());
+            return redirect()->back()->with('error',  $th->getMessage());
         }
+    }
+
+    public function accountActiveRequest(){
+        return view('auth.active_request');
     }
 }
