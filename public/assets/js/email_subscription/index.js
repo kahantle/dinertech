@@ -149,12 +149,13 @@ $(function() {
         );
     }
 
-    $('.moreless-button').click(function() {
-        $('.moretext').toggle();
-        if ($('.moreless-button').text() == "Show More") {
-            $(this).text("Show Less")
+    $('.moreless-button').on('click', function() {
+        $(".moretext").toggle();
+        if ($(this).text() == "Show More") {
+            $(".moretext").removeClass("d-none");
+            $(this).text("Show Less");
         } else {
-            $(this).text("Show More")
+            $(this).text("Show More");
         }
     });
 });

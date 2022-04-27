@@ -45,7 +45,7 @@
                             @php $count = 1; @endphp
                             @foreach ($subscriptions as $key => $subscription)
                                 @if ($key == 4)
-                                    <div class="moretext">
+                                    <div class="moretext d-none">
                                 @endif
                                 @if ($count == 1)
                                     <div class="row row-blog-inner">

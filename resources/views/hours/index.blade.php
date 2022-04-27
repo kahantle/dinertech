@@ -17,40 +17,74 @@
       </div>
     </nav>
   </div>
-  <div class="dashboard orders content-wrapper">
+  <div class="dashboard category modifiers-ctm content-wrapper">
+    @include('common.flashMessage')
     <div class="container">
-      <div class="row">
+      {{-- <div class="row">
         <div class="col-lg-12">
           <div class="orderss">
             <div class="orders">
-            @foreach($hoursdata as $data)
-              <div class="order red">
-                <div class="order-name">
-                  <h4>{{$data->groupDays}}</h4>
-                </div>
-                <div class="order-detail">
-                  <div class="time">
-                    <p>{{date("h:i:a",strtotime($data->opening_time))}} - {{date("h:i:a",strtotime($data->closing_time))}}</p>
+              @foreach($hoursdata as $data)
+                <div class="order red">
+                  <div class="order-name">
+                    <h4>{{$data->groupDays}}</h4>
                   </div>
-                  <div class="order-icons">
-                    <a class="action-edit" href="{{route('edit.hour',$data->hours_group_id)}}">
-                      <i class="fa fa-pencil" aria-hidden="true"></i>
-                    </a>
-                    <a class="action-delete delete" href="javaScript:void(0);"  data-route="{{route('delete.hour.post',$data->hours_group_id)}}">
-                      <i class="fa fa-trash" aria-hidden="true"></i>
-                    </a>
+                  <div class="order-detail">
+                    <div class="time">
+                      <p>{{date("h:i:a",strtotime($data->opening_time))}} - {{date("h:i:a",strtotime($data->closing_time))}}</p>
+                    </div>
+                    <div class="order-icons">
+                      <a class="action-edit" href="{{route('edit.hour',$data->hours_group_id)}}">
+                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                      </a>
+                      <a class="action-delete delete" href="javaScript:void(0);"  data-route="{{route('delete.hour.post',$data->hours_group_id)}}">
+                        <i class="fa fa-trash" aria-hidden="true"></i>
+                      </a>
+                    </div>
                   </div>
                 </div>
-              </div>
-              @endforeach
+                @endforeach
             </div>
           </div>
         </div>
+      </div> --}}
+      <div id="accordion" class="accordion">
+        @foreach($hoursdata as $data)
+          <div class="order">
+            <div class="collapsed a-order" data-toggle="collapse" href="#collapseOne{{$data->hours_group_id}}">
+              <div class="order-name">
+                  <div class="circle"></div>
+                  <h4>{{$data->groupDays}}</h4>
+              </div>
+              <div class="order-detail">
+                <div class="order-icons">
+                  <a class="action-edit" href="{{route('edit.hour',$data->hours_group_id)}}">
+                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                  </a>
+                  <a class="action-delete delete" href="javaScript:void(0);"  data-route="{{route('delete.hour.post',$data->hours_group_id)}}">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div id="collapseOne{{$data->hours_group_id}}" class="collapse c-order" data-parent="#accordion">
+              @foreach ($data->allTimes as $time)
+                <div class="child">
+                  <div class="order-name">
+                      <div class="circle"></div>
+                      <p class="mb-0 ml-2">{{$time->opening_time}} - {{$time->closing_time}}</p>
+                  </div>
+                </div>
+              @endforeach
+            </div>
+          </div>
+        @endforeach
       </div>
     </div>
   </div>
+
 </section>
 @endsection
-@section('scripts') 
-<script src="{{asset('/assets/js/hours.js')}}"></script> 
+@section('scripts')
+<script src="{{asset('/assets/js/hours.js')}}"></script>
 @endsection
