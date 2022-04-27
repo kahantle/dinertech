@@ -44,7 +44,7 @@
                                                         data-route="{{ route('action.order', [$order->order_id, 'action' => 'PREPARED']) }}"
                                                         data-value="prepared">Prepare order</a>
                                                 @else
-                                                    <a href="javaScript:void(0);" class="grey-border disabled"
+                                                    <a href="javaScript:void(0);" class="grey-border"
                                                         title="Prepare order!">Prepare order</a>
                                                 @endif
                                             </div>
@@ -106,7 +106,7 @@
                                         </div>
                                     </div>
                                 @endforeach
-                                <div class="w-100 pagination-links"> {{ $orders->links() }}</div>
+                                {{-- <div class="w-100 pagination-links"> {{ $orders->links() }}</div> --}}
                             @else
                                 <p>No records found.</p>
                         @endif
@@ -154,5 +154,4 @@
     <script src="{{ asset('/assets/js/order.js') }}"></script>
     {!! JsValidator::formRequest('App\Http\Requests\VerifyRequest', '#verifyForm') !!}
     {!! JsValidator::formRequest('App\Http\Requests\PickTimeRequest', '#orderTimePickup') !!}
-
 @endsection

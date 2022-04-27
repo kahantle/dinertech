@@ -11,13 +11,13 @@
         <li class="{{ Request::is('/') ? 'active' : '' }}">
             <a href="{{ route('dashboard') }}"><img src="{{ asset('images/order-icon.png') }}"
                     class="img-fluid">
-                <span>recent orders</span>
+                <span>active order</span>
             </a>
         </li>
         <li class="{{ Request::is('order') ? 'active' : '' }}">
             <a href="{{ route('order') }}"><img src="{{ asset('images/promotion-icon.png') }}"
                     class="img-fluid">
-                <span>orders</span>
+                <span>previous order</span>
             </a>
         </li>
         <div id="accordion-first">
@@ -32,8 +32,8 @@
                     </h5>
                 </div>
 
-                <div id="manageMenu" class="collapse @if (Request::is('menu') || Request::is('category') || Request::is('modifier')) show @endif" aria-labelledby="headingOne"
-                    data-parent="#accordion">
+                <div id="manageMenu" class="collapse @if (Request::is('menu') || Request::is('category') || Request::is('modifier')) show @endif"
+                    aria-labelledby="headingOne" data-parent="#accordion">
                     <div class="card-body">
                         <ul class="sub-menu">
                             <li class="{{ Request::is('menu') ? 'active' : '' }}">
@@ -71,8 +71,8 @@
                     </h5>
                 </div>
 
-                <div id="marketing" class="collapse @if (Request::is('promotion') || Request::is('campaigns') || Request::is('loyalty/*')) show @endif" aria-labelledby="headingtwo"
-                    data-parent="#accordion">
+                <div id="marketing" class="collapse @if (Request::is('promotion') || Request::is('campaigns') || Request::is('loyalty/*')) show @endif"
+                    aria-labelledby="headingtwo" data-parent="#accordion">
                     <div class="card-body">
                         <ul class="sub-menu">
                             <li class="{{ Request::is('promotion') ? 'active' : '' }}">

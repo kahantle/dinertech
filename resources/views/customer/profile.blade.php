@@ -13,7 +13,7 @@
                                 <form action="{{ route('customer.profile.update') }}" method="post"
                                     enctype="multipart/form-data" id="profile-update">
                                     @csrf
-                                    <div class="prof-img-par ">
+                                    <div class="prof-img-par">
                                         <div class="row">
                                             <div class="col-lg-12 mb-2">
                                                 <div class="circle">
@@ -49,22 +49,21 @@
                                                 @enderror
                                             </div>
                                         </div>
-                                        <div class="form-group ">
-                                            <input type="text " class="form-control Profile-input" name="email_id"
+                                        <div class="form-group">
+                                            <input type="text" class="form-control Profile-input" name="email_id"
                                                 id="inputemail" placeholder="email address"
                                                 value="{{ $customer->email_id }}" readonly>
                                         </div>
-                                        <div class="form-group ">
+                                        <div class="form-group">
                                             <input type="text " class="form-control Profile-input" name="mobile_number"
                                                 id="inputmob" placeholder="mobile no"
                                                 value="{{ $customer->mobile_number }}" readonly>
                                         </div>
-                                        <div class="form-group ">
-                                            <textarea class="form-control Profile-input" name="physical_address"
-                                                id="inputaddress" rows="3 " placeholder="Address"
+                                        <div class="form-group">
+                                            <textarea class="form-control Profile-input" name="physical_address" id="inputaddress" rows="3 " placeholder="Address"
                                                 disabled="disabled">{{ $customer->address->first->address['address'] }}</textarea>
                                         </div>
-                                        <button type="submit " class="btn btn-user-profile submitProfile"
+                                        <button type="submit" class="btn btn-user-profile submitProfile"
                                             alt="Update Profile" disabled>
                                             <h4 class="m-0">Update Profile</h4>
                                         </button>
