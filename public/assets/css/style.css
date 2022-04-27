@@ -5103,6 +5103,9 @@
                     .messenger img,
                     .type img {
                         max-width: 13px;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
                     }
                     /** add-hours **/
                     
