@@ -334,17 +334,33 @@
     #wrapper.toggled #sidebar-wrapper .card-header {
         padding-left: 12px;
     }
-    #wrapper.toggled #accordion-first .card-body .sub-menu {
-        margin-left: 23px !important;
+    #wrapper.toggled #sidebar-wrapper #accordion-first .card .card-body ul li {
+        justify-content: unset !important;
+        align-items: unset !important;
     }
     #wrapper #sidebar-wrapper .card-header {
         padding-left: 23px;
+    }
+    #accordion-first .card .card-body span {
+        padding-left: 3px;
     }
     #wrapper #accordion-first .card-body .sub-menu {
         margin-left: 36px;
     }
     #wrapper.toggled #sidebar-wrapper .sidebar-nav img {
         margin: 0 23px 0 0 !important;
+    }
+}
+
+@media (min-width: 320px) and (max-width: 991.98px) {
+    #wrapper.toggled #accordion-first .card-body .sub-menu {
+        margin-left: 26px !important;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    #wrapper.toggled #accordion-first .card-body .sub-menu {
+        margin-left: 10px !important;
     }
 }
 
@@ -594,11 +610,6 @@
     .clear {
         color: #fff;
     }
-    .form-group.form-btn {
-        flex-flow: column;
-        justify-content: center;
-        align-items: center;
-    }
     /*   .orderss .order .time {
         position: absolute;
         right: initial;
@@ -711,9 +722,6 @@
     #wrapper #sidebar-wrapper a span {
         display: none;
     }
-    #wrapper #sidebar-wrapper a span {
-        display: none;
-    }
     #wrapper #sidebar-wrapper #accordion-first .card-header .btn span {
         display: none;
     }
@@ -726,9 +734,10 @@
     #wrapper.toggled #sidebar-wrapper #accordion-first .card .card-body ul li {
         padding: 0 15px !important;
     }
+    #wrapper.toggled #sidebar-wrapper #accordion-first .card .card-body ul li {
+        margin: 0 0;
+    }
     #wrapper #sidebar-wrapper #accordion-first .card .card-body ul li {
-        justify-content: center;
-        align-items: center;
         margin: 20px 0;
     }
     #wrapper.toggled #sidebar-wrapper #accordion-first .card .card-body ul li {
@@ -984,6 +993,17 @@
     }
     .modal-inner-footer .btn-primary {
         padding: 8px 12px;
+    }
+}
+
+@media (max-width: 767px) {
+    .yellow .order-detail .btn {
+        vertical-align: middle;
+    }
+    .form-group.form-btn {
+        flex-flow: column;
+        justify-content: center;
+        align-items: center;
     }
 }
 

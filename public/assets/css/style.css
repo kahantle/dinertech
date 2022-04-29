@@ -112,6 +112,7 @@
                         position: relative;
                         z-index: 9;
                         color: #fff;
+                        font-weight: 500;
                     }
                     
                     .btn-blue:before,
@@ -1865,6 +1866,10 @@
                         right: auto;
                         color: #514dc8;
                         font-size: 16px;
+                    }
+                    
+                    .clear a {
+                        color: #514dc8;
                     }
                     
                     .clear span {
@@ -3716,15 +3721,6 @@
                         padding: 20px 10px 20px 0;
                         border-right: 1px solid #a0a0a0;
                         border-radius: 0;
-                    }
-                    
-                    .order-detail,
-                    .time p {
-                        display: flex;
-                        align-items: center;
-                        flex-wrap: wrap;
-                        border-left: 1px solid #a0a0a0;
-                        padding-left: 10px;
                     }
                     
                     .order-detail a {
@@ -7124,11 +7120,6 @@
                         text-decoration: none;
                     }
                     
-                    #accordion-first .card-header .btn span {
-                        font-size: 18px;
-                        text-transform: capitalize;
-                    }
-                    
                     #accordion-first .card .card-body {
                         padding: 0 0;
                     }
@@ -8201,19 +8192,11 @@
                         width: 100%;
                     }
                     
-                    #accordion-first .card-header .btn {
-                        color: #fff;
-                    }
-                    
                     #accordion-first .sidebar-nav img {
                         width: 20px;
                         height: 20px !important;
                         object-fit: contain;
                         margin-right: 20px;
-                    }
-                    
-                    .sidebar-nav #accordion-first li:first-child a {
-                        opacity: unset !important;
                     }
                     
                     .sidebar-nav #accordion-first li a {
@@ -8223,10 +8206,6 @@
                     #accordion-first .card-header .btn span {
                         font-size: 18px;
                         text-transform: capitalize;
-                    }
-                    
-                    #accordion-first .card-header .btn {
-                        color: #fff;
                     }
                     
                     #accordion-first .card-header .btn span i {
@@ -8256,7 +8235,6 @@
                     
                     #accordion-first .card .card-body span {
                         padding-left: 8px;
-                        color: #fff;
                     }
                     
                     #accordion-first .card-header .card-body {
@@ -8521,17 +8499,21 @@
                     }
                     
                     #wrapper #accordion-first .card .card-body ul li {
-                        display: unset !important;
+                        display: unset;
+                    }
+                    
+                    #wrapper.toggled #accordion-first .card .card-body ul li {
+                        display: flex;
                     }
                     
                     #wrapper #accordion-first ul.sub-menu li img {
                         margin-right: 15px;
                     }
-                    
-                    #wrapper.toggled #sidebar-wrapper .card-header {
+                    /* #wrapper.toggled #sidebar-wrapper .card-header {
                         padding-top: 15px;
                         padding-bottom: 15px;
                     }
+                     */
                     
                     #wrapper.toggled #accordion-first ul.sub-menu li img {
                         margin: auto;
