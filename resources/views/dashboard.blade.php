@@ -44,7 +44,7 @@
                                                         data-route="{{ route('action.order', [$order->order_id, 'action' => 'PREPARED']) }}"
                                                         data-value="prepared">Prepare order</a>
                                                 @else
-                                                    <a href="javaScript:void(0);" class="grey-border"
+                                                    <a href="javaScript:void(0);" class="grey-border disabled"
                                                         title="Prepare order!">Prepare order</a>
                                                 @endif
                                             </div>
@@ -154,4 +154,5 @@
     <script src="{{ asset('/assets/js/order.js') }}"></script>
     {!! JsValidator::formRequest('App\Http\Requests\VerifyRequest', '#verifyForm') !!}
     {!! JsValidator::formRequest('App\Http\Requests\PickTimeRequest', '#orderTimePickup') !!}
+
 @endsection
