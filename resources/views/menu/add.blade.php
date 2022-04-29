@@ -21,7 +21,7 @@
         <div class="add-category Promotion menu dashboard content-wrapper category category-insides-blog">
             @include('common.flashMessage')
 
-            <div class="container-fluid">
+            <div class="container-fluid p-0">
                 {{ Form::open(['route' => ['add.menu.post'],'id' => 'menuForm','method' => 'POST','class' => '','files' => 'true']) }}
                 <div class="form-group">
                     <span class="slt-img"></span>
