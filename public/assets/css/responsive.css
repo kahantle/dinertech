@@ -330,40 +330,6 @@
     }
 }
 
-@media (min-width: 320px) and (max-width: 1199.98px) {
-    #wrapper.toggled #sidebar-wrapper .card-header {
-        padding-left: 12px;
-    }
-    #wrapper.toggled #sidebar-wrapper #accordion-first .card .card-body ul li {
-        justify-content: unset !important;
-        align-items: unset !important;
-    }
-    #wrapper #sidebar-wrapper .card-header {
-        padding-left: 23px;
-    }
-    #accordion-first .card .card-body span {
-        padding-left: 3px;
-    }
-    #wrapper #accordion-first .card-body .sub-menu {
-        margin-left: 36px;
-    }
-    #wrapper.toggled #sidebar-wrapper .sidebar-nav img {
-        margin: 0 23px 0 0 !important;
-    }
-}
-
-@media (min-width: 320px) and (max-width: 991.98px) {
-    #wrapper.toggled #accordion-first .card-body .sub-menu {
-        margin-left: 26px !important;
-    }
-}
-
-@media (min-width: 992px) and (max-width: 1199.98px) {
-    #wrapper.toggled #accordion-first .card-body .sub-menu {
-        margin-left: 10px !important;
-    }
-}
-
 @media (max-width: 768px) {
     body {
         font-size: 16px;
@@ -459,32 +425,9 @@
     }
 }
 
-@media (max-width: 575px) {
-    .promotions-type-t-blog .right-s {
-        display: block !important;
-    }
-    .pro-card.detail .left-s {
-        display: block !important;
-    }
-}
-
 @media (max-width: 992px) {
     .Promotion.content-wrapper .form-group.form-btn-menu {
         width: 100%;
-    }
-    .left-t-inner-blog {
-        display: flex !important;
-        justify-content: space-between;
-    }
-    .promotions-type-t-blog p {
-        padding: 0 0 !important;
-    }
-    .promotions-type-t-blog .pro-card.detail {
-        padding: 13px 60px;
-    }
-    .promotions-type-t-blog .right-s {
-        display: flex;
-        justify-content: space-between;
     }
     .pro-details-m-blog {
         display: flex !important;
@@ -534,7 +477,7 @@
     }
     .navbar-header h2 {
         color: #fff;
-        font-size: 22px;
+        font-size: 27px;
     }
     #sidebar-toggle i {
         color: #fff;
@@ -609,6 +552,11 @@
     }
     .clear {
         color: #fff;
+    }
+    .form-group.form-btn {
+        flex-flow: column;
+        justify-content: center;
+        align-items: center;
     }
     /*   .orderss .order .time {
         position: absolute;
@@ -722,6 +670,9 @@
     #wrapper #sidebar-wrapper a span {
         display: none;
     }
+    #wrapper #sidebar-wrapper a span {
+        display: none;
+    }
     #wrapper #sidebar-wrapper #accordion-first .card-header .btn span {
         display: none;
     }
@@ -731,18 +682,25 @@
     /* #accordion-first .card-header .btn span {
         display: none;
     } */
+    #wrapper #sidebar-wrapper #accordion-first .card-body .sub-menu {
+        margin-left: 0;
+    }
+    #wrapper.toggled #sidebar-wrapper #accordion-first .card-body .sub-menu {
+        margin-left: 46px;
+    }
     #wrapper.toggled #sidebar-wrapper #accordion-first .card .card-body ul li {
+        margin-left: 46px;
         padding: 0 15px !important;
     }
-    #wrapper.toggled #sidebar-wrapper #accordion-first .card .card-body ul li {
-        margin: 0 0;
-    }
     #wrapper #sidebar-wrapper #accordion-first .card .card-body ul li {
+        justify-content: center;
+        align-items: center;
         margin: 20px 0;
     }
     #wrapper.toggled #sidebar-wrapper #accordion-first .card .card-body ul li {
         justify-content: unset !important;
         align-items: unset !important;
+        margin: 20px 0;
     }
     #wrapper .sidebar-nav {
         width: 100%;
@@ -852,9 +810,6 @@
     }
     #wrapper.toggled .sidebar-nav>li {
         text-align: center;
-        display: flex;
-        justify-content: center;
-        align-items: center;
     }
     #wrapper.toggled .sidebar-nav a {
         text-align: center;
@@ -993,17 +948,6 @@
     }
     .modal-inner-footer .btn-primary {
         padding: 8px 12px;
-    }
-}
-
-@media (max-width: 767px) {
-    .yellow .order-detail .btn {
-        vertical-align: middle;
-    }
-    .form-group.form-btn {
-        flex-flow: column;
-        justify-content: center;
-        align-items: center;
     }
 }
 
