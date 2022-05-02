@@ -105,5 +105,6 @@
         var url = "{{ route('update-account-settings') }}";
         var pin_route = "{{ route('pin.index') }}";
     </script>
-    <script src="{{ asset('/assets/js/account.js') }}"></script>
+    <script src="{{ asset('/assets/js/account.js') }}">
+    </script>
 @endsection

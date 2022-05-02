@@ -60,7 +60,7 @@
     }
     .category .order-detail .order-icons a,
     .orderss .order-icons a {
-        width: 30px;
+        /* width: 30px; */
         /* height: 30px; */
         font-size: 16px;
     }
@@ -692,9 +692,12 @@
     }
 }
 
-@media (max-width: 1200px) and (min-width: 992px) {
+@media (max-width: 1199px) and (min-width: 992px) {
     .Promotion.content-wrapper .form-group.form-btn-menu {
         width: 100%;
+    }
+    .sidebar-nav>li a {
+        justify-content: unset;
     }
     /** other pages **/
     #wrapper {
@@ -711,11 +714,11 @@
     }
     #wrapper #sidebar-wrapper .sidebar-nav img {
         width: 28px;
-        margin-right: 0;
+        margin: 0;
     }
-    #wrapper.toggled #sidebar-wrapper .sidebar-nav img {
+    /* #wrapper.toggled #sidebar-wrapper .sidebar-nav img {
         margin-right: 23px;
-    }
+    } */
     #sidebar-wrapper {
         width: 350px;
     }
@@ -740,10 +743,10 @@
     #wrapper #sidebar-wrapper #accordion-first .card .card-body ul li {
         margin: 20px 0;
     }
-    #wrapper.toggled #sidebar-wrapper #accordion-first .card .card-body ul li {
+    /* #wrapper.toggled #sidebar-wrapper #accordion-first .card .card-body ul li {
         justify-content: unset !important;
         align-items: unset !important;
-    }
+    } */
     #wrapper .sidebar-nav {
         width: 100%;
     }

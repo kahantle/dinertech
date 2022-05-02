@@ -7110,11 +7110,6 @@
                         padding-bottom: 0px;
                     }
                     
-                    #accordion-first .card {
-                        background-color: unset !important;
-                        border: unset !important;
-                    }
-                    
                     #accordion-first .card-header .btn {
                         color: #fff;
                         text-decoration: none;
@@ -7330,9 +7325,9 @@
                         /* #accordion .card-header {
             padding-left: 24px !important;
         } */
-                        #wrapper #sidebar-wrapper .card-header {
+                        /* #wrapper #sidebar-wrapper .card-header {
                             padding-left: 12px;
-                        }
+                        } */
                     }
                     
                     @media (max-width: 991px) {
@@ -8199,10 +8194,6 @@
                         margin-right: 20px;
                     }
                     
-                    .sidebar-nav #accordion-first li a {
-                        padding: 8px 0 !important;
-                    }
-                    
                     #accordion-first .card-header .btn span {
                         font-size: 18px;
                         text-transform: capitalize;
@@ -8225,6 +8216,7 @@
                         display: flex !important;
                         align-items: center;
                         opacity: unset !important;
+                        padding: 20px 0 0 0 !important;
                     }
                     /* .sidebar-nav li:first-child a {
     font-weight: 600;
@@ -8490,20 +8482,17 @@
                     }
                     
                     #wrapper.toggled #accordion-first .card-body .sub-menu {
-                        margin-left: 0 !important;
+                        margin-left: 0;
                     }
                     
                     #wrapper.toggled #accordion-first .card .card-body ul li {
                         align-items: center;
                         justify-content: center;
+                        display: flex;
                     }
                     
                     #wrapper #accordion-first .card .card-body ul li {
                         display: unset;
-                    }
-                    
-                    #wrapper.toggled #accordion-first .card .card-body ul li {
-                        display: flex;
                     }
                     
                     #wrapper #accordion-first ul.sub-menu li img {
@@ -8539,6 +8528,11 @@
                     
                     .minitues-modal {
                         z-index: 9;
+                    }
+                    
+                    #wrapper.toggled .sidebar-nav a {
+                        display: flex;
+                        align-items: center;
                     }
                     /* .promotions-type-t-blog {
                         padding: 0 4rem;
