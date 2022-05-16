@@ -89,7 +89,7 @@
                                     <img src="{{ asset('assets/images/Promotion Function.png') }}">
                                     <select id="select-box" class="form-control" name="auto_manually_discount">
                                         @foreach (Config::get('constants.AUTO_DISCOUNT') as $key=>$item)
-                                            <option value="{{$key}}" {{($promotion->auto_manually_discount==$key)?'selected':''}}>{{$item}}</option>
+                                            <option value="{{$item}}" {{($promotion->auto_manually_discount==$key)?'selected':''}}>{{$item}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -221,8 +221,9 @@
                         <div class="form-group select-input"> 
                             <img src="{{ asset('assets/images/Availability.png') }}">
                             <select name="availability" id="display_time" class="form-control">
+                                <option disabled>Availability</option>
                                 @foreach (Config::get('constants.AVAILABILITY') as $key=>$item)
-                                    <option value="{{$key}}" {{($promotion->availability==$key)?'selected':''}}>{{$item}}</option>
+                                    <option value="{{$item}}" {{($promotion->availability==$item)?'selected':''}}>{{$item}}</option>
                                 @endforeach
                             </select>
                         </div>

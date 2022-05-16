@@ -36,7 +36,6 @@ class Otp extends Notification
 
     public function sendOTP($user)
     {
-        // $url = 'https://sms.api.sinch.com/xms/v1/' . Config::get('constants.SNICH_KEY.PLAN_ID') . '/batches';
         $url = 'https://us.sms.api.sinch.com/xms/v1/' . Config::get('constants.SNICH_KEY.PLAN_ID') . '/batches';
 
         $messages = Config::get('constants.SNICH_KEY.MESSAGE') . " : " . $user->otp;
@@ -51,10 +50,7 @@ class Otp extends Notification
         
         $data['user'] = $user;
         $data['messages'] = "Your Activate Account OTP is: ". $user->otp;
-        Mail::to($user->email_id)->send(new SendOtp($data));
-        // Mail::send('emails.otp',  ['messages' => $messages], function ($m) use ($user) {
-        //     $m->to($user->email_id, $user->FullName)->subject(config('app.name') . " OTP ");
-        // });
+        Mail::to($user->email_id)->send(new SendOtp($data));       
         return true;
     }
 

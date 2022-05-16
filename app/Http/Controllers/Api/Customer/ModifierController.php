@@ -24,6 +24,7 @@ class ModifierController extends Controller
                 ->with('modifierList','modifierList.modifier_item')
                 ->whereHas('modifierList')
                 ->first();
+            
             return response()->json(['modifier_list' => ($menuList && $menuList->modifierList)?$menuList->modifierList:[], 'success' => true], 200);
         } catch (\Throwable $th) {
             $errors['success'] = false;

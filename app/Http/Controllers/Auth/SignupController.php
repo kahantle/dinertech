@@ -32,16 +32,13 @@ class SignupController extends Controller
 
     public function show()
     {
-        try {
-
-            $countries = new \CS_REST_General($this->getAuthTokens());
+        $countries = new \CS_REST_General($this->getAuthTokens());
+        if($countries->get_countries()->http_status_code == 200){
             $data['countries'] = $countries->get_countries()->response;
             return view('auth.register', $data);
-
-        } catch (\Throwable $th) {
+        }else{
             return back()->with('error', 'Countries api error.');
         }
-
     }
 
     /**
@@ -109,16 +106,6 @@ class SignupController extends Controller
         try {
             DB::beginTransaction();
 
-            // $paymentMethod = $stripe->paymentMethods()->create([
-            //     'type' => 'card',
-            //     'card' => [
-            //         'number' => implode("", $request->post('digit')),
-            //         'exp_month' => $request->get('ccExpiryMonth'),
-            //         'exp_year' => $request->get('ccExpiryYear'),
-            //         'cvc' => $request->get('cvvNumber'),
-            //     ],
-            // ]);
-
             $customer = $stripe->customers()->create([
                 'email' => $user->email_id,
                 'name' => $user->restaurant->restaurant_name,
@@ -154,24 +141,6 @@ class SignupController extends Controller
                 ],
                 'default_payment_method' => $paymentMethodId,
             ]);
-
-            // $token = $stripe->tokens()->create([
-            //     'card' => [
-            //         'number' => implode("", $request->post('digit')),
-            //         'exp_month' => $request->get('ccExpiryMonth'),
-            //         'exp_year' => $request->get('ccExpiryYear'),
-            //         'cvc' => $request->get('cvvNumber'),
-            //     ],
-            // ]);
-            // if (!isset($token['id'])) {
-            //     return redirect()->route('show.pay');
-            // }
-            // $charge = $stripe->charges()->create([
-            //     'card' => $token['id'],
-            //     'currency' => 'USD',
-            //     'amount' => Config::get('constants.RESTAURANT_CHARGE'),
-            //     'description' => 'restaurants initial changes',
-            // ]);
 
             $username = $request->post('username');
             $user = User::where(function ($query) use ($username) {
