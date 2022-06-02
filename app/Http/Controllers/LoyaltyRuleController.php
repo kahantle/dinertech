@@ -22,14 +22,11 @@ class LoyaltyRuleController extends Controller
     public function index()
     {
         try {
-
             $uid = Auth::user()->uid;
             $restaurant = Restaurant::where('uid', $uid)->first();
-            $data['categories'] = Category::with('category_item')->where('restaurant_id', $restaurant->restaurant_id)->get();
+            // $data['categories'] = Category::with('category_item')->where('restaurant_id', $restaurant->restaurant_id)->get();
             $data['loyaltyRules'] = LoyaltyRule::with('rulesItems')->where('restaurant_id', $restaurant->restaurant_id)->get();
-            // $data['loyaltyRules'] = $rules;
-            // $data['ruleItems'] = $rules->pluck('rulesItems');
-            return view('loyalty.rules', $data);
+            return view('loyalty.list', $data);
 
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
@@ -58,7 +55,7 @@ class LoyaltyRuleController extends Controller
             $uid = Auth::user()->uid;
             $restaurant = Restaurant::where('uid', $uid)->first();
 
-            $categories = json_decode($request->post('categoryIds'));
+            // $categories = json_decode($request->post('categoryIds'));
             $items = json_decode($request->post('items'));
             DB::beginTransaction();
 
@@ -70,39 +67,28 @@ class LoyaltyRuleController extends Controller
 
             $lastRuleId = LoyaltyRule::where('restaurant_id', $restaurant->restaurant_id)->where('uid', $uid)->orderBy('rules_id', 'desc')->first();
 
-            foreach ($categories as $category) {
+            if(!empty($items)){
                 foreach ($items as $item) {
                     $rule_item = new LoyaltyRuleItem;
                     $rule_item->restaurant_id = $restaurant->restaurant_id;
                     $rule_item->loyalty_rule_id = $lastRuleId->rules_id;
-                    $rule_item->category_id = $category;
-                    $rule_item->menu_id = $item;
+                    $rule_item->category_id = $item->category_id;
+                    $rule_item->menu_id = $item->menu;
                     $rule_item->save();
                 }
             }
+            
             DB::commit();
             Toastr::success('Loyalty Rule add successfully.', '', Config::get('constants.toster'));
-            return redirect()->route('loyalty.rules');
+            return redirect()->route('loyalty.list');
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\LoyaltyRule  $loyaltyRule
-     * @return \Illuminate\Http\Response
-     */
-    public function show(LoyaltyRule $loyaltyRule)
-    {
-        //
-    }
-
     public function edit($ruleId)
     {
         try {
-
             $uid = Auth::user()->uid;
             $restaurant = Restaurant::where('uid', $uid)->first();
             $data['categories'] = Category::with('category_item')->where('restaurant_id', $restaurant->restaurant_id)->get();
@@ -129,33 +115,33 @@ class LoyaltyRuleController extends Controller
         try {
             $uid = Auth::user()->uid;
             $restaurant = Restaurant::where('uid', $uid)->first();
-            $categories = json_decode($request->post('categoryIds'));
             $items = json_decode($request->post('items'));
-            dd($items);
             $loyaltyRule = LoyaltyRule::where('rules_id', $request->post('rule_id'))->first();
             $loyaltyRule->restaurant_id = $restaurant->restaurant_id;
             $loyaltyRule->uid = $uid;
             $loyaltyRule->point = $request->post('point');
-            $loyaltyRule->save();
+            if($loyaltyRule->save())
+            {
+                LoyaltyRuleItem::where('loyalty_rule_id', $request->post('rule_id'))->delete();
 
-            LoyaltyRuleItem::where('loyalty_rule_id', $request->post('rule_id'))->delete();
+                // DB::beginTransaction();
 
-            // DB::beginTransaction();
-
-            foreach ($categories as $category) {
-                foreach ($items as $item) {
-                    $rule_item = new LoyaltyRuleItem;
-                    $rule_item->restaurant_id = $restaurant->restaurant_id;
-                    $rule_item->loyalty_rule_id = $request->post('rule_id');
-                    $rule_item->category_id = $category;
-                    $rule_item->menu_id = $item;
-                    $rule_item->save();
+                if(!empty($items)){
+                    foreach ($items as $item) {
+                        $rule_item = new LoyaltyRuleItem;
+                        $rule_item->restaurant_id = $restaurant->restaurant_id;
+                        $rule_item->loyalty_rule_id = $request->post('rule_id');
+                        $rule_item->category_id = $item->category_id;
+                        $rule_item->menu_id = $item->menu;
+                        $rule_item->save();
+                    }
                 }
             }
+
             // DB::commit();
 
             Toastr::success('Loyalty Rule update successfully.', '', Config::get('constants.toster'));
-            return redirect()->route('loyalty.rules');
+            return redirect()->route('loyalty.list');
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }
@@ -179,7 +165,7 @@ class LoyaltyRuleController extends Controller
                 $loyaltyRule->delete();
             }
             Toastr::success('Loyalty Rule delete successfully.', '', Config::get('constants.toster'));
-            return redirect()->route('loyalty.rules');
+            return redirect()->route('loyalty.list');
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }

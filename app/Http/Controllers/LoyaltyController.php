@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Loyalty;
 use App\Models\LoyaltyCategory;
+use App\Models\LoyaltyRule;
 use App\Models\Restaurant;
 use App\Models\RestaurantPayment;
 use App\Models\RestaurantSubscription;
@@ -77,10 +78,28 @@ class LoyaltyController extends Controller
                     $data['subscription']['start_date'] = \Carbon\Carbon::parse($subscription->start_date)->format('M d Y');
                     $data['subscription']['end_date'] = \Carbon\Carbon::parse($subscription->end_date)->format('M d Y');
                 }
-                
             }
             $data['categories'] = Category::with('category_item')->where('restaurant_id', $restaurant->restaurant_id)->get();
             $data['loyalties'] = Loyalty::where('restaurant_id',$restaurant->restaurant_id)->get();
+            $loyaltyRules = LoyaltyRule::with('rulesItems')->where('restaurant_id', $restaurant->restaurant_id)->get();
+            // dd($loyaltyRules);
+            foreach($loyaltyRules as $loyaltyItems)
+            {
+                foreach($loyaltyItems->rulesItems as $items)
+                {
+                    foreach ($items->menuItems as $menu) 
+                    {
+                        if($items->category_id == $menu->category_id)
+                        {
+                            $menus[$items->loyalty_rule_id][$items->categories->category_name][] = $menu->item_name; 
+                            $menuItems = $menus;
+                        }
+                    }
+                }
+            }
+            // dd($menuItems);
+            $data['loyaltyRules'] = $loyaltyRules;
+            $data['rulesItems'] = (isset($menuItems)) ? $menuItems : [] ;
             return view('loyalty.list',$data);
         } else {
             return redirect()->route('loyalty.index')->with('error', 'Please purchase loyalty subscription.');
