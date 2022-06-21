@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRestaurantSubscribersTable extends Migration
+class AddToOrderPickUpMinutesColumn extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class CreateRestaurantSubscribersTable extends Migration
      */
     public function up()
     {
-        Schema::create('restaurant_subscribers', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('orders', function (Blueprint $table) {
+            $table->string('pickup_minutes')->after('pickup_time')->nullable();
         });
     }
 
@@ -26,6 +25,8 @@ class CreateRestaurantSubscribersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('restaurant_subscribers');
+        Schema::table('orders', function (Blueprint $table) {
+            //
+        });
     }
 }

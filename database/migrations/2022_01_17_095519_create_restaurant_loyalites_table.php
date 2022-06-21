@@ -17,8 +17,8 @@ class CreateRestaurantLoyalitesTable extends Migration
             $table->id('loyalty_id'); 
             $table->integer('restaurant_id')->nullable();
             $table->integer('uid')->nullable();
-            $table->string('loyalty_type')->nullable();
-            $table->string('no_of_orders')->nullable();
+            $table->enum('loyalty_type',['NO OF ORDER','AMOUNT SPENT','CATEGORY BASED'])->nullable();
+            $table->string('no_of_orders',10)->nullable();
             $table->string('amount')->nullable();
             $table->string('point')->nullable();
             $table->enum('status',['ACTIVE','INACTIVE'])->default('INACTIVE');

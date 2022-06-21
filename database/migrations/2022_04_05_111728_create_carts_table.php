@@ -18,11 +18,12 @@ class CreateCartsTable extends Migration
             $table->integer('restaurant_id')->nullable();
             $table->integer('uid')->nullable();
             $table->integer('promotion_id')->nullable();
+            $table->enum('is_payment',['Cash','Credit Card'])->nullable();
             $table->string('loyalty_points')->nullable();
-            $table->string('sub_total')->nullable();
-            $table->string('discount_charge')->nullable();
-            $table->string('tax_charge')->nullable();
-            $table->string('total_due')->nullable();
+            $table->string('sub_total')->default('0.00');
+            $table->string('discount_charge')->default('0.00');
+            $table->string('tax_charge')->default('0.00');
+            $table->string('total_due')->default('0.00');
             $table->timestamps();
         });
     }
