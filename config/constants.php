@@ -36,6 +36,7 @@ return [
         'CANCEL' => 'CANCEL',
         'CANCELREFUND' => 'CANCEL AND REFUND',
         'REFUND' => 'REFUND',
+        'ORDER_DUE' => 'ORDER DUE',
     ],
     'DISCOUNT_TYPE' => [
         'USD' => 'USD',

@@ -111,6 +111,18 @@ class ReportController extends Controller
             $result['sales_total'] = number_format( $result['sales_total'] ,2);
             $result['all_sales'] = number_format( $result['all_sales'] ,2);
             $result['sales_pr'] =  number_format($sales_pr,2);
+
+            $result['all_tip'] = Order::where('restaurant_id',$request->post('restaurant_id'))
+                                        // ->where('order_date','>=',$date)
+                                        ->sum('tip_amount');
+            $result['all_tip'] = number_format($result['all_tip'],2);
+
+            $result['total_tip'] = Order::where('restaurant_id',$request->post('restaurant_id'))
+                                        ->where('order_date','>=',$date)
+                                        ->where('order_date','<=',$avgStartDate)
+                                        ->sum('tip_amount');
+            $result['total_tip'] = number_format($result['total_tip'],2);
+
             for($var=1;$var<=$duaration;$var++) {
                 $tempArray['day'] = $var;
                 $date = \Carbon\Carbon::today()->subDays($var)->format('Y-m-d');

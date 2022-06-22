@@ -64,12 +64,14 @@ Route::group(['middleware' => ['auth:web']], function () {
     Route::prefix('account')->group(function () {
         Route::get('/', 'AccountController@index')->name('account');
         Route::post('/update-account-settings', 'AccountController@update')->name('update-account-settings');
+        Route::get('/active-subscriptions','AccountController@showActiveSubscription')->name('account.active.subscription');
     });
     Route::prefix('chat')->group(function () {
         Route::get('/', 'ChatController@index')->name('chat');
         Route::get('/{order_id}', 'ChatController@index')->name('chat.order');
         Route::post('/sendMessages', 'ChatController@sendMessages')->name('chat.send');
         Route::post('/getMessages', 'ChatController@getMessages')->name('chat.get');
+        Route::post('/message/count/update','ChatController@readChatMessage')->name('chat.message.count');
     });
     
     Route::prefix('hours')->group(function () {
@@ -114,6 +116,7 @@ Route::group(['middleware' => ['auth:web']], function () {
         Route::get('/details/{id}', 'OrderController@showOrderDetails')->name('details');
         Route::post('/action/{id}/{action}', 'OrderController@OrderAction')->name('action.order');
         Route::get('/pdf/{id}', 'OrderController@generate_invoice')->name('order.pdf');
+        Route::post('/status/due','OrderController@orderDueStatus')->name('order.status.due');
     });
     Route::prefix('promotion')->group(function () {
         Route::get('/', 'PromotionController@index')->name('promotion');

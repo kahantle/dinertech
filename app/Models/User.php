@@ -89,4 +89,9 @@ class User extends Authenticatable
         return $fcm_ids;
     }
 
+    // public function getMobileNumberAttribute($value)
+    // {
+    //     return sprintf("%s-%s-%s",substr($value, 2, 3),substr($value, 5, 3),substr($value, 8));
+    // }
+
 }
