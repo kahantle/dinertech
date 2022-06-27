@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddToOrderColumn extends Migration
+class AddToRestaurantRestaurantCountryColumn extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class AddToOrderColumn extends Migration
      */
     public function up()
     {
-        Schema::table('orders', function (Blueprint $table) {
-            $table->string('action_time')->nullable();
-            $table->enum('point_count', ['YES', 'NO'])->nullable()->default('NO');
+        Schema::table('restaurants', function (Blueprint $table) {
+            $table->string('restaurant_country', 255)->nullable()->after('restaurant_state');
         });
     }
 
@@ -26,7 +25,7 @@ class AddToOrderColumn extends Migration
      */
     public function down()
     {
-        Schema::table('orders', function (Blueprint $table) {
+        Schema::table('restaurants', function (Blueprint $table) {
             //
         });
     }

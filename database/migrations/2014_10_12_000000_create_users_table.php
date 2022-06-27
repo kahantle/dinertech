@@ -31,7 +31,8 @@ class CreateUsersTable extends Migration
             $table->boolean('chat_notifications');
             $table->boolean('location_tracking');
             $table->integer('subscription_id')->unsigned()->nullable()->default(12);
-            $table->boolean('loyalty_subscription')->nullable()->default(false);
+            // $table->boolean('loyalty_subscription')->nullable()->default(false);
+            $table->enum('loyalty_subscription', ['ACTIVE', 'INACTIVE'])->nullable()->default(['INACTIVE']);
             $table->string('google_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
