@@ -94,22 +94,22 @@
                 <div class="modal-body modal-inner-blog">
                     <h6 id="modal-title">Add Loyalty Rules</h6>
                     {{ Form::open(['route' => ['loyalty.rules.add'], 'id' => 'loyalty-rule-add', 'method' => 'POST']) }}
-                    <input type="hidden" name="rule_id" id="ruleId">
-                    <div class="form-group">
-                        <input type="number" name="point" class="form-control" placeholder="Add Points" min="1"
-                            id="points">
-                    </div>
-                    <div class="form-group form-item form-type-textfield form-item-count-checked-checkboxes">
-                        <input type="text" id="count-checked-checkboxes" name="menuItems"
-                            placeholder="Selected Category Or Menu Items" value="" size="60" maxlength="50"
-                            class="choose-blog form-text required">
-                        <input type="hidden" name="items" id="items-ids">
-                        <input type="hidden" name="categoryIds" id="categoryIds">
-                    </div>
-                    <div class="modal-footer-blog">
-                        <button type="submit" class="btn btn-first modal-submit">Add Loyalty</button>
-                        <button type="button" class="btn btn-second btn-d-inner-blog cancel-button add-rule">Cancel</button>
-                    </div>
+                        <input type="hidden" name="rule_id" id="ruleId">
+                        <div class="form-group">
+                            <input type="number" name="point" class="form-control" placeholder="Add Points" min="1"
+                                id="points">
+                        </div>
+                        <div class="form-group form-item form-type-textfield form-item-count-checked-checkboxes">
+                            <input type="text" id="count-checked-checkboxes" name="menuItems"
+                                placeholder="Selected Category Or Menu Items" value="" size="60" maxlength="50"
+                                class="choose-blog form-text required">
+                            <input type="hidden" name="items" id="items-ids">
+                            <input type="hidden" name="categoryIds" id="categoryIds">
+                        </div>
+                        <div class="modal-footer-blog">
+                            <button type="submit" class="btn btn-first modal-submit">Add Loyalty</button>
+                            <button type="button" class="btn btn-second btn-d-inner-blog cancel-button add-rule">Cancel</button>
+                        </div>
                     </form>
                 </div>
             </div>

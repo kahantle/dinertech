@@ -12,10 +12,10 @@
     <title>Dinertech</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&display=swap" rel="stylesheet">
+	{{-- <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&display=swap" rel="stylesheet"> --}}
 </head>
-<body style="font-family: 'IBM Plex Mono', monospace;font-size:16px;display: flex;align-items: center;width: 100%;height: 100vh;padding:0;margin:0">
-	<div style="margin: auto;width: 400px;position:relative;padding: 30px 0">
+<body style="font-family: 'IBM Plex Mono', monospace;font-size:16px;display: flex;align-items: center;width: 100%;height: 100vh;padding:0;margin:0;">
+	<div style="margin: auto;width: 400px;position:relative;padding: 30px 0;">
 		<div style="width:100%;text-align:center;">
 			<img src="{{ asset('assets/images/logo_wide.png') }}" width="280" />
 		</div>
@@ -28,13 +28,13 @@
 		<p style="text-align: center;margin: 0;">Invoice & Order Number : {{$order->order_number}}</p>
 		<table style="width: 350px;margin: 10px auto;border-top: 1px dashed #000;border-bottom: 1px dashed #000;">
 			<tbody>
-		  @foreach ($order->orderItems as $key=>$item)
-      <tr>
-        <td style="">{{$key+1}}</td>
-        <td style="width: 150px;">{{$item->menu_name}}</td>
-        <td style="text-align:right;">${{$item->menu_total}}</td>
-      </tr>
-      @endforeach
+		  		@foreach ($order->orderItems as $key=>$item)
+					<tr>
+						<td style="">{{$key+1}}</td>
+						<td style="width: 150px;">{{$item->menu_name}}</td>
+						<td style="text-align:right;">${{$item->menu_total}}</td>
+					</tr>
+      			@endforeach
 			</tbody>
 		</table>
 		<table style="width: 350px;margin: 10px auto;">

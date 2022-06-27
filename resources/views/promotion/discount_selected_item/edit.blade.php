@@ -153,7 +153,7 @@
                         <select name="promotion_function" id="promotion_function" class="form-control">
                             <option selected="" value="">Promotion Function</option>
                             @foreach (Config::get('constants.PROMOTION_FUNCTION') as $key=>$item)
-                                <option value="{{$key}}" {{($promotion->promotion_function==$item)?'selected':''}}>{{$item}}</option>
+                                <option value="{{$item}}" {{($promotion->promotion_function==$item)?'selected':''}}>{{$item}}</option>
                             @endforeach
                         </select>
                     </div>
@@ -161,8 +161,9 @@
                     <div class="form-group select-input">
                         <img src="{{ asset('assets/images/Availability.png') }}">
                         <select name="availability" id="availability" class="form-control">
+                            <option disabled>Availability</option>
                             @foreach (Config::get('constants.AVAILABILITY') as $key=>$item)
-                                <option value="{{$key}}" {{($promotion->availability==$item)?'selected':''}}>{{$item}}</option>
+                                <option value="{{$item}}" {{($promotion->availability==$item)?'selected':''}}>{{$item}}</option>
                             @endforeach
                         </select>
                     </div>

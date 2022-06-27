@@ -77,22 +77,22 @@ class Promotion extends Model
         'created_at' => 'datetime:d-m-Y h:s A',
     ];
 
-    public function getPromotionFunctionAttribute($value)
-    {
-        foreach(Config::get('constants.PROMOTION_FUNCTION') as $key => $function)
-        {
-            if($value == $key)
-            {
-                return $function;
-            }
-        }
-    }
+    // public function getPromotionFunctionAttribute($value)
+    // {
+    //     foreach(Config::get('constants.PROMOTION_FUNCTION') as $key => $function)
+    //     {
+    //         if($value == $key)
+    //         {
+    //             return $function;
+    //         }
+    //     }
+    // }
 
-    public function getAvailabilityAttribute($value){
-        foreach(Config::get('constants.AVAILABILITY') as $key => $availability){
-            if($value == $key){
-                return $availability;
-            }
-        }
-    }
+    // public function getAvailabilityAttribute($value){
+    //     foreach(Config::get('constants.AVAILABILITY') as $key => $availability){
+    //         if($value == $key){
+    //             return $availability;
+    //         }
+    //     }
+    // }
 }

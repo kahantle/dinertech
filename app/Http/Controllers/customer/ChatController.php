@@ -4,6 +4,7 @@ namespace App\Http\Controllers\customer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Restaurant;
+use App\Models\Order;
 use Auth;
 use Config;
 use Illuminate\Http\Request;
@@ -74,6 +75,11 @@ class ChatController extends Controller
             $url = Config::get('constants.FIREBASE_DB_NAME') . '/' . $restaurantId . '/' . $orderId . "/" . $userId . "/";
             $updates = [$url . $newPostKey => $messageData];
             $database->getReference()->update($updates);
+            $restaurant = Restaurant::with(['order' => function ($order) use ($orderId, $restaurantId) {
+                $order->where('order_number', $orderId)->where('restaurant_id', $restaurantId)->first();
+            }])->first();
+            $messageCount = $restaurant->order->customer_msg_count + 1;
+            Order::where('order_number',$orderId)->where('restaurant_id',$restaurantId)->update(['customer_msg_count' => $messageCount]);
             return true;
         }
     }

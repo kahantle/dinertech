@@ -177,7 +177,6 @@ class PromotionController extends Controller
 
     public function storeSelectedItems(Request $request){
         try {
-            
             if(isset($request->restaurant_user_id))
             {
                 $uid = $request->restaurant_user_id;

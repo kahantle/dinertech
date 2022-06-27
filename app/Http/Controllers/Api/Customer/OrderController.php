@@ -13,6 +13,10 @@ use App\Models\Order;
 use App\Models\OrderMenuItem;
 use App\Models\OrderMenuGroup;
 use App\Models\OrderMenuGroupItem;
+use App\Models\Cart;
+use App\Models\CartItem;
+use App\Models\CartMenuGroup;
+use App\Models\CartMenuGroupItem;
 use App\Models\User;
 use App\Models\Loyalty;
 use App\Models\LoyaltyCategory;
@@ -85,6 +89,7 @@ class OrderController extends Controller
             $validator = Validator::make($request_data,[
                 'restaurant_id' => 'required',
                 'cart_charge' => 'required',
+                'cart_id'     => 'required',
                 'delivery_charge' => 'required',
                 'discount_charge' => 'required',
                 'grand_total' => 'required',
@@ -92,6 +97,8 @@ class OrderController extends Controller
                 'is_feature' => 'required',
                 'order_date' => 'required',
                 'order_time' => 'required',
+                'is_tip'     => 'required',
+                'tip_amount' => 'required',
                 // 'payment_card_id' => 'required',
                 'isCash'          => 'required',
                 // 'stripe_payment_id' => 'required',
@@ -120,6 +127,8 @@ class OrderController extends Controller
             $order->feature_time = date("h:m:A",strtotime($request->post('feature_time')));
             $order->action_time =  date('Y-m-d m:i:s');
             $order->isPickUp = $request->post('isPickUp');
+            $order->is_tip   = $request->post('is_tip');
+            $order->tip_amount = $request->post('tip_amount');
             $order->delivery_charge = $request->post('delivery_charge');
             $order->comments = $request->post('comments');
             $order->grand_total = $request->post('grand_total');
@@ -129,23 +138,24 @@ class OrderController extends Controller
                     $menu_price = MenuItem::where('menu_id',$menuItem['menu_id'])->where('restaurant_id',$request->post('restaurant_id'))->first();
                     $menuItemData = New OrderMenuItem;
                     $menuItemData->menu_id =    $menuItem['menu_id']; 
-                    $menuItemData->menu_name =  $menuItem['menu_name']; 
+                    $menuItemData->menu_name =  $menuItem['item_name']; 
                     $menuItemData->menu_total = $menuItem['menu_total']; 
-                    $menuItemData->menu_qty =   $menuItem['menu_qty'];
+                    $menuItemData->menu_qty =   $menuItem['item_qty'];
                     $menuItemData->menu_price = $menu_price->item_price;
                     $menuItemData->menu_total = $menuItem['menu_total'];
+                    $menuItemData->is_loyalty = $menuItem['is_loyalty'];
                     $menuItemData->modifier_total = $menuItem['modifier_total'];
-                    $menuItemData->order_id =$order->order_id;
+                    $menuItemData->order_id = $order->order_id;
                     if($menuItemData->save()){
                         foreach ($menuItem['modifier_list'] as $key => $modifierGroup) {
                             $menuModifier = New OrderMenuGroup;
                             $menuModifier->modifier_group_id = $modifierGroup['modifier_group_id'];
                             $menuModifier->modifier_group_name = $modifierGroup['modifier_group_name'];
                             $menuModifier->order_menu_item_id = $menuItemData->order_menu_item_id;
-                            $menuModifier->menu_id =    $menuItem['menu_id']; 
-                            $menuModifier->order_id =$order->order_id;
+                            $menuModifier->menu_id =  $menuItem['menu_id']; 
+                            $menuModifier->order_id = $order->order_id;
                             if($menuModifier->save()){
-                                foreach ($modifierGroup['modifier_item'] as $key => $modierMenu) {
+                                foreach ($modifierGroup['modifier_items'] as $key => $modierMenu) {
                                     $menuModifierMenu = New OrderMenuGroupItem;
                                     $menuModifierMenu->order_menu_item_id = $menuItemData->order_menu_item_id;
                                     $menuModifierMenu->order_modifier_group_id = $menuModifier->order_modifier_group_id;
@@ -202,7 +212,7 @@ class OrderController extends Controller
                 }
                 $userPoint = auth('api')->user()->total_points;
                 $redeemPoint = $request->post('point');
-                if($redeemPoint != 0){
+                if(($redeemPoint != 0) && ($userPoint < 0)){
                     $userRedeemPoint = $userPoint - $redeemPoint;
                     if($userRedeemPoint < 0){
                         $userRedeemPoint = 0;
@@ -243,6 +253,16 @@ class OrderController extends Controller
                             }
                             break;
                     }
+                }
+
+                $cartId = $request->post('cart_id');
+                $check_cart = Cart::where('uid',$uid)->where('restaurant_id',$request->post('restaurant_id'))->where('cart_id',$cartId)->first();
+                if($check_cart)
+                {
+                    CartItem::where('cart_id',$check_cart->cart_id)->delete();
+                    CartMenuGroup::where('cart_id',$check_cart->cart_id)->delete();
+                    CartMenuGroupItem::where('cart_id',$check_cart->cart_id)->delete();
+                    $check_cart->delete();
                 }
                 return response()->json(['message' => "Order added successfully.", 'order_id'=>$order->order_id, 'order_number'=>$order->order_number,  'success' => true], 200);
             }else{

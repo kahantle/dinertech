@@ -15,8 +15,10 @@ class CreateSubscriptionsTable extends Migration
     {
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->id('subscription_id');
+            $table->enum('subscription_plan',['Restaurant Registration','Loyalty','Email Marketing']);
+            $table->string('stripe_plan_id');
             $table->string('subscribers')->nullable();
-            $table->decimal('price', [10, 2])->nullable();
+            $table->float('price', 10, 2)->nullable();
             $table->string('subscription_type', 255)->nullable();
             $table->timestamps();
         });

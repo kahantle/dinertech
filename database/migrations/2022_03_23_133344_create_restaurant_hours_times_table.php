@@ -14,7 +14,12 @@ class CreateRestaurantHoursTimesTable extends Migration
     public function up()
     {
         Schema::create('restaurant_hours_times', function (Blueprint $table) {
-            $table->id();
+            $table->id('restaurant_time_id');
+            $table->integer('restaurant_hour_id')->nullable();
+            $table->integer('hours_group_id')->nullable();
+            $table->integer('restaurant_id')->nullable();
+            $table->string('opening_time')->nullable();
+            $table->string('closing_time')->nullable();
             $table->timestamps();
         });
     }

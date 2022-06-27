@@ -25,7 +25,7 @@
   <div class="dashboard report">
     <div class="container-fluid">
        <div class="row orders-report">
-         <div class="col-lg-4">
+         <div class="col-lg-3">
            <div class="repot-box">
              <h5>Orders</h5>
              <span>Last {{$result['time_duration']}} Days</span>
@@ -45,7 +45,7 @@
              </div>
            </div>
          </div>
-         <div class="col-lg-4">
+         <div class="col-lg-3">
            <div class="repot-box">
              <h5>Pending Orders</h5>
              <span>Last {{$result['time_duration']}}  Days</span>
@@ -65,7 +65,7 @@
             </div>
            </div>
          </div>
-         <div class="col-lg-4">
+         <div class="col-lg-3">
            <div class="repot-box">
              <h5>Total Delivery</h5>
              <span>Last {{$result['time_duration']}}  Days</span>
@@ -76,6 +76,21 @@
                <div class="right-numbers">
                  <span>All Time</span>
                  <p class="report-time">{{ $result['all_delivery']}}</p>
+               </div>
+             </div>
+           </div>
+         </div>
+         <div class="col-lg-3">
+           <div class="repot-box">
+             <h5>Total Tip</h5>
+             <span>Last {{$result['time_duration']}}  Days</span>
+             <div class="report-numbers">
+               <div class="left-numbers">
+                 <p class="first">{{ $result['total_tip']}}</p>
+               </div>
+               <div class="right-numbers">
+                 <span>All Time</span>
+                 <p class="report-time">{{ $result['all_tip']}}</p>
                </div>
              </div>
            </div>

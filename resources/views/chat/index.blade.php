@@ -69,6 +69,7 @@
                 <div class="chat-footer">
                   <input type="text" id="message" name="message" placeholder="Message">
                   <div class="cf-icon">
+                    <input type="hidden" id="customerId">
                     <a href="#0"><img src="{{ asset('assets/images/send.png') }}" class="send-icon sendMessage"></a>
                     <a href="#0"><img src="{{ asset('assets/images/microphone.png') }}" class="microphone-icon "></a>
                   </div>
@@ -90,6 +91,7 @@
 <script src="{{asset('/assets/js/firebase.js')}}"></script>
 <script>
 var sendMessage = '{{ route("chat.send") }}';
+var chatMessageCountUpdate = '{{ route("chat.message.count") }}';
 var getMessages = '{{ route("chat.get") }}';
 var db_name = "{{ Config::get('constants.FIREBASE_DB_NAME') }}";
 var resturant_id = {!! json_encode($resturant_id) !!};
@@ -120,8 +122,10 @@ $('document').ready(function() {
             dataType: "json",
             data:{
                 message:$("#message").val(),
-                order_id:$(".active").data('order_id'),
-                customer_id:$(".active").data('customer_id')
+                // order_id:$(".active").data('order_id'),
+                order_id : $("#order_id").text(),
+                // customer_id:$(".active").data('customer_id')
+                customer_id : $("#customerId").val()
             },
             beforeSend: function() {
               $("body").preloader();
@@ -156,7 +160,7 @@ $('document').ready(function() {
     firebase.initializeApp(config);
     var order_id=$(".active").data('order_id');
     var customer_id = $(".active").data('customer_id');
-    var url = '/'+db_name+'/'+resturant_id+'/'+order_id+'/'+customer_id;
+    var url = '/'+db_name+'/'+resturant_id+'/'+order_id+'/'+customer_id+'/';
     $(".msg-body").html("<h5>No Conversion Found.</h5>");
     firebase.database().ref(url).on('value', function(snapshot) {
         var chat_element = "";
@@ -191,43 +195,63 @@ $('document').ready(function() {
         order_id=$(this).data('order_id');
         var user = $(this).data('user_name');
         var customer_id = $(this).data('customer_id');
+        $("#customerId").val(customer_id);
         $("#order_id").text(order_id);
         $("#order_user").text(user);
         $(".msg-body").html('');
-        var url = '/'+db_name+'/'+resturant_id+'/'+order_id+'/'+customer_id;
+        var url = '/'+db_name+'/'+resturant_id+'/'+order_id+'/'+customer_id+'/';
         firebase.database().ref(url).on('value', function(snapshot) {
         var chat_element = "";
         var value = snapshot.val();
         $(".msg-body").html("<h5>No Conversion Found.</h5>");
         $.each(value, function(index, value){
           if(value.sent_from=='RESTAURANT'){
-          chat_element += ' <li class="company-msg">';
-          chat_element += '      <img src="{{ asset("assets/images/person.png") }}" class="img-fluid">';
-          chat_element += '     <div class="cht-msg">'
-          chat_element += '       <p>'+value.message+'</p>';
-          chat_element += '        <span>'+value.message_date+'</span>';
-          chat_element += '      </div>'
-          chat_element += '    </li>'
-        }else{
-          chat_element += ' <li class="client-msg">';
-          chat_element += '      <img src="{{ asset("assets/images/person.png") }}" class="img-fluid">';
-          chat_element += '     <div class="cht-msg">'
-          chat_element += '       <p>'+value.message+'</p>';
-          chat_element += '        <span>'+value.message_date+'</span>';
-          chat_element += '      </div>'
-          chat_element += '    </li>'
-        }
+            chat_element += ' <li class="company-msg">';
+            chat_element += '      <img src="{{ asset("assets/images/person.png") }}" class="img-fluid">';
+            chat_element += '     <div class="cht-msg">'
+            chat_element += '       <p>'+value.message+'</p>';
+            chat_element += '        <span>'+value.message_date+'</span>';
+            chat_element += '      </div>'
+            chat_element += '    </li>'
+          }else{
+            chat_element += ' <li class="client-msg">';
+            chat_element += '      <img src="{{ asset("assets/images/person.png") }}" class="img-fluid">';
+            chat_element += '     <div class="cht-msg">'
+            chat_element += '       <p>'+value.message+'</p>';
+            chat_element += '        <span>'+value.message_date+'</span>';
+            chat_element += '      </div>'
+            chat_element += '    </li>'
+          }
 
-        var update_url = '/'+db_name+'/'+resturant_id+'/'+order_id+'/'+index;
-        value.is_read = 1;        
-        var updates = {};
-        updates[update_url] = value;
-        firebase.database().ref().update(updates);
-        $(".msg-body").html(chat_element);
-          $("#message").val('');  
-          lastIndex = index;
+          var update_url = '/'+db_name+'/'+resturant_id+'/'+order_id+'/'+index+'/';
+          // value.is_read = 1; 
+          value.isseen = true;       
+          var updates = {};
+          updates[update_url] = value;
+          firebase.database().ref().update(updates);
+          $(".msg-body").html(chat_element);
+            $("#message").val('');  
+            lastIndex = index;
+          });
         });
-    });
+
+        $.ajax({
+            headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: chatMessageCountUpdate,
+            type: "POST",
+            dataType: "json",
+            data:{
+                order_number : $("#order_id").text(),
+            },
+            success: function (res) {
+              console.log("message counter update."); 
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                console.log("message counter not update.");
+            }
+        });
     });
 
 });

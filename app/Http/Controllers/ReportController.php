@@ -149,6 +149,16 @@ class ReportController extends Controller
         $result['all_sales'] = number_format( $result['all_sales'] ,2);
         $result['sales_pr'] =  number_format($sales_pr,2);
 
+        $result['all_tip'] = Order::where('restaurant_id',$restaurant ->restaurant_id)
+                                    ->sum('tip_amount');
+
+        $result['total_tip'] = Order::where('restaurant_id',$restaurant ->restaurant_id)
+                                    ->where('order_date','>=',$sub_date)
+                                    ->sum('tip_amount');
+
+        // $result['all_tip'] = number_format($result['all_tip'], 2);
+        // $result['total_tip'] = number_format($result['total_tip'],2);
+
         $sales_array =array();
         for($var=1;$var<=$duaration;$var++) {
             $date = \Carbon\Carbon::today()->subDays($var)->format('Y-m-d');
@@ -164,10 +174,10 @@ class ReportController extends Controller
     }
 
     function dateDiff($date1, $date2)
-{
-    $date1_ts = strtotime($date1);
-    $date2_ts = strtotime($date2);
-    $diff = $date2_ts - $date1_ts;
-    return round($diff / 86400);
-}
+    {
+        $date1_ts = strtotime($date1);
+        $date2_ts = strtotime($date2);
+        $diff = $date2_ts - $date1_ts;
+        return round($diff / 86400);
+    }
 }

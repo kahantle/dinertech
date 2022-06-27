@@ -55,8 +55,9 @@ class LoginController extends Controller
         $login_array = array();
         if ($user->mobile_number) {
             Session::put('resturant_id', $user->restaurant->restaurant_id);
-            $login_array = (['mobile_number' => $user->mobile_number, 'password' => $request->password]);
+            $login_array = (['mobile_number' => str_replace('-','',$user->mobile_number), 'password' => $request->password]);
         }
+        
         if (Auth::attempt($login_array)) {
             return redirect()->route('dashboard')->with('success', 'Login Successfully.');
         } else {

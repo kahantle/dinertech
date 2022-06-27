@@ -47,6 +47,14 @@ Route::namespace ('Auth')->group(function () {
     Route::get('/active-request', 'VerificationController@accountActiveRequest')->name('account.active.request');
 });
 Route::group(['middleware' => ['auth:web']], function () {
+    Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
+    Route::get('/menu', 'MenuController@index')->name('menu');
+    Route::get('/category', 'CategoryController@index')->name('category');
+    Route::get('add/category', 'CategoryController@add')->name('add.category');
+    Route::post('add/category', 'CategoryController@store')->name('add.category.post');
+    Route::get('edit/category/{id}', 'CategoryController@edit')->name('edit.category.post');
+    Route::post('update', 'CategoryController@update')->name('update.category.post');
+    Route::get('delete/{id}', 'CategoryController@delete')->name('delete.category.post');
 
     Route::prefix('profile')->group(function () {
         Route::get('/', 'ProfileController@index')->name('profile');
@@ -56,13 +64,16 @@ Route::group(['middleware' => ['auth:web']], function () {
     Route::prefix('account')->group(function () {
         Route::get('/', 'AccountController@index')->name('account');
         Route::post('/update-account-settings', 'AccountController@update')->name('update-account-settings');
+        Route::get('/active-subscriptions','AccountController@showActiveSubscription')->name('account.active.subscription');
     });
     Route::prefix('chat')->group(function () {
         Route::get('/', 'ChatController@index')->name('chat');
         Route::get('/{order_id}', 'ChatController@index')->name('chat.order');
         Route::post('/sendMessages', 'ChatController@sendMessages')->name('chat.send');
         Route::post('/getMessages', 'ChatController@getMessages')->name('chat.get');
+        Route::post('/message/count/update','ChatController@readChatMessage')->name('chat.message.count');
     });
+    
     Route::prefix('hours')->group(function () {
         Route::get('/', 'HoursController@index')->name('hours');
         Route::post('add', 'HoursController@store')->name('add.hour.post');
@@ -72,16 +83,7 @@ Route::group(['middleware' => ['auth:web']], function () {
         Route::get('delete/{id}', 'HoursController@delete')->name('delete.hour.post');
         Route::get('delete-time/{id}','HoursController@delete_time')->name('delete_time.hour.post');
     });
-    Route::group(['middleware' => ['auth:web']], function () {
-        Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
-        Route::get('/menu', 'MenuController@index')->name('menu');
-        Route::get('/category', 'CategoryController@index')->name('category');
-        Route::get('add/category', 'CategoryController@add')->name('add.category');
-        Route::post('add/category', 'CategoryController@store')->name('add.category.post');
-        Route::get('edit/category/{id}', 'CategoryController@edit')->name('edit.category.post');
-        Route::post('update', 'CategoryController@update')->name('update.category.post');
-        Route::get('delete/{id}', 'CategoryController@delete')->name('delete.category.post');
-    });
+    
     Route::prefix('modifier')->group(function () {
         Route::get('/', 'ModifiersController@index')->name('modifier');
         Route::post('/', 'ModifiersController@addModifierGroup')->name('add.modifier.post');
@@ -91,6 +93,7 @@ Route::group(['middleware' => ['auth:web']], function () {
         Route::get('delete/{id}', 'ModifiersController@deleteGroup')->name('delete.modifier.post');
         Route::get('delete-item/{id}', 'ModifiersController@deleteItem')->name('delete.modifier.item.post');
     });
+
     Route::prefix('menu')->group(function () {
         Route::get('/', 'MenuController@index')->name('menu');
         Route::get('/add', 'MenuController@add')->name('add.menu');
@@ -113,6 +116,7 @@ Route::group(['middleware' => ['auth:web']], function () {
         Route::get('/details/{id}', 'OrderController@showOrderDetails')->name('details');
         Route::post('/action/{id}/{action}', 'OrderController@OrderAction')->name('action.order');
         Route::get('/pdf/{id}', 'OrderController@generate_invoice')->name('order.pdf');
+        Route::post('/status/due','OrderController@orderDueStatus')->name('order.status.due');
     });
     Route::prefix('promotion')->group(function () {
         Route::get('/', 'PromotionController@index')->name('promotion');

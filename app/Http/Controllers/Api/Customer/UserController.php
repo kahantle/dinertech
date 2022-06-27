@@ -7,6 +7,7 @@ use App\Models\CustomerAddress;
 use App\Models\CustomerFcmTokens;
 use App\Models\Restaurant;
 use App\Models\RestaurantUser;
+use App\Models\Order;
 use App\Models\User;
 use App\Notifications\Otp;
 use App\Notifications\RestaurantChat;
@@ -426,21 +427,23 @@ class UserController extends Controller
 
             $validator = Validator::make($request_data, [
                 'restaurant_id' => 'required',
-                'order_id' => 'required',
+                'order_number' => 'required',
                 'message' => 'required',
             ]);
 
             if ($validator->fails()) {
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
             }
-            $orderId = $request->post('order_id');
+            $orderId = $request->post('order_number');
             $restaurantId = $request->post('restaurant_id');
             $message = $request->post('message');
             $restaurant = Restaurant::with(['order' => function ($order) use ($orderId, $restaurantId) {
-                $order->where('order_id', $orderId)->where('restaurant_id', $restaurantId)->first();
+                $order->where('order_number', $orderId)->where('restaurant_id', $restaurantId)->first();
             }])->first();
             $messageData = ['message' => $message, 'order_id' => (string) $restaurant->order->order_id, 'order_number' => (string) $restaurant->order->order_number];
             $restaurant->notify(new RestaurantChat($messageData));
+            $messageCount = $restaurant->order->customer_msg_count + 1;
+            Order::where('order_id',$restaurant->order->order_id)->where('restaurant_id',$restaurantId)->update(['customer_msg_count' => $messageCount]);
             return response()->json(['message' => 'Chat notification send successfully.', 'success' => true], 200);
         } catch (\Throwable $th) {
             $errors['success'] = false;

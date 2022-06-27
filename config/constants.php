@@ -36,6 +36,7 @@ return [
         'CANCEL' => 'CANCEL',
         'CANCELREFUND' => 'CANCEL AND REFUND',
         'REFUND' => 'REFUND',
+        'ORDER_DUE' => 'ORDER DUE',
     ],
     'DISCOUNT_TYPE' => [
         'USD' => 'USD',
@@ -64,9 +65,11 @@ return [
         'COMMON_MESSAGE' => 'Something wrong please try again!!',
     ],
     'SNICH_KEY' => [
-        'FROM' => '447537404817',
+        // 'FROM' => '447537404817',
+        'FROM'  => '4242317961',
         'TOKEN' => 'Bearer a0a605c3c2644138aa3e37712a7c7207',
-        'PLAN_ID' => 'aa97d8b8af8d4440a1d45b328c7abf17',
+        // 'PLAN_ID' => 'aa97d8b8af8d4440a1d45b328c7abf17',
+        'PLAN_ID'   => 'aa97d8b8af8d4440a1d45b328c7abf17',
         'MESSAGE' => 'Dear User,Your OTP is',
     ],
     'PUBLIC_ASSETS_PATH' => 'web/',
@@ -123,8 +126,20 @@ return [
         '2' => 'Closed',
         '3' => 'Open',
     ],
+    'PROMOTION_TYPES' => [
+        'FIRST'  => "% or Discount in Cart",
+        'TWO' => "% or Discount on Selected items",
+        'THREE'  => "Free Delivery",
+        'FOUR'   => "Payment Method Reward",
+        'FIVE'   => "Get a free Item",
+        'SIX'    => "buy one get one free",
+        'SEVEN'  => "Meal Bundle",
+        'EIGHT'  => "Buy 2,3...get one free",
+        'NINE'   => "Fixed discount amount on a Combo deal",
+        'TEN'    => "% Discount on combo deal"
+    ],
     'AVAILABILITY' => [
-        '1' => 'Availability',
+        // '1' => 'Availability',
         '2' => 'Always Available',
         '3' => 'Restricted',
         '4' => 'Hidden',

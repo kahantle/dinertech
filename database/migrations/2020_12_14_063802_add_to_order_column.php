@@ -15,6 +15,7 @@ class AddToOrderColumn extends Migration
     {
         Schema::table('orders', function (Blueprint $table) {
             $table->string('action_time')->nullable();
+            $table->enum('point_count', ['YES', 'NO'])->nullable()->default('NO');
         });
     }
 

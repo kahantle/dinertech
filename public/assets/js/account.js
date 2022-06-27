@@ -63,40 +63,73 @@ $(document).ready(function() {
     var input_4 = $("#digit-4").val();
     var pin = input_1+input_2+input_3+input_4;
     if(input_1 && input_2 && input_3 && input_4){
-      var pin = input_1+input_2+input_3+input_4;
-      $.ajax({
-        headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        url: verify_pin_route,
-        type: "POST",
-        dataType: "json",
-        data:{
-          pin:pin
-        },
-        beforeSend: function() {
-          $("body").preloader();
-        },
-        complete: function(){
-          $("body").preloader('remove');
-        }, 
-        success: function (res) {
-          if(res.success){
-            toastr.success(res.message,'',toastrSetting);
-            window.location.href = account_route
-          }else{
-            toastr.error(res.message,'',toastrSetting);
-            $('#verify_pin')[0].reset();
+        var pin = input_1+input_2+input_3+input_4;
+        $.ajax({
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          url: verify_pin_route,
+          type: "POST",
+          dataType: "json",
+          data:{
+            pin:pin
+          },
+          beforeSend: function() {
+            $("body").preloader();
+          },
+          complete: function(){
+            $("body").preloader('remove');
+          }, 
+          success: function (res) {
+            if(res.success){
+              toastr.success(res.message,'',toastrSetting);
+              window.location.href = account_route
+            }else{
+              toastr.error(res.message,'',toastrSetting);
+              $('#verify_pin')[0].reset();
+            }
+          },
+          error: function (xhr, ajaxOptions, thrownError) {
           }
-        },
-        error: function (xhr, ajaxOptions, thrownError) {
-        }
-    });
-      }
+        });
+    }
   });
 
 
   $(document).on('click', '.reset_form', function(event) {
     $('#verify_pin')[0].reset();
+  });
+
+  $(document).on("click", "#save-tax", function () {
+    var type = $(this).data("type");
+    var salesTax = $("#tax-value").val();
+      $.ajax({
+          headers: {
+              "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+          },
+          url: url,
+          type: "POST",
+          dataType: "json",
+          data: {
+              type: type,
+              notification_value: salesTax,
+          },
+          beforeSend: function () {
+              $("body").preloader();
+          },
+          complete: function () {
+              $("body").preloader("remove");
+          },
+          success: function (res) {
+              if (res.success) {
+                  toastr.success(res.message, "", toastrSetting);
+              } else {
+                  toastr.error(res.message, "", toastrSetting);
+              }
+          },
+          error: function (xhr, ajaxOptions, thrownError) {
+              swal.fire("Error change setting!", "Please try again", "error");
+          },
+      });
   });
 });

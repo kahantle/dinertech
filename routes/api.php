@@ -44,6 +44,8 @@ Route::namespace ('Api')->group(function () {
         Route::post('/modifier-list', 'ModifierController@getModifierList')->name('customer.modifier.without.auth.list');
         Route::post('/promotion-list', 'PromotionController@getRecords')->name('customer.promotion.without.auth.get');
         Route::post('/logout', 'UserController@logout')->name('customer.logout');
+        
+        //Role Customer
         Route::middleware(['auth:api', 'role-cutomer'])->group(function () {
             Route::post('/category', 'CategoryController@getCategoryList')->name('customer.category.list');
             Route::post('/profile', 'UserController@profile')->name('customer.profile');
@@ -91,6 +93,15 @@ Route::namespace ('Api')->group(function () {
             });
             Route::prefix('loyalties')->group(function(){
                 Route::post('/','LoyaltyRuleController@index')->name('customer.loyalties');
+            });
+            Route::prefix('cart')->group(function(){
+                Route::post('/','CartController@index')->name('customer.carts');
+                Route::post('/add','CartController@store')->name('customer.carts.add');
+                Route::post('/quantity/increment','CartController@quantityIncrement')->name('customer.cart.quantityIncrement');
+                Route::post('/quantity/decrement','CartController@quantityDecrement')->name('customer.cart.quantityDecrement');
+                Route::post('/getMenu/modifier','CartController@getCartMenuModifier')->name('customer.cart.getMenu.modifier');
+                Route::post('/customize/modifier','CartController@customizeModifier')->name('customer.cart.customize.modifier');
+                Route::post('/delete','CartController@destroy')->name('customer.cart.delete');
             });
         });
     });
@@ -194,9 +205,11 @@ Route::namespace ('Api')->group(function () {
                 Route::post('/accept', 'OrderController@makeOrder')->name('order.accept');
                 Route::post('/prepared', 'OrderController@preparedOrder')->name('order.prepared');
                 Route::post('/cancel', 'OrderController@cancelOrder')->name('order.cancel');
+                Route::post('/due','OrderController@dueOrder')->name('order.due');
             });
             Route::prefix('chat')->group(function () {
                 Route::post('/notification', 'ChatNumberController@sendChatNotification')->name('customer.chat.notification');
+                Route::post('/message/read','ChatNumberController@readChatMessage')->name('chat.read.message');
             });
 
         });

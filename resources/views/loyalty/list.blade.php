@@ -17,10 +17,10 @@
                                         class="fa fa-bars"></i></a>
                                 <h2>Loyalty</h2>
                             </div>
-                            <div class="add-campaign-blog">
+                            {{-- <div class="add-campaign-blog">
                                 <a href="{{ route('loyalty.rules') }}"><button class="add-campaign">Loyalty
                                         Rules</button></a>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </nav>
@@ -35,8 +35,8 @@
                         <p>Your Loyality type determines how your customers will earn points and rewards.</p>
                     </div>
 
-                    <div class="row">
-                        <div class="col-xl-9 col-lg-8 col-md-12 profile-two-inner profile-third-inner">
+                    {{-- <div class="row"> --}}
+                        {{-- <div class="col-xl-9 col-lg-8 col-md-12 profile-two-inner profile-third-inner">
                             <div class="row my-4">
                                 <div class="col-lg-4">
                                     <div class="card">
@@ -87,20 +87,55 @@
                                         <a href="{{route('loyalty.plan.cancel',$subscription['stripe_subscription_id'])}}" class="mr-3">
                                             <button type="button" class="upgrade-plan-bog">Cancel Plan</button>
                                         </a>
-                                        {{-- <a href="javascripts:;">
-                                            <button type="button" class="upgrade-plan-bog">Upgrade
-                                                Plan</button>
-                                        </a> --}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div> --}}
+                    {{-- </div> --}}
+                    <div class="row my-4 profile-two-inner profile-third-tinner-blog d-flex align-itemes-center justify-content-center">
+                        <div class="col-lg-3 col-lg-two-inner">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6>Number of Orders</h6>
+                                    <p>Customers earn points for each order they place.</p>
+                                    <div class="add-order-button">
+                                        <a href="javascript:;" class="add-loyalty-blog" data-toggle="modal"
+                                            data-target="#orderLoyalty">Add Loyalty</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-lg-two-inner">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6>Amount Spent</h6>
+                                    <p>Customers earn points for each dollar they spend.</p>
+                                    <div class="add-order-button">
+                                        <a href="javascript:;" class="add-loyalty-blog" data-toggle="modal"
+                                            data-target="#amount_spent">Add Loyalty</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-lg-two-inner">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6>Category Based </h6>
+                                    <p>Customers earn points for items purchased from select categories.</p>
+                                    <div class="add-order-button">
+                                        <a href="javascript:;" class="add-loyalty-blog" data-toggle="modal"
+                                            data-target="#category_based">Add Loyalty</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="dash-second mt-4">
+                <div class="dash-second mt-4 rounded">
+                    <!-- Loyalties Programs Start -->
                     <div class="container-fluid">
                         <div class="profile-inner-blog pt-2 pb-1">
-                            <h2>Loyalty List </h2>
+                            <h2>Current Loyalty Programs </h2>
                         </div>
                         <div class="number-table">
                             <table class="table table-responsive-blog">
@@ -108,7 +143,7 @@
                                     <tr>
                                         <th scope="col" class="dr-title-blog dr-inner-d-first">Title</th>
                                         <th scope="col" class="dr-title-blog dr-c-blog dr-inner-d-first">Details</th>
-                                        <th scope="col" class="dr-inner-t-blog text-center dr-inner-d-first">Status</th>
+                                        <th scope="col" class="dr-inner-t-blog text-center dr-inner-d-first-tittle">Status</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -145,6 +180,80 @@
                             @endforeach
                         </div>
                     </div>
+                    <!-- Loyalties Programs End -->
+                </div>
+                <div class="dash-second mt-4 rounded">
+                    <!-- Loyalties Rules Start -->
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="profile-inner-blog">
+                                    <h2 class="m-0">Loyalty Rules List </h2>
+                                </div>
+                            </div>
+                            <div class="col-md-6 text-right">
+                                <div class="add-campaign-blog">
+                                    <button class="add-campaign product-quantity-plus" data-toggle="modal"
+                                        data-target="#addRule">Add
+                                        Loyalty Rules</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="number-table">
+                            <table class="table table-responsive-blog">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="dr-title-t-inner-blog d-campaign-inner rules-blog-first">
+                                            Points</th>
+                                        <th scope="col" class="dr-title-t-inner-blog d-status-inner-blog rules-blog-second">
+                                            Items
+                                        </th>
+                                        <th scope="col" class="dr-title-t-inner-blog d-creates rules-blog-third"></th>
+                                    </tr>
+                                </thead>
+                            </table>
+                            @foreach ($loyaltyRules as $rules)
+                                {{-- {{dd($rules)}} --}}
+                                <table class="table table-responsive">
+                                    <tbody>
+                                        <tr class="header-url header-desk-board">
+                                            <td class="inner-second-rules-inner "><span class="order-numerber-blog "></span>
+                                                <p class="m-0 pl-5 ">{{ $rules->point }} Points </p>
+                                            </td>
+                                            
+                                            <td class="reports-blog-swc">
+                                                <span class="more">
+                                                    @foreach ($rulesItems[$rules->rules_id] as $categoryName => $items)
+                                                        {{$categoryName}} :
+                                                        @php
+                                                            $menu = implode(", ",$items);
+                                                        @endphp
+                                                        {{$menu}},<br>
+                                                    @endforeach
+                                                </span>
+                                            </td>
+                                            <td class="btn-blog-group btn-rules-desktop btn-rules-desktop btn-rules-desktop">
+                                                <button class="btn-edit btn-inner product-quantity-plus1 edit-rule"
+                                                    data-rule-id="{{ $rules->rules_id }}">Edit</button>
+                                                <button class="btn-delete delete-rule"
+                                                    data-rule-id="{{ $rules->rules_id }}"
+                                                    data-rule-point="{{ $rules->point }}">Delete</button>
+                                            </td>
+                                        </tr>
+                                        <tr class="mobile-inner-blog">
+                                            <td>
+                                                <button class="btn-edit btn-inner edit-rule product-quantity-plus1"
+                                                    data-rule-id="{{ $rules->rule_id }}">Edit</button>
+                                                <button class="btn-delete delete-rule" data-rule-id="{{ $rules->rules_id }}"
+                                                    data-rule-point="{{ $rules->point }}">Delete</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            @endforeach
+                        </div>
+                    </div>
+                    <!-- Loyalties Rules End -->
                 </div>
             </div>
         </div>
@@ -240,9 +349,112 @@
                 <div class="modal-body modal-inner-blog modal-fif-blog">
                     <h6>Are you sure? </h6>
                     <p id="delete-message"></p>
-                    <form action="{{route('loyalty.delete')}}" method="POST">
+                    <form action="{{route('loyalty.rules.delete')}}" method="POST">
                         @csrf
-                        <input type="hidden" name="loyaltyId" id="loyaltyId">
+                        <input type="hidden" name="rule_id" id="rule_id">
+                        <div class="modal-footer-blog">
+                            <button type="submit" class="btn btn-first btn-yes">Yes</button>
+                            <button type="button" class="btn btn-second" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loyalties Rules Modal -->
+    <div class="modal modal-inner-third-vlog" style="display: none;" aria-hidden="true" id="addRule">
+        <div class="modal-dialog modal-dialog-centered modal-inner-system" role="document">
+            <div class="modal-content">
+                <div class="modal-body modal-inner-blog">
+                    <h6 id="modal-title">Add Loyalty Rules</h6>
+                    {{ Form::open(['route' => ['loyalty.rules.add'], 'id' => 'loyalty-rule-add', 'method' => 'POST']) }}
+                        <input type="hidden" name="rule_id" id="ruleId">
+                        <div class="form-group">
+                            <input type="number" name="point" class="form-control set-point" placeholder="Add Points" min="1"
+                                id="points">
+                        </div>
+                        <div class="form-group form-item form-type-textfield form-item-count-checked-checkboxes">
+                            <input type="text" id="count-checked-checkboxes" name="menuItems"
+                                placeholder="Selected Category Or Menu Items" value="" size="60" maxlength="50"
+                                class="choose-blog form-text required">
+                            <input type="hidden" name="items" id="items-ids">
+                            <input type="hidden" name="categoryIds" id="categoryIds">
+                        </div>
+                        <div class="modal-footer-blog">
+                            <button type="submit" class="btn btn-first modal-submit">Add Loyalty</button>
+                            <button type="button" class="btn btn-second btn-d-inner-blog cancel-button add-rule">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="editMenuItemModal">
+        <div class="modal second-part" style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-inner-system" role="document">
+                <div class="modal-content modal-conting-blog">
+                    <div class="modal-body modal-inner-blog">
+                        <h6>Seleted Items </h6>
+                        <div class="content">
+                            <div class="table-scroll-y-blog table-active-blog">
+                                <table class="table-inner-sec">
+                                    @foreach ($categories as $item)
+                                        @if (count($item->category_item) != 0)
+                                            <tbody class="t-b-blog">
+                                                <tr class="odd">
+                                                    <td class="table-tag-blog add">
+                                                        <div>
+                                                            <input type="checkbox" class="selectall inner-checkin-blog"
+                                                                data-category-id="{{ $item->category_id }}"
+                                                                id="modifier-group-{{ $item->category_id }}">
+                                                        </div>
+                                                    </td>
+                                                    <td class="forum-topic-blog">{{ $item->category_name }}</td>
+                                                </tr>
+                                                @foreach ($item->category_item as $menuItem)
+                                                    <tr class="even">
+                                                        <td class="table-tag add">
+                                                            <div class="form-item form-type-checkbox form-item-node-types-forum subOption">
+                                                                <input type="checkbox" id="edit-node-types-forum"
+                                                                    name="modifier_item" value="forum"
+                                                                    class="form-checkbox individual inner-checkin-blog item-group-{{ $menuItem->category_id }}"
+                                                                    data-item-id={{ $menuItem->menu_id }}
+                                                                    data-category-id="{{ $menuItem->category_id }}">
+                                                            </div>
+                                                        </td>
+                                                        <td class="forum-topic-blog">
+                                                            {{ $menuItem->item_name }}
+                                                        </td>
+                                                        <td class="forum-blog">
+                                                            <small>${{ number_format($menuItem->item_price, 2) }}</small>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        @endif
+                                    @endforeach
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer-blog">
+                        <button type="button" class="btn btn-first second-close count-item">Add </button>
+                        <button type="button" class="btn btn-second second-cancle-in modifier-modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="deleteModal" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-inner-system" role="document">
+            <div class="modal-content">
+                <div class="modal-body modal-inner-blog modal-fif-blog">
+                    <h6>Are you sure? </h6>
+                    <p id="deleteMessage"></p>
+                    <form action="{{ route('loyalty.rules.delete') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="rule_id" id="rule_id">
                         <div class="modal-footer-blog">
                             <button type="submit" class="btn btn-first btn-yes">Yes</button>
                             <button type="button" class="btn btn-second" data-dismiss="modal">Cancel</button>
@@ -257,6 +469,7 @@
 @section('scripts')
 <script src="{{ asset('assets/js/select2.min.js') }}"></script>
 <script src="{{ asset('assets/js/loyalty/list.js') }}"></script>
+<script src="{{ asset('assets/js/loyalty/rules.js') }}"></script>
 {{-- <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js') }}"></script> --}}
 {{-- {!! JsValidator::formRequest('App\Http\Requests\LoyaltyRequest', '#addOrderLoyaltyPoint') !!} --}}
     {{-- {!! JsValidator::formRequest('App\Http\Requests\LoyaltyAmountRequest', '#addAmountLoyalty') !!} --}}

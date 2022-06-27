@@ -67,10 +67,43 @@ class ChatController extends Controller
                 $newPostKey = $database->getReference(Config::get('constants.FIREBASE_DB_NAME'))->push()->getKey();
                 $url = Config::get('constants.FIREBASE_DB_NAME').'/'.$restaurant->restaurant_id.'/'.$order_id."/"."/".$customer_id."/" ;
                 $updates = [$url.$newPostKey  => $postData];
-                $database->getReference()->update($updates);
+                // $database->getReference()->update($updates);
+                $database->getReference(Config::get('constants.FIREBASE_DB_NAME'))->update($updates);
                 return response()->json(['success'=> true,'message'=> 'Message successfully sent!']);
         }catch (ApiException $e) {
                 $request = $e->getRequest();
         }
+    }
+
+    public function readChatMessage(Request $request)
+    {
+        if ($request->ajax()) {
+            $uid = Auth::user()->uid;
+            $restaurant = Restaurant::where('uid', $uid)->first();
+            $restaurantId = $restaurant->restaurant_id;
+            $orderNumber = $request->post('order_number');
+            $order = Order::where('order_number',$orderNumber)->where('restaurant_id', $restaurantId)->first();
+            if($order){
+                $database = app('firebase.database');
+                $url = Config::get('constants.FIREBASE_DB_NAME') . "/" . $restaurantId . "/" . $order->order_number . "/" . $order->uid . "/";
+                $messages = $database->getReference($url)->getvalue();
+                if($messages){
+                    foreach ($messages as $key => $value) {
+                        if ($value['sent_from'] == Config::get('constants.ROLES.CUSTOMER')) {
+                            $value['isseen'] = true;
+                            $updateUrl = $url.'/'.$key.'/';
+                            $updates[$updateUrl]  = $value;
+                            $database->getReference()->update($updates);
+                            if($order->customer_msg_count > 0){
+                                $messageCount = 0;
+                                Order::where('order_number',$orderNumber)->where('restaurant_id', $restaurantId)->update(['customer_msg_count' => $messageCount]);
+                            }
+                        }
+                    }
+                }
+                return true;
+            }
+        }
+        
     }
 }

@@ -56,7 +56,7 @@ class User extends Authenticatable
 
     public function restaurant()
     {
-        return $this->hasOne('App\Models\Restaurant', 'uid')->select(['restaurant_id', 'uid', 'restaurant_name', 'restaurant_address', 'restaurant_city', 'restaurant_state', 'restaurant_state']);
+        return $this->hasOne('App\Models\Restaurant', 'uid')->select(['restaurant_id', 'uid', 'restaurant_name', 'restaurant_address', 'restaurant_city', 'restaurant_state', 'restaurant_state','sales_tax']);
     }
 
     public function restaurant_user()
@@ -88,5 +88,10 @@ class User extends Authenticatable
         // return $this->fcm_id;
         return $fcm_ids;
     }
+
+    // public function getMobileNumberAttribute($value)
+    // {
+    //     return sprintf("%s-%s-%s",substr($value, 2, 3),substr($value, 5, 3),substr($value, 8));
+    // }
 
 }

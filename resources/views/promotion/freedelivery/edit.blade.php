@@ -128,8 +128,9 @@
                         <div class="form-group select-input"> 
                             <img src="{{ asset('assets/images/Availability.png') }}">
                             <select name="availability" id="display_time" class="form-control">
+                                <option disabled>Availability</option>
                                 @foreach (Config::get('constants.AVAILABILITY') as $key=>$item)
-                                    <option value="{{$key}}" {{($promotion->availability==$item)?'selected':''}}>{{$item}}</option>
+                                    <option value="{{$item}}" {{($promotion->availability==$item)?'selected':''}}>{{$item}}</option>
                                 @endforeach
                             </select>
                         </div>

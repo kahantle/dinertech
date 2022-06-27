@@ -14,10 +14,10 @@ class CreateRestaurantLoyaltyRulesTable extends Migration
     public function up()
     {
         Schema::create('restaurant_loyalty_rules', function (Blueprint $table) {
-            $table->id();
-            $table->integer('restaurant_id');
-            $table->integer('uid');
-            $table->string('point');
+            $table->id('rules_id');
+            $table->integer('restaurant_id')->nullable();
+            $table->integer('uid')->nullable();
+            $table->string('point')->nullable();
             $table->timestamps();
         });
     }
