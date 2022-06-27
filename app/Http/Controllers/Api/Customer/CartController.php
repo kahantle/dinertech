@@ -51,8 +51,7 @@ class CartController extends Controller
             if($cart){
                 return response()->json(['cart_list' => $cart, 'success' => true], 200);
             }else{
-                $cart = [];
-                return response()->json(['cart_list' => $cart,'message' => 'Your cart is empty','success' => true], 200);
+                return response()->json(['cart_list' => (object)[],'message' => 'Your cart is empty','success' => true], 200);
             }
         } catch (\Throwable $th) {
             $errors['success'] = false;
@@ -85,7 +84,7 @@ class CartController extends Controller
             }
             $uid = auth('api')->user()->uid;
             $check_cart = Cart::where('uid',$uid)->where('restaurant_id',$request->post('restaurant_id'))->first();
-            
+            $finalTotal = 0;
             if($check_cart == NULL){
                 $cart_sub_total = 0;
                 $cart = new Cart;
@@ -132,8 +131,9 @@ class CartController extends Controller
                                 }
                             }
                         }
+                        $finalTotal += $cart_sub_total;
                     }
-                    Cart::where('uid',$uid)->where('restaurant_id',$request->post('restaurant_id'))->where('cart_id',$cart->cart_id)->update(['sub_total' => number_format($cart_sub_total,2)]);
+                    Cart::where('uid',$uid)->where('restaurant_id',$request->post('restaurant_id'))->where('cart_id',$cart->cart_id)->update(['sub_total' => number_format($cart_sub_total,2),'total_due' => number_format($finalTotal,2)]);
                 }
             }else{
                 $cart_sub_total = $check_cart->sub_total;
@@ -176,8 +176,9 @@ class CartController extends Controller
                             }
                         }
                     }
+                    $finalTotal += $cart_sub_total;
                 }
-                Cart::where('uid',$uid)->where('restaurant_id',$request->post('restaurant_id'))->where('cart_id',$check_cart->cart_id)->update(['sub_total' => number_format($cart_sub_total,2)]);
+                Cart::where('uid',$uid)->where('restaurant_id',$request->post('restaurant_id'))->where('cart_id',$check_cart->cart_id)->update(['sub_total' => number_format($cart_sub_total,2),'total_due' => number_format($finalTotal,2)]);
             }
             
            return response()->json(['success' => true, 'message' => "Item added to the cart successfully."], 200);

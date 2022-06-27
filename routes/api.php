@@ -205,9 +205,11 @@ Route::namespace ('Api')->group(function () {
                 Route::post('/accept', 'OrderController@makeOrder')->name('order.accept');
                 Route::post('/prepared', 'OrderController@preparedOrder')->name('order.prepared');
                 Route::post('/cancel', 'OrderController@cancelOrder')->name('order.cancel');
+                Route::post('/due','OrderController@dueOrder')->name('order.due');
             });
             Route::prefix('chat')->group(function () {
                 Route::post('/notification', 'ChatNumberController@sendChatNotification')->name('customer.chat.notification');
+                Route::post('/message/read','ChatNumberController@readChatMessage')->name('chat.read.message');
             });
 
         });

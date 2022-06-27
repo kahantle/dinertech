@@ -73,7 +73,8 @@ class UserController extends Controller
                     $user->restaurant_city = $user->restaurant->restaurant_city;
                     $user->restaurant_state = $user->restaurant->restaurant_state;
                     $user->is_pin_protected = ($user->restaurant->is_pin_protected) ? true : false;
-
+                    $user->sales_tax = $user->restaurant->sales_tax;
+                    
                     $fcmId = $request->post('fcm_id');
                     $device = $request->post('device');
                     $restaurantFcmToken = RestaurantFcmTokens::where('restaurant_id', $user->restaurant->restaurant_id)->where('fcm_id', $fcmId)->first();

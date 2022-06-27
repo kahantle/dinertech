@@ -81,6 +81,17 @@ class AccountController extends Controller
                     $returns['success'] = false;
                     $returns['message'] = ucfirst($request->post('type')) . " notification does not change successfully!";
                 }
+            } else if($request->post('type') === 'sales-tax'){
+                $restaurant = Restaurant::where('uid', $uid)->first();
+                $restaurant->sales_tax = $request->post('notification_value');
+                
+                if ($restaurant->save()) {
+                    $returns['success'] = true;
+                    $returns['message'] = "Sales tax change successfully!";
+                } else {
+                    $returns['success'] = false;
+                    $returns['message'] = "Sales tax does not change successfully!";
+                }
             }
 
             return response()->json($returns);
@@ -90,4 +101,10 @@ class AccountController extends Controller
             return response()->json($returns);
         }
     }
+
+    public function showActiveSubscription()
+    {
+        return view('account.active_subscription');
+    }
+    
 }

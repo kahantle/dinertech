@@ -62,7 +62,7 @@ class ChatNumberController extends Controller
         try {
             $request_data = $request->json()->all();
             $validator = Validator::make($request_data, [
-                'order_id' => 'required',
+                'order_number' => 'required',
                 'message' => 'required',
                 'restaurant_id' => 'required',
             ]);
@@ -70,10 +70,10 @@ class ChatNumberController extends Controller
             if ($validator->fails()) {
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
             }
-            $orderId = $request->post('order_id');
+            $orderNumber = $request->post('order_number');
             $restaurantId = $request->post('restaurant_id');
             $message = $request->post('message');
-            $order = Order::where('order_id', $orderId)->where('restaurant_id', $restaurantId)->first();
+            $order = Order::where('order_number', $orderNumber)->where('restaurant_id', $restaurantId)->first();
             $user = User::where('uid', $order->uid)->first();
             $messageData = ['message' => $message, 'order_id' => (string) $order->order_id, 'order_number' => (string) $order->order_number];
             $user->notify(new CustomerChat($messageData));
@@ -88,4 +88,48 @@ class ChatNumberController extends Controller
         }
     }
 
+    public function readChatMessage(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'restaurant_id' => 'required',
+                'order_number'  => 'required'
+            ]);
+            if ($validator->fails()) {
+                return response()->json(['success' => false, 'message' => $validator->errors()], 400);
+            }
+            $restaurantId = $request->post('restaurant_id');
+            $order = Order::where('order_number',$request->post('order_number'))->where('restaurant_id', $restaurantId)->first();
+            if($order){
+                $database = app('firebase.database');
+                $url = Config::get('constants.FIREBASE_DB_NAME') . "/" . $restaurantId . "/" . $order->order_number . "/" . $order->uid . "/";
+                $messages = $database->getReference($url)->getvalue();
+                if($messages){
+                    foreach ($messages as $key => $value) {
+                        if ($value['sent_from'] == Config::get('constants.ROLES.CUSTOMER')) {
+                            $updates = (object)[];
+                            $value['isseen'] = true;
+                            $updateUrl = $url.'/'.$key.'/';
+                            $updates[$updateUrl]  = $value;
+                            $database->getReference()->update($updates);
+                            if($order->customer_msg_count > 0){
+                                $messageCount = 0;
+                                Order::where('order_number',$request->post('order_number'))->where('restaurant_id', $restaurantId)->update(['customer_msg_count' => $messageCount]);
+                            }
+                        }
+                    }
+                }
+                return response()->json(['message' => 'Message read successfully.', 'success' => true], 200);
+            }else{
+                return response()->json(['message' => 'Order not found.', 'success' => false], 200);
+            }
+        } catch (\Throwable $th) {
+            $errors['success'] = false;
+            $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
+            if ($request->debug_mode == 'ON') {
+                $errors['debug'] = $th->getMessage();
+            }
+            return response()->json($errors, 500);
+        }
+    }
 }

@@ -12,11 +12,11 @@
               </div>
               @if($order->order_progress_status != "CANCEL")
               <div class="right-side-nav">
-                @if($order->pickup_time)
+                @if($order->pickup_minutes)
                 <div>
                 <p>Pickup Time</p>
                 <div class="time">
-                  <a href="#popup-menu">{{$order->pickup_time}}</a>
+                  <a href="#popup-menu">{{$order->pickup_minutes}} Mintues</a>
                 </div>
               </div>
                 @endif
@@ -81,7 +81,7 @@
                         <p>Total Discount</p>  
                         <p>${{$order->discount_charge}}</p>
                       </li>
-                      <li >
+                      <li>
                         <p>Tax</p>  
                         <p>$0</p>
                       </li>
@@ -127,7 +127,7 @@
                     data-route="{{route('action.order',[$order->order_id,'action'=>'CANCEL'])}}" data-value="Decline"><span>decline order</span></a>
                   </div>
                 </div>
-                @elseif($order->order_progress_status == 'ACCEPTED')
+                @elseif($order->order_progress_status == 'ACCEPTED' || $order->order_progress_status == Config::get('constants.ORDER_STATUS.ORDER_DUE'))
                 <div class="three-btn">
                   <div class="btn-custom">
                     <a class="btn-orange action"  href="javaScript:void(0);" 

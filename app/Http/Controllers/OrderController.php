@@ -36,17 +36,22 @@ class OrderController extends Controller
 
 	public function OrderAction(Request $request,$id,$action){
         try {
+            
             $message = strtolower($action);
             $message = "Order $message successfully.";
+            
             $order = Order::where('order_id',$id)->first();
             $uid = Auth::user()->uid;
+            $orderPickupTime = null;
     		$restaurant = Restaurant::where('uid', $uid)->first();
             if(!$order){
                 return response()->json(['route'=>route('dashboard'),'alert'=>[ $message,'', Config::get('constants.toster')],'success' => true],200);
             }
+            
             $order->order_progress_status = $action;
             $order->action_time =  date('Y-m-d h:i:s');
             if($action==='ACCEPTED'){
+                $pikUpTime = Carbon\Carbon::parse($request->post('pick_up_time'))->format('Y-m-d H:i:s a');
                 $database = app('firebase.database');
                 $order_id =  $id;
                 $customer_id = $order->uid;
@@ -69,13 +74,17 @@ class OrderController extends Controller
                 $url = Config::get('constants.FIREBASE_DB_NAME').'/'.$restaurant->restaurant_id.'/'.$order->order_number."/"."/".$order->uid."/" ;
                 $updates = [$url.$newPostKey  => $postData];
                 $database->getReference()->update($updates);
-
-
-                if($request->post('type')==='hours'){
-                    $order->pickup_time = $request->post('minutes')." Hours";
-                }else{
-                    $order->pickup_time = $request->post('minutes')." Minutes";
-                }
+                
+                $order->pickup_time = $pikUpTime;
+                // $orderPickupTime = $request->post('minutes')." Minutes";
+                $order->pickup_minutes = $request->post('minutes');
+                // if($request->post('type')==='hours'){
+                //     $order->pickup_time = $request->post('minutes')." Hours";
+                //     $orderPickupTime = $request->post('minutes')." Hours";
+                // }else{
+                //     $order->pickup_time = $request->post('minutes')." Minutes";
+                //     $orderPickupTime = $request->post('minutes')." Minutes";
+                // }
             }
             $order->order_status = ($action==Config::get('constants.ORDER_STATUS.CANCEL'))?0:1;
             $order->save();
@@ -86,7 +95,7 @@ class OrderController extends Controller
                 $database->getReference($url)->remove();
             }
 
-            return response()->json(['route'=>route('dashboard'),'alert'=>[$message ,'', Config::get('constants.toster')],'success' => true], 200);
+            return response()->json(['route'=>route('dashboard'),'alert'=>[$message ,'', Config::get('constants.toster')],'order_pickup_time' => $orderPickupTime,'success' => true], 200);
         } catch (\Throwable $th) {
             $errors['success'] = false;
             $errors['message'] =  $th->getMessage();
@@ -96,15 +105,30 @@ class OrderController extends Controller
 
     public function generate_invoice($id){
         try{
-
-                $order = Order::where('order_id',$id)->with('orderItems')->first();
-                $uid = Auth::user()->uid;
-                $user = User::where('uid', $uid)->first();
-        		$restaurant = Restaurant::where('uid', $uid)->first();
-                $pdf = PDF::loadView('orders.pdf',compact('order','restaurant','user'));
-                return $pdf->download('dinertech_'.$order->order_number.'.pdf');
+            $order = Order::where('order_id',$id)->with('orderItems')->first();
+            $uid = Auth::user()->uid;
+            $user = User::where('uid', $uid)->first();
+            $restaurant = Restaurant::where('uid', $uid)->first();
+            $pdf = PDF::loadView('orders.pdf',compact('order','restaurant','user'));
+            return $pdf->download('dinertech_'.$order->order_number.'.pdf');
         }catch(Exception $e){
                 echo '<pre>',print_r($e),'</pre>';
+        }
+    }
+
+    public function orderDueStatus(Request $request)
+    {
+        $orderId = $request->post('orderId');
+        $order = Order::where('order_id',$orderId)->first();
+        if($order)
+        {
+            $order->order_progress_status = Config::get('constants.ORDER_STATUS.ORDER_DUE');
+            $order->save();
+            return response()->json(['success' => true], 200);
+        }
+        else
+        {
+            return response()->json(['success' => false], 200);
         }
     }
 }

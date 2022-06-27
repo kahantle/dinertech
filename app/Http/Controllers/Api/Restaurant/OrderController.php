@@ -22,17 +22,39 @@ class OrderController extends Controller
 {
     public function getOrderList(Request $request)
     {
+        
         try {
             $request_data = $request->json()->all();
             $validator = Validator::make($request_data,['restaurant_id' => 'required','order_status' => 'required|integer']);
             if ($validator->fails()) {
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
             }
+            $today = \Carbon\Carbon::now();
             $list = Order::where('restaurant_id', $request->post('restaurant_id'))
             ->where('order_status',$request->post('order_status'))
-            ->with('user')
-            ->get();
-            return response()->json(['order_list' => $list, 'success' => true], 200);
+            ->with('user');
+            
+            if($request->post('order_status') == 0)
+            {
+                $list = $list->whereDate('order_date','=',$today->format('Y-m-d'));
+            }
+            $list = $list->get();
+            $result = [];
+            foreach($list as $key => $order)
+            {
+                if($order->order_progress_status == Config::get('constants.ORDER_STATUS.COMPLETED'))
+                {
+                    if((date("Y-m-d",strtotime($order->order_date)) >= date('Y-m-d', strtotime('-7 days'))) && (date("Y-m-d",strtotime($order->order_date)) <= $today->format('Y-m-d')))
+                    {
+                        $result[] = $order;
+                    }
+                }
+                else
+                {
+                    $result[] = $order;
+                }
+            }
+            return response()->json(['order_list' => $result, 'success' => true], 200);
         } catch (\Throwable $th) {
             $errors['success'] = false;
             $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
@@ -174,7 +196,8 @@ class OrderController extends Controller
             $validator = Validator::make($request_data,[
                 'restaurant_id' => 'required',
                 'order_id' => 'required',
-                'pickup_time' => 'required'
+                'pickup_time' => 'required',
+                'pickup_minutes' => 'required',
             ]);
             if ($validator->fails()) {
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
@@ -187,14 +210,36 @@ class OrderController extends Controller
             if(!$order){
                 return response()->json(['message' => "Invalid Order or already procceed.", 'success' => true], 401);
             }
+
             $order->isPickUp = true;
             $order->pickup_time = $request->post('pickup_time');
+            $order->pickup_minutes = $request->post('pickup_minutes');
             $order->order_status = 1;
             $order->order_progress_status = Config::get('constants.ORDER_STATUS.ACCEPTED');
             if($order->save()){
                 DB::commit();
                 $user = User::find($order->uid);
                 $user->notify(new AcceptOrder);
+                $database = app('firebase.database');
+                $order_id =  $order->order_number;
+                $customer_id = $order->uid;
+                $user = User::where('uid',$customer_id)->first();
+                $user_id = $request->post('restaurant_id');
+                $postData =(object) [
+                    'full_name' => $user->first_name." ".$user->last_name,
+                    'message' => 'How may I help you',
+                    'message_date'=>date("Y-m-d h:i:A"),
+                    'isseen'=>true,
+                    'order_number'=>$order_id,
+                    'receiver'=>$customer_id,
+                    'sender'=>$user_id,
+                    'sent_from'=> Config::get('constants.ROLES.RESTAURANT'),
+                    'user_id'=>$customer_id
+                ];
+                $newPostKey = $database->getReference(Config::get('constants.FIREBASE_DB_NAME'))->push()->getKey();
+                $url = Config::get('constants.FIREBASE_DB_NAME').'/'.$user_id.'/'.$order_id."/"."/".$customer_id."/" ;
+                $updates = [$url.$newPostKey  => $postData];
+                $database->getReference()->update($updates);
                 return response()->json(['message' => "Order accepted successfully.", 'success' => true], 200);
             }else{
                 DB::rollBack();
@@ -296,6 +341,42 @@ class OrderController extends Controller
         }
     }
 
+    public function dueOrder(Request $request)
+    {
+        try {
+            $request_data = $request->json()->all();
+            $validator = Validator::make($request_data,[
+                'restaurant_id' => 'required',
+                'order_number' => 'required',
+            ]);
+            if ($validator->fails()) {
+                return response()->json(['success' => false, 'message' => $validator->errors()], 400);
+            }
+            DB::beginTransaction();
+            $order =  Order::where('restaurant_id', $request->post('restaurant_id'))
+            ->where('order_number',$request->post('order_number'))
+            ->first();
+            if(!$order){
+                return response()->json(['message' => "Invalid Order.", 'success' => true], 401);
+            }
+            $order->order_progress_status = Config::get('constants.ORDER_STATUS.ORDER_DUE');
+            if($order->save()){
+                DB::commit();
+                return response()->json(['message' => "Order due successfully.", 'success' => true], 200);
+            }else{
+                DB::rollBack();
+                return response()->json(['message' => "Order not due successfully.", 'success' => true], 401);
+            }
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $errors['success'] = false;
+            $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
+            if ($request->debug_mode == 'ON') {
+                $errors['debug'] = $th->getMessage();
+            }
+            return response()->json($errors, 500);
+        }
+    }
 
     public function getRecentOrder(Request $request)
     {
@@ -311,12 +392,15 @@ class OrderController extends Controller
                     $q->where('is_feature',1);
                     $q->orWhere('order_progress_status',Config::get('constants.ORDER_STATUS.INITIAL'));
                     $q->orWhere('order_progress_status',Config::get('constants.ORDER_STATUS.ACCEPTED'));
+                    $q->orWhere('order_progress_status',Config::get('constants.ORDER_STATUS.ORDER_DUE'));
                 })
                 ->where('order_progress_status',Config::get('constants.ORDER_STATUS.INITIAL'))
                 ->orWhere('order_progress_status',Config::get('constants.ORDER_STATUS.ACCEPTED'))
+                ->orWhere('order_progress_status',Config::get('constants.ORDER_STATUS.ORDER_DUE'))
                 ->with('orderItems','user')
                 ->latest()
                 ->get();
+            return response()->json(['order' => $order, 'success' => true], 200);
             // $result = [];
             // foreach ($order as $key => $value) {
             //     $database = app('firebase.database');
@@ -334,7 +418,7 @@ class OrderController extends Controller
             //     $result[$key]['notification_badge'] = $count ;
             // }
 
-            return response()->json(['order' => $order, 'success' => true], 200);
+            
         } catch (\Throwable $th) {
             $errors['success'] = false;
             $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');

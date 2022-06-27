@@ -35,9 +35,11 @@ class DashboardController extends Controller
                     Config::get('constants.ORDER_STATUS.INTIAL'),
                     Config::get('constants.ORDER_STATUS.PREPARED'),
                     Config::get('constants.ORDER_STATUS.ACCEPTED'),
+                    Config::get('constants.ORDER_STATUS.ORDER_DUE'),
                 ]);
             })->orderByDesc('order_date')->paginate(7);
-        return view('dashboard', compact('orders'));
+        $restaurantId = $restaurant->restaurant_id;
+        return view('dashboard', compact('orders','restaurantId'));
     }
 
 }
