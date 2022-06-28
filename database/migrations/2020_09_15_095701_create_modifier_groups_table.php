@@ -17,6 +17,10 @@ class CreateModifierGroupsTable extends Migration
             $table->id('modifier_group_id');
             $table->integer('restaurant_id');
             $table->string('modifier_group_name');
+            $table->integer('allow_multiple')->nullable()->default(0);
+            $table->integer('minimum')->nullable();
+            $table->integer('maximum')->nullable();
+            $table->tinyInteger('is_required')->default(0);
             $table->timestamps();
         });
     }

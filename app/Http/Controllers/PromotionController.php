@@ -106,6 +106,7 @@ class PromotionController extends Controller
 
     public function storeCart(Request $request){
         try {
+           
             if(isset($request->restaurant_user_id))
             {
                 $uid = $request->restaurant_user_id;
@@ -160,7 +161,8 @@ class PromotionController extends Controller
                 }   
             }
         } catch (\Throwable $th) {
-            Toastr::success('Please try again something wrong.','', Config::get('constants.toster'));
+             dd($th->getMessage());
+            Toastr::error('Please try again something wrong.','', Config::get('constants.toster'));
             return redirect()->route('promotion');
         }
     }

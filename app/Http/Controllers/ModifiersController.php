@@ -65,7 +65,7 @@ class ModifiersController extends Controller
             Toastr::success($message,'', Config::get('constants.toster'));
             return redirect()->route('modifier');
         } catch (\Throwable $th) {
-            Toastr::error($message,'', Config::get('constants.toster'));
+            Toastr::error($th->getMessage(),'', Config::get('constants.toster'));
             return redirect()->route('modifier');
         }
     }

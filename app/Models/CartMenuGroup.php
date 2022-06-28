@@ -17,6 +17,6 @@ class CartMenuGroup extends Model
      */
     public function cartMenuGroupItems()
     {
-        return $this->hasMany(CartMenuGroupItem::class, 'cart_modifier_group_id')->select(['cart_modifier_menu_id','cart_modifier_group_id','modifier_group_item_name','modifier_group_item_price', 'modifier_item_id','modifier_group_id']);
+        return $this->hasMany(CartMenuGroupItem::class, 'cart_modifier_group_id')->select(['cart_modifier_menu_id','cart_menu_item_id','cart_modifier_group_id','modifier_group_item_name','modifier_group_item_price', 'modifier_item_id','modifier_group_id']);
     }
 }
