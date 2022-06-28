@@ -36,16 +36,26 @@ class OrderController extends Controller
             if ($validator->fails()) {
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
             }
-             $list = Order::where('restaurant_id', $request->post('restaurant_id'))
+            $uid = auth('api')->user()->uid;
+            $list = Order::where('restaurant_id', $request->post('restaurant_id'))->where('uid',$uid)
              ->with('user');
             if($request->post('order_status')){
-                $list = $list->where('order_progress_status',Config::get('constants.ORDER_STATUS.INITIAL'));
-                $list =  $list->orWhere('order_progress_status',Config::get('constants.ORDER_STATUS.ACCEPTED'));
-                $list =  $list->orWhere('order_progress_status',Config::get('constants.ORDER_STATUS.PREPARED'));
-                
+                 $list = $list->where(function($query){
+                    $query->where('order_progress_status',Config::get('constants.ORDER_STATUS.INITIAL'));
+                    $query->orWhere('order_progress_status',Config::get('constants.ORDER_STATUS.ACCEPTED'));
+                    $query->orWhere('order_progress_status',Config::get('constants.ORDER_STATUS.PREPARED'));
+                 });
+                // $list = $list->where('order_progress_status',Config::get('constants.ORDER_STATUS.INITIAL'));
+                // $list =  $list->orWhere('order_progress_status',Config::get('constants.ORDER_STATUS.ACCEPTED'));
+                // $list =  $list->orWhere('order_progress_status',Config::get('constants.ORDER_STATUS.PREPARED'));
+               
             }else{
-                $list =  $list->where('order_progress_status',Config::get('constants.ORDER_STATUS.CANCEL'));
-                $list = $list->orWhere('order_progress_status',Config::get('constants.ORDER_STATUS.COMPLETED'));
+                // $list =  $list->where('order_progress_status',Config::get('constants.ORDER_STATUS.CANCEL'));
+                // $list = $list->orWhere('order_progress_status',Config::get('constants.ORDER_STATUS.COMPLETED'));
+                 $list = $list->where(function($query){
+                    $query->where('order_progress_status',Config::get('constants.ORDER_STATUS.CANCEL'));
+                    $query->orWhere('order_progress_status',Config::get('constants.ORDER_STATUS.COMPLETED'));
+                 });
             }
             $list = $list->get();
             return response()->json(['order_list' => $list, 'success' => true], 200);

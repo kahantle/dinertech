@@ -211,7 +211,10 @@ Route::namespace ('Api')->group(function () {
                 Route::post('/notification', 'ChatNumberController@sendChatNotification')->name('customer.chat.notification');
                 Route::post('/message/read','ChatNumberController@readChatMessage')->name('chat.read.message');
             });
-
+        
+            Route::prefix('account')->group(function () {
+                Route::post('/setting/update', 'AccountController@updateSetting')->name('account.update.setting');
+            });
         });
     });
 });
