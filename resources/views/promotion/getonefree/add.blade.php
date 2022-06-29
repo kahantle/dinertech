@@ -62,7 +62,7 @@
                         </div>
                         
                         <div>
-                            <input type="text" style="clip-path: circle(0);height: 0;padding: 0; width: 0; position: absolute; opacity: 0;" id="hidden_eligible_item-first" name="hidden_eligible_item_first" />
+                            <input type="text" style="clip-path: circle(0);height: 0;padding: 0; width: 0; position: absolute; opacity: 0;" id="hidden_eligible_item_first" name="hidden_eligible_item_first" />
                         </div>
 
                         <div class="form-group select-input input-popup inputpop-inner">
@@ -73,7 +73,7 @@
                         </div>
 
                         <div>
-                            <input type="text" style="clip-path: circle(0);height: 0;padding: 0; width: 0; position: absolute; opacity: 0;" id="hidden_eligible_item-second" name="hidden_eligible_item_second" />
+                            <input type="text" style="clip-path: circle(0);height: 0;padding: 0; width: 0; position: absolute; opacity: 0;" id="hidden_eligible_item_second" name="hidden_eligible_item_second" />
                         </div>
 
                         <div class="text-promotion">
@@ -145,7 +145,7 @@
                             <img src="{{ asset('assets/images/modifiers-black.png') }}">
                             <select name="no_extra_charge" id="no_extra_charge" class="form-control">
                               @foreach (Config::get('constants.NO_EXTRA_CHARGES') as $key=>$item)
-                                <option value="{{$key}}">{{$item}}</option>
+                                <option value="{{$item}}">{{$item}}</option>
                               @endforeach
                             </select>
                         </div>
@@ -230,13 +230,13 @@
                                                       <i class="fa fa-plus"></i>
                                                   </a>
                                               </div>
-                                              <div id="collapse{{$key}}" class="card-body collapse" data-parent="#accordion" >
-                                              @foreach($value->category_item as $key1=>$value1)
+                                              <div id="collapse{{$key}}" class="card-body collapse" data-parent="#accordion">
+                                                @foreach($value->category_item as $key1=>$value1)
                                                   <div class="form-group cs-checkbox">
-                                                      <input type="checkbox" class="checkbox-custom category_item-first category{{$key}}" id="item{{$value->category_id}}{{$key1}}" value="{{$value1->menu_id}}" name="category[{{$value->category_id}}][{{$value1->menu_id}}]">
+                                                      <input type="checkbox" class="checkbox-custom category-item-first category{{$key}}" id="item{{$value->category_id}}{{$key1}}" value="{{$value1->menu_id}}" name="category[{{$value->category_id}}][{{$value1->menu_id}}]">
                                                       <label for="item{{$value->category_id}}{{$key1}}">{{$value1->item_name}}</label>
                                                   </div>
-                                                  @endforeach
+                                                @endforeach
                                               </div>
                                           </div>
                                         @endif
@@ -244,7 +244,7 @@
                                   </div>
                               </div>
                               <div class="form-group form-btn justify-content-center">   
-                                  <a class="close eligible_popup_close-first eligible_popup-inner" href="#">Submit</a> 
+                                  <a class="close eligible-popup-close-first eligible_popup-inner" href="#">Submit</a> 
                               </div>
                             </div>
                         </div>
@@ -269,7 +269,7 @@
                                               <div id="collapse-two{{$key}}" class="card-body collapse" data-parent="#accordion" >
                                                  @foreach($value->category_item as $key1=>$value1)
                                                   <div class="form-group cs-checkbox">
-                                                      <input type="checkbox" class="checkbox-custom category_item-second category-two{{$key}}" id="item-two{{$value->category_id}}{{$key1}}" value="{{$value1->menu_id}}" name="category_two[{{$value->category_id}}][{{$value1->menu_id}}]">
+                                                      <input type="checkbox" class="checkbox-custom category-item-second category-two{{$key}}" id="item-two{{$value->category_id}}{{$key1}}" value="{{$value1->menu_id}}" name="category_two[{{$value->category_id}}][{{$value1->menu_id}}]">
                                                       <label for="item-two{{$value->category_id}}{{$key1}}">{{$value1->item_name}}</label>
                                                   </div>
                                                   @endforeach
@@ -279,7 +279,7 @@
                                   </div>
                               </div>
                               <div class="form-group form-btn justify-content-center">   
-                                  <a class="close eligible_popup_close-second eligible_popup-inner" href="#">Submit</a> 
+                                  <a class="close eligible-popup-close-second eligible_popup-inner" href="#">Submit</a> 
                               </div>
                             </div>
                         </div>

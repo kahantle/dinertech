@@ -128,8 +128,8 @@ $(document).ready(function () {
                             popUp += '<div id="collapse_' + words_number + i + '" class="card-body collapse" data-parent="#accordion" >';
                             for (var item in categoryData[i].category_item) {
                                 popUp += '<div class="form-group cs-checkbox">';
-                                popUp += '<input type="checkbox" class="checkbox-custom category_item_' + words_number + ' category_' + words_number + i + '" id="item' + categoryData[i].category_id + item + '" value=' + categoryData[i].category_item[item].menu_id + ' name="category[' + count + '][' + categoryData[i].category_id + '][' + categoryData[i].category_item[item].menu_id + ']" data-category="' + words_number + '">';
-                                popUp += '<label for="item' + categoryData[i].category_id + item + '">' + categoryData[i].category_item[item].item_name + '</label>';
+                                popUp += '<input type="checkbox" class="checkbox-custom category_item_' + words_number + ' category_' + words_number + i + '" id="item' + categoryData[i].category_id + item + count +'" value=' + categoryData[i].category_item[item].menu_id + ' name="category[' + count + '][' + categoryData[i].category_id + '][' + categoryData[i].category_item[item].menu_id + ']" data-category="' + words_number + '">';
+                                popUp += '<label for="item' + categoryData[i].category_id + item + count+'">' + categoryData[i].category_item[item].item_name + '</label>';
                                 popUp += '</div>';
                             }
                             popUp += '</div>';

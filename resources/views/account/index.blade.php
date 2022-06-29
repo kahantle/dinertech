@@ -201,7 +201,7 @@
                             </div>
                             <div class="switch-btn d-flex align-items-center justify-content-end">
                                 <span class="input-group-text">%</span>
-                                <input type="number" max="100" accuracy="2" min="0" style="padding: 8px 28px 8px 15px; width: 100%;" value="{{($restaurant->sales_tax) ? $restaurant->sales_tax : ''}}" id="tax-value">
+                                <input type="number" max="100" accuracy="2" min="0" style="padding: 8px 28px 8px 15px; width: 100%;" value="{{($restaurant->sales_tax) ? $restaurant->sales_tax : ''}}" id="tax-value" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
                                 <button type="button" id="save-tax" data-type="sales-tax">Save</button>
                             </div>
                         </label>

@@ -14,11 +14,11 @@ class AddAutoManuallyDiscountToTable extends Migration
     public function up()
     {
         Schema::table('promotions', function (Blueprint $table) {
-            $table->integer('auto_manually_discount')->nullable()->after('order_type');
-            $table->string('discount_cheapest')->nullable()->after('order_type');
-            $table->string('discount_expensive')->nullable()->after('order_type');
-            $table->string('item_group_1')->nullable()->after('order_type');
-            $table->string('item_group_2')->nullable()->after('order_type');
+            $table->string('auto_manually_discount',255)->nullable()->after('order_type');
+            $table->string('discount_cheapest')->nullable()->after('auto_manually_discount');
+            $table->string('discount_expensive')->nullable()->after('discount_cheapest');
+            $table->string('item_group_1')->nullable()->after('discount_expensive');
+            $table->string('item_group_2')->nullable()->after('item_group_1');
         });
     }
 

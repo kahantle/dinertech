@@ -65,7 +65,7 @@
                         </div>
                         
                         <div>
-                            <input type="text" style="clip-path: circle(0);height: 0;padding: 0; width: 0; position: absolute; opacity: 0;" id="hidden_eligible_item-first" name="hidden_eligible_item_first" />
+                            <input type="text" style="clip-path: circle(0);height: 0;padding: 0; width: 0; position: absolute; opacity: 0;" id="hidden_eligible_item_first" name="hidden_eligible_item_first" />
                         </div>
 
                         <div class="form-group select-input input-popup inputpop-inner">
@@ -76,7 +76,7 @@
                         </div>
 
                         <div>
-                            <input type="text" style="clip-path: circle(0);height: 0;padding: 0; width: 0; position: absolute; opacity: 0;" id="hidden_eligible_item-second" name="hidden_eligible_item_second" />
+                            <input type="text" style="clip-path: circle(0);height: 0;padding: 0; width: 0; position: absolute; opacity: 0;" id="hidden_eligible_item_second" name="hidden_eligible_item_second" />
                         </div>
 
                         <div class="text-promotion">
@@ -89,12 +89,12 @@
                                     <img src="{{ asset('assets/images/Promotion Function.png') }}">
                                     <select id="select-box" class="form-control" name="auto_manually_discount">
                                         @foreach (Config::get('constants.AUTO_DISCOUNT') as $key=>$item)
-                                            <option value="{{$item}}" {{($promotion->auto_manually_discount==$key)?'selected':''}}>{{$item}}</option>
+                                            <option value="{{$item}}" {{($promotion->auto_manually_discount==$item)?'selected':''}}>{{$item}}</option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
-                            @if ($promotion->auto_manually_discount == 2)
+                            @if ($promotion->auto_manually_discount == Config::get('constants.AUTO_DISCOUNT.2'))
                                 <div id="tab-2" class="tab-content">
                             @else
                                 <div id="tab-2" class="tab-content" style="display: none">
@@ -167,7 +167,7 @@
                             <select name="client_type" id="client_type" class="form-control">
                                   <option value="">Customer type</option>
                                   @foreach (Config::get('constants.CLIENT_TYPE') as $key=>$item)
-                                      <option value="{{$item}}" {{($promotion->client_type==$item)?'selected':''}}>{{$item}}</option>
+                                      <option value="{{$item}}" {{($promotion->client_type == $item)?'selected':''}}>{{$item}}</option>
                                   @endforeach
                             </select>
                         </div>
@@ -243,8 +243,8 @@
                                               <div class="form-group cs-checkbox">
                                                     @php
                                                         $category_selected =  \App\Models\PromotionCategoryItem::where(['category_id' => $value->category_id])->where(['promotion_id' => $promotion->promotion_id])->where('eligible_item_id',1)->count();
-                                                        if($category_selected >0){
-                                                            $all = $value->category_item->count()===$category_selected ;
+                                                        if($category_selected > 0){
+                                                            $all = $value->category_item->count() === $category_selected;
                                                         }else{
                                                             $all=false;
                                                         }
@@ -266,7 +266,7 @@
                                                         }
                                                     @endphp
                                                   <div class="form-group cs-checkbox">
-                                                      <input type="checkbox" class="checkbox-custom category_item-first category{{$key}}" {{($category_select_item)?'checked':''}} id="item{{$value->category_id}}{{$key1}}" value="{{$value1->menu_id}}" name="category[{{$value->category_id}}][{{$value1->menu_id}}]">
+                                                      <input type="checkbox" class="checkbox-custom category-item-first category{{$key}}" {{($category_select_item)?'checked':''}} id="item{{$value->category_id}}{{$key1}}" value="{{$value1->menu_id}}" name="category[{{$value->category_id}}][{{$value1->menu_id}}]">
                                                       <label for="item{{$value->category_id}}{{$key1}}">{{$value1->item_name}}</label>
                                                   </div>
                                                   @endforeach
@@ -277,7 +277,7 @@
                                   </div>
                               </div>
                               <div class="form-group form-btn justify-content-center">   
-                                  <a class="close eligible_popup_close-first eligible_popup-inner" href="#">Submit</a> 
+                                  <a class="close eligible-popup-close-first eligible_popup-inner" href="#">Submit</a> 
                               </div>
                             </div>
                         </div>
@@ -297,7 +297,7 @@
                                                     @php
                                                         $category_selected =  \App\Models\PromotionCategoryItem::where(['category_id' => $value->category_id])->where(['promotion_id' => $promotion->promotion_id])->where('eligible_item_id',2)->count();
                                                         if($category_selected >0){
-                                                            $all = $value->category_item->count()===$category_selected ;
+                                                            $all = $value->category_item->count() === $category_selected ;
                                                         }else{
                                                             $all=false;
                                                         }
@@ -319,7 +319,7 @@
                                                         }
                                                     @endphp
                                                   <div class="form-group cs-checkbox">
-                                                      <input type="checkbox" class="checkbox-custom category_item-second category-two{{$key}}" {{($category_select_item)?'checked':''}} id="item-two{{$value->category_id}}{{$key1}}" value="{{$value1->menu_id}}" name="category_two[{{$value->category_id}}][{{$value1->menu_id}}]">
+                                                      <input type="checkbox" class="checkbox-custom category-item-second category-two{{$key}}" {{($category_select_item)?'checked':''}} id="item-two{{$value->category_id}}{{$key1}}" value="{{$value1->menu_id}}" name="category_two[{{$value->category_id}}][{{$value1->menu_id}}]">
                                                       <label for="item-two{{$value->category_id}}{{$key1}}">{{$value1->item_name}}</label>
                                                   </div>
                                                   @endforeach
@@ -329,7 +329,7 @@
                                   </div>
                               </div>
                               <div class="form-group form-btn justify-content-center">   
-                                  <a class="close eligible_popup_close-second eligible_popup-inner" href="#">Submit</a> 
+                                  <a class="close eligible-popup-close-second eligible_popup-inner" href="#">Submit</a> 
                               </div>
                             </div>
                         </div>

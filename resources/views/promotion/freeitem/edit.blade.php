@@ -184,14 +184,14 @@
                                     @if($value->category_item->count() != 0)
                                         <div class="card mb-0">
                                             <div class="form-group cs-checkbox">
-                                            @php
-                                            $category_selected =  \App\Models\PromotionCategoryItem::where(['category_id' => $value->category_id])->where(['promotion_id' => $promotion->promotion_id])->count();
-                                              if($category_selected >0){
-                                              $all = $value->category_item->count()===$category_selected ;
-                                              }else{
-                                                $all=false;
-                                              }
-                                           @endphp
+                                                @php
+                                                    $category_selected =  \App\Models\PromotionCategoryItem::where(['category_id' => $value->category_id])->where(['promotion_id' => $promotion->promotion_id])->count();
+                                                    if($category_selected > 0){
+                                                        $all = $value->category_item->count() === $category_selected ;
+                                                    }else{
+                                                        $all=false;
+                                                    }
+                                                @endphp
           
                                             <input type="checkbox" class="checkbox-custom categoryList" {{($all)?'checked':''}}  id="category{{$key}}" value="{{$value->category_id}}" name="category[{{$value->category_id}}]">
                                             <label for="category{{$key}}">{{$value->category_name}}</label>

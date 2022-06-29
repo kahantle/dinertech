@@ -110,7 +110,7 @@
                             <img src="{{ asset('assets/images/modifiers-black.png') }}">
                             <select name="no_extra_charge" id="no_extra_charge" class="form-control">
                               @foreach (Config::get('constants.NO_EXTRA_CHARGES') as $key=>$item)
-                                <option value="{{$key}}">{{$item}}</option>
+                                <option value="{{$item}}">{{$item}}</option>
                               @endforeach
                             </select>
                         </div>
@@ -199,8 +199,8 @@
                                                     <div id="collapse_one{{$key}}" class="card-body collapse" data-parent="#accordion" >
                                                         @foreach($value->category_item as $key1=>$value1)
                                                             <div class="form-group cs-checkbox">
-                                                                <input type="checkbox" class="checkbox-custom category_item_one category_one{{$key}}" id="item{{$value->category_id}}{{$key1}}" value="{{$value1->menu_id}}" name="category[1][{{$value->category_id}}][{{$value1->menu_id}}]" data-category="one">
-                                                                <label for="item{{$value->category_id}}{{$key1}}">{{$value1->item_name}}</label>
+                                                                <input type="checkbox" class="checkbox-custom category_item_one category_one{{$key}}" id="item{{$value->category_id}}{{$key1}}1" value="{{$value1->menu_id}}" name="category[1][{{$value->category_id}}][{{$value1->menu_id}}]" data-category="one">
+                                                                <label for="item{{$value->category_id}}{{$key1}}1">{{$value1->item_name}}</label>
                                                             </div>
                                                         @endforeach
                                                     </div>
@@ -235,8 +235,8 @@
                                                 <div id="collapse_two{{$key}}" class="card-body collapse" data-parent="#accordion" >
                                                     @foreach($value->category_item as $key1=>$value1)
                                                         <div class="form-group cs-checkbox">
-                                                            <input type="checkbox" class="checkbox-custom category_item_two category_two{{$key}}" id="item{{$value->category_id}}{{$key1}}" value="{{$value1->menu_id}}" name="category[2][{{$value->category_id}}][{{$value1->menu_id}}]">
-                                                            <label for="item{{$value->category_id}}{{$key1}}">{{$value1->item_name}}</label>
+                                                            <input type="checkbox" class="checkbox-custom category_item_two category_two{{$key}}" id="item{{$value->category_id}}{{$key1}}2" value="{{$value1->menu_id}}" name="category[2][{{$value->category_id}}][{{$value1->menu_id}}]">
+                                                            <label for="item{{$value->category_id}}{{$key1}}2">{{$value1->item_name}}</label>
                                                         </div>
                                                     @endforeach
                                                 </div>
@@ -270,8 +270,8 @@
                                                 <div id="collapse_three{{$key}}" class="card-body collapse" data-parent="#accordion" >
                                                     @foreach($value->category_item as $key1=>$value1)
                                                         <div class="form-group cs-checkbox">
-                                                            <input type="checkbox" class="checkbox-custom category_item_three category_three{{$key}}" id="item{{$value->category_id}}{{$key1}}" value="{{$value1->menu_id}}" name="category[3][{{$value->category_id}}][{{$value1->menu_id}}]" data-category="three">
-                                                            <label for="item{{$value->category_id}}{{$key1}}">{{$value1->item_name}}</label>
+                                                            <input type="checkbox" class="checkbox-custom category_item_three category_three{{$key}}" id="item{{$value->category_id}}{{$key1}}3" value="{{$value1->menu_id}}" name="category[3][{{$value->category_id}}][{{$value1->menu_id}}]" data-category="three">
+                                                            <label for="item{{$value->category_id}}{{$key1}}3">{{$value1->item_name}}</label>
                                                         </div>
                                                     @endforeach
                                                 </div>
