@@ -15,8 +15,9 @@ class CreatePromotionEligibleItemsTable extends Migration
     {
         Schema::create('promotion_eligible_items', function (Blueprint $table) {
             $table->id('promotion_eligible_item_id');
-            $table->integer('promotion_id');
-            $table->integer('eligible_item_id');
+            $table->integer('promotion_id')->nullable();
+            $table->integer('eligible_item_id')->nullable();
+            $table->string('item_group_discount',10)->nullable();
             $table->timestamps();
         });
     }

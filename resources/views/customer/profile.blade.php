@@ -16,10 +16,14 @@
                                     <div class="prof-img-par ">
                                         <div class="row">
                                             <div class="col-lg-12 mb-2">
-                                                <div class="circle">
-                                                    <img src="{{ route('display.image', [Config::get('constants.IMAGES.USER_IMAGE_PATH'), $customer->profile_image]) }}"
-                                                        class="profile-pic">
-                                                </div>
+                                                @if($customer->profile_image)
+                                                    <div class="circle">
+                                                        <img src="{{ route('display.image', [Config::get('constants.IMAGES.USER_IMAGE_PATH'), $customer->profile_image]) }}"
+                                                            class="profile-pic">
+                                                    </div>
+                                                @else 
+                                                    <img src="{{asset('assets/images/user.png')}}" class="profile-pic">
+                                                @endif
                                                 <div class="p-image d-none">
                                                     <i class="fa fa-camera upload-button"></i>
                                                     <input class="file-upload" type="file" accept="image/*"
@@ -60,9 +64,16 @@
                                                 value="{{ $customer->mobile_number }}" readonly>
                                         </div>
                                         <div class="form-group ">
-                                            <textarea class="form-control Profile-input" name="physical_address"
+                                            @if ($customer->address->first->address)
+                                                <textarea class="form-control Profile-input" name="physical_address"
                                                 id="inputaddress" rows="3 " placeholder="Address"
                                                 disabled="disabled">{{ $customer->address->first->address['address'] }}</textarea>
+                                            @else
+                                                <textarea class="form-control Profile-input" name="physical_address"
+                                                id="inputaddress" rows="3 " placeholder="Address"
+                                                disabled="disabled"></textarea>
+                                            @endif
+                                            
                                         </div>
                                         <button type="submit " class="btn btn-user-profile submitProfile"
                                             alt="Update Profile" disabled>

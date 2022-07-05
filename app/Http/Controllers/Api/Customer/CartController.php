@@ -9,6 +9,7 @@ use Config;
 use App\Models\Cart;
 // use App\Models\MenuItem;
 use App\Models\CartItem;
+use App\Models\Restaurant;
 use App\Models\CartMenuGroup;
 use App\Models\CartMenuGroupItem;
 use App\Models\PromotionType;
@@ -30,26 +31,43 @@ class CartController extends Controller
             ]);
             $uid = auth('api')->user()->uid;
             $restaurantId = $request->post('restaurant_id');
-            $cartItem = Cart::with(['cartMenuItems','cartMenuModifierItems'])->where('restaurant_id',$restaurantId)->where('uid',$uid)->first();
-            
-            if($cartItem){
-                /* Promotions Helper logic function */
-                $promotionTypes = PromotionType::all();
-                foreach($promotionTypes as $promotion_type){
-                    if(apply_promotion($promotion_type->promotion_name,$uid,$restaurantId,$cartItem) == true){
-                        break;
-                    }
-                }
-            }
-
-            $cart = Cart::with(['cartMenuItems' => function($cartItems){
+            // $cartItem = Cart::with(['cartMenuItems','cartMenuModifierItems'])->where('restaurant_id',$restaurantId)->where('uid',$uid)->first();
+            $cartItem = Cart::with(['cartMenuItems' => function($cartItems){
                 $cartItems->select(['cart_menu_item_id','cart_id','menu_id','menu_name','menu_qty','menu_price','menu_total','modifier_total','is_loyalty'])->with(['cartMenuGroups' => function($cartMenuGroups){
                     $cartMenuGroups->select(['cart_modifier_group_id','cart_menu_item_id','menu_id','modifier_group_id','modifier_group_name'])->with('cartMenuGroupItems')->get();
                 }])->get();
             }])->where('restaurant_id',$restaurantId)->where('uid',$uid)->select('cart_id','restaurant_id','uid','sub_total','discount_charge','tax_charge','total_due','is_payment')->first();
+            if($cartItem){
+                
+                if((empty($cartItem->promotion_id) || $cartItem->promotion_id == null) && (empty($cartItem->discount_charge) || floatval($cartItem->discount_charge) == 0.00)){
+                    // if(!$cartItem->promotion_id){
+                    //     Cart::where('cart_id',$cartItem->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['discount_charge' => 0.00,'tax_charge' => 0.00,'total_due' => $cartItem->sub_total]);
+                    // }
+                    $promotionTypes = PromotionType::all();
+                    foreach($promotionTypes as $promotion_type){
+                        /* Promotions Helper logic function */
+                        if(apply_promotion($promotion_type->promotion_name,$uid,$restaurantId,$cartItem) == true){
+                           break;
+                        }
+                    }
+                }
+
+                if(!$cartItem->tax_charge || floatval($cartItem->tax_charge) == 0.00){
+                    $restaurant = Restaurant::where('restaurant_id',$restaurantId)->first();
+                    $taxCharge = number_format(($cartItem->total_due * $restaurant->sales_tax) / 100,2);
+                    $finalTotal = number_format($cartItem->total_due + $taxCharge,2);
+                    Cart::where('cart_id',$cartItem->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['tax_charge' => $taxCharge,'total_due' => $finalTotal]);
+                }
+            }
+           
             
-            if($cart){
-                return response()->json(['cart_list' => $cart, 'success' => true], 200);
+            // $cartItem = Cart::with(['cartMenuItems' => function($cartItems){
+            //     $cartItems->select(['cart_menu_item_id','cart_id','menu_id','menu_name','menu_qty','menu_price','menu_total','modifier_total','is_loyalty'])->with(['cartMenuGroups' => function($cartMenuGroups){
+            //         $cartMenuGroups->select(['cart_modifier_group_id','cart_menu_item_id','menu_id','modifier_group_id','modifier_group_name'])->with('cartMenuGroupItems')->get();
+            //     }])->get();
+            // }])->where('restaurant_id',$restaurantId)->where('uid',$uid)->select('cart_id','restaurant_id','uid','sub_total','discount_charge','tax_charge','total_due','is_payment')->first();
+            if($cartItem){
+                return response()->json(['cart_list' => $cartItem, 'success' => true], 200);
             }else{
                 return response()->json(['cart_list' => (object)[],'message' => 'Your cart is empty','success' => true], 200);
             }
@@ -83,8 +101,8 @@ class CartController extends Controller
                 return response()->json(['success' => false,'message' => $validator->errors()], 400);
             }
             $uid = auth('api')->user()->uid;
-            $restaurant = Restaurant::where('restaurant_id',$request->post('restaurant_id'))->first();
-            $salesTax = $restaurant->sales_tax;
+            // $restaurant = Restaurant::where('restaurant_id',$request->post('restaurant_id'))->first();
+            // $salesTax = $restaurant->sales_tax;
             $check_cart = Cart::where('uid',$uid)->where('restaurant_id',$request->post('restaurant_id'))->first();
             $finalTotal = 0;
             if($check_cart == NULL){
@@ -92,7 +110,8 @@ class CartController extends Controller
                 $cart = new Cart;
                 $cart->uid = $uid;
                 $cart->restaurant_id = $request->post('restaurant_id');
-                
+                $cart->order_type = ($request->post('order_type') == Config::get('constants.ORDER_TYPE.1')) ? Config::get('constants.ORDER_TYPE.1') : Config::get('constants.ORDER_TYPE.2');
+                $cart->is_payment = ($request->post('is_payment') == Config::get('constants.ORDER_PAYMENT_TYPE.CASH_PAYMENT')) ? Config::get('constants.ORDER_PAYMENT_TYPE.CASH_PAYMENT') : Config::get('constants.ORDER_PAYMENT_TYPE.CARD_PAYMENT');
                 if($cart->save()){
                     foreach($request->post('menu_item') as $key => $menuItem){
                         $cartMenuItemData = new CartItem;
@@ -106,9 +125,9 @@ class CartController extends Controller
                         $cart_sub_total = $menuItem['menu_total'];
                         $cartMenuItemData->modifier_total = $menuItem['modifier_total'];
                         $cartMenuItemData->is_loyalty = ($menuItem['is_loyalty'] == true) ? 1:0;
-                        $cartMenuItemData->save();
-                        if($menuItem['modifier_list']){
-                            foreach($menuItem['modifier_list'] as $modifierKey => $modifier){
+                        $cartMenuItemData->save();                    
+                        if(isset($menuItem['modifier_list'])){
+                           foreach($menuItem['modifier_list'] as $modifierKey => $modifier){
                                 $cartModifierGroup = new CartMenuGroup;
                                 $cartModifierGroup->cart_id = $cart->cart_id;
                                 $cartModifierGroup->cart_menu_item_id = $cartMenuItemData->cart_menu_item_id;
@@ -116,7 +135,7 @@ class CartController extends Controller
                                 $cartModifierGroup->modifier_group_id = $modifier['modifier_group_id'];
                                 $cartModifierGroup->modifier_group_name = $modifier['modifier_group_name'];
                                 if($cartModifierGroup->save()){
-                                    if($modifier['modifier_items']){
+                                    if(isset($modifier['modifier_items'])){
                                         foreach($modifier['modifier_items'] as $modifierItemKey => $modifierItem){
                                             $cartModifierItem = new CartMenuGroupItem;
                                             $cartModifierItem->cart_id = $cart->cart_id;
@@ -135,9 +154,9 @@ class CartController extends Controller
                         }
                         $finalTotal += $cart_sub_total;
                     }
-                    $taxCharge = ($finalTotal * $salesTax) / 100;
-                    $finalTotal = $finalTotal + $taxCharge;
-                    Cart::where('uid',$uid)->where('restaurant_id',$request->post('restaurant_id'))->where('cart_id',$cart->cart_id)->update(['sub_total' => number_format($cart_sub_total,2), 'tax_charge' => number_format($taxCharge,2), 'total_due' => number_format($finalTotal,2)]);
+                    // $taxCharge = ($finalTotal * $salesTax) / 100;
+                    // $finalTotal = $finalTotal + $taxCharge;
+                    Cart::where('uid',$uid)->where('restaurant_id',$request->post('restaurant_id'))->where('cart_id',$cart->cart_id)->update(['sub_total' => number_format($finalTotal,2),  'total_due' => number_format($finalTotal,2)]);
                 }
             }else{
                 $cart_sub_total = $check_cart->sub_total;
@@ -154,7 +173,7 @@ class CartController extends Controller
                     $cart_sub_total += $menuItem['menu_total'];
                     $cartMenuItemData->is_loyalty = ($menuItem['is_loyalty'] == true) ? 1:0;
                     $cartMenuItemData->save();
-                    if($menuItem['modifier_list']){
+                    if(isset($menuItem['modifier_list'])){
                         foreach($menuItem['modifier_list'] as $modifierKey => $modifier){
                             $cartModifierGroup = new CartMenuGroup;
                             $cartModifierGroup->cart_id = $check_cart->cart_id;
@@ -163,7 +182,7 @@ class CartController extends Controller
                             $cartModifierGroup->modifier_group_id = $modifier['modifier_group_id'];
                             $cartModifierGroup->modifier_group_name = $modifier['modifier_group_name'];
                             if($cartModifierGroup->save()){
-                                if($modifier['modifier_items']){
+                                if(isset($modifier['modifier_items'])){
                                     foreach($modifier['modifier_items'] as $modifierItemKey => $modifierItem){
                                         $cartModifierItem = new CartMenuGroupItem;
                                         $cartModifierItem->cart_id = $check_cart->cart_id;
@@ -182,9 +201,11 @@ class CartController extends Controller
                     }
                     $finalTotal += $cart_sub_total;
                 }
-                $taxCharge = ($finalTotal * $salesTax) / 100;
-                $finalTotal = $finalTotal + $taxCharge;
-                Cart::where('uid',$uid)->where('restaurant_id',$request->post('restaurant_id'))->where('cart_id',$check_cart->cart_id)->update(['sub_total' => number_format($cart_sub_total,2), 'tax_charge' => number_format($taxCharge,2), 'total_due' => number_format($finalTotal,2)]);
+                // $taxCharge = ($finalTotal * $salesTax) / 100;
+                // $finalTotal = $finalTotal + $taxCharge;
+                $orderType = ($request->post('order_type') == Config::get('constants.ORDER_TYPE.1')) ? Config::get('constants.ORDER_TYPE.1') : Config::get('constants.ORDER_TYPE.2');
+                // Cart::where('uid',$uid)->where('restaurant_id',$request->post('restaurant_id'))->where('cart_id',$check_cart->cart_id)->update(['order_type' => $orderType,'sub_total' => number_format($cart_sub_total,2), 'tax_charge' => number_format($taxCharge,2), 'total_due' => number_format($finalTotal,2)]);
+                Cart::where('uid',$uid)->where('restaurant_id',$request->post('restaurant_id'))->where('cart_id',$check_cart->cart_id)->update(['order_type' => $orderType, 'sub_total' => number_format($finalTotal,2), 'total_due' => number_format($finalTotal,2)]);
             }
             
            return response()->json(['success' => true, 'message' => "Item added to the cart successfully."], 200);

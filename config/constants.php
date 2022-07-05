@@ -88,6 +88,7 @@ return [
     'ORDER_TYPE' => [
         '1' => 'Any Type',
         '2' => 'Pickup Time',
+        // '3' => 'Delhivery'
     ],
     'MARK_PROMO_AS' => [
         '1' => 'Not Exclusive',
@@ -168,6 +169,8 @@ return [
     'ORDER_PAYMENT_TYPE' => [
         'CASH' => 1,
         'CARD' => 0,
+        'CARD_PAYMENT' => 'Credit Card',
+        'CASH_PAYMENT' => 'Cash'
     ],
     'CAMPAIGN_MONITOR' => [
         'EMAIL' => 'kevin@sohosushi.com',

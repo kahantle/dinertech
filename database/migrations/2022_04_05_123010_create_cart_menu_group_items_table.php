@@ -17,6 +17,7 @@ class CreateCartMenuGroupItemsTable extends Migration
             $table->id('cart_modifier_menu_id');
             $table->integer('cart_id')->nullable();
             $table->integer('cart_menu_item_id')->nullable();
+            $table->integer('category_id')->nullable();
             $table->integer('menu_id')->nullable();
             $table->integer('cart_modifier_group_id')->nullable();
             $table->integer('modifier_item_id')->nullable();

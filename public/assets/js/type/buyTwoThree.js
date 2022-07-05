@@ -3,14 +3,13 @@ $(document).ready(function () {
     var baseUrl = $("meta[name='base-url']").attr("content");
 
     $("#select-box").on("change", function () {
-        if ($(this).val() == 2) {
+        if ($(this).val() == "Manually set discount") {
             $("#tab-1").hide();
             $("#tab-2").show();
-        }
-        else {
+        } else {
             $("#tab-1").show();
             if ($(document).find(".discount-remove").length != 0) {
-                $(document).find("#addDiscountItem").html('');
+                $(document).find("#addDiscountItem").html("");
             }
             $("#tab-2").hide();
         }

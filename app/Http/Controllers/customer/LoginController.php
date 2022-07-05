@@ -66,10 +66,11 @@ class LoginController extends Controller
         }
 
         $login_array = array();
-        if ($user->mobile_number) {
-            $login_array = (['email_id' => $user->email_id, 'password' => $request->password]);
-        }
-
+        // if ($user->mobile_number) {
+        //     $login_array = (['email_id' => $user->email_id, 'password' => $request->password]);
+        // }
+        $login_array = (['email_id' => $user->email_id, 'password' => $request->password]);
+        
         if (auth()->attempt($login_array)) {
             return "Success";
         } else {

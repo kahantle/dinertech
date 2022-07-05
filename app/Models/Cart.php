@@ -8,7 +8,7 @@ class Cart extends Model
 {
     protected $primaryKey = 'cart_id';
 
-    protected $appends = ['menu_with_out_total','menu_with_total'];
+    protected $appends = ['modifier_with_out_menu_total','modifier_with_menu_total'];
     
     /**
      * Get all of the menu items for the Cart
@@ -25,11 +25,11 @@ class Cart extends Model
     }
 
 
-    public function getMenuWithOutTotalAttribute(){
-        return $this->cartMenuItems->sum('menu_price');
+    public function getModifierWithOutMenuTotalAttribute(){
+        return $this->cartMenuItems->where('modifier_total',0.00)->sum('menu_price');
     }
 
-    public function getMenuWithTotalAttribute(){
-        return $this->cartMenuItems->sum('menu_total');
+    public function getModifierWithMenuTotalAttribute(){
+        return $this->cartMenuItems->where('modifier_total',0.00)->sum('menu_total');
     }
 }

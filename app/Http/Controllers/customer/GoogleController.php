@@ -33,11 +33,14 @@ class GoogleController extends Controller
     {
         try {
             $user = Socialite::driver('google')->user();
-            $findUser = User::where('google_id', $user->id)->first();
+            $findUser = User::where('email_id', $user->email)->where('role',Config::get('constants.ROLES.CUSTOMER'))->first();
             if($findUser){
-                Auth::login($findUser);
-                // return redirect('/customer');
-                return redirect()->route('customer.index');
+                $login_array = (['email_id' => $findUser->email_id, 'password' => '123456']);
+                if (auth()->attempt($login_array)) {
+                    return redirect()->route('customer.index');
+                }
+                // Auth::login($findUser);
+                return redirect('/customer');
             }else{
 
                 $name = explode(" ",$user->name);
@@ -62,8 +65,11 @@ class GoogleController extends Controller
                     'created_at' => date('Y-m-d H:i:s'),
                 ]);
 
-                $newUser = ['email_id' => $user->email,'password' => '123456'];
-
+                $newUser = ['email_id' => $googleUser->email_id,'password' => '123456'];
+                if (auth()->attempt($newUser)) {
+                    return redirect()->route('customer.index');
+                }
+                return redirect()->route('customer.index');
                 // $newUser = User::create([
                 //     'role'       => Config::get('constants.ROLES.CUSTOMER'),
                 //     'first_name' => $name[0],
@@ -72,12 +78,12 @@ class GoogleController extends Controller
                 //     'google_id'=> $user->id,
                 //     'password' => \Hash::make('123456')
                 // ]);
-                Auth::login($newUser);
-                return redirect()->route('customer.index');
+                // Auth::login($newUser);
                 // return redirect('/customer');
             }
         } catch (\Throwable $th) {
-            dd($th->getMessage());
+            // dd($th->getMessage());
+            return redirect()->route('customer.index')->with('error','This email already exists.');
         }
     }
 }

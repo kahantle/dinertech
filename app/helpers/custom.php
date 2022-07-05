@@ -517,242 +517,281 @@ if(!function_exists('apply_promotion'))
     function apply_promotion($promotionType,$uid,$restaurantId,$cart){
         switch ($promotionType) {
             case Config::get('constants.PROMOTION_TYPES.FIRST'):
-                $promotions = Promotion::with('promotion_category')->where('promotion_type_id',1)->where('promotion_status',Config::get('constants.STATUS.ACTIVE'))->whereNotIn('availability',[Config::get('constants.AVAILABILITY.3'),Config::get('constants.AVAILABILITY.4')]);
+                $promotions = Promotion::with('promotion_category')->where('promotion_type_id',1)->where('status',Config::get('constants.STATUS.ACTIVE'))->whereNotIn('availability',[Config::get('constants.AVAILABILITY.3'),Config::get('constants.AVAILABILITY.4')]);
                 $promotionsCount = $promotions;
                 if($promotionsCount->count() > 0){
-                    $promotions = promotion_filter($promotions,$uid,$restaurantId,$cart);
-                    if($promotions){
-                        if(add_promotion($promotions,$cart,$uid,$restaurantId) == true){
-                            return true;
-                        }else{
-                            $totalAmount = $cart->sub_total;
-                            $discount = 0.00;
-                            $totalPayableAmount = $totalAmount;
-                            Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
-                        }                    
-                    }else{
-                        $totalAmount = $cart->sub_total;
-                        $discount = 0.00;
-                        $totalPayableAmount = $totalAmount;
-                        Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
-                        return false;
+                    // $promotions = promotion_filter($promotions,$uid,$restaurantId,$cart);
+
+                    // if($promotions){
+                    //     if(add_promotion($promotions,$cart,$uid,$restaurantId) == true){
+                    //         return true;
+                    //     }else{
+                    //         return false;
+                    //         // $totalAmount = $cart->sub_total;
+                    //         // $discount = 0.00;
+                    //         // $totalPayableAmount = $totalAmount;
+                    //         // Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
+                    //     }                    
+                    // }else{
+                    //     // $totalAmount = $cart->sub_total;
+                    //     // $discount = 0.00;
+                    //     // $totalPayableAmount = $totalAmount;
+                    //     // Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
+                    //     return false;
+                    // }
+                    if(promotion_filter($promotions,$uid,$restaurantId,$cart) == true){
+                        return true;
                     }
+                    return false;
                 }else{
-                    $totalAmount = $cart->sub_total;
-                    $discount = 0.00;
-                    $totalPayableAmount = $totalAmount;
-                    Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
+                    // $totalAmount = $cart->sub_total;
+                    // $discount = 0.00;
+                    // $totalPayableAmount = $totalAmount;
+                    // Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
                     return false;
                 }
                 break;
             case Config::get('constants.PROMOTION_TYPES.TWO'):
-                $promotions = Promotion::with('promotion_category')->where('promotion_type_id',2)->where('promotion_status',Config::get('constants.STATUS.ACTIVE'))->whereNotIn('availability',[Config::get('constants.AVAILABILITY.3'),Config::get('constants.AVAILABILITY.4')]);
+                $promotions = Promotion::with('promotion_category')->where('promotion_type_id',2)->where('status',Config::get('constants.STATUS.ACTIVE'))->whereNotIn('availability',[Config::get('constants.AVAILABILITY.3'),Config::get('constants.AVAILABILITY.4')]);
                 $promotionsCount = $promotions;
-                dd($promotions->get());
+               
                 if($promotionsCount->count() > 0){
-                    $promotions = promotion_filter($promotions,$uid,$restaurantId,$cart);
-                    $cartModifierItemIds = $cart->cartMenuModifierItems->pluck('modifier_item_id');
-                    $promotionsEligibleItems = PromotionEligibleItem::where('promotion_id',$promotions->promotion_id)->whereIn('eligible_item_id',$cartModifierItemIds)->get();
-                    if($promotionsEligibleItems->count() != 0){
-                        
-                        if(add_promotion($promotions,$cart,$uid,$restaurantId) == true){
-                            return true;
-                        }else{
-                            $totalAmount = $cart->sub_total;
-                            $discount = 0.00;
-                            $totalPayableAmount = $totalAmount;
-                            Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
-                        }
-                    }else{
-                        $totalAmount = $cart->sub_total;
-                        $discount = 0.00;
-                        $totalPayableAmount = $totalAmount;
-                        Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
+                    // $promotions = promotion_filter($promotions,$uid,$restaurantId,$cart);
+                    if(promotion_filter($promotions,$uid,$restaurantId,$cart) == true){
+                        return true;
                     }
                     
+                    // if(add_promotion($promotions,$cart,$uid,$restaurantId) == true){
+                    //     return true;
+                    // }   
+                    return false;
                 }else{
-                    $totalAmount = $cart->sub_total;
-                    $discount = 0.00;
-                    $totalPayableAmount = $totalAmount;
-                    Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
+                    return false;
+                    // $totalAmount = $cart->sub_total;
+                    // $discount = 0.00;
+                    // $totalPayableAmount = $totalAmount;
+                    // Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
                 }
-                return false;
                 break;
             case Config::get('constants.PROMOTION_TYPES.THREE'):
-                $promotions = Promotion::with('promotion_category')->where('promotion_type_id',3)->where('promotion_status',Config::get('constants.STATUS.ACTIVE'))->whereNotIn('availability',[Config::get('constants.AVAILABILITY.3'),Config::get('constants.AVAILABILITY.4')]);
+                $promotions = Promotion::with('promotion_category')->where('promotion_type_id',3)->where('status',Config::get('constants.STATUS.ACTIVE'))->whereNotIn('availability',[Config::get('constants.AVAILABILITY.3'),Config::get('constants.AVAILABILITY.4')]);
+                
                 $promotionsCount = $promotions;
                 if($promotionsCount->count() > 0){
-                    $promotions = promotion_filter($promotions,$uid,$restaurantId,$cart);
+                    // $promotions = promotion_filter($promotions,$uid,$restaurantId,$cart);
                    
-                    if(add_promotion($promotions,$cart,$uid,$restaurantId) == true){
+                    // if(add_promotion($promotions,$cart,$uid,$restaurantId) == true){
+                    //     return true;
+                    // }else{
+                    //     $totalAmount = $cart->sub_total;
+                    //     $discount = 0.00;
+                    //     $totalPayableAmount = $totalAmount;
+                    //     Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
+                    // }
+
+                    if(promotion_filter($promotions,$uid,$restaurantId,$cart) == true){
                         return true;
-                    }else{
-                        $totalAmount = $cart->sub_total;
-                        $discount = 0.00;
-                        $totalPayableAmount = $totalAmount;
-                        Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
                     }
+                    return false;
                 }else{
-                    $totalAmount = $cart->sub_total;
-                    $discount = 0.00;
-                    $totalPayableAmount = $totalAmount;
-                    Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
+                    // $totalAmount = $cart->sub_total;
+                    // $discount = 0.00;
+                    // $totalPayableAmount = $totalAmount;
+                    // Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
+                    return false;
                 }
                 return false;
                 break;
             case Config::get('constants.PROMOTION_TYPES.FOUR'):
-                $promotions = Promotion::with('promotion_category')->where('promotion_type_id',4)->where('promotion_status',Config::get('constants.STATUS.ACTIVE'))->whereNotIn('availability',[Config::get('constants.AVAILABILITY.3'),Config::get('constants.AVAILABILITY.4')]);
+                $promotions = Promotion::with('promotion_category')->where('promotion_type_id',4)->where('status',Config::get('constants.STATUS.ACTIVE'))->whereNotIn('availability',[Config::get('constants.AVAILABILITY.3'),Config::get('constants.AVAILABILITY.4')]);
+                
                 $promotionsCount = $promotions;
                 if($promotionsCount->count() > 0){
-                    $promotions = promotion_filter($promotions,$uid,$restaurantId,$cart);
-                    if(add_promotion($promotions,$cart,$uid,$restaurantId) == true){
+                    // $promotions = promotion_filter($promotions,$uid,$restaurantId,$cart);
+                    // if(add_promotion($promotions,$cart,$uid,$restaurantId) == true){
+                    //     return true;
+                    // }else{
+                    //     $totalAmount = $cart->sub_total;
+                    //     $discount = 0.00;
+                    //     $totalPayableAmount = $totalAmount;
+                    //     Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
+                    // }
+                    if(promotion_filter($promotions,$uid,$restaurantId,$cart) == true){
                         return true;
-                    }else{
-                        $totalAmount = $cart->sub_total;
-                        $discount = 0.00;
-                        $totalPayableAmount = $totalAmount;
-                        Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
                     }
+                    return false;
                 }else{
-                    $totalAmount = $cart->sub_total;
-                    $discount = 0.00;
-                    $totalPayableAmount = $totalAmount;
-                    Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
+                    // $totalAmount = $cart->sub_total;
+                    // $discount = 0.00;
+                    // $totalPayableAmount = $totalAmount;
+                    // Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
+                    return false;
                 }
                 return false;
                 break;
             case Config::get('constants.PROMOTION_TYPES.FIVE'):
-                $promotions = Promotion::with('promotion_category')->where('promotion_type_id',5)->where('promotion_status',Config::get('constants.STATUS.ACTIVE'))->whereNotIn('availability',[Config::get('constants.AVAILABILITY.3'),Config::get('constants.AVAILABILITY.4')]);
+                $promotions = Promotion::with('promotion_category')->where('promotion_type_id',5)->where('status',Config::get('constants.STATUS.ACTIVE'))->whereNotIn('availability',[Config::get('constants.AVAILABILITY.3'),Config::get('constants.AVAILABILITY.4')]);
+                
                 $promotionsCount = $promotions;
                 if($promotionsCount->count() > 0){
-                    $promotions = promotion_filter($promotions,$uid,$restaurantId,$cart);
-                    if(add_promotion($promotions,$cart,$uid,$restaurantId) == true){
+                    // $promotions = promotion_filter($promotions,$uid,$restaurantId,$cart);
+                    // if(add_promotion($promotions,$cart,$uid,$restaurantId) == true){
+                    //     return true;
+                    // }else{
+                    //     $totalAmount = $cart->sub_total;
+                    //     $discount = 0.00;
+                    //     $totalPayableAmount = $totalAmount;
+                    //     Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
+                    // }
+                    if(promotion_filter($promotions,$uid,$restaurantId,$cart) == true){
                         return true;
-                    }else{
-                        $totalAmount = $cart->sub_total;
-                        $discount = 0.00;
-                        $totalPayableAmount = $totalAmount;
-                        Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
                     }
+                    return false;
                 }else{
-                    $totalAmount = $cart->sub_total;
-                    $discount = 0.00;
-                    $totalPayableAmount = $totalAmount;
-                    Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
+                    return false;
+                    // $totalAmount = $cart->sub_total;
+                    // $discount = 0.00;
+                    // $totalPayableAmount = $totalAmount;
+                    // Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
                 }
                 return false;
                 break;
             case Config::get('constants.PROMOTION_TYPES.SIX'):
-                $promotions = Promotion::with('promotion_category')->where('promotion_type_id',6)->where('promotion_status',Config::get('constants.STATUS.ACTIVE'))->whereNotIn('availability',[Config::get('constants.AVAILABILITY.3'),Config::get('constants.AVAILABILITY.4')]);
+                $promotions = Promotion::with('promotion_category')->where('promotion_type_id',6)->where('status',Config::get('constants.STATUS.ACTIVE'))->whereNotIn('availability',[Config::get('constants.AVAILABILITY.3'),Config::get('constants.AVAILABILITY.4')]);
                 $promotionsCount = $promotions;
                 if($promotionsCount->count() > 0){
-                    $promotions = promotion_filter($promotions,$uid,$restaurantId,$cart);
-                    if(add_promotion($promotions,$cart,$uid,$restaurantId) == true){
+                    // $promotions = promotion_filter($promotions,$uid,$restaurantId,$cart);
+                    // if(add_promotion($promotions,$cart,$uid,$restaurantId) == true){
+                    //     return true;
+                    // }else{
+                    //     $totalAmount = $cart->sub_total;
+                    //     $discount = 0.00;
+                    //     $totalPayableAmount = $totalAmount;
+                    //     Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
+                    // }
+                    if(promotion_filter($promotions,$uid,$restaurantId,$cart) == true){
                         return true;
-                    }else{
-                        $totalAmount = $cart->sub_total;
-                        $discount = 0.00;
-                        $totalPayableAmount = $totalAmount;
-                        Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
                     }
+                    return false;
                 }else{
-                    $totalAmount = $cart->sub_total;
-                    $discount = 0.00;
-                    $totalPayableAmount = $totalAmount;
-                    Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
+                    return false;
+                    // $totalAmount = $cart->sub_total;
+                    // $discount = 0.00;
+                    // $totalPayableAmount = $totalAmount;
+                    // Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
                 }
                 return false;
                 break;
             case Config::get('constants.PROMOTION_TYPES.SEVEN'):
-                $promotions = Promotion::with('promotion_category')->where('promotion_type_id',7)->where('promotion_status',Config::get('constants.STATUS.ACTIVE'))->whereNotIn('availability',[Config::get('constants.AVAILABILITY.3'),Config::get('constants.AVAILABILITY.4')]);
+                $promotions = Promotion::with('promotion_category')->where('promotion_type_id',7)->where('status',Config::get('constants.STATUS.ACTIVE'))->whereNotIn('availability',[Config::get('constants.AVAILABILITY.3'),Config::get('constants.AVAILABILITY.4')]);
                 $promotionsCount = $promotions;
                 if($promotionsCount->count() > 0){
-                    $promotions = promotion_filter($promotions,$uid,$restaurantId,$cart);
-                    $cartModifierItemIds = $cart->cartMenuModifierItems->pluck('modifier_item_id');
-                    $promotionsEligibleItems = PromotionEligibleItem::where('promotion_id',$promotions->promotion_id)->whereIn('eligible_item_id',$cartModifierItemIds)->get();
-                    if($promotionsEligibleItems->count() != 0){
-                        if(add_promotion($promotions,$cart,$uid,$restaurantId) == true){
-                            return true;
-                        }else{
-                            $totalAmount = $cart->sub_total;
-                            $discount = 0.00;
-                            $totalPayableAmount = $totalAmount;
-                            Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
-                        }
-                    }else{
-                        $totalAmount = $cart->sub_total;
-                        $discount = 0.00;
-                        $totalPayableAmount = $totalAmount;
-                        Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
+                    // $promotions = promotion_filter($promotions,$uid,$restaurantId,$cart);
+                    // $cartModifierItemIds = $cart->cartMenuModifierItems->pluck('modifier_item_id');
+                    // $promotionsEligibleItems = PromotionEligibleItem::where('promotion_id',$promotions->promotion_id)->whereIn('eligible_item_id',$cartModifierItemIds)->get();
+                    // if($promotionsEligibleItems->count() != 0){
+                    //     if(add_promotion($promotions,$cart,$uid,$restaurantId) == true){
+                    //         return true;
+                    //     }else{
+                    //         $totalAmount = $cart->sub_total;
+                    //         $discount = 0.00;
+                    //         $totalPayableAmount = $totalAmount;
+                    //         Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
+                    //     }
+                    // }else{
+                    //     $totalAmount = $cart->sub_total;
+                    //     $discount = 0.00;
+                    //     $totalPayableAmount = $totalAmount;
+                    //     Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
+                    // }
+                    if(promotion_filter($promotions,$uid,$restaurantId,$cart) == true){
+                        return true;
                     }
+                    return false;
                 }else{
-                    $totalAmount = $cart->sub_total;
-                    $discount = 0.00;
-                    $totalPayableAmount = $totalAmount;
-                    Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
+                    return false;
+                    // $totalAmount = $cart->sub_total;
+                    // $discount = 0.00;
+                    // $totalPayableAmount = $totalAmount;
+                    // Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
                 }
                 return false;
                 break;
             case Config::get('constants.PROMOTION_TYPES.EIGHT'):
-                $promotions = Promotion::with('promotion_category')->where('promotion_type_id',8)->where('promotion_status',Config::get('constants.STATUS.ACTIVE'))->whereNotIn('availability',[Config::get('constants.AVAILABILITY.3'),Config::get('constants.AVAILABILITY.4')]);
+                $promotions = Promotion::with('promotion_category')->where('promotion_type_id',8)->where('status',Config::get('constants.STATUS.ACTIVE'))->whereNotIn('availability',[Config::get('constants.AVAILABILITY.3'),Config::get('constants.AVAILABILITY.4')]);
                 $promotionsCount = $promotions;
                 if($promotionsCount->count() > 0){
                     $promotions = promotion_filter($promotions,$uid,$restaurantId,$cart);
-                    if(add_promotion($promotions,$cart,$uid,$restaurantId) == true){
-                        return true;
-                    }else{
-                        $totalAmount = $cart->sub_total;
-                        $discount = 0.00;
-                        $totalPayableAmount = $totalAmount;
-                        Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
+                    // if(add_promotion($promotions,$cart,$uid,$restaurantId) == true){
+                    //     return true;
+                    // }else{
+                    //     $totalAmount = $cart->sub_total;
+                    //     $discount = 0.00;
+                    //     $totalPayableAmount = $totalAmount;
+                    //     Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
+                    // }
+                    if(promotion_filter($promotions,$uid,$restaurantId,$cart) == true){
+                            return true;
                     }
+                    return false;
                 }else{
-                    $totalAmount = $cart->sub_total;
-                    $discount = 0.00;
-                    $totalPayableAmount = $totalAmount;
-                    Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
+                    return false;
+                    // $totalAmount = $cart->sub_total;
+                    // $discount = 0.00;
+                    // $totalPayableAmount = $totalAmount;
+                    // Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
                 }
                 return false;
                 break;
             case Config::get('constants.PROMOTION_TYPES.NINE'):
-                $promotions = Promotion::with('promotion_category')->where('promotion_type_id',9)->where('promotion_status',Config::get('constants.STATUS.ACTIVE'))->whereNotIn('availability',[Config::get('constants.AVAILABILITY.3'),Config::get('constants.AVAILABILITY.4')]);
+                $promotions = Promotion::with('promotion_category')->where('promotion_type_id',9)->where('status',Config::get('constants.STATUS.ACTIVE'))->whereNotIn('availability',[Config::get('constants.AVAILABILITY.3'),Config::get('constants.AVAILABILITY.4')]);
                 $promotionsCount = $promotions;
                 if($promotionsCount->count() > 0){
-                    $promotions = promotion_filter($promotions,$uid,$restaurantId,$cart);
-                    if(add_promotion($promotions,$cart,$uid,$restaurantId) == true){
+                    // $promotions = promotion_filter($promotions,$uid,$restaurantId,$cart);
+                    // if(add_promotion($promotions,$cart,$uid,$restaurantId) == true){
+                    //     return true;
+                    // }else{
+                    //     $totalAmount = $cart->sub_total;
+                    //     $discount = 0.00;
+                    //     $totalPayableAmount = $totalAmount;
+                    //     Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
+                    // }
+                    if(promotion_filter($promotions,$uid,$restaurantId,$cart) == true){
                         return true;
-                    }else{
-                        $totalAmount = $cart->sub_total;
-                        $discount = 0.00;
-                        $totalPayableAmount = $totalAmount;
-                        Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
                     }
+                    return false;
                 }else{
-                    $totalAmount = $cart->sub_total;
-                    $discount = 0.00;
-                    $totalPayableAmount = $totalAmount;
-                    Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
+                    return false;
+                    // $totalAmount = $cart->sub_total;
+                    // $discount = 0.00;
+                    // $totalPayableAmount = $totalAmount;
+                    // Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
                 }
                 return false;
                 break;
             case Config::get('constants.PROMOTION_TYPES.TEN'):
-                $promotions = Promotion::with('promotion_category')->where('promotion_type_id',10)->where('promotion_status',Config::get('constants.STATUS.ACTIVE'))->whereNotIn('availability',[Config::get('constants.AVAILABILITY.3'),Config::get('constants.AVAILABILITY.4')]);
+                $promotions = Promotion::with('promotion_category')->where('promotion_type_id',10)->where('status',Config::get('constants.STATUS.ACTIVE'))->whereNotIn('availability',[Config::get('constants.AVAILABILITY.3'),Config::get('constants.AVAILABILITY.4')]);
                 $promotionsCount = $promotions;
                 if($promotionsCount->count() > 0){
-                    $promotions = promotion_filter($promotions,$uid,$restaurantId,$cart);
-                    if(add_promotion($promotions,$cart,$uid,$restaurantId) == true){
+                    // $promotions = promotion_filter($promotions,$uid,$restaurantId,$cart);
+                    // if(add_promotion($promotions,$cart,$uid,$restaurantId) == true){
+                    //     return true;
+                    // }else{
+                    //     $totalAmount = $cart->sub_total;
+                    //     $discount = 0.00;
+                    //     $totalPayableAmount = $totalAmount;
+                    //     Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
+                    // }
+                    if(promotion_filter($promotions,$uid,$restaurantId,$cart) == true){
                         return true;
-                    }else{
-                        $totalAmount = $cart->sub_total;
-                        $discount = 0.00;
-                        $totalPayableAmount = $totalAmount;
-                        Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
                     }
+                    return false;
                 }else{
-                    $totalAmount = $cart->sub_total;
-                    $discount = 0.00;
-                    $totalPayableAmount = $totalAmount;
-                    Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
+                    return false;
+                    // $totalAmount = $cart->sub_total;
+                    // $discount = 0.00;
+                    // $totalPayableAmount = $totalAmount;
+                    // Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => null]);
                 }
                 return false;
                 break;
@@ -765,83 +804,246 @@ if(!function_exists('apply_promotion'))
 
 if(!function_exists('promotion_filter')){
     function promotion_filter($promotions,$uid,$restaurantId,$cart){
+        
         $orderCount = Order::where('uid',$uid)->where('restaurant_id',$restaurantId)->where('order_progress_status',Config::get('constants.ORDER_STATUS.COMPLETED'))->get();
         if($orderCount->count() == 0){
-            $promotions = $promotions->where('client_type','!=',Config::get('constants.CLIENT_TYPE.2'));
+            // $promotions = $promotions->where('client_type','!=',Config::get('constants.CLIENT_TYPE.2'));
+            $promotions = $promotions->whereIn('client_type',[Config::get('constants.CLIENT_TYPE.2'),Config::get('constants.CLIENT_TYPE.1')]);
         }else{
             $promotions = $promotions->whereIn('client_type',[Config::get('constants.CLIENT_TYPE.3'),Config::get('constants.CLIENT_TYPE.1')]);
         }
         
-        if($cart->is_payment == 'Credit Card'){
+        if($cart->is_payment == Config::get('constants.ORDER_PAYMENT_TYPE.CARD_PAYMENT')){
             $promotions = $promotions->where('only_selected_cash_delivery_person',"1");
-        }else if($cart->is_payment == 'Cash'){
+        }
+        
+        if($cart->is_payment == Config::get('constants.ORDER_PAYMENT_TYPE.CASH_PAYMENT')){
             $promotions = $promotions->where('only_selected_cash',"1");
         }
         
-        $promotions = $promotions->select('promotion_id','promotion_type_id','restaurant_id','promotion_code','promotion_name','promotion_details','discount','discount_type','client_type','order_type','mark_promoas_status','no_extra_charge_type','promotion_function','availability','promotion_status','set_minimum_order_amount','only_selected_payment_method','only_selected_cash','only_selected_cash_delivery_person','only_once_per_client')->first();
-        return $promotions;
+        if($cart->order_type == Config::get('constants.ORDER_TYPE.1')){
+            $promotions = $promotions->where('order_type',Config::get('constants.ORDER_TYPE.1'));
+        }
+
+        if($cart->order_type == Config::get('constants.ORDER_TYPE.2')){
+            $promotions = $promotions->where('order_type',Config::get('constants.ORDER_TYPE.2'));
+        }
+       
+        if($promotions->count() != 0){
+            $cartMenuItemIds = $cart->cartMenuItems->pluck('menu_id');
+            $promotionId = null;
+            if($cartMenuItemIds->count() != 0){
+                $allPromotions = $promotions->get();
+                foreach($allPromotions as $promotion){
+                    $promotionsEligibleItems = PromotionEligibleItem::whereIN('eligible_item_id',$cartMenuItemIds)->where('promotion_id',$promotion->promotion_id)->get();
+                    if($promotionsEligibleItems->count() != 0){
+                        //  $promotions = $promotions->where('promotion_id',$promotion->promotion_id);
+                        $promotionId = $promotion->promotion_id;
+                        break;
+                    }
+                }
+            } else {
+                $allPromotions = $promotions->get();
+            }
+            
+            // if($promotionId == null){
+            //     return false;
+            // }else{
+            //     $promotions = $promotions->select('promotion_id','promotion_type_id','restaurant_id','promotion_code','promotion_name','promotion_details','discount','discount_type','client_type','order_type','mark_promoas_status','no_extra_charge_type','promotion_function','availability','promotion_status','set_minimum_order_amount','only_selected_payment_method','only_selected_cash','only_selected_cash_delivery_person','only_once_per_client')->where('promotion_id',$promotionId)->first();
+            //     // return $promotions;
+            // }
+            
+            if($promotionId){
+                $promotions = $promotions->select('promotion_id','promotion_type_id','restaurant_id','promotion_code','promotion_name','promotion_details','discount','discount_type','client_type','order_type','mark_promoas_status','no_extra_charge_type','promotion_function','availability','promotion_status','set_minimum_order_amount','only_selected_payment_method','only_selected_cash','only_selected_cash_delivery_person','only_once_per_client')->where('promotion_id',$promotionId)->first();
+                
+                if($promotions->no_extra_charge_type == Config::get('constants.NO_EXTRA_CHARGES.2')){
+                    if(floatval($cart->modifier_with_out_menu_total) > floatval($promotions->set_minimum_order_amount)){
+                        if($promotions->discount_type == Config::get('constants.DISCOUNT_TYPE.USD')){
+                            $totalAmount = $cart->modifier_with_out_menu_total;
+                            $discount = $promotions->discount;
+                            $totalPayableAmount = $cart->modifier_with_out_menu_total - $discount;
+                        }else{
+                            $totalAmount = $cart->modifier_with_out_menu_total;
+                            $discount = $totalAmount * $promotions->discount / 100;
+                            $totalPayableAmount = $totalAmount - $discount;
+                        }
+                    }else{
+                        // apply_tax_charge($cart->cart_id, $uid, $cart->sub_total, $restaurantId);
+                        return false;
+                    }
+                }else if($promotions->no_extra_charge_type == Config::get('constants.NO_EXTRA_CHARGES.3')){
+                    if(floatval($cart->modifier_with_menu_total) > floatval($promotions->set_minimum_order_amount)){
+                        if($promotions->discount_type == Config::get('constants.DISCOUNT_TYPE.USD')){
+                            $totalAmount = $cart->modifier_with_menu_total;
+                            $discount = $promotions->discount;
+                            $totalPayableAmount = $cart->modifier_with_menu_total - $discount;
+                        }else{
+                            $totalAmount = $cart->modifier_with_menu_total;
+                            $discount = $totalAmount * $promotions->discount / 100;
+                            $totalPayableAmount = $totalAmount - $discount;
+                        }
+                    }else{
+                        return false;
+                    }
+                }else{
+                     
+                    if(floatval($cart->sub_total) > floatval($promotions->set_minimum_order_amount)){ 
+                        if($promotions->discount_type == Config::get('constants.DISCOUNT_TYPE.USD')){
+                            $totalAmount = $cart->sub_total;
+                            $discount = $promotions->discount;
+                            $totalPayableAmount = $totalAmount - $discount;
+                        }else{
+                            $totalAmount = $cart->sub_total;
+                            $discount = $totalAmount * $promotions->discount / 100;
+                            $totalPayableAmount = $totalAmount - $discount;
+                        }
+                    }else{
+                        return false;
+                    }
+                }
+                return discount_charge($cart->cart_id, $uid, $totalAmount, $totalPayableAmount, $discount, $restaurantId, $promotions->promotion_id);
+            } else {
+                foreach($allPromotions as $promotion){
+                    $promotions = $promotions->select('promotion_id','promotion_type_id','restaurant_id','promotion_code','promotion_name','promotion_details','discount','discount_type','client_type','order_type','mark_promoas_status','no_extra_charge_type','promotion_function','availability','promotion_status','set_minimum_order_amount','only_selected_payment_method','only_selected_cash','only_selected_cash_delivery_person','only_once_per_client')->where('promotion_id',$promotion->promotion_id)->first();
+
+                    dd($promotions->no_extra_charge_type);
+                    if($promotions->no_extra_charge_type == Config::get('constants.NO_EXTRA_CHARGES.2')){
+                        if($cart->modifier_with_out_menu_total > floatval($promotions->set_minimum_order_amount)){
+                            if($promotions->discount_type == Config::get('constants.DISCOUNT_TYPE.USD')){
+                                $totalAmount = $cart->modifier_with_out_menu_total;
+                                $discount = $promotions->discount;
+                                $totalPayableAmount = $cart->modifier_with_out_menu_total - $discount;
+                            }else{
+                                $totalAmount = $cart->modifier_with_out_menu_total;
+                                $discount = $totalAmount * $promotions->discount / 100;
+                                $totalPayableAmount = $totalAmount - $discount;
+                            }
+                        }else{
+                            // apply_tax_charge($cart->cart_id, $uid, $cart->sub_total, $restaurantId);
+                            return false;
+                        }
+                    }else if($promotions->no_extra_charge_type == Config::get('constants.NO_EXTRA_CHARGES.3')){
+                        if($cart->modifier_with_out_menu_total > floatval($promotions->set_minimum_order_amount)){
+                        
+                            if($promotions->discount_type == Config::get('constants.DISCOUNT_TYPE.USD')){
+                                $totalAmount = $cart->modifier_with_out_menu_total;
+                                $discount = $promotions->discount;
+                                $totalPayableAmount = $cart->modifier_with_out_menu_total - $discount;
+                            }else{
+                                $totalAmount = $cart->modifier_with_out_menu_total;
+                                $discount = $totalAmount * $promotions->discount / 100;
+                                $totalPayableAmount = $totalAmount - $discount;
+                            }
+                        }else{
+                            return false;
+                        }
+                    }else{
+                        if(floatval($cart->sub_total) > floatval($promotions->set_minimum_order_amount)){
+                            if($promotions->discount_type == Config::get('constants.DISCOUNT_TYPE.USD')){
+                                $totalAmount = $cart->sub_total;
+                                $discount = $promotions->discount;
+                                $totalPayableAmount = $totalAmount - $discount;
+                            }else{
+                                $totalAmount = $cart->sub_total;
+                                $discount = $totalAmount * $promotions->discount / 100;
+                                $totalPayableAmount = $totalAmount - $discount;
+                            }
+                        }else{
+                            return false;
+                        }
+                    }
+                    return discount_charge($cart->cart_id, $uid, $totalAmount, $totalPayableAmount, $discount, $restaurantId, $promotions->promotion_id);
+                }
+            }
+        }
+        return false;
     }
 }
 
 if(!function_exists('add_promotion')){
     function add_promotion($promotions,$cart,$uid,$restaurantId){
         if($promotions){
-            if($promotions->no_extra_charge_type == Config::get('constants.NO_EXTRA_CHARGES.2')){
-                if($promotions->set_minimum_order_amount > $cart->menu_with_out_total){
-                    if($promotions->discount_type == Config::get('constants.DISCOUNT_TYPE.USD')){
-                        $totalAmount = $cart->menu_with_out_total;
-                        $discount = $promotions->discount;
-                        $totalPayableAmount = $cart->menu_with_out_total - $discount;
-                    }else{
-                        $totalAmount = $cart->menu_with_out_total;
-                        $discount = $totalAmount * $promotions->discount / 100;
-                        $totalPayableAmount = $totalAmount - $discount;
-                    }
-                }else{
-                    $totalAmount = $cart->sub_total;
-                    $discount = 0.00;
-                    $totalPayableAmount = $totalAmount;
-                    return false;
-                }
-            }else if($promotions->no_extra_charge_type == Config::get('constants.NO_EXTRA_CHARGES.3')){
-                if($promotions->set_minimum_order_amount > $cart->menu_with_out_total){
-                    if($promotions->discount_type == Config::get('constants.DISCOUNT_TYPE.USD')){
-                        $totalAmount = $cart->menu_with_out_total;
-                        $discount = $promotions->discount;
-                        $totalPayableAmount = $cart->menu_with_out_total - $discount;
-                    }else{
-                        $totalAmount = $cart->menu_with_out_total;
-                        $discount = $totalAmount * $promotions->discount / 100;
-                        $totalPayableAmount = $totalAmount - $discount;
-                    }
-                }else{
-                    $totalAmount = $cart->sub_total;
-                    $discount = 0.00;
-                    $totalPayableAmount = $totalAmount;
-                    return false;
-                }
-            }else{
-                if($promotions->set_minimum_order_amount < $cart->sub_total){
-                    if($promotions->discount_type == Config::get('constants.DISCOUNT_TYPE.USD')){
-                        $totalAmount = $cart->sub_total;
-                        $discount = $promotions->discount;
-                        $totalPayableAmount = $totalAmount - $discount;
-                    }else{
-                        $totalAmount = $cart->sub_total;
-                        $discount = $totalAmount * $promotions->discount / 100;
-                        $totalPayableAmount = $totalAmount - $discount;
-                    }
-                }else{
-                    $totalAmount = $cart->sub_total;
-                    $discount = 0.00;
-                    $totalPayableAmount = $totalAmount;
-                    return false;
-                }
-            }
-            Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id' => $promotions->promotion_id]);
-            return true;
+           
+            // if($promotions->no_extra_charge_type == Config::get('constants.NO_EXTRA_CHARGES.2')){
+            //     if($cart->modifier_with_out_menu_total > floatval($promotions->set_minimum_order_amount)){
+            //         if($promotions->discount_type == Config::get('constants.DISCOUNT_TYPE.USD')){
+            //             $totalAmount = $cart->modifier_with_out_menu_total;
+            //             $discount = $promotions->discount;
+            //             $totalPayableAmount = $cart->modifier_with_out_menu_total - $discount;
+            //         }else{
+            //             $totalAmount = $cart->modifier_with_out_menu_total;
+            //             $discount = $totalAmount * $promotions->discount / 100;
+            //             $totalPayableAmount = $totalAmount - $discount;
+            //         }
+            //     }else{
+            //         // apply_tax_charge($cart->cart_id, $uid, $cart->sub_total, $restaurantId);
+            //         return false;
+            //     }
+            // }else if($promotions->no_extra_charge_type == Config::get('constants.NO_EXTRA_CHARGES.3')){
+            //     if($cart->modifier_with_out_menu_total > floatval($promotions->set_minimum_order_amount)){
+            //         if($promotions->discount_type == Config::get('constants.DISCOUNT_TYPE.USD')){
+            //             $totalAmount = $cart->modifier_with_out_menu_total;
+            //             $discount = $promotions->discount;
+            //             $totalPayableAmount = $cart->modifier_with_out_menu_total - $discount;
+            //         }else{
+            //             $totalAmount = $cart->modifier_with_out_menu_total;
+            //             $discount = $totalAmount * $promotions->discount / 100;
+            //             $totalPayableAmount = $totalAmount - $discount;
+            //         }
+            //     }else{
+            //         // $totalAmount = $cart->sub_total;
+            //         // $discount = 0.00;
+            //         // $totalPayableAmount = $totalAmount;
+            //         // apply_tax_charge($cart->cart_id, $uid, $cart->sub_total, $restaurantId);
+            //         return false;
+            //     }
+            // }else{
+            //     if($promotions->set_minimum_order_amount < $cart->sub_total){
+            //         if($promotions->discount_type == Config::get('constants.DISCOUNT_TYPE.USD')){
+            //             $totalAmount = $cart->sub_total;
+            //             $discount = $promotions->discount;
+            //             $totalPayableAmount = $totalAmount - $discount;
+            //         }else{
+            //             $totalAmount = $cart->sub_total;
+            //             $discount = $totalAmount * $promotions->discount / 100;
+            //             $totalPayableAmount = $totalAmount - $discount;
+            //         }
+            //     }else{
+            //         // $totalAmount = $cart->sub_total;
+            //         // $discount = 0.00;
+            //         // $totalPayableAmount = $totalAmount;
+            //         // apply_tax_charge($cart->cart_id, $uid, $cart->sub_total, $restaurantId);
+            //         return false;
+            //     }
+            // }
+            // dd($totalPayableAmount);
+            // $restaurant = Restaurant::where('restaurant_id',$restaurantId)->first();
+            // $taxCharge = ($totalPayableAmount * $restaurant->sales_tax) / 100;
+            // $finalTotal = $totalPayableAmount + $taxCharge;
+            // Cart::where('cart_id',$cart->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($totalAmount,2),'discount_charge' => number_format($discount,2),'total_due' => number_format($finalTotal,2),'promotion_id' => $promotions->promotion_id]);
+            return discount_charge($cart->cart_id, $uid, $totalAmount, $totalPayableAmount, $discount, $restaurantId, $promotions->promotion_id);
+            // return true;
         }else{
             return false;
+        }
+    }
+}
+
+if(!function_exists('discount_charge')){
+    function discount_charge($cartId, $uid, $subTotal, $totalPayableAmount, $discount, $restaurantId, $promotionId = NULL){
+        try {
+            if($promotionId == NULL){
+                Cart::where('cart_id',$cartId)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($subTotal,2),'total_due' => number_format($totalPayableAmount,2)]);
+                return false;
+            } 
+            
+            
+            Cart::where('cart_id',$cartId)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($subTotal,2),'discount_charge' => number_format($discount,2), 'total_due' => number_format($totalPayableAmount,2),'promotion_id' => $promotionId]);
+            return true;
+            
+            
+        } catch (\Throwable $th) {
+            return $th->getMessage();
         }
     }
 }

@@ -182,7 +182,7 @@
                                                                 @php
                                                                     $category_selected =  \App\Models\PromotionCategoryItem::where(['category_id' => $value->category_id])->where(['promotion_id' => $promotion->promotion_id])->where('eligible_item_id',$i)->count();
                                                                     if($category_selected >0){
-                                                                        $all = $value->category_item->count()===$category_selected ;
+                                                                        $all = $value->category_item->count() === $category_selected ;
                                                                     }else{
                                                                         $all=false;
                                                                     }
@@ -196,7 +196,7 @@
                                                                 </a>
                                                             </div>
                                                             <div id="collapse_{{convertNumberToWord($i)}}{{$key}}" class="card-body collapse" data-parent="#accordion" >
-                                                                @foreach($value->category_item as $key1=>$value1)
+                                                                @foreach($value->category_item as $key1 => $value1)
                                                                     @php
                                                                         $category_select_item =  \App\Models\PromotionCategoryItem::where(['category_id' => $value->category_id])->where(['item_id' => $value1->menu_id])->where(['promotion_id' => $promotion->promotion_id])->where('eligible_item_id',$i)->first();
                                                                         if($category_select_item){
@@ -204,8 +204,8 @@
                                                                         }
                                                                     @endphp
                                                                     <div class="form-group cs-checkbox">
-                                                                        <input type="checkbox" class="checkbox-custom category_item_{{convertNumberToWord($i)}} category_{{convertNumberToWord($i)}}{{$key}}" id="item{{$value->category_id}}{{$key1}}" {{($category_select_item)?'checked':''}} value="{{$value1->menu_id}}" name="category[{{$i}}][{{$value->category_id}}][{{$value1->menu_id}}]" data-category="{{convertNumberToWord($i)}}">
-                                                                        <label for="item{{$value->category_id}}{{$key1}}">{{$value1->item_name}}</label>
+                                                                        <input type="checkbox" class="checkbox-custom category_item_{{convertNumberToWord($i)}} category_{{convertNumberToWord($i)}}{{$key}}" id="item{{$value->category_id.$key1.$i}}" {{($category_select_item)?'checked':''}} value="{{$value1->menu_id}}" name="category[{{$i}}][{{$value->category_id}}][{{$value1->menu_id}}]" data-category="{{convertNumberToWord($i)}}">
+                                                                        <label for="item{{$value->category_id.$key1.$i}}">{{$value1->item_name}}</label>
                                                                     </div>
                                                                 @endforeach
                                                             </div>

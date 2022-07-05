@@ -53,8 +53,7 @@ $(document).ready(function () {
             $(this).val($(this).val().substring(0, max));
         }
     });
-});
-$(document).ready(function () {
+
     $(".add-category a").each(function () {
         if ($(this).hasClass("disabled")) {
             $(this).removeAttr("href");

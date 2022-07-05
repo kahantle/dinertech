@@ -115,8 +115,8 @@
                                 <div class="form-group select-input"> 
                                     <img src="{{ asset('assets/images/Promotion Function.png') }}">
                                     <select id="select-box" class="form-control" name="auto_manually_discount">
-                                        @foreach (Config::get('constants.AUTO_DISCOUNT') as $key=>$item)
-                                            <option value="{{$key}}">{{$item}}</option>
+                                        @foreach (Config::get('constants.AUTO_DISCOUNT') as $key => $item)
+                                            <option value="{{$item}}">{{$item}}</option>
                                         @endforeach
                                     </select>
                                 </div>
