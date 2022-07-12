@@ -99,7 +99,21 @@
                             @else
                                 <div id="tab-2" class="tab-content" style="display: none">
                             @endif
-                                <div class="input-group mb-3">
+                                
+                                @foreach ($eligibleItems as $key => $item)
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend"> 
+                                            <span class="input-group-text inner-text-blog">
+                                                Items Group {{$key + 1}}:
+                                            </span>
+                                        </div>
+                                        <input type="text" class="form-control discount_percentage" value="{{$item->item_group_discount}}" name="item_group_{{$key + 1}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text input-group-text-first">%</span> 
+                                        </div>
+                                    </div>
+                                @endforeach
+                                {{-- <div class="input-group mb-3">
                                     <div class="input-group-prepend"> 
                                         <span class="input-group-text inner-text-blog">
                                             Items Group 1:
@@ -120,9 +134,9 @@
                                     <div class="input-group-prepend"> 
                                         <span class="input-group-text input-group-text-first">%</span> 
                                     </div>
-                                </div>
+                                </div> --}}
                             </div>
-                            @if ($promotion->auto_manually_discount == 1)
+                            @if ($promotion->auto_manually_discount == Config::get('constants.AUTO_DISCOUNT.1'))
                                 <div id="tab-1" class="tab-content">
                             @else
                                 <div id="tab-1" class="tab-content" style="display: none">
@@ -134,7 +148,7 @@
                                             Discount for cheapest item:
                                         </span>
                                     </div>
-                                    <input type="text" class="form-control discount_percentage" value="{{$promotion->discount_cheapest}}"  name="discount_cheapest" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+                                    <input type="text" class="form-control discount_percentage" value="100"  name="discount_cheapest" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" readonly>
                                     <div class="input-group-prepend"> 
                                         <span class="input-group-text input-group-text-first">%</span> 
                                     </div>
@@ -145,7 +159,7 @@
                                             Discount for most expensive item:
                                         </span>
                                     </div>
-                                    <input type="text" class="form-control discount_percentage" value="{{$promotion->discount_expensive}}"  name="discount_expensive" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+                                    <input type="text" class="form-control discount_percentage" value="0"  name="discount_expensive" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" readonly>
                                     <div class="input-group-prepend"> 
                                         <span class="input-group-text input-group-text-first">%</span> 
                                     </div>
@@ -299,7 +313,7 @@
                                                         if($category_selected >0){
                                                             $all = $value->category_item->count() === $category_selected ;
                                                         }else{
-                                                            $all=false;
+                                                            $all = false;
                                                         }
                                                     @endphp
                                                   <input type="checkbox" class="checkbox-custom categoryList-two" {{($all)?'checked':''}} id="category-two{{$key}}" value="{{$value->category_id}}" name="category_two[{{$value->category_id}}]">

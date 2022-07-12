@@ -122,7 +122,7 @@
                                             Discount for cheapest item:
                                         </span>
                                     </div>
-                                    <input type="text" class="form-control discount_percentage" value="100"  name="discount_cheapest" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+                                    <input type="text" class="form-control discount_percentage" value="100"  name="discount_cheapest" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" readonly>
                                     <div class="input-group-prepend"> 
                                         <span class="input-group-text input-group-text-first">%</span> 
                                     </div>
@@ -133,7 +133,7 @@
                                             Discount for most expensive item:
                                         </span>
                                     </div>
-                                    <input type="text" class="form-control discount_percentage" value="0"  name="discount_expensive" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+                                    <input type="text" class="form-control discount_percentage" value="0"  name="discount_expensive" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" readonly>
                                     <div class="input-group-prepend"> 
                                         <span class="input-group-text input-group-text-first">%</span> 
                                     </div>

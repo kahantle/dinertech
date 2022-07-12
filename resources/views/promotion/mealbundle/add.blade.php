@@ -197,7 +197,7 @@
                                                         </a>
                                                     </div>
                                                     <div id="collapse_one{{$key}}" class="card-body collapse" data-parent="#accordion" >
-                                                        @foreach($value->category_item as $key1=>$value1)
+                                                        @foreach($value->category_item as $key1 => $value1)
                                                             <div class="form-group cs-checkbox">
                                                                 <input type="checkbox" class="checkbox-custom category_item_one category_one{{$key}}" id="item{{$value->category_id}}{{$key1}}1" value="{{$value1->menu_id}}" name="category[1][{{$value->category_id}}][{{$value1->menu_id}}]" data-category="one">
                                                                 <label for="item{{$value->category_id}}{{$key1}}1">{{$value1->item_name}}</label>
@@ -284,7 +284,6 @@
                                   </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>

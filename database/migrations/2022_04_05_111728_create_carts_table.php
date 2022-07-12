@@ -18,7 +18,7 @@ class CreateCartsTable extends Migration
             $table->integer('restaurant_id')->nullable();
             $table->integer('uid')->nullable();
             $table->integer('promotion_id')->nullable();
-            $table->enum('is_payment',['Cash','Credit Card'])->nullable();
+            $table->enum('is_payment',['Cash','Credit Card'])->nullable()->default('Credit Card');
             $table->string('loyalty_points')->nullable();
             $table->string('sub_total')->default('0.00');
             $table->string('discount_charge')->default('0.00');

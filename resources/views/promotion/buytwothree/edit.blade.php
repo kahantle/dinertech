@@ -92,15 +92,15 @@
                                     <img src="{{ asset('assets/images/Promotion Function.png') }}">
                                     <select id="select-box" class="form-control" name="auto_manually_discount">
                                         @foreach (Config::get('constants.AUTO_DISCOUNT') as $key=>$item)
-                                            <option value="{{$key}}" {{($promotion->auto_manually_discount==$key)?'selected':''}}>{{$item}}</option>
+                                            <option value="{{$item}}" {{($promotion->auto_manually_discount== $item)?'selected':''}}>{{$item}}</option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
-                            @if ($promotion->auto_manually_discount == 2)
+                            @if ($promotion->auto_manually_discount == Config::get('constants.AUTO_DISCOUNT.2'))
                                 <div id="tab-2" class="tab-content">
                             @else
-                                <div id="tab-2" class="tab-content" style="display: none">    
+                                <div id="tab-2" class="tab-content" style="display: none">
                             @endif
                                 <div id="addItemGroup">
                                     @for ($i = 1;$i <= $eligibleItems;$i++)
@@ -121,7 +121,7 @@
                                     @endfor
                                 </div>
                             </div>
-                            @if ($promotion->auto_manually_discount == 1)
+                             @if ($promotion->auto_manually_discount == Config::get('constants.AUTO_DISCOUNT.1'))
                                 <div id="tab-1" class="tab-content">
                             @else
                                 <div id="tab-1" class="tab-content" style="display: none">
@@ -132,7 +132,7 @@
                                             Discount for cheapest item:
                                         </span>
                                     </div>
-                                    <input type="text" class="form-control discount_percentage" value="{{$promotion->discount_cheapest}}"  name="discount_cheapest" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+                                    <input type="text" class="form-control discount_percentage" value="100"  name="discount_cheapest" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" readonly>
                                     <div class="input-group-prepend"> 
                                         <span class="input-group-text input-group-text-first">%</span> 
                                     </div>
@@ -147,7 +147,7 @@
                                                 <div class="input-group-prepend"> 
                                                     <span class="input-group-text inner-text-blog pr-5"></span>
                                                 </div>
-                                                <input type="text" class="form-control discount_percentage" value="{{$discount->item_group_discount}}"  name="item_discount[{{$i}}]" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+                                                <input type="text" class="form-control discount_percentage" value="0"  name="item_discount[{{$i}}]" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" readonly>
                                                 <div class="input-group-prepend"> 
                                                     <span class="input-group-text input-group-text-first">%</span> 
                                                 </div>
@@ -161,7 +161,7 @@
                                             Discount for most expensive item:
                                         </span>
                                     </div>
-                                    <input type="text" class="form-control discount_percentage" value="{{$promotion->discount_expensive}}"  name="discount_expensive" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+                                    <input type="text" class="form-control discount_percentage" value="0"  name="discount_expensive" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" readonly>
                                     <div class="input-group-prepend"> 
                                         <span class="input-group-text input-group-text-first">%</span> 
                                     </div>

@@ -13,7 +13,6 @@ $(document).ready(function () {
             }
             $("#tab-2").hide();
         }
-
     });
 
     $(document).on('keyup change', ".discount_percentage", function () {
@@ -164,7 +163,7 @@ $(document).ready(function () {
         automatically_discount += '<div class="input-group-prepend">';
         automatically_discount += '<span class="input-group-text inner-text-blog pr-5"></span>';
         automatically_discount += '</div>';
-        automatically_discount += '<input type="text" class="form-control discount_percentage" value="0"  name="item_discount[' + (count - 1) + ']" oninput="this.value = this.value.replace(/[^0-9.]/g, "").replace(/(\..*?)\..*/g, "$1");">';
+        automatically_discount += '<input type="text" class="form-control discount_percentage" value="0"  name="item_discount[' + (count - 1) + ']" oninput="this.value = this.value.replace(/[^0-9.]/g, "").replace(/(\..*?)\..*/g, "$1");" readonly>';
         automatically_discount += '<div class="input-group-prepend">';
         automatically_discount += '<span class="input-group-text input-group-text-first">%</span>';
         automatically_discount += '</div>';
