@@ -218,7 +218,7 @@
                         </div>
 
                         <div class="form-group cs-checkbox">
-                            <input type="checkbox" class="checkbox-custom" id="client" name="only_once_per_client" {{($promotion->only_once_per_client)?'checked':''}}>
+                            <input type="checkbox" class="checkbox-custom" id="client" name="only_once_per_client" {{($promotion->only_once_per_client == "true")?'checked':''}}>
                             <label for="client">Single Use Per Customer</label>
                         </div>
 

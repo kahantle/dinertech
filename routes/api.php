@@ -46,7 +46,7 @@ Route::namespace ('Api')->group(function () {
         Route::post('/logout', 'UserController@logout')->name('customer.logout');
         
         //Role Customer
-        Route::middleware(['auth:api', 'role-cutomer'])->group(function () {
+        Route::middleware(['auth:api', 'role-customer'])->group(function () {
             Route::post('/category', 'CategoryController@getCategoryList')->name('customer.category.list');
             Route::post('/profile', 'UserController@profile')->name('customer.profile');
             Route::post('/category-menu', 'MenuItemController@getMenuList')->name('customer.category.menu.list');

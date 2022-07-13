@@ -140,7 +140,7 @@ class PromotionController extends Controller
             $promotion->only_selected_payment_method = ($request->post('only_selected_payment_method'))?1:0;
             $promotion->only_selected_cash_delivery_person = ($request->post('only_selected_cash_delivery_person'))?1:0;
             $promotion->only_selected_cash = ($request->post('only_selected_cash'))?1:0;
-            $promotion->only_once_per_client = ($request->post('only_once_per_client'))?1:0;
+            $promotion->only_once_per_client = ($request->post('only_once_per_client'))?0:1;
             $promotion->no_extra_charge_type = $request->post('no_extra_charge');
             $promotion->promotion_function = $request->post('promotion_function');
             $promotion->availability = $request->post('availability');
@@ -208,7 +208,7 @@ class PromotionController extends Controller
             $promotion->only_selected_payment_method = ($request->post('only_selected_payment_method'))?1:0;
             $promotion->only_selected_cash_delivery_person = ($request->post('only_selected_cash_delivery_person'))?1:0;
             $promotion->only_selected_cash = ($request->post('only_selected_cash'))?1:0;
-            $promotion->only_once_per_client = ($request->post('only_once_per_client'))?1:0;
+            $promotion->only_once_per_client = ($request->post('only_once_per_client'))?0:1;
             $promotion->promotion_function = $request->post('promotion_function');
             $promotion->availability = $request->post('availability');
             if ($promotion->save()) {
@@ -309,7 +309,7 @@ class PromotionController extends Controller
             $promotion->only_selected_payment_method = ($request->post('only_selected_payment_method'))?1:0;
             $promotion->only_selected_cash_delivery_person = ($request->post('only_selected_cash_delivery_person'))?1:0;
             $promotion->only_selected_cash = ($request->post('only_selected_cash'))?1:0;
-            $promotion->only_once_per_client = ($request->post('only_once_per_client'))?1:0;
+            $promotion->only_once_per_client = ($request->post('only_once_per_client'))?0:1;
             $promotion->mark_promoas_status = $request->post('mark_promo_as');
             $promotion->availability = $request->post('availability');
             if ($promotion->save()) {
@@ -343,12 +343,9 @@ class PromotionController extends Controller
 
     public function storePaymentMethod(Request $request){
         try {
-            if(isset($request->restaurant_user_id))
-            {
-                $uid = $request->restaurant_user_id;
-            }
-            else
-            {
+            if($request->post('restaurant_user_id')) {
+                $uid = $request->post('restaurant_user_id');
+            } else {
                 $uid = Auth::user()->uid;
             }
             
@@ -356,8 +353,8 @@ class PromotionController extends Controller
             if (!$restaurant) {
                 return redirect()->route('promotion')->with('error', 'Invalid users for this restaurant.');
             }
-            if($request->promotion_id){
-                $promotion = Promotion::where('promotion_id',$request->promotion_id)->first();
+            if($request->post('promotion_id')){
+                $promotion = Promotion::where('promotion_id',$request->post('promotion_id'))->first();
                 $message = 'Promotion update successfully.';
             }else{
                 $promotion = new  Promotion;
@@ -366,38 +363,32 @@ class PromotionController extends Controller
            
             $promotion->restaurant_id = $restaurant->restaurant_id;
             $promotion->promotion_type_id = 4 ;
-            $promotion->promotion_code = $request->promotion_code;
-            $promotion->promotion_name = $request->promotion_name;
-            $promotion->promotion_details = $request->promotion_details;
-            $promotion->discount = $request->discount_usd_percentage;
+            $promotion->promotion_code = $request->post('promotion_code');
+            $promotion->promotion_name = $request->post('promotion_name');
+            $promotion->promotion_details = $request->post('promotion_details');
+            $promotion->discount = $request->post('discount_usd_percentage');
             $promotion->discount_type        = Config::get('constants.DISCOUNT_TYPE.PERCENT');
-            $promotion->set_minimum_order = ($request->set_minimum_order)?1:0;
-            $promotion->set_minimum_order_amount = $request->set_minimum_order_amount;
-            $promotion->client_type = $request->client_type;
-            $promotion->order_type = $request->order_type;
-            $promotion->only_selected_payment_method = ($request->only_selected_payment_method)?1:0;
-            $promotion->only_selected_cash_delivery_person = ($request->only_selected_cash_delivery_person)?1:0;
-            $promotion->only_selected_cash = ($request->only_selected_cash)?1:0;
-            $promotion->only_once_per_client = ($request->only_once_per_client)?1:0;
-            $promotion->mark_promoas_status = $request->mark_promo_as;
-            $promotion->availability = $request->availability;
+            $promotion->set_minimum_order = ($request->post('set_minimum_order'))?1:0;
+            $promotion->set_minimum_order_amount = $request->post('set_minimum_order_amount');
+            $promotion->client_type = $request->post('client_type');
+            $promotion->order_type = $request->post('order_type');
+            $promotion->only_selected_payment_method = ($request->post('only_selected_payment_method'))?1:0;
+            $promotion->only_selected_cash_delivery_person = ($request->post('only_selected_cash_delivery_person'))?1:0;
+            $promotion->only_selected_cash = ($request->post('only_selected_cash'))?1:0;
+            $promotion->only_once_per_client = ($request->post('post')('only_once_per_client'))?0:1;
+            $promotion->mark_promoas_status = $request->post('mark_promo_as');
+            $promotion->availability = $request->post('availability');
             if ($promotion->save()) {
-                if(isset($request->restaurant_user_id))
-                {
+                if($request->post('restaurant_user_id')) {
                     return redirect()->back();
-                }
-                else
-                {
+                } else {
                     Toastr::success( $message,'', Config::get('constants.toster'));
                     return redirect()->route('promotion');
                 }
             }else{
-                if(isset($request->restaurant_user_id))
-                {
+                if($request->post('restaurant_user_id')) {
                     return redirect()->back();
-                }
-                else
-                {
+                } else {
                     Toastr::error( $message,'', Config::get('constants.toster'));
                     return redirect()->route('promotion');
                 }
@@ -420,12 +411,9 @@ class PromotionController extends Controller
     public function storeFreeItems(Request $request){
         try {
 
-            if(isset($request->restaurant_user_id))
-            {
-                $uid = $request->restaurant_user_id;
-            }
-            else
-            {
+            if($request->post('restaurant_user_id')) {
+                $uid = $request->post('restaurant_user_id');
+            } else {
                 $uid = Auth::user()->uid;
             }
 
@@ -433,11 +421,11 @@ class PromotionController extends Controller
             if (!$restaurant) {
                 return redirect()->route('promotion')->with('error', 'Invalid users for this restaurant.');
             }
-            if($request->promotion_id){
-                PromotionEligibleItem::where('promotion_id',$request->promotion_id)->delete();
-                PromotionCategory::where('promotion_id',$request->promotion_id)->delete();
-                PromotionCategoryItem::where('promotion_id',$request->promotion_id)->delete();
-                $promotion = Promotion::where('promotion_id',$request->promotion_id)->first();
+            if($request->post('promotion_id')){
+                PromotionEligibleItem::where('promotion_id',$request->post('promotion_id'))->delete();
+                PromotionCategory::where('promotion_id',$request->post('promotion_id'))->delete();
+                PromotionCategoryItem::where('promotion_id',$request->post('promotion_id'))->delete();
+                $promotion = Promotion::where('promotion_id',$request->post('promotion_id'))->first();
                 $message = 'Promotion update successfully.';
             }else{
                 $promotion = new  Promotion;
@@ -445,29 +433,29 @@ class PromotionController extends Controller
             }
             $promotion->restaurant_id = $restaurant->restaurant_id;
             $promotion->promotion_type_id = 5 ;
-            $promotion->promotion_code = $request->promotion_code;
-            $promotion->promotion_name = $request->promotion_name;
-            $promotion->promotion_details = $request->promotion_details;
+            $promotion->promotion_code = $request->post('promotion_code');
+            $promotion->promotion_name = $request->post('promotion_name');
+            $promotion->promotion_details = $request->post('promotion_details');
             $promotion->discount_type = Config::get('constants.DISCOUNT_TYPE.PERCENT');
-            $promotion->discount = $request->discount_usd_percentage_amount;
-            $promotion->set_minimum_order = ($request->set_minimum_order)?1:0;
-            $promotion->set_minimum_order_amount = $request->set_minimum_order_amount;
-            $promotion->client_type = $request->client_type;
-            $promotion->no_extra_charge_type = $request->no_extra_charge;
-            $promotion->order_type = $request->order_type;
-            $promotion->only_selected_payment_method = ($request->only_selected_payment_method)?1:0;
-            $promotion->only_selected_cash_delivery_person = ($request->only_selected_cash_delivery_person)?1:0;
-            $promotion->only_selected_cash = ($request->only_selected_cash)?1:0;
-            $promotion->only_once_per_client = ($request->only_once_per_client)?1:0;
-            $promotion->mark_promoas_status = $request->mark_promo_as;
-            $promotion->availability = $request->availability;
+            $promotion->discount = $request->post('discount_usd_percentage_amount');
+            $promotion->set_minimum_order = ($request->post('set_minimum_order'))?1:0;
+            $promotion->set_minimum_order_amount = $request->post('set_minimum_order_amount');
+            $promotion->client_type = $request->post('client_type');
+            $promotion->no_extra_charge_type = $request->post('no_extra_charge');
+            $promotion->order_type = $request->post('order_type');
+            $promotion->only_selected_payment_method = ($request->post('only_selected_payment_method'))?1:0;
+            $promotion->only_selected_cash_delivery_person = ($request->post('only_selected_cash_delivery_person'))?1:0;
+            $promotion->only_selected_cash = ($request->post('only_selected_cash'))?1:0;
+            $promotion->only_once_per_client = ($request->post('post')('only_once_per_client'))?0:1;
+            $promotion->mark_promoas_status = $request->post('mark_promo_as');
+            $promotion->availability = $request->post('availability');
             if ($promotion->save()) {
-                if(is_array($request->category)){
+                if(is_array($request->post('category'))){
                     $eligible_item = New PromotionEligibleItem;
                     $eligible_item->eligible_item_id  = 1;
                     $eligible_item->promotion_id = $promotion->promotion_id;
                     if($eligible_item->save()){
-                        foreach($request->category as $key=>$value){
+                        foreach($request->post('category') as $key=>$value){
                             $category = New PromotionCategory;
                             $category->promotion_id = $promotion->promotion_id;
                             $category->eligible_item_id  = 1;
@@ -510,7 +498,6 @@ class PromotionController extends Controller
             return redirect()->route('promotion');
         }
     }
-
 
     public function editGetOneFreeItem(Request $request){
         $uid = Auth::user()->uid;
@@ -560,7 +547,7 @@ class PromotionController extends Controller
             $promotion->only_selected_payment_method = ($request->post('only_selected_payment_method'))?1:0;
             $promotion->only_selected_cash_delivery_person = ($request->post('only_selected_cash_delivery_person'))?1:0;
             $promotion->only_selected_cash = ($request->post('only_selected_cash'))?1:0;
-            $promotion->only_once_per_client = ($request->post('only_once_per_client'))?1:0;
+            $promotion->only_once_per_client = ($request->post('only_once_per_client'))?0:1;
             $promotion->mark_promoas_status = $request->post('mark_promo_as');
             $promotion->availability = $request->post('availability');
 
@@ -719,7 +706,7 @@ class PromotionController extends Controller
             $promotion->only_selected_payment_method = ($request->post('only_selected_payment_method'))?1:0;
             $promotion->only_selected_cash_delivery_person = ($request->post('only_selected_cash_delivery_person'))?1:0;
             $promotion->only_selected_cash = ($request->post('only_selected_cash'))?1:0;
-            $promotion->only_once_per_client = ($request->post('only_once_per_client'))?1:0;
+            $promotion->only_once_per_client = ($request->post('only_once_per_client'))?0:1;
             $promotion->mark_promoas_status = $request->post('mark_promo_as');
             $promotion->availability = $request->post('availability');
             
@@ -821,7 +808,7 @@ class PromotionController extends Controller
             $promotion->only_selected_payment_method = ($request->post('only_selected_payment_method'))?1:0;
             $promotion->only_selected_cash_delivery_person = ($request->post('only_selected_cash_delivery_person'))?1:0;
             $promotion->only_selected_cash = ($request->post('only_selected_cash'))?1:0;
-            $promotion->only_once_per_client = ($request->post('only_once_per_client'))?1:0;
+            $promotion->only_once_per_client = ($request->post('only_once_per_client'))?0:1;
             $promotion->mark_promoas_status = $request->post('mark_promo_as');
             $promotion->availability = $request->post('availability');
             $promotion->auto_manually_discount = $request->post('auto_manually_discount');
@@ -944,7 +931,7 @@ class PromotionController extends Controller
             $promotion->only_selected_payment_method = ($request->post('only_selected_payment_method'))?1:0;
             $promotion->only_selected_cash_delivery_person = ($request->post('only_selected_cash_delivery_person'))?1:0;
             $promotion->only_selected_cash = ($request->post('only_selected_cash'))?1:0;
-            $promotion->only_once_per_client = ($request->post('only_once_per_client'))?1:0;
+            $promotion->only_once_per_client = ($request->post('only_once_per_client'))?0:1;
             $promotion->mark_promoas_status = $request->post('mark_promo_as');
             $promotion->availability = $request->post('availability');
             
@@ -1050,7 +1037,7 @@ class PromotionController extends Controller
             $promotion->only_selected_payment_method = ($request->post('only_selected_payment_method'))?1:0;
             $promotion->only_selected_cash_delivery_person = ($request->post('only_selected_cash_delivery_person'))?1:0;
             $promotion->only_selected_cash = ($request->post('only_selected_cash'))?1:0;
-            $promotion->only_once_per_client = ($request->post('only_once_per_client'))?1:0;
+            $promotion->only_once_per_client = ($request->post('only_once_per_client'))?0:1;
             $promotion->mark_promoas_status = $request->post('mark_promo_as');
             $promotion->availability = $request->post('availability');
             

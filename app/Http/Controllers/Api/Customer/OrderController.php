@@ -114,14 +114,20 @@ class OrderController extends Controller
                 // 'stripe_payment_id' => 'required',
                 'menu_item'=>'required'
             ]);
+
             if ($validator->fails()) {
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
             }
+
+            $cartId = $request->post('cart_id');
+            $check_cart = Cart::where('uid',$uid)->where('restaurant_id',$request->post('restaurant_id'))->where('cart_id',$cartId)->first();
+
             $uid = auth('api')->user()->uid;
             DB::beginTransaction();
             $order = new Order;
             $order->uid = $uid;
             $order->restaurant_id = $request->post('restaurant_id');
+            $order->promotion_id = $check_cart->promotion_id;
             $order->order_number = random_int(1000,1000000000000000);
             $order->payment_card_id = ($request->post('isCash') == 1) ? $request->post('payment_card_id') : NULL;
             $order->isCash = $request->post('isCash');
@@ -156,7 +162,7 @@ class OrderController extends Controller
                     $menuItemData->is_loyalty = $menuItem['is_loyalty'];
                     $menuItemData->modifier_total = $menuItem['modifier_total'];
                     $menuItemData->order_id = $order->order_id;
-                    if($menuItemData->save()){
+                    if($menuItemData->save()) {
                         foreach ($menuItem['modifier_list'] as $key => $modifierGroup) {
                             $menuModifier = New OrderMenuGroup;
                             $menuModifier->modifier_group_id = $modifierGroup['modifier_group_id'];
@@ -164,7 +170,7 @@ class OrderController extends Controller
                             $menuModifier->order_menu_item_id = $menuItemData->order_menu_item_id;
                             $menuModifier->menu_id =  $menuItem['menu_id']; 
                             $menuModifier->order_id = $order->order_id;
-                            if($menuModifier->save()){
+                            if($menuModifier->save()) {
                                 foreach ($modifierGroup['modifier_items'] as $key => $modierMenu) {
                                     $menuModifierMenu = New OrderMenuGroupItem;
                                     $menuModifierMenu->order_menu_item_id = $menuItemData->order_menu_item_id;
@@ -177,11 +183,11 @@ class OrderController extends Controller
                                     $menuModifierMenu->modifier_group_item_price = $modierMenu['modifier_group_item_price'];
                                     $menuModifierMenu->save();
                                 }
-                            }else{
+                            } else {
                                 return response()->json(['message' => "Order does not added successfully.", 'success' => true], 401);
                             }
                         }
-                    }else{
+                    } else {
                         return response()->json(['message' => "Order does not added successfully.", 'success' => true], 401);
                     }
                 }
@@ -265,10 +271,8 @@ class OrderController extends Controller
                     }
                 }
 
-                $cartId = $request->post('cart_id');
-                $check_cart = Cart::where('uid',$uid)->where('restaurant_id',$request->post('restaurant_id'))->where('cart_id',$cartId)->first();
-                if($check_cart)
-                {
+                
+                if($check_cart) {
                     CartItem::where('cart_id',$check_cart->cart_id)->delete();
                     CartMenuGroup::where('cart_id',$check_cart->cart_id)->delete();
                     CartMenuGroupItem::where('cart_id',$check_cart->cart_id)->delete();
