@@ -11,13 +11,13 @@
         <li class="{{ Request::is('/') ? 'active' : '' }}">
             <a href="{{ route('dashboard') }}"><img src="{{ asset('images/order-icon.png') }}"
                     class="img-fluid">
-                <span>recent orders</span>
+                <span>active orders</span>
             </a>
         </li>
         <li class="{{ Request::is('order') ? 'active' : '' }}">
             <a href="{{ route('order') }}"><img src="{{ asset('images/promotion-icon.png') }}"
                     class="img-fluid">
-                <span>orders</span>
+                <span>completed orders</span>
             </a>
         </li>
         <div id="accordion-first">

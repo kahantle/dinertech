@@ -26,13 +26,13 @@ class ModifierItemPriceRequest extends FormRequest
         if (request()->post('modifier_item_id')) {
             return [
                 'modifier_item_group_id' => 'required',
-                'modifier_group_item_name' => 'required|unique:modifier_groups_items,modifier_group_item_name,'.request()->post('modifier_item_id').',modifier_item_id',
+                'modifier_group_item_name' => 'required',
                 'modifier_group_item_price' => 'required'
             ];
         } else {
             return [
                 'modifier_item_group_id' => 'required|unique:modifier_groups,modifier_group_name',
-                'modifier_group_item_name' => 'required|unique:modifier_groups_items,modifier_group_item_name',
+                'modifier_group_item_name' => 'required',
                 'modifier_group_item_price' => 'required'
             ];
         }

@@ -7,11 +7,11 @@ $(document).ready(function(e) {
     var url = $(this).data('route');
     if($(this).hasClass("open")){
       $(".groupBtn").html('Add');
-      $(".groupHeading").html('Add modifier group');
+      $(".groupHeading").html("Add A Modifier Group");
 
     }else{
       $(".groupBtn").html('Update');
-      $(".groupHeading").html('Edit modifier group');
+      $(".groupHeading").html("Edit A Modifier Group");
     }
     if(url){
       $.ajax({
@@ -64,12 +64,12 @@ $(document).ready(function(e) {
     $(".closeAllModal").css('opacity', 0);
     var url = $(this).data('route');
     if($(this).hasClass("open")){
-      $(".itemHeading").html('Add modifier group item');
+      $(".itemHeading").html('Add Modifier Item');
       $(".itemBtn").html('Add');
 
     }else{
       $(".error-help-block").remove();
-      $(".itemHeading").html('Edit modifier group item');
+      $(".itemHeading").html('Edit Modifier Item');
       $(".itemBtn").html('Update');
     }
     if(url){

@@ -53,8 +53,8 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <img src="{{ asset('assets/images/modifiers-black.png') }}">
-                            <input type="text" class="form-control" name="item_price" placeholder="Enter Item Price" />
+                            <img src="{{ asset('assets/images/tag-d.png') }}">
+                            <input type="text" class="form-control menu-price" name="item_price" placeholder="Enter Item Price" value="$"/>
                         </div>
                         <div class="form-group select-input">
                             <img style="    z-index: 1;" src="{{ asset('assets/images/category-detail.png') }}">

@@ -90,7 +90,7 @@
                                                                 <p>Chat</p>
                                                             </button>
                                                         @else
-                                                            <a href="{{ route('chat', ['order_id' => $order->order_id]) }}">
+                                                            <a href="{{ route('chat', ['order_number' => $order->order_number]) }}">
                                                                 <button class="disabled-order-print recent-order-chat">
                                                                     <img src="{{ asset('assets/images/order-msg-message.png')}}">
                                                                     <span class="chat-count" id="chat-{{$order->order_id}}" data-orderNumber="{{$order->order_number}}" data-orderId="{{$order->order_id}}" data-userId="{{$order->uid}}">0</span>
@@ -156,7 +156,7 @@
                     <div class="form-group  col-lg-6">
                         <select class="form-control sltMinutes " id="sltMinutes" name="sltMinutes">
                             {{-- <option value="">Type</option> --}}
-                            <option value="minutes">Mintues</option>
+                            <option value="minutes">Minutes</option>
                         </select>
                         <input type="hidden" id="actionUrl" name="actionUrl" class="actionUrl" />
                         <input type="hidden" id="pickUpTime" name="pick_up_time" />

@@ -14,6 +14,7 @@ use Config;
 use Toastr;
 use DB;
 use Auth;
+use Storage;
 
 class MenuController extends Controller
 {
@@ -71,13 +72,13 @@ class MenuController extends Controller
             if (!$restaurant) {
                 return redirect()->route('modifier')->with('error', 'Invalid users for this restaurant.');
             }
-            
+            $removeDollarSign = explode(" ",$request->post('item_price'));
             $menu = new  MenuItem;
             $menu->restaurant_id = $restaurant->restaurant_id;
             $menu->category_id = $request->post('category_id');
             $menu->item_name = $request->post('item_name');
             $menu->item_details = ($request->post('item_details'))? $request->post('item_details') : null;
-            $menu->item_price = $request->post('item_price');
+            $menu->item_price = (int)$removeDollarSign[1];
             if ($request->hasFile('item_img')) {
                 $image = $request->file('item_img');
                 $save_name =  $request->post('item_name') ."_".$restaurant->restaurant_id. '.' . $image->getClientOriginalExtension();
@@ -135,10 +136,11 @@ class MenuController extends Controller
         if (!$restaurant) {
             return redirect()->route('menu')->with('error', 'Invalid users for this restaurant.');
         }
+        $removeDollarSign = explode(" ",$request->post('item_price'));
         $menu_id->category_id = $request->post('category_id');
         $menu_id->item_name = $request->post('item_name');
         $menu_id->item_details = $request->post('item_details');
-        $menu_id->item_price = $request->post('item_price');
+        $menu_id->item_price = (int)$removeDollarSign[1];
         if ($request->hasFile('item_img')) {
             $image = $request->file('item_img');
             $save_name =  $request->post('item_name') ."_".$restaurant->restaurant_id. '.' . $image->getClientOriginalExtension();
@@ -169,5 +171,15 @@ class MenuController extends Controller
         }
     }
 
-
+    public function removeMenuImage(Request $request) {
+         $menuItem  = MenuItem::findOrFail($request->post('menuId'));
+         if($menuItem->item_img) {
+            Storage::delete(Config::get('constants.IMAGES.MENU_IMAGE_PATH').'/'.$menuItem->item_img);
+            $menuItem->item_img = null;
+            $menuItem->save();
+            return response()->json(['alert' => 'Photo remove successfully.']);
+         } else {
+            return response()->json(['error' => 'Photo does not remove successfully.']);
+         }
+    }
 }

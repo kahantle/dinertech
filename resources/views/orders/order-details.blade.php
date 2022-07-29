@@ -73,17 +73,23 @@
                         <p>Subtotal</p>  
                         <p>${{$order->cart_charge}}</p>
                       </li>
-                      <li>
-                        <p>Delivery Charges</p>  
-                        <p>${{$order->delivery_charge}}</p>
-                      </li>
-                      <li class="green">
-                        <p>Total Discount</p>  
-                        <p>${{$order->discount_charge}}</p>
-                      </li>
+                      @if ($order->isPickUp != 0)
+                        <li>
+                          <p>Delivery Charges</p>  
+                          <p>${{$order->delivery_charge}}</p>
+                        </li>
+                      @endif
+
+                      @if (floatval($order->discount_charge) != 0.00)
+                        <li>
+                          <p>Total Discount</p>  
+                          <p>${{$order->discount_charge}}</p>
+                        </li>
+                      @endif
+
                       <li>
                         <p>Tax</p>  
-                        <p>$0</p>
+                        <p>${{number_format($order->tax_charge,2)}}</p>
                       </li>
                       <li class="total">
                         <p><b>Grand Total</b></p>

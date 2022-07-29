@@ -192,4 +192,55 @@ $(document).ready(function(e) {
     }
   });
   });
+
+  $(".menu-price").on("change", function () {
+    var price = $(this).val().split("$");
+    price = parseFloat(price[1]).toFixed(2);
+    $(this).val("$ " + price);
+  });
+
+  $(".remove-img").on('click', function () {
+    var url = $(this).data("route");
+    var menuId = $(this).attr('data-menu-id');
+    Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this photo!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, remove it!",
+    }).then(function (result) {
+        if (result.value) {
+            $.ajax({
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                        "content"
+                    ),
+                },
+                url: url,
+                type: "POST",
+                data: {
+                    menuId: menuId,
+                },
+                // dataType: "json",
+                beforeSend: function () {
+                    $("body").preloader();
+                },
+                complete: function () {
+                    $("body").preloader("remove");
+                },
+                success: function (res) {
+                    if (res.error) {
+                      toastr.error(res.error);
+                    } else {
+                      toastr.success(res.alert);
+                      window.location.reload();
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    swal.fire("Error deleting!", "Please try again", "error");
+                },
+            });
+        }
+    });
+  });
 });

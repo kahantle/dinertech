@@ -68,7 +68,7 @@ Route::group(['middleware' => ['auth:web']], function () {
     });
     Route::prefix('chat')->group(function () {
         Route::get('/', 'ChatController@index')->name('chat');
-        Route::get('/{order_id}', 'ChatController@index')->name('chat.order');
+        Route::get('/{order_number}', 'ChatController@index')->name('chat.order');
         Route::post('/sendMessages', 'ChatController@sendMessages')->name('chat.send');
         Route::post('/getMessages', 'ChatController@getMessages')->name('chat.get');
         Route::post('/message/count/update','ChatController@readChatMessage')->name('chat.message.count');
@@ -101,6 +101,7 @@ Route::group(['middleware' => ['auth:web']], function () {
         Route::get('edit/{id}', 'MenuController@edit')->name('edit.menu');
         Route::post('update', 'MenuController@update')->name('update.menu.post');
         Route::get('delete/{id}', 'MenuController@delete')->name('delete.menu.post');
+        Route::post('remove/image/', 'MenuController@removeMenuImage')->name('remove.menu.image');
         Route::prefix('modifier')->group(function () {
             Route::post('/', 'MenuModifierController@addMenuModifierGroup')->name('add.menu.modifier.post');
             Route::get('/edit/{id}', 'MenuModifierController@editMenuModifierGroup')->name('edit.menu.modifier.post');

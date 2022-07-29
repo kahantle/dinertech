@@ -27,15 +27,19 @@
       {{ Form::open(array('route' => array('update.menu.post'),'id'=>'menuForm','method'=>'POST','class'=>'form','files'=>'true',
       )) }}
       <input type="hidden" name="hidden_id" value="{{$menuItem->menu_id}}">
-      
-      <span class="slt-img">
-        @if($menuItem->item_img)
+      @if($menuItem->item_img)
+        <span class="slt-img edit-menu-img">
           <img src="{{ route('display.image',[config("constants.IMAGES.MENU_IMAGE_PATH"),$menuItem->item_img]) }}" class="img-fluid">
-        @endif
-      </span>
-      <input id="image" type="file" name="item_img" placeholder="Photo" required="" capture="" style="display: none;">
-      <label class="label-a"><i class="fa fa-camera" aria-hidden="true"></i>Select Picture</label>
-      
+        </span>
+        <input id="image" type="file" name="item_img" placeholder="Photo" required="" capture="" style="display: none;">
+        <label class="label-a"><i class="fa fa-camera" aria-hidden="true"></i>Update Photo</label>
+        <label class="remove-photo-link"><a href="javaScript:void(0);" class="remove-img" data-route="{{route('remove.menu.image')}}" data-menu-id="{{$menuItem->menu_id}}"> Remove Photo </a></label>
+      @else
+        <span class="slt-img"></span>
+        <input id="image" type="file" name="item_img" placeholder="Photo" required="" capture=""
+            style="display: none;">
+        <label class="label-a"><i class="fa fa-camera" aria-hidden="true"></i>Select Picture</label>
+      @endif
       <div class="row">
         <div class="col-xl-5 col-lg-6 col-md-6">
           <div class="form-group">   
@@ -58,8 +62,8 @@
             </select>
           </div>
           <div class="form-group">   
-            <img src="{{ asset('assets/images/modifiers-black.png') }}">              
-            <input type="text" class="form-control" name="item_price" placeholder="Enter Item Price" value="{{$menuItem->item_price}}"></input>
+            <img src="{{ asset('assets/images/tag-d.png') }}">              
+            <input type="text" class="form-control menu-price" name="item_price" placeholder="Enter Item Price" value="$ {{number_format($menuItem->item_price,2)}}">
           </div>
           <div class="form-group select-input">   
             <img  style="z-index: 1;" src="{{ asset('assets/images/category-detail.png') }}">              
@@ -68,7 +72,7 @@
               @foreach($modifiers as $modifier)
               <option value="{{$modifier->modifier_group_id}}" 
                 @php
-                $modifers = $menuItem->modifiers->pluck('modifier_id')->toArray();
+                  $modifers = $menuItem->modifiers->pluck('modifier_id')->toArray();
                 @endphp
                 @if(in_array($modifier->modifier_group_id, $modifers))
                       selected='selected'
@@ -151,7 +155,7 @@
 
   $(document).ready(function() {
     $('.select2').select2();
-});
+  });
 
 </script>
 <script src="{{ asset('assets/js/common.js')}}"></script>

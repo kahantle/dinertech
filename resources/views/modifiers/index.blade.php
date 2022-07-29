@@ -70,7 +70,7 @@
       <div class="popup text-center">
         <a class="close closeModal" href="javaScript:void(0);">&times;</a>
         <div class="content">
-          <h5 class="groupHeading">Add Modifier Group</h5>
+          <h5 class="groupHeading">Add A Modifier Group</h5>
           {{ Form::open(array('route' => array('add.modifier.post'),'id'=>'modifierForm','method'=>'POST',
           'class'=>'')) }}
             <div class="form-group">                
@@ -83,20 +83,20 @@
             </div> --}}
             <div class="form-group form-check-insides">
                 <input type="checkbox" class="styled-checkbox is_required" id="allow_multiple1" name="is_required" />
-                <label for="allow_multiple1">Required</label>
-                <p>If checked, this modifier group will require a selection.</p>
+                <label for="allow_multiple1"></label>
+                <p>Required ( <span class="font-small"> If checked, this modifier group will require a selection.</span> )</p>
             </div>
             <div class="form-group form-check-insides">
-                {{-- <input type="checkbox" class="styled-checkbox" id="allow_multiple2" name="allow_multiple" /> --}}
                 <input type="radio" id="single_modifier" name="allow_multiple" checked class="modifier_type styled-radio-button"  value="{{Config::get('constants.MODIFIER_TYPE.SINGLE_MODIFIER')}}"/>
-                <label for="single_modifier">Single Modifier </label>
-                <p>Customer may select only one modifier</p>
+                <label for="single_modifier"></label>
+                <p>Single Modifier ( <span class="font-small">Customer may select only one modifier.</span> )</p>
+                
             </div>
             <div class="form-group form-check-insides">
                 {{-- <input type="checkbox" class="styled-checkbox" id="allow_multiple3" name="allow_multiple" /> --}}
                 <input type="radio" id="multiple_modifier" name="allow_multiple" class="modifier_type styled-radio-button" value="{{Config::get('constants.MODIFIER_TYPE.MULTIPLE_MODIFIER')}}"/>
-                <label for="multiple_modifier">Multiple Modifiers </label>
-                <p>Customer may select multiple modifiers</p>
+                <label for="multiple_modifier"> </label>
+                <p>Multiple Modifiers ( <span class="font-small">Customer may select multiple modifiers.</span> )</p>
             </div>
             <div class="form-group form-align-blog row align-items-center d-none" id="min_max_modifierBox">
                 <input type="number" class="form-control input-first" id="minimum" placeholder="min" min="1" name="minimum">

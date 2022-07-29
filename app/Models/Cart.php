@@ -26,10 +26,12 @@ class Cart extends Model
 
 
     public function getModifierWithOutMenuTotalAttribute(){
-        return $this->cartMenuItems->where('modifier_total',0.00)->sum('menu_price');
+        // return $this->cartMenuItems->where('modifier_total',0.00)->sum('menu_price');
+        return $this->cartMenuItems->sum('menu_price');
     }
 
     public function getModifierWithMenuTotalAttribute(){
-        return $this->cartMenuItems->where('modifier_total',0.00)->sum('menu_total');
+        // return $this->cartMenuItems->where('modifier_total',0.00)->sum('menu_total');
+        return $this->cartMenuItems->sum('menu_total');
     }
 }

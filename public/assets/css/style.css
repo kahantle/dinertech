@@ -701,8 +701,9 @@
 	}
 
 	.popup .content p {
-		max-width: 300px;
-		margin: 0 auto 30px;
+		/* max-width: 300px; */
+		/* margin: 0 auto 30px; */
+		margin: -40px 0px 0px 30px;
 	}
 
 	div#modifierGroupPopUp .content h5 {
@@ -1927,6 +1928,20 @@
 		background-size: contain;
 		background-position: center;
 		background-repeat: no-repeat;
+	}
+
+	.edit-menu-img:before {
+		background: none;
+	}
+
+	.remove-photo-link {
+		font-family: 'SFProDisplay-Bold';
+		width: 100%;
+		text-align: center;
+	}
+
+	.remove-photo-link:hover {
+		color: #007bff;
 	}
 
 	.slt-img #image {
@@ -3501,7 +3516,7 @@
 		content: "";
 		position: absolute;
 		left: 3px;
-		top: 3px;
+		top: 4px;
 		background: #fff;
 		width: 14px;
 		height: 14px;
@@ -4344,7 +4359,7 @@
 		margin-right: 10px;
 	}
 
-	.slt-img {
+	/* .slt-img {
 		position: relative;
 		height: 170px;
 		width: 170px;
@@ -4377,7 +4392,7 @@
 		cursor: pointer;
 		padding: 0;
 		position: relative;
-	}
+	} */
 
 	.label-a {
 		width: 100%;
@@ -9161,7 +9176,7 @@
 	}
 
 	.order-recent-pickup button {
-		min-height: 57px;
+		min-height: 65px;
 		margin-left: 10px;
 	}
 

@@ -74,3 +74,8 @@
     color: #0056b3;
     text-decoration: underline;
 }
+
+/* custom font small class */
+.font-small{
+    font-size: small;
+}

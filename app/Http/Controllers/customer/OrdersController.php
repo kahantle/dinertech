@@ -164,7 +164,7 @@ class OrdersController extends Controller
                     $order->restaurant_id = $restaurantId;
                     $order->order_number = random_int(1000, 1000000000000000);
                     $order->payment_card_id = $cardId;
-                    $order->isCash = Config::get('constants.ORDER_TYPE.CARD');
+                    $order->isCash = Config::get('constants.ORDER_PAYMENT_TYPE.CARD_PAYMENT');
                     $order->stripe_payment_id = $charge['created'];
                     $order->cart_charge = $orderDetails['cart_charge'];
                     $order->delivery_charge = '0.00';
@@ -268,7 +268,7 @@ class OrdersController extends Controller
                 $order->order_number = random_int(1000, 1000000000000000);
                 $order->cart_charge = $orderDetails['cart_charge'];
                 $order->delivery_charge = '0.00';
-                $order->isCash = Config::get('constants.ORDER_TYPE.CASH');
+                $order->isCash = Config::get('constants.ORDER_PAYMENT_TYPE.CASH_PAYMENT');
                 $order->discount_charge = $orderDetails['discount_charge'];
                 $order->is_feature = ($orderDetails['order_status'] == 1) ? 1 : 0;
                 $order->order_status = null;

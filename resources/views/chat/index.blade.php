@@ -23,7 +23,7 @@
               <div class="chat-table">
                 <div class="chat-search">
                   <i class="fa fa-search searchTextBtn" aria-hidden="true"></i>
-                  <input type="search" id="chat-search" class="searchText" value="{{$order_number}}" placeholder="Search here">
+                  <input type="search" id="chat-search" class="searchText" value="{{$orderNumber}}" placeholder="Search here">
                 </div>
                   @foreach($orders as $key=>$item)
                   <div class="chat-content @if($key==0) active @endif" data-customer_id="{{$item->user->uid}}" data-user_name="{{$item->user->full_name}}" data-order_id="{{$item->order_number}}" data-id="{{$item->order_id}}" >
@@ -195,6 +195,7 @@ $('document').ready(function() {
         order_id=$(this).data('order_id');
         var user = $(this).data('user_name');
         var customer_id = $(this).data('customer_id');
+        console.log(customer_id);
         $("#customerId").val(customer_id);
         $("#order_id").text(order_id);
         $("#order_user").text(user);
