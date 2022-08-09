@@ -79,3 +79,9 @@
 .font-small{
     font-size: small;
 }
+.back_icon{
+    color: #514dc8;
+    font-size: 25px;
+    margin-right: 20px;
+    margin-left: -25px;
+}

@@ -30,8 +30,8 @@ class HourRequest extends FormRequest
             // 'opening_hours' => 'required',
             // 'closing_hours' => 'required',
             'day.*' =>'required|min:1',
-            'opening_hours.*' => 'required',
-            'closing_hours.*' => 'required'
+            'opening_hours.*' => 'required|date_format:H:i',
+            'closing_hours.*' => 'required|date_format:H:i|after:opening_hours.*'
         ];
     }
 
@@ -40,7 +40,8 @@ class HourRequest extends FormRequest
         return [
             'day.*.required' => 'Please select at least one day.',
             'opening_hours.*.required' => 'select time.',
-            'closing_hours.*.required' => 'select time.'
+            'closing_hours.*.required' => 'select time.',
+            'closing_hours.*.after' => 'Please Enter Max Time Then Start Time.'
             // 'opening_hours.required' => 'select time.',
             // 'closing_hours.required' => 'Select time.',
         ];

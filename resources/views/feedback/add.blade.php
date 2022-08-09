@@ -24,7 +24,7 @@
         'class'=>'')) }}
         <div class="content text-center pb-4">
           <h3>Send Us Your Feedback</h3>
-          <p>Do You have a Feature Request or App Error,General Feedback ?,let us know in the field bellow.</p>
+          <p>Do You have a Feature Request, App Error or General Feedback? Let us know!</p>
         </div>
         <div class="form-group">            
           <input type="text" id="name" name="name" value="{{$user->first_name}} {{$user->last_name}}" class="form-control"

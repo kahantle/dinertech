@@ -8,6 +8,7 @@
         <div class="navbar-header">
           <div class="profile-title-new">
           <a href="#" class="navbar-brand" id="sidebar-toggle"><i class="fa fa-bars"></i></a>
+          <a class="fa fa-angle-left back_icon" href="{{ URL::previous() }}"></a>
           <h2>Hours</h2>
           </div>
           <div class="plus">

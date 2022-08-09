@@ -39,6 +39,7 @@ $(function () {
                 if (
                     value >= $(".opening_time").last().val() &&
                     closing_hours[key] >= $(".closing_time").last().val()
+                    
                 ) {
                     $("#submit_form").prop('disable',true);
                     alert("Please Enter Valid time");

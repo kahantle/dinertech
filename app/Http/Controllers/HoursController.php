@@ -33,6 +33,7 @@ class HoursController extends Controller
       $uid = Auth::user()->uid;
       $restaurant = Restaurant::where('uid', $uid)->first();
       $restaurantHours = RestaurantHours::where('restaurant_id',$restaurant->restaurant_id)->pluck('day')->toArray();
+      /*$restaurantHoursTimes = RestaurantHoursTimes::pluck('opening_time','closing_time');*/
       return view('hours.add',compact('restaurantHours'));
     }
 
@@ -45,7 +46,6 @@ class HoursController extends Controller
               $countRestaurantHours = RestaurantHours::where('restaurant_id',$restaurant->restaurant_id)
                 ->orderBy('hours_group_id','desc')
                 ->get();
-
                 $groupId = ($countRestaurantHours)?$countRestaurantHours->count()+1:1;
                 foreach ($request->post('day') as $key => $value) {
                   $hour = new RestaurantHours;
