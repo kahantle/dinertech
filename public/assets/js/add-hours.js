@@ -31,18 +31,21 @@ $(function () {
             opening_hours.push($(this).val());
         } 
     });
-
+    
     const closing_hours = [];
     $(document).on("change", ".closing_time", function () {
         if ((opening_hours.length != 0) && (closing_hours.length != 0)) {
             $.each(opening_hours, function (key, value) {
+
                 if (
-                    value >= $(".opening_time").last().val() &&
-                    closing_hours[key] >= $(".closing_time").last().val()
-                    
-                ) {
-                    $("#submit_form").prop('disable',true);
+                    value <= $(".opening_time").last().val() &&
+                    closing_hours[key] >= $(".closing_time").last().val() 
+                )
+                {
+                    $("#submit_form").attr('disable',true);
                     alert("Please Enter Valid time");
+                    $('.opening_time').last().val('');
+                    $('.closing_time').last().val('');
                 } else {
                      $("#submit_form").prop("disable", false);
                 }
@@ -51,7 +54,7 @@ $(function () {
             closing_hours.push($(this).val());
         } 
     });
-
+    
     $(document).on("click", ".remove-btn", function () {
         $(this).parent().parent().remove();
     });

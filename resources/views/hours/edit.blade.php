@@ -56,12 +56,12 @@
                         <div class="row">
                           <div class="col-xl-2 col-md-3 col-sm-4 col-5">
                              <div class="form-group" style="display: inline-block">
-                                <input type="time" class="add-time" id="opening_hours" name="opening_hours[]" placeholder="Time" value="{{date('h:i',strtotime($time->opening_time))}}">
+                                <input type="time" class="add-time" id="opening_hours" name="opening_hours[]" placeholder="Time" value="{{date('H:i',strtotime($time->opening_time))}}">
                              </div>
                           </div>
                           <div class="col-xl-2 col-md-3 col-sm-4 col-5">
                             <div class="form-group" style="display: inline-block">
-                              <input type="time" class="add-time" id="closing_hours" name="closing_hours[]" placeholder="Time" value="{{date('h:i',strtotime($time->closing_time))}}">
+                              <input type="time" class="add-time" id="closing_hours" name="closing_hours[]" placeholder="Time" value="{{date('H:i',strtotime($time->closing_time))}}">
                             </div>
                           </div>
                           @if ($key == 0)
