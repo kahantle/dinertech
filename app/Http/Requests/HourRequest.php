@@ -27,11 +27,11 @@ class HourRequest extends FormRequest
     {
         $user = Auth::user();
         return [
-            // 'opening_hours' => 'required',
-            // 'closing_hours' => 'required',
+            'opening_hours' => 'required',
+            'closing_hours' => 'required',
             'day.*' =>'required|min:1',
-            'opening_hours.*' => 'required|date_format:H:i',
-            'closing_hours.*' => 'required|date_format:H:i|after:opening_hours.*'
+            /*'opening_hours.*' => 'required|date_format:H:i',
+            'closing_hours.*' => 'required|date_format:H:i|after:opening_hours.*'*/
         ];
     }
 

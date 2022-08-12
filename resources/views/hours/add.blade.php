@@ -52,19 +52,20 @@
             <div class="row">
                 <div class="col-xl-2 col-md-3 col-sm-4 col-5">
                   <div class="form-group" style="display: inline-block">
-                      <input type="time" class="add-time opening_time" id="opening_hours" name="opening_hours[]" placeholder="Selecting Open Hours">
+                      <input type="time" class="add-time opening_time" id="opening_hours" name="opening_hours[]" data-number="0"  placeholder="Selecting Open Hours">
                       <span for="opening_hours" class="help-block"></span>
                   </div>
                 </div>
                 <div class="col-xl-2 col-md-3 col-sm-4 col-5">
                   <div class="form-group" style="display: inline-block">
-                      <input type="time" class="add-time closing_time" id="closing_hours" name="closing_hours[]" placeholder="Selecting Closeing Hours">
+                      <input type="time" class="add-time closing_time" id="closing_hours" name="closing_hours[]" data-number="0" placeholder="Selecting Closeing Hours">
                       <span for="closing_hours" class="error"></span>
                   </div>
                 </div>
                 <div class="col-xl-2 col-md-2 col-sm-3 mt-3">
                   <button class="btn btn-primary" id="add-more" type="button">Add More</button>
                 </div>
+                <input type="hidden" id="last_number" value="1" name="">
             </div>
             <div class="add-more-times"></div>
          </div>
