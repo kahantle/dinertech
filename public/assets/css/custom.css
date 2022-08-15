@@ -79,9 +79,60 @@
 .font-small{
     font-size: small;
 }
+/*-------------*/
+/*modifier page*/
 .back_icon{
     color: #514dc8;
     font-size: 25px;
     margin-right: 20px;
     margin-left: -25px;
+}
+div#modifierGroupPopUp .content h5{
+    color: #333;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+#modifierGroupPopUp .popup .content p{
+    color: #333;
+    font-weight: 700;
+    line-height: 18px;
+}
+.styled-radio-button+label:before, .styled-checkbox+label:before{
+    box-shadow: 0 0 0 2px rgb(0 0 0);
+}
+#modifierGroupPopUp span.font-small {
+    font-weight: 500;
+    color: #a0a0a0;
+    font-style: italic;
+}
+.modifier_sub_title{
+    text-align: left;
+    padding: 10px;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 0px !important;
+}
+#modifierGroupPopUp .popup{
+    padding-top: 20px;
+}
+.swal2-icon.swal2-warning{
+    border-color: #514dc8 !important;
+    color: #514dc8 !important;
+}
+.order-icons.icon_add_item a{
+    color: #333 !important;
+    width: auto !important;
+}
+.bage_main a{
+    border-radius: 0;
+    color: #fff;
+    padding: 9px;
+    border: 1px solid #514dc8;
+    background-color: #514dc8;
+    margin-right: 15px;
+}
+.bage_main .badge-info[href]:focus, .bage_main .badge-info[href]:hover{
+    background-color: #fff;
+    color: #514dc8;
+    border: 1px solid #514dc8;
 }

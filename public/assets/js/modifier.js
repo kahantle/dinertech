@@ -7,11 +7,11 @@ $(document).ready(function(e) {
     var url = $(this).data('route');
     if($(this).hasClass("open")){
       $(".groupBtn").html('Add');
-      $(".groupHeading").html("Add A Modifier Group");
+      $(".groupHeading").html("Add Modifier Group");
 
     }else{
       $(".groupBtn").html('Update');
-      $(".groupHeading").html("Edit A Modifier Group");
+      $(".groupHeading").html("Edit Modifier Group");
     }
     if(url){
       $.ajax({
@@ -114,7 +114,7 @@ $(document).ready(function(e) {
     var url = $(this).data('route');
     Swal.fire({
       title: "Are you sure?",
-      text: "You won't be able to revert this!",
+      // text: "You won't be able to revert this!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Yes, delete it!"

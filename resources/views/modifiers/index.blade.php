@@ -27,10 +27,15 @@
               <div class="collapsed a-order" data-toggle="collapse" href="#collapseOne{{$item->modifier_group_name}}">
                 <div class="order-name">
                     <div class="circle"></div>
-                    <h4>{{$item->modifier_group_name}}<a href="javaScript:void(0);" class="ml-1 badge badge-info">{{$item->modifier_item->count()}}</a></h4>
+                    <h4>{{$item->modifier_group_name}}</h4>
                 </div>
                 <div class="order-detail">
-                  <a href="#modifierItem" class="openModifierItemForm open" data-id={{$item->modifier_group_id}}>Add Item <i class="fa fa-plus" aria-hidden="true"></i></a>
+                  <div class="bage_main">
+                    <a href="javaScript:void(0);" class="ml-1 badge badge-info">{{$item->modifier_item->count()}}</a>
+                  </div>
+                  <div class="order-icons icon_add_item">
+                    <a href="#modifierItem" class="openModifierItemForm open" data-id={{$item->modifier_group_id}}>Add Item <i class="fa fa-plus" aria-hidden="true"></i></a>
+                  </div>  
                   <div class="order-icons">
                     <a  data-route="{{route('edit.modifier.post',[$item->modifier_group_id])}}" href="javaScript:void(0);" class="openModifierForm action-edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                     <a  data-route="{{route('delete.modifier.post',[$item->modifier_group_id])}}" href="javaScript:void(0);" class="delete action-delete"><i class="fa fa-trash" aria-hidden="true"></i></a>
@@ -75,6 +80,7 @@
           'class'=>'')) }}
             <div class="form-group">                
               <input type="hidden" id="modifier_group_id" name="modifier_group_id"  />
+              <h5 class="modifier_sub_title">Modifier Group Name</h5>
               <input type="text" class="form-control" id="modifier_group_name" name="modifier_group_name" placeholder="Modifier Group Name">
             </div>
             {{-- <div class="form-group">                
@@ -84,19 +90,19 @@
             <div class="form-group form-check-insides">
                 <input type="checkbox" class="styled-checkbox is_required" id="allow_multiple1" name="is_required" />
                 <label for="allow_multiple1"></label>
-                <p>Required ( <span class="font-small"> If checked, this modifier group will require a selection.</span> )</p>
+                <p>Required <br> <span class="font-small"> If Selected, customer must complete modifier selection before proceeding</span> </p>
             </div>
             <div class="form-group form-check-insides">
                 <input type="radio" id="single_modifier" name="allow_multiple" checked class="modifier_type styled-radio-button"  value="{{Config::get('constants.MODIFIER_TYPE.SINGLE_MODIFIER')}}"/>
                 <label for="single_modifier"></label>
-                <p>Single Modifier ( <span class="font-small">Customer may select only one modifier.</span> )</p>
+                <p>Single Modifier Section <br> <span class="font-small">If selected, customer may select one modifier from this group</span> </p>
                 
             </div>
             <div class="form-group form-check-insides">
                 {{-- <input type="checkbox" class="styled-checkbox" id="allow_multiple3" name="allow_multiple" /> --}}
                 <input type="radio" id="multiple_modifier" name="allow_multiple" class="modifier_type styled-radio-button" value="{{Config::get('constants.MODIFIER_TYPE.MULTIPLE_MODIFIER')}}"/>
                 <label for="multiple_modifier"> </label>
-                <p>Multiple Modifiers ( <span class="font-small">Customer may select multiple modifiers.</span> )</p>
+                <p>Multiple Modifiers Section <br> <span class="font-small">If selected, customer may select multiple modifiers from this group</span> </p>
             </div>
             <div class="form-group form-align-blog row align-items-center d-none" id="min_max_modifierBox">
                 <input type="number" class="form-control input-first" id="minimum" placeholder="min" min="1" name="minimum">
