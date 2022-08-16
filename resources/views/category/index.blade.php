@@ -29,16 +29,16 @@
         @foreach($categories as $key=>$item)
         <div class="row">
           <div class="col-lg-12">
-            <div class="orders">
+            <div class="orders category_display">
               <div class="order">
                 <div class="order-name">
-                  <div class="img">
                     @if(!$item->image && $item->image == null)
-                      <img src="{{ $item->getDefaultImage() }}" class="img-fluid">
+                      <!-- <img src="{{ $item->getDefaultImage() }}" class="img-fluid"> -->
                     @else
+                    <div class="img">
                       <img src="{{ $item->getImagePathAttribute() }}" class="img-fluid">
+                    </div>
                     @endif
-                  </div>
                 <h4>{{$item->category_name}}</h4>
                 </div>
                 <div class="order-detail">

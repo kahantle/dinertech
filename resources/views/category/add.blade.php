@@ -18,7 +18,7 @@
       </div>
     </nav>
   </div>
-  <div class="add-category content-wrapper">
+  <div class="add-category content-wrapper category_main">
     @include('common.flashMessage')
     <div class="container-fluid">
       {{ Form::open(array('route' => array('add.category.post'),'id'=>'categoryForm','method'=>'POST','class'=>'','files'=>'true')) }}
@@ -29,10 +29,12 @@
         <label class="label-a"><i class="fa fa-camera" aria-hidden="true"></i>Select Picture</label>
       </div>
       <div class="form-group">
+        <label class="label_cat">Category Name</label>
         <img src="{{ asset('assets/images/category-menu-icon.png') }}">
         <input type="text" id="name" name="name" class="form-control" placeholder="Enter Category">
       </div>
       <div class="form-group">
+        <label class="label_cat">Category Description <span>(optional)</span></label>
         <img src="{{ asset('assets/images/category-detail.png') }}">
         <textarea type="text" id="details" name="details" class="form-control"
           placeholder="Enter Category Details"></textarea>

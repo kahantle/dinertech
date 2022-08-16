@@ -18,7 +18,7 @@
                 </div>
             </nav>
         </div>
-        <div class="add-category Promotion menu dashboard content-wrapper category category-insides-blog">
+        <div class="add-category Promotion menu dashboard content-wrapper category category-insides-blog category_main">
             @include('common.flashMessage')
 
             <div class="container-fluid p-0">
@@ -33,17 +33,20 @@
                 <div class="row">
                     <div class="col-xl-5 col-lg-6 col-md-6">
                         <div class="form-group">
+                            <label class="label_cat">Item Name</label>
                             <img src="{{ asset('assets/images/category-menu-icon.png') }}">
                             <input type="text" class="form-control" name="item_name" value="{{ old('item_name') }}"
                                 placeholder="Enter Menu Item">
                         </div>
                         <div class="form-group">
+                            <label class="label_cat">Item Description</label>
                             <img src="{{ asset('assets/images/category-detail.png') }}">
                             <textarea type="text" class="form-control" name="item_details" placeholder="Enter Menu Details"></textarea>
                         </div>
                     </div>
                     <div class="col-xl-5 col-lg-6 col-md-6">
                         <div class="form-group select-input">
+                            <label class="label_cat">Category</label>
                             <img src="{{ asset('assets/images/catagory-black.png') }}">
                             <select type="text" class="form-control" name="category_id" placeholder="Enter Item Catagory">
                                 <option value="" disabled selected>Select Item Catagory</option>
@@ -53,10 +56,12 @@
                             </select>
                         </div>
                         <div class="form-group">
+                            <label class="label_cat">Price</label>
                             <img src="{{ asset('assets/images/tag-d.png') }}">
                             <input type="text" class="form-control menu-price" name="item_price" placeholder="Enter Item Price" value="$"/>
                         </div>
                         <div class="form-group select-input">
+                            <label class="label_cat">Modifiers <span>(optional)</span></label>
                             <img style="    z-index: 1;" src="{{ asset('assets/images/category-detail.png') }}">
                             <select type="text" class="select2 form-control " name="modifier_group_id[]" id="modifier_id"
                                 multiple="multiple" placeholder="Enter Modifiers">

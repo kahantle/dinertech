@@ -136,3 +136,35 @@ div#modifierGroupPopUp .content h5{
     color: #514dc8;
     border: 1px solid #514dc8;
 }
+/*******Category********/
+.label_cat{
+    color: #333;
+    font-size: 20px;
+    font-weight: 700;
+    position: relative;
+    left: 20px;
+}
+.category_main .form-group img{
+    top: 58px;
+}
+.add-category .form-group .label_cat span{
+    font-weight: 500;
+    color: #a0a0a0;
+    font-style: italic;
+    font-size: 16px;
+}
+#accordion-first .card-body .sub-menu {
+    margin-left: 60px;
+}
+.category_display .order{
+    margin: 15px 0;
+}
+.menu-content-left{
+    padding-left: 0px;
+}
+.category_main .remove-photo-link{
+    font-size: 20px;
+}
+.category_main .select-input:before{
+    top: 65%;
+}
