@@ -49,7 +49,7 @@
                                                                     <p>Accept</p>
                                                                 </button>
                                                             </a>
-                                                       
+
                                                             <a href="javaScript:void(0);" data-route="{{ route('action.order', [$order->order_id, 'action' => 'CANCEL']) }}">
                                                                 <button href="javaScript:void(0);" data-toggle="tooltip"
                                                                     title="Decline Order!" class="action btn-danger" data-value="Cancel">
@@ -71,7 +71,7 @@
                                                             <img src="{{ asset('assets/images/food-delivery-hand.png')}}" class="img-fluid icon icon-print">
                                                             <p>Pickup</p>
                                                         </button>
-                                                        
+
                                                         @if ($order->order_status == '')
                                                             <button class="disabled-order-print text-disabled">
                                                                     <img src="{{ asset('assets/images/disable-food-delivery.png')}}">
@@ -115,7 +115,7 @@
                                                                 </button>
                                                             </a>
                                                         @endif
-                                                        
+
                                                         <a href="{{ route('details', $order->order_id) }}">
                                                             <button  data-toggle="tooltip"
                                                             title="Order details!" class="disabled-order-print">
@@ -180,9 +180,9 @@
     <script type="text/javascript">
         var db_name = "{{ Config::get('constants.FIREBASE_DB_NAME') }}";
         var restaurant_id = {!! json_encode($restaurantId) !!};
-        
+
         $('document').ready(function(){
-            
+
             setInterval(() => {
                 chatCount();
             }, 1000);
@@ -221,7 +221,7 @@
                 });
             }
 
-            
+
         });
     </script>
 @endsection

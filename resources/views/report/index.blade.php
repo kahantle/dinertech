@@ -8,7 +8,7 @@
         <div class="navbar-header">
           <div class="profile-title-new">
           <a href="#" class="navbar-brand" id="sidebar-toggle"><i class="fa fa-bars"></i></a>
-     
+
           <h2>Reports</h2>
           </div>
           <div class="report-days">
@@ -82,17 +82,56 @@
          </div>
          <div class="col-lg-3">
            <div class="repot-box">
-             <h5>Total Tip</h5>
-             <span>Last {{$result['time_duration']}}  Days</span>
-             <div class="report-numbers">
-               <div class="left-numbers">
-                 <p class="first">{{ $result['total_tip']}}</p>
-               </div>
-               <div class="right-numbers">
-                 <span>All Time</span>
-                 <p class="report-time">{{ $result['all_tip']}}</p>
-               </div>
-             </div>
+            <div class="d-flex justify-content-between">
+                <h5>Total Tip</h5>
+                @if ($result['time_duration'] == 1)
+                    <a class="btn btn-default btn-lg" data-toggle="modal" data-target="#exampleModal">
+                        <i class="fa fa-clock-o" aria-hidden="true"></i>
+                    </a>
+                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        {{ Form::open(['method' => 'POST', 'id' => 'customTimePicker', 'class' => '']) }}
+                        <div class="modal-dialog modal-sm" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Select Time</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group row">
+                                        <label for="from-time" class="col-sm-2 col-form-label">From:</label>
+                                        <div class="col-sm-10">
+                                            <input type="time" name="from_time" class="form-control" id="from-time">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label for="from-time" class="col-sm-2 col-form-label">To:</label>
+                                        <div class="col-sm-10">
+                                            <input type="time" name="to_time" class="form-control" id="to-time">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Get Tip Amount</button>
+                                </div>
+                            </div>
+                            {{ Form::close() }}
+                        </div>
+                    </div>
+                @endif
+            </div>
+            <span>Last {{$result['time_duration']}}  Days</span>
+            <div class="report-numbers">
+            <div class="left-numbers">
+                 <p class="first total_tip">{{ $result['total_tip']}}</p>
+            </div>
+            <div class="right-numbers">
+                <span>All Time</span>
+                <p class="report-time"> {{ $result['all_tip']}}</p>
+            </div>
+            </div>
            </div>
          </div>
        </div>
@@ -122,7 +161,7 @@
                </div>
              </div>
              <div class="basic_graph" id="basic_graph">
-               
+
              </div>
            </div>
          </div>
@@ -131,7 +170,7 @@
              <h5>Clients</h5>
              <span class="w-100"><span class="green-rbox"></span>New</span>
              <span class="w-100"><span class="yellow-rbox"></span>Returning</span>
-             <div class="pie_chart" id="pie_chart"> 
+             <div class="pie_chart" id="pie_chart">
              </div>
            </div>
          </div>
@@ -141,16 +180,44 @@
 </section>
 @endsection
 @section('scripts')
-<script src="https://code.highcharts.com/highcharts.src.js"></script> 
+<script src="https://code.highcharts.com/highcharts.src.js"></script>
 <script>
+
+    $('#from-time').on('change',function () {
+        var from_time = this.value;
+        $('#to-time').attr('min',from_time);
+        $('#to-time').attr('value',from_time);
+    });
+
+    $("#customTimePicker").submit(function(e) {
+
+        e.preventDefault(); // avoid to execute the actual submit of the form.
+
+        var form = $(this);
+
+        $.ajax({
+            type: "POST",
+            url: "{{ route('report.custom_tips') }}",
+            data: form.serialize(), // serializes the form's elements.
+            success: function(data)
+            {
+                $('.total_tip').html(data.total_tip);
+                // form[0].reset();
+                $('#exampleModal').modal('hide');
+            }
+        });
+
+    });
+
+
     $(document).on('change', '.duration_change', function() {
-    var days = $(this).val();
-    if(days){
-      window.location.href = "http://" + window.location.host + window.location.pathname + '?duration=' + days;
-    }else{
-      window.location.href = "http://" + window.location.host + window.location.pathname ;
-    }
-  });
+        var days = $(this).val();
+        if(days){
+        window.location.href = "http://" + window.location.host + window.location.pathname + '?duration=' + days;
+        }else{
+        window.location.href = "http://" + window.location.host + window.location.pathname ;
+        }
+    });
 Highcharts.chart('pie_chart', {
     chart: {
         type: 'pie',
@@ -171,10 +238,10 @@ Highcharts.chart('pie_chart', {
     series: [{
         name: 'Delivered amount',
         data:  {!! $result['clients'] !!},
-        
+
     }]
 });
-         
+
 Highcharts.chart('basic_graph', {
     chart: {
         type: 'area'
@@ -186,13 +253,13 @@ Highcharts.chart('basic_graph', {
         allowDecimals: false,
         labels:false,
         labels: {
-            enabled: false    
+            enabled: false
         }
     },
     yAxis: {
         title: false,
     },
-  
+
     plotOptions: {
         area: {
             marker: {

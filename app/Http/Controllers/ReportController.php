@@ -16,7 +16,6 @@ class ReportController extends Controller
 {
     public function index(Request $request){
 
-
        	$uid = Auth::user()->uid;
     	$user = User::where('uid', $uid)->first();
         $restaurant = Restaurant::where('uid', $uid)->first();
@@ -33,7 +32,7 @@ class ReportController extends Controller
         $date = \Carbon\Carbon::today()->subDays($duaration);
         $avgStartDate = $date=date_create($date);
         $avgStartDate = date_sub($date,date_interval_create_from_date_string("$duaration days"));
-        $avgStartDate = date_format($date,"Y-m-d");  
+        $avgStartDate = date_format($date,"Y-m-d");
         $result =array ();
         $result['time_duration'] = $duaration;
 
@@ -72,7 +71,7 @@ class ReportController extends Controller
         ->where('order_date','>=',$sub_date)
         ->where('order_date','<',$current_date)
         ->count();
-        
+
         $result['get_pending_order_pr'] = Order::where('restaurant_id',$restaurant ->restaurant_id)
         ->where('order_progress_status',Config::get('constants.ORDER_STATUS.INITIAL'))
         ->whereNull('order_status')
@@ -82,9 +81,9 @@ class ReportController extends Controller
 
         $pending_order_pr = ($result['get_pending_order_pr'])?$result['get_pending_order_pr']:1;
         $result['pending_order_pr_status'] = (100* $result['get_pendingorder'])/ $pending_order_pr;
-        
 
-                            
+
+
         $result['all_delivery'] = Order::where('restaurant_id',$restaurant ->restaurant_id)
                                     ->where('order_progress_status',Config::get('constants.ORDER_STATUS.COMPLETED'))
                                     ->count();
@@ -110,7 +109,7 @@ class ReportController extends Controller
 
         $result['clients'] = "[['".$result['new_client']."',".$result['new_client']."],['".$result['repeat_clients']."',".$result['repeat_clients']."]]";
 
-        
+
 
 
         $result['all_sales'] = Order::where('restaurant_id',$restaurant ->restaurant_id)
@@ -119,12 +118,12 @@ class ReportController extends Controller
         $result['sales_total'] = Order::where('restaurant_id',$restaurant ->restaurant_id)
                                     ->where('order_date','>=',$sub_date)
                                     ->sum('grand_total');
-        
+
         $result['current_week_sale'] = Order::where('restaurant_id',$restaurant ->restaurant_id)
                                     ->where('order_date','>=',$sub_date)
                                     ->where('order_date','<=',$current_date)
                                     ->sum('grand_total');
-        
+
         $result['last_week_sale'] = Order::where('restaurant_id',$restaurant ->restaurant_id)
         ->where('order_date','>=',$avgStartDate)
         ->where('order_date','<=',$sub_date)
@@ -134,14 +133,14 @@ class ReportController extends Controller
         $result['sales_per'] = (($result['current_week_sale'] - $result['last_week_sale'])/$sales_per_status)*100;
 
 
-    
+
         $your_date = date("Y-m-d");
-        $datediff = $this->dateDiff($restaurant->created_at, $your_date);                     
+        $datediff = $this->dateDiff($restaurant->created_at, $your_date);
         $days_diff = $datediff / $duaration;
 
         $result['avg_values'] =  number_format(($result['all_sales'] /  $days_diff) ,2);
         $sales_pr = ($result['sales_total'] > 0)? (($result['sales_total'] - $result['last_week_sale'])/$result['sales_total'] )*100:0;
-        
+
         $result['sales_pr_status'] = (abs($result['sales_total'] - $result['last_week_sale']))?1:0;
 
 
@@ -171,6 +170,21 @@ class ReportController extends Controller
         $result['sales_array'] = implode(",",$sales_array);
         $result['sales_array'] = "[".$result['sales_array']."]";
         return view('report.index',compact('result'));
+    }
+
+    public function customTips(Request $request)
+    {
+        $from = date($request->from_time);
+        $to = date($request->to_time);
+        $uid = Auth::user()->uid;
+    	$user = User::where('uid', $uid)->first();
+        $restaurant = Restaurant::where('uid', $uid)->first();
+        $sub_date = \Carbon\Carbon::today()->subDays(1);
+        $result['total_tip'] = Order::where('restaurant_id',$restaurant ->restaurant_id)
+                                    ->where('order_date','>=',$sub_date)
+                                    ->whereBetween('order_time',[$from,$to])
+                                    ->sum('tip_amount');
+        return response()->json($result, 200);
     }
 
     function dateDiff($date1, $date2)

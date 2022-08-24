@@ -36,10 +36,10 @@ class OrderController extends Controller
 
 	public function OrderAction(Request $request,$id,$action){
         try {
-            
+
             $message = strtolower($action);
             $message = "Order $message successfully.";
-            
+
             $order = Order::where('order_id',$id)->first();
             $uid = Auth::user()->uid;
             $orderPickupTime = null;
@@ -47,7 +47,7 @@ class OrderController extends Controller
             if(!$order){
                 return response()->json(['route'=>route('dashboard'),'alert'=>[ $message,'', Config::get('constants.toster')],'success' => true],200);
             }
-            
+
             $order->order_progress_status = $action;
             $order->action_time =  date('Y-m-d h:i:s');
             if($action==='ACCEPTED'){
@@ -74,7 +74,7 @@ class OrderController extends Controller
                 $url = Config::get('constants.FIREBASE_DB_NAME').'/'.$restaurant->restaurant_id.'/'.$order->order_number."/"."/".$order->uid."/" ;
                 $updates = [$url.$newPostKey  => $postData];
                 $database->getReference()->update($updates);
-                
+
                 $order->pickup_time = $pikUpTime;
                 // $orderPickupTime = $request->post('minutes')." Minutes";
                 $order->pickup_minutes = $request->post('minutes');
@@ -88,7 +88,7 @@ class OrderController extends Controller
             }
             $order->order_status = ($action==Config::get('constants.ORDER_STATUS.CANCEL'))?0:1;
             $order->save();
-            //removed if order completed 
+            //removed if order completed
             if($action==Config::get('constants.ORDER_STATUS.COMPLETED')){
                 $database = app('firebase.database');
                 $url = Config::get('constants.FIREBASE_DB_NAME').'/'.$restaurant->restaurant_id."/".$order->order_number."/".$order->uid."/";

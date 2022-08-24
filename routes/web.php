@@ -73,7 +73,7 @@ Route::group(['middleware' => ['auth:web']], function () {
         Route::post('/getMessages', 'ChatController@getMessages')->name('chat.get');
         Route::post('/message/count/update','ChatController@readChatMessage')->name('chat.message.count');
     });
-    
+
     Route::prefix('hours')->group(function () {
         Route::get('/', 'HoursController@index')->name('hours');
         Route::post('add', 'HoursController@store')->name('add.hour.post');
@@ -83,7 +83,7 @@ Route::group(['middleware' => ['auth:web']], function () {
         Route::get('delete/{id}', 'HoursController@delete')->name('delete.hour.post');
         Route::get('delete-time/{id}','HoursController@delete_time')->name('delete_time.hour.post');
     });
-    
+
     Route::prefix('modifier')->group(function () {
         Route::get('/', 'ModifiersController@index')->name('modifier');
         Route::post('/', 'ModifiersController@addModifierGroup')->name('add.modifier.post');
@@ -188,6 +188,7 @@ Route::group(['middleware' => ['auth:web']], function () {
 
     Route::prefix('report')->group(function () {
         Route::get('/', 'ReportController@index')->name('report');
+        Route::post('custom-tips', 'ReportController@customTips')->name('report.custom_tips');
     });
 
     Route::prefix('subscriptions')->group(function () {
