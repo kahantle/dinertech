@@ -1,5 +1,10 @@
 @extends('layouts.app')
 @section('content')
+<style>
+    .first{
+        font-size:30px !important;
+    }
+</style>
 <section id="wrapper">
   @include('layouts.sidebar')
   <div id="navbar-wrapper">
@@ -13,34 +18,73 @@
           </div>
           <div class="report-days">
             <select class="duration_change form-control">
-              <option value="1" @if($result['time_duration']==="1") selected @endif>Today</option>
-              <option value="7"  @if($result['time_duration']==="7") selected @endif>Last 7 Day’s </option>
-              <option value="30" @if($result['time_duration']==="30") selected @endif>Last Months </option>
+              <option value="today" @if($result['time_duration']==="today") selected @endif>Today</option>
+              <option value="yesterday"  @if($result['time_duration']==="yesterday") selected @endif>Yesterday</option>
+              <option value="this_week"  @if($result['time_duration']==="this_week") selected @endif>This Week</option>
+              <option value="last_week"  @if($result['time_duration']==="last_week") selected @endif>Last Week</option>
+              <option value="this_month"  @if($result['time_duration']==="this_month") selected @endif>This Month</option>
+              <option value="last_month" @if($result['time_duration']==="last_month") selected @endif>Last Month </option>
+              <option value="year_to_date" @if($result['time_duration']==="year_to_date") selected @endif>Year To Date </option>
+              <option value="last_year"  @if($result['time_duration']==="last_year") selected @endif>Last Year</option>
+              <option value="custom"  @if($result['time_duration']==="custom") selected @endif>Custom</option>
             </select>
           </div>
         </div>
       </div>
     </nav>
   </div>
+    <div class="modal fade" id="customDateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Select Date</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {{ Form::open(['method' => 'get', 'id' => 'customdatePickerForm', 'class' => '']) }}
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <label for="from-date" class="col-sm-2 col-form-label">From:</label>
+                            <div class="col-sm-10">
+                                <input type="date" name="from_date" class="form-control" id="from-date">
+                            </div>
+                        </div>
+                        <input type="hidden" name="duration" value="custom">
+                        <div class="form-group row">
+                            <label for="from-date" class="col-sm-2 col-form-label">To:</label>
+                            <div class="col-sm-10">
+                                <input type="date" name="to_date" class="form-control" id="to-date">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Get Report</button>
+                    </div>
+                {{ Form::close() }}
+            </div>
+        </div>
+    </div>
   <div class="dashboard report">
     <div class="container-fluid">
        <div class="row orders-report">
          <div class="col-lg-3">
            <div class="repot-box">
              <h5>Orders</h5>
-             <span>Last {{$result['time_duration']}} Days</span>
+             <span> {{ ucwords(str_replace('_', ' ', $result['time_duration'])) }} </span>
              <div class="report-numbers">
                <div class="left-numbers">
-                 <p class="first">{{ $result['get_order']}}</p>
-                 @if(abs($result['order_pr_status']))
-                 <p class="up secound"><i class="fa fa-caret-up" aria-hidden="true"></i>  {{number_format($result['order_pr_status'],2)}} %</p>
+                 <p class="first">{{ $result['get_orders']}}</p>
+                 @if($result['order_percentage_status'])
+                 <p class="up secound"><i class="fa fa-caret-up" aria-hidden="true"></i>  {{$result['order_percentage']}} %</p>
                  @else
-                 <p class="down secound"><i class="fa fa-caret-down" aria-hidden="true"></i>  {{number_format($result['order_pr_status'],2)}} %</p>
+                 <p class="down secound"><i class="fa fa-caret-down" aria-hidden="true"></i>  {{$result['order_percentage']}} %</p>
                  @endif
                </div>
                <div class="right-numbers">
                  <span>All Time</span>
-                 <p class="report-time">{{$result['all_order']}}</p>
+                 <p class="report-time">{{$result['all_orders']}}</p>
                </div>
              </div>
            </div>
@@ -48,19 +92,19 @@
          <div class="col-lg-3">
            <div class="repot-box">
              <h5>Pending Orders</h5>
-             <span>Last {{$result['time_duration']}}  Days</span>
+             {{ ucwords(str_replace('_', ' ', $result['time_duration'])) }}  </span>
              <div class="report-numbers">
               <div class="left-numbers">
-                <p class="first">{{ $result['get_pendingorder']}}</p>
-                @if(abs($result['pending_order_pr_status']))
-                <p class="up secound"><i class="fa fa-caret-up" aria-hidden="true"></i>  {{number_format($result['pending_order_pr_status'],2)}} %</p>
+                <p class="first">{{ $result['get_pending_orders']}}</p>
+                @if($result['pending_order_percentage_status'])
+                <p class="up secound"><i class="fa fa-caret-up" aria-hidden="true"></i>  {{$result['pending_order_percentage']}} %</p>
                 @else
-                <p class="down secound"><i class="fa fa-caret-down" aria-hidden="true"></i>  {{number_format($result['pending_order_pr_status'],2)}} %</p>
+                <p class="down secound"><i class="fa fa-caret-down" aria-hidden="true"></i>  {{$result['pending_order_percentage']}} %</p>
                 @endif
               </div>
               <div class="right-numbers">
                 <span>All Time</span>
-                <p class="report-time">{{$result['all_pendingorder']}}</p>
+                <p class="report-time">{{$result['all_pending_orders']}}</p>
               </div>
             </div>
            </div>
@@ -68,7 +112,7 @@
          <div class="col-lg-3">
            <div class="repot-box">
              <h5>Total Delivery</h5>
-             <span>Last {{$result['time_duration']}}  Days</span>
+             {{ ucwords(str_replace('_', ' ', $result['time_duration'])) }}  </span>
              <div class="report-numbers">
                <div class="left-numbers">
                  <p class="first">{{ $result['get_delivery']}}</p>
@@ -84,12 +128,12 @@
            <div class="repot-box">
             <div class="d-flex justify-content-between">
                 <h5>Total Tip</h5>
-                @if ($result['time_duration'] == 1)
+                @if ($result['time_duration'] == 'today' || $result['time_duration'] == 'yesterday')
                     <a class="btn btn-default btn-lg" data-toggle="modal" data-target="#exampleModal">
                         <i class="fa fa-clock-o" aria-hidden="true"></i>
                     </a>
                     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        {{ Form::open(['method' => 'POST', 'id' => 'customTimePicker', 'class' => '']) }}
+                        {{ Form::open(['method' => 'POST', 'id' => 'customTimePicker', 'route' => 'report']) }}
                         <div class="modal-dialog modal-sm" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -105,7 +149,7 @@
                                             <input type="time" name="from_time" class="form-control" id="from-time">
                                         </div>
                                     </div>
-
+                                    <input type="hidden" name="duration" value="{{$result['time_duration']}}">
                                     <div class="form-group row">
                                         <label for="from-time" class="col-sm-2 col-form-label">To:</label>
                                         <div class="col-sm-10">
@@ -122,7 +166,7 @@
                     </div>
                 @endif
             </div>
-            <span>Last {{$result['time_duration']}}  Days</span>
+            {{ ucwords(str_replace('_', ' ', $result['time_duration'])) }}  </span>
             <div class="report-numbers">
             <div class="left-numbers">
                  <p class="first total_tip">{{ $result['total_tip']}}</p>
@@ -139,20 +183,20 @@
          <div class="col-lg-7">
            <div class="repot-box">
              <h5>Sales (USD)</h5>
-             <span>Last {{$result['time_duration']}}  Days</span>
+             {{ ucwords(str_replace('_', ' ', $result['time_duration'])) }}  </span>
              <div class="report-numbers">
                <div class="left-numbers">
                  <p class="first">{{ $result['sales_total']}}</p>
-                 @if(abs($result['sales_per']))
-                <p class="up secound"><i class="fa fa-caret-up" aria-hidden="true"></i>  {{number_format($result['sales_per'],2)}} %</p>
+                 @if($result['sales_percentage_status'])
+                <p class="up secound"><i class="fa fa-caret-up" aria-hidden="true"></i>  {{$result['sales_percentage']}} %</p>
                 @else
-                <p class="down secound"><i class="fa fa-caret-down" aria-hidden="true"></i>  {{number_format($result['sales_per'],2)}} %</p>
+                <p class="down secound"><i class="fa fa-caret-down" aria-hidden="true"></i>  {{$result['sales_percentage']}} %</p>
                 @endif
                </div>
                <div class="right-numbers">
                   <div class="avg-value">
                     <span>Avg.Value</span>
-                    <p class="report-time">{{ $result['avg_values']}}</p>
+                    <p class="report-time">{{ $result['average_values']}}</p>
                   </div>
                   <div class="alltime-value">
                     <span>All Time</span>
@@ -211,73 +255,80 @@
 
 
     $(document).on('change', '.duration_change', function() {
+
         var days = $(this).val();
-        if(days){
-        window.location.href = "http://" + window.location.host + window.location.pathname + '?duration=' + days;
+
+        if (days == 'custom') {
+            $('#customDateModal').modal('toggle');
+        } else if(days){
+            window.location.href = "http://" + window.location.host + window.location.pathname + '?duration=' + days;
         }else{
-        window.location.href = "http://" + window.location.host + window.location.pathname ;
+            window.location.href = "http://" + window.location.host + window.location.pathname ;
         }
     });
-Highcharts.chart('pie_chart', {
-    chart: {
-        type: 'pie',
-    },
-    credits:false,
-    colors:['#B7E985','#FBDA1E'],
-    title: {
-        text: ''
-    },
-    subtitle: {
-        text: ''
-    },
-    plotOptions: {
-        pie: {
-            innerSize: 250,
-        }
-    },
-    series: [{
-        name: 'Delivered amount',
-        data:  {!! $result['clients'] !!},
 
-    }]
-});
+    Highcharts.chart('pie_chart', {
+        chart: {
+            type: 'pie',
+        },
+        credits:false,
+        colors:['#B7E985','#FBDA1E'],
+        title: {
+            text: ''
+        },
+        subtitle: {
+            text: ''
+        },
+        plotOptions: {
+            pie: {
+                innerSize: 250,
+            }
+        },
+        series: [{
+            name: 'Delivered amount',
+            data:  {!! $result['clients'] !!},
 
-Highcharts.chart('basic_graph', {
-    chart: {
-        type: 'area'
-    },
-    colors:['#514DC8'],
-    credits:false,
-    title: false,
-    xAxis: {
-        allowDecimals: false,
-        labels:false,
-        labels: {
-            enabled: false
-        }
-    },
-    yAxis: {
+        }]
+    });
+
+    Highcharts.chart('basic_graph', {
+        chart: {
+            type: 'area'
+        },
+        colors:['#514DC8'],
+        credits:false,
         title: false,
-    },
+        xAxis: {
+            allowDecimals: false,
+            labels:false,
+            labels: {
+                enabled: false
+            }
+        },
+        yAxis: {
+            title: false,
+        },
 
-    plotOptions: {
-        area: {
-            marker: {
-                enabled: false,
-                symbol: 'circle',
-                radius: 2,
-                states: {
-                    hover: {
-                        enabled: false
+        plotOptions: {
+            area: {
+                marker: {
+                    enabled: false,
+                    symbol: 'circle',
+                    radius: 2,
+                    states: {
+                        hover: {
+                            enabled: false
+                        }
                     }
                 }
             }
-        }
-    },
-    series: [{
-        name: 'Sales',
-        data:  {!! $result['sales_array'] !!}
-    }]
-});
+        },
+        series: [{
+            name: 'Sales',
+            data:  {!! $result['sales_array'] !!}
+        }]
+    });
 </script>
 @endsection
+
+

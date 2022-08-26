@@ -11,10 +11,55 @@ use App\Models\Order;
 use Config;
 use Auth;
 use Session;
+use DateInterval;
+use DatePeriod;
+use DateTime;
 
 class ReportController extends Controller
 {
+    public $durations ;
+
+    public function __construct()
+    {
+        $this->durations = [
+            'today' => [date("Y-m-d",strtotime("-1 days")), date("Y-m-d")],
+            'yesterday' => [date('Y-m-d',strtotime("-2 days")), date('Y-m-d',strtotime("-1 days"))],
+            'this_week' => [\Carbon\Carbon::now()->startOfWeek()->format('Y-m-d'),date("Y-m-d")],
+            'last_week' => [\Carbon\Carbon::now()->subWeek()->startOfWeek()->format('Y-m-d'), \Carbon\Carbon::now()->subWeek()->endOfWeek()->format('Y-m-d')],
+            'this_month' => [\Carbon\Carbon::now()->startOfMonth()->format('Y-m-d'),date("Y-m-d")],
+            'last_month' => [\Carbon\Carbon::now()->subMonth()->startOfMonth()->format('Y-m-d'), \Carbon\Carbon::now()->subMonth()->endOfMonth()->format('Y-m-d')],
+            'year_to_date' => [\Carbon\Carbon::now()->startOfYear()->format('Y-m-d'),date("Y-m-d")],
+            'last_year' => [\Carbon\Carbon::now()->subYear()->startOfYear()->format('Y-m-d'), \Carbon\Carbon::now()->subYear()->endOfYear()->format('Y-m-d')],
+        ];
+
+        $this->comparison_durations = [
+            'today' => [date('Y-m-d',strtotime("-2 days")),date('Y-m-d',strtotime("-1 days"))],
+            'yesterday' => [date('Y-m-d',strtotime("-3 days")), date('Y-m-d',strtotime("-2 days"))],
+            'this_week' => [\Carbon\Carbon::now()->subWeek()->startOfWeek()->format('Y-m-d'), \Carbon\Carbon::now()->subWeek()->endOfWeek()->format('Y-m-d')],
+            'last_week' => [\Carbon\Carbon::now()->subWeek(2)->startOfWeek()->format('Y-m-d'), \Carbon\Carbon::now()->subWeek(2)->endOfWeek()->format('Y-m-d')],
+            'this_month' => [\Carbon\Carbon::now()->subMonth()->startOfMonth()->format('Y-m-d'), \Carbon\Carbon::now()->subMonth()->endOfMonth()->format('Y-m-d')],
+            'last_month' => [\Carbon\Carbon::now()->subMonth(2)->startOfMonth()->format('Y-m-d'), \Carbon\Carbon::now()->subMonth(2)->endOfMonth()->format('Y-m-d')],
+            'year_to_date' => [\Carbon\Carbon::now()->subYear()->startOfYear()->format('Y-m-d'), \Carbon\Carbon::now()->subYear()->endOfYear()->format('Y-m-d')],
+            'last_year' => [\Carbon\Carbon::now()->subYear(2)->startOfYear()->format('Y-m-d'), \Carbon\Carbon::now()->subYear(2)->endOfYear()->format('Y-m-d')],
+        ];
+
+    }
+
     public function index(Request $request){
+
+        $duration = $request->duration == 'custom' ?  [$request->from_date,$request->to_date] : $this->durations[$request->duration ?? 'today'];
+
+        $days_difference = $this->dateDiff($duration[0],$duration[1]);
+
+        if ($request->duration == 'custom') {
+
+            $comparison_duration = [date('Y-m-d', strtotime('-1 day', strtotime($request->from_date))) ,date('Y-m-d', strtotime("-$days_difference days", strtotime($request->from_date)))];
+
+        } else {
+
+            $comparison_duration = $this->comparison_durations[$request->duration ?? 'today'] ;
+
+        }
 
        	$uid = Auth::user()->uid;
     	$user = User::where('uid', $uid)->first();
@@ -27,149 +72,170 @@ class ReportController extends Controller
             }
         }
 
+        $result['time_duration'] = $request->duration;
 
-        $duaration= ($request->get('duration'))?$request->get('duration'):1;
-        $date = \Carbon\Carbon::today()->subDays($duaration);
-        $avgStartDate = $date=date_create($date);
-        $avgStartDate = date_sub($date,date_interval_create_from_date_string("$duaration days"));
-        $avgStartDate = date_format($date,"Y-m-d");
-        $result =array ();
-        $result['time_duration'] = $duaration;
+        // --------------------------------- order data logic ------------------------------------
 
+        $result['all_orders'] = Order::where('restaurant_id',$restaurant ->restaurant_id)->count();
 
-        $result['all_order'] = Order::where('restaurant_id',$restaurant ->restaurant_id)
-                                    ->count();
-
-
-
-        $current_date = date("Y-m-d");
-        $sub_date = \Carbon\Carbon::today()->subDays($duaration);
-        $result['get_order'] = Order::where('restaurant_id',$restaurant ->restaurant_id)
-        ->where('order_date','>',$sub_date)
+        $result['get_orders'] = Order::where('restaurant_id',$restaurant ->restaurant_id)
+        ->whereBetween('order_date',[$duration])
         ->count();
 
-        $result['get_order_pr'] = Order::where('restaurant_id',$restaurant ->restaurant_id)
-        ->where('order_date','>=',$avgStartDate)
-        ->where('order_date','<',$sub_date)
+        $sub_duration_orders = Order::where('restaurant_id',$restaurant ->restaurant_id)
+        ->whereBetween('order_date',[$comparison_duration])
         ->count();
 
-        $order_pr = ($result['get_order_pr'])?$result['get_order_pr']:1;
-        $result['order_pr_status'] = (100* $result['get_order'])/ $order_pr;
+        [$result['order_percentage'], $result['order_percentage_status']] = $this->getPercentageData($sub_duration_orders, $result['get_orders']);
 
 
+        // --------------------------------- order data logic ends ------------------------------------
 
+        // --------------------------------- pending order data logic ends ------------------------------------
 
-
-        $result['all_pendingorder'] = Order::where('restaurant_id',$restaurant ->restaurant_id)
-                                    ->where('order_progress_status',Config::get('constants.ORDER_STATUS.INITIAL'))
-                                    ->whereNull('order_status')
-                                    ->count();
-
-        $result['get_pendingorder'] = Order::where('restaurant_id',$restaurant ->restaurant_id)
+        $result['all_pending_orders'] = Order::where('restaurant_id',$restaurant ->restaurant_id)
         ->where('order_progress_status',Config::get('constants.ORDER_STATUS.INITIAL'))
         ->whereNull('order_status')
-        ->where('order_date','>=',$sub_date)
-        ->where('order_date','<',$current_date)
         ->count();
 
-        $result['get_pending_order_pr'] = Order::where('restaurant_id',$restaurant ->restaurant_id)
+        $result['get_pending_orders'] = Order::where('restaurant_id',$restaurant ->restaurant_id)
         ->where('order_progress_status',Config::get('constants.ORDER_STATUS.INITIAL'))
         ->whereNull('order_status')
-        ->where('order_date','>=',$avgStartDate)
-        ->where('order_date','<',$sub_date)
+        ->whereBetween('order_date',[$duration])
         ->count();
 
-        $pending_order_pr = ($result['get_pending_order_pr'])?$result['get_pending_order_pr']:1;
-        $result['pending_order_pr_status'] = (100* $result['get_pendingorder'])/ $pending_order_pr;
+        $sub_duration_pending_orders = Order::where('restaurant_id',$restaurant ->restaurant_id)
+        ->where('order_progress_status',Config::get('constants.ORDER_STATUS.INITIAL'))
+        ->whereNull('order_status')
+        ->whereBetween('order_date',[$comparison_duration])
+        ->count();
+
+        [$result['pending_order_percentage'], $result['pending_order_percentage_status']] = $this->getPercentageData($sub_duration_pending_orders, $result['get_pending_orders']);
 
 
+        // --------------------------------- pending order data logic ends ---------------------------
+
+        // --------------------------------- Delivery data logic  ------------------------------------
 
         $result['all_delivery'] = Order::where('restaurant_id',$restaurant ->restaurant_id)
-                                    ->where('order_progress_status',Config::get('constants.ORDER_STATUS.COMPLETED'))
-                                    ->count();
+        ->where('order_progress_status',Config::get('constants.ORDER_STATUS.COMPLETED'))
+        ->count();
 
         $result['get_delivery'] = Order::where('restaurant_id',$restaurant ->restaurant_id)
-                                    ->where('order_progress_status',Config::get('constants.ORDER_STATUS.COMPLETED'))
-                                    ->where('order_date','>=',$date)
-                                    ->count();
+        ->where('order_progress_status',Config::get('constants.ORDER_STATUS.COMPLETED'))
+        ->whereBetween('order_date',[$duration])
+        ->count();
+
+        $sub_duration_deliveries = Order::where('restaurant_id',$restaurant ->restaurant_id)
+        ->where('order_progress_status',Config::get('constants.ORDER_STATUS.COMPLETED'))
+        ->whereBetween('order_date',[$comparison_duration])
+        ->count();
+
+        [$result['delivery_percentage'], $result['delivery_percentage_status']] = $this->getPercentageData($sub_duration_deliveries, $result['get_delivery']);
+
+
+        // --------------------------------- Delivery data logic ends ------------------------------------
+
+        // --------------------------------- Clients data logic  -------------------------------------
 
         $restaurant_id = $restaurant ->restaurant_id;
+
         $result['repeat_clients'] = User::where('role',Config::get('constants.ROLES.CUSTOMER'))
-                                    ->whereHas('orders',function($query)use($restaurant_id){
-                                        $query->where('restaurant_id',$restaurant_id);
-                                    })
-                                    ->where('created_at','<=',$date)
-                                    ->get();
+        ->whereHas('orders',function($query)use($restaurant_id){
+            $query->where('restaurant_id',$restaurant_id);
+        })
+        ->whereBetween('created_at',[$duration])
+        ->get();
+
         $result['new_client'] = User::where('role',Config::get('constants.ROLES.CUSTOMER'))
-                                ->whereHas('orders',function($query)use($restaurant_id){
-                                    $query->where('restaurant_id',$restaurant_id);
-                                })
-                                ->where('created_at','>=',$date)
-                                ->count();
+        ->whereHas('orders',function($query)use($restaurant_id){
+            $query->where('restaurant_id',$restaurant_id);
+        })
+        ->whereBetween('created_at',[$duration])
+        ->count();
 
         $result['clients'] = "[['".$result['new_client']."',".$result['new_client']."],['".$result['repeat_clients']."',".$result['repeat_clients']."]]";
 
+        // --------------------------------- Clients data logic ends ----------------------------------
 
+        // --------------------------------- Sales data logic  ------------------------------------
 
-
-        $result['all_sales'] = Order::where('restaurant_id',$restaurant ->restaurant_id)
-                                    ->sum('grand_total');
+        $result['all_sales'] = Order::where('restaurant_id',$restaurant ->restaurant_id)->sum('grand_total');
 
         $result['sales_total'] = Order::where('restaurant_id',$restaurant ->restaurant_id)
-                                    ->where('order_date','>=',$sub_date)
-                                    ->sum('grand_total');
-
-        $result['current_week_sale'] = Order::where('restaurant_id',$restaurant ->restaurant_id)
-                                    ->where('order_date','>=',$sub_date)
-                                    ->where('order_date','<=',$current_date)
-                                    ->sum('grand_total');
-
-        $result['last_week_sale'] = Order::where('restaurant_id',$restaurant ->restaurant_id)
-        ->where('order_date','>=',$avgStartDate)
-        ->where('order_date','<=',$sub_date)
+        ->whereBetween('created_at',[$duration])
         ->sum('grand_total');
 
-        $sales_per_status = ($result['last_week_sale'])?$result['last_week_sale']:1;
-        $result['sales_per'] = (($result['current_week_sale'] - $result['last_week_sale'])/$sales_per_status)*100;
+        $sub_duration_sales = Order::where('restaurant_id',$restaurant ->restaurant_id)
+        ->whereBetween('created_at',[$comparison_duration])
+        ->sum('grand_total');
 
+        $restaurant_age = $this->dateDiff($restaurant->created_at, date("Y-m-d"));
 
+        $days_diff = $restaurant_age / $days_difference;
 
-        $your_date = date("Y-m-d");
-        $datediff = $this->dateDiff($restaurant->created_at, $your_date);
-        $days_diff = $datediff / $duaration;
+        $result['average_values'] =  number_format(($result['all_sales'] /  $days_diff) ,2);
 
-        $result['avg_values'] =  number_format(($result['all_sales'] /  $days_diff) ,2);
-        $sales_pr = ($result['sales_total'] > 0)? (($result['sales_total'] - $result['last_week_sale'])/$result['sales_total'] )*100:0;
+        [$result['sales_percentage'], $result['sales_percentage_status']] = $this->getPercentageData($sub_duration_sales, $result['sales_total']);
 
-        $result['sales_pr_status'] = (abs($result['sales_total'] - $result['last_week_sale']))?1:0;
-
+        // ------------
 
         $result['sales_total'] = number_format( $result['sales_total'] ,2);
         $result['all_sales'] = number_format( $result['all_sales'] ,2);
-        $result['sales_pr'] =  number_format($sales_pr,2);
+        $result['sales_percentage'] =  number_format($result['sales_percentage'],2);
 
-        $result['all_tip'] = Order::where('restaurant_id',$restaurant ->restaurant_id)
-                                    ->sum('tip_amount');
-
-        $result['total_tip'] = Order::where('restaurant_id',$restaurant ->restaurant_id)
-                                    ->where('order_date','>=',$sub_date)
-                                    ->sum('tip_amount');
-
-        // $result['all_tip'] = number_format($result['all_tip'], 2);
-        // $result['total_tip'] = number_format($result['total_tip'],2);
-
-        $sales_array =array();
-        for($var=1;$var<=$duaration;$var++) {
-            $date = \Carbon\Carbon::today()->subDays($var)->format('Y-m-d');
+        $interval = DateInterval::createFromDateString('1 day');
+        $period = new DatePeriod(new DateTime($duration[0]), $interval, new DateTime($duration[1]));
+        $sales_array = [];
+        foreach ($period as $key => $date) {
             $tempArray=  number_format(Order::where('restaurant_id',$restaurant ->restaurant_id)
-                                    ->where('order_progress_status',Config::get('constants.ORDER_STATUS.COMPLETED'))
-                                    ->where('order_date','>=',$date)
-                                    ->sum('grand_total'),0);
+            ->where('order_progress_status',Config::get('constants.ORDER_STATUS.COMPLETED'))
+            ->where('order_date',$date->format('Y-m-d'))
+            ->sum('grand_total'),0);
             array_push($sales_array,$tempArray);
         }
+
+
         $result['sales_array'] = implode(",",$sales_array);
         $result['sales_array'] = "[".$result['sales_array']."]";
+
+
+        // --------------------------------- Sales data logic ends ------------------------------------
+
+        // --------------------------------- tip data logic -------------------------------------------
+
+        $result['all_tip'] = number_format(Order::where('restaurant_id',$restaurant ->restaurant_id)->sum('tip_amount'),2);
+
+        $result['total_tip'] = Order::where('restaurant_id',$restaurant ->restaurant_id)
+        ->whereBetween('order_date',[$duration])
+        ->sum('tip_amount');
+
+        $result['total_tip'] = number_format($result['total_tip'],2);
+
+        // --------------------------------- tip data logic ends ------------------------------------
+
         return view('report.index',compact('result'));
+    }
+
+    public function getPercentageData($comparison_data, $actual_data)
+    {
+       if ($comparison_data > 0) {
+
+            $percentage = (100*$actual_data/$comparison_data) ;
+
+        } else if ($comparison_data == $actual_data) {
+
+            $percentage = 0 ;
+
+        } else {
+
+            $percentage = $actual_data*100 ;
+
+        }
+
+        $status = $actual_data >  $comparison_data  ? true : false ;
+
+        return [$percentage, $status];
     }
 
     public function customTips(Request $request)
@@ -179,11 +245,11 @@ class ReportController extends Controller
         $uid = Auth::user()->uid;
     	$user = User::where('uid', $uid)->first();
         $restaurant = Restaurant::where('uid', $uid)->first();
-        $sub_date = \Carbon\Carbon::today()->subDays(1);
+        $sub_date = \Carbon\Carbon::today()->subDays($request->duration == 'today' ? 1 : 2);
         $result['total_tip'] = Order::where('restaurant_id',$restaurant ->restaurant_id)
-                                    ->where('order_date','>=',$sub_date)
-                                    ->whereBetween('order_time',[$from,$to])
-                                    ->sum('tip_amount');
+        ->where('order_date','>=',$sub_date)
+        ->whereBetween('order_time',[$from,$to])
+        ->sum('tip_amount');
         return response()->json($result, 200);
     }
 
