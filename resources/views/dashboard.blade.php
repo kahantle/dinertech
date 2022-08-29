@@ -50,7 +50,7 @@
                                                                 </button>
                                                             </a>
 
-                                                            <a href="javaScript:void(0);" data-route="{{ route('action.order', [$order->order_id, 'action' => 'CANCEL']) }}">
+                                                            <a href="javaScript:void(0);" data-route="{{ route('action.order', [$order->order_id, 'action' => 'CANCEL']) }}" class="action" data-value="Cancel">
                                                                 <button href="javaScript:void(0);" data-toggle="tooltip"
                                                                     title="Decline Order!" class="action btn-danger" data-value="Cancel">
                                                                         <img src="{{ asset('assets/images/order-close.png')}}">

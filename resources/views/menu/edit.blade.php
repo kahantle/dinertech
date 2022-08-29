@@ -22,7 +22,7 @@
   </div>
   <div class="add-category Promotion menu dashboard content-wrapper category category-insides-blog category_main">
     @include('common.flashMessage')
-  
+
     <div class="container-fluid p-0">
       {{ Form::open(array('route' => array('update.menu.post'),'id'=>'menuForm','method'=>'POST','class'=>'form','files'=>'true',
       )) }}
@@ -42,21 +42,21 @@
       @endif
       <div class="row">
         <div class="col-xl-5 col-lg-6 col-md-6">
-          <div class="form-group"> 
-            <label class="label_cat">Item Name</label>  
-            <img src="{{ asset('assets/images/category-menu-icon.png') }}">              
+          <div class="form-group">
+            <label class="label_cat"> Item Name </label>
+            <img src="{{ asset('assets/images/category-menu-icon.png') }}">
             <input type="text" class="form-control" name="item_name" placeholder="Enter Menu Item" value="{{$menuItem->item_name}}">
           </div>
           <div class="form-group">
-            <label class="label_cat">Item Description</label>   
-            <img src="{{ asset('assets/images/category-detail.png') }}">            
+            <label class="label_cat"> Item Description </label>
+            <img src="{{ asset('assets/images/category-detail.png') }}">
             <textarea type="text" class="form-control" name="item_details" placeholder="Enter Menu Details">{{$menuItem->item_details}}</textarea>
           </div>
         </div>
         <div class="col-xl-5 col-lg-6 col-md-6">
           <div class="form-group select-input">
-            <label class="label_cat">Category</label>   
-            <img src="{{ asset('assets/images/catagory-black.png') }}">              
+            <label class="label_cat"> Category </label>
+            <img src="{{ asset('assets/images/catagory-black.png') }}">
             <select type="text" class="form-control" name="category_id" placeholder="Enter Item Catagory">
               <option value="{{$menuItem->category_id}}" selected>{{$menuItem->category_name}}</option>
               @foreach($categories as $category)
@@ -64,18 +64,18 @@
               @endforeach
             </select>
           </div>
-          <div class="form-group"> 
-            <label class="label_cat">Price</label>  
-            <img src="{{ asset('assets/images/tag-d.png') }}">              
+          <div class="form-group">
+            <label class="label_cat"> Price </label>
+            <img src="{{ asset('assets/images/tag-d.png') }}">
             <input type="text" class="form-control menu-price" name="item_price" placeholder="Enter Item Price" value="$ {{number_format($menuItem->item_price,2)}}">
           </div>
           <div class="form-group select-input">
-            <label class="label_cat">Modifiers <span>(optional)</span></label>   
-            <img  style="z-index: 1;" src="{{ asset('assets/images/category-detail.png') }}">              
+            <label class="label_cat"> Modifiers <span>(optional)</span> </label>
+            <img  style="z-index: 1;" src="{{ asset('assets/images/category-detail.png') }}">
 
             <select type="text" class="form-control select2" name="modifier_group_id[]" multiple id="modifier_id" placeholder="Select Modifiers">
               @foreach($modifiers as $modifier)
-              <option value="{{$modifier->modifier_group_id}}" 
+              <option value="{{$modifier->modifier_group_id}}"
                 @php
                   $modifers = $menuItem->modifiers->pluck('modifier_id')->toArray();
                 @endphp
@@ -89,7 +89,7 @@
         </div>
       </div>
     </div>
-    <div class="form-group form-btn-menu">   
+    <div class="form-group form-btn-menu">
       <div class="btn-custom">
         <a href="{{route('menu')}}" class="btn-grey"><span>Cancel</span></a>
       </div>
@@ -109,11 +109,11 @@
       <h5 class="groupHeading">Add Modifier Group</h5>
       {{ Form::open(array('route' => array('add.menu.modifier.post'),'id'=>'modifierForm','method'=>'POST',
       'class'=>'')) }}
-      <div class="form-group">                
+      <div class="form-group">
         <input type="hidden" id="modifier_group_id" name="modifier_group_id"  />
         <input type="text" class="form-control" id="modifier_group_name" name="modifier_group_name" placeholder="Modifier Group Name">
       </div>
-      <div class="form-group">                
+      <div class="form-group">
         <input type="checkbox"  id="allow_multiple" name="allow_multiple" />
         Allow Multiple
       </div>
@@ -133,12 +133,12 @@
       <h5 class="itemHeading">Add modifier item</h5>
       {{ Form::open(array('route' => array('add.menu.modifier.item.post'),'id'=>'modifierItemForm','method'=>'POST',
       'class'=>'')) }}
-      <div class="form-group">                
+      <div class="form-group">
         <input type="text" class="form-control" id="modifier_group_item_name" name="modifier_group_item_name" placeholder="Enter Modifier Item Name">
       </div>
-      <div class="form-group"> 
-        <input type="hidden" id="modifier_item_group_id" name="modifier_item_group_id" />  
-        <input type="hidden" id="modifier_item_id" name="modifier_item_id" />               
+      <div class="form-group">
+        <input type="hidden" id="modifier_item_group_id" name="modifier_item_group_id" />
+        <input type="hidden" id="modifier_item_id" name="modifier_item_id" />
         <input type="text" class="form-control" id="modifier_group_item_price" name="modifier_group_item_price" placeholder="Enter Modifier Price">
       </div>
       <div class="btn-custom">
@@ -155,7 +155,7 @@
 {!! JsValidator::formRequest('App\Http\Requests\ModifierGroupRequest','#modifierForm'); !!}
 {!! JsValidator::formRequest('App\Http\Requests\ModifierItemPriceRequest','#modifierItemForm'); !!}
 <script src="{{asset('/assets/js/menu-modifier.js')}}"></script>
-<script> 
+<script>
   var route = "{{route('ajax.modifier.list')}}";
 
   $(document).ready(function() {
