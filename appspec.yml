@@ -3,3 +3,24 @@ os: linux
 files:
   - source: /
     destination: /var/www/html/web
+permissions:
+  - object: /var/www/html/web
+    pattern: "**"
+    owner: ubuntu
+    group: www-data
+    type:
+      - file
+  - object: /var/www/html/web/storage
+    pattern: "**"
+    owner: ubuntu
+    group: www-data
+    mode: 775
+    type:
+      - file
+  - object: /var/www/html/web/bootstrap/cache
+    pattern: "**"
+    owner: ubuntu
+    group: www-data
+    mode: 775
+    type:
+      - file
