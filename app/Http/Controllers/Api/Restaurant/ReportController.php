@@ -127,7 +127,7 @@ class ReportController extends Controller
 
             $result['last_pending_order_total'] = $sub_duration_pending_orders ;
 
-            [$result['pending_order_pr'], $result['pending_order_pr_status']] = $this->getPercentageData($sub_duration_pending_orders, $result['get_pendingorder']);
+            [$result['pendingorder_pr'], $result['pending_order_pr_status']] = $this->getPercentageData($sub_duration_pending_orders, $result['get_pendingorder']);
 
 
             // --------------------------------- pending order data logic ends ---------------------------
@@ -190,12 +190,14 @@ class ReportController extends Controller
 
             $result['avg_values'] =  number_format(($result['all_sales'] /  $days_diff) ,2);
 
-            [$result['sales_pr '], $result['sales_pr_status']] = $this->getPercentageData($sub_duration_sales, $result['sales_total']);
+            [$result['sales_pr'], $result['sales_pr_status']] = $this->getPercentageData($sub_duration_sales, $result['sales_total']);
 
             // ------------
 
             $interval = DateInterval::createFromDateString('1 day');
             $period = new DatePeriod(new DateTime($duration[0]), $interval, new DateTime($duration[1]));
+
+            $result['sales_graph'] = [];
 
             foreach ($period as $key => $date) {
                 $tempArray['day'] = $key;
