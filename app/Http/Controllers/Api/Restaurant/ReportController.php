@@ -160,6 +160,14 @@ class ReportController extends Controller
             ->whereBetween('created_at',[$duration])
             ->count();
 
+            $result['reporting_client'] = 0;
+
+            $users = User::where('role',Config::get('constants.ROLES.CUSTOMER'))->where('status','ACTIVE')->get();
+
+            foreach ($users as $key => $user) {
+                $user->orders->count() > 0 ? $result['reporting_client']++ : "";
+            }
+
             // --------------------------------- clients data logic ends ------------------------------------
 
             // --------------------------------- Sales data logic  -----------------------------------------
@@ -243,7 +251,7 @@ class ReportController extends Controller
 
         }
 
-        $status = $actual_data >  $comparison_data  ? true : false ;
+        $status = $actual_data >  $comparison_data  ? 1 : 0 ;
 
         return [$percentage, $status];
     }
@@ -253,7 +261,7 @@ class ReportController extends Controller
         $date1_ts = strtotime($date1);
         $date2_ts = strtotime($date2);
         $diff = $date2_ts - $date1_ts;
-        return round($diff / 86400);
+        return round($diff / 86400) == 0 ? 1 : round($diff / 86400);
     }
 
 }

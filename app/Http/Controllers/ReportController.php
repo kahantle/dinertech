@@ -72,7 +72,7 @@ class ReportController extends Controller
             }
         }
 
-        $result['time_duration'] = $request->duration;
+        $result['time_duration'] = $request->duration ?? 'today';
 
         // --------------------------------- order data logic ------------------------------------
 
@@ -204,6 +204,8 @@ class ReportController extends Controller
 
         // --------------------------------- tip data logic -------------------------------------------
 
+        $result['reporting_client'] = 50;
+
         $result['all_tip'] = number_format(Order::where('restaurant_id',$restaurant ->restaurant_id)->sum('tip_amount'),2);
 
         $result['total_tip'] = Order::where('restaurant_id',$restaurant ->restaurant_id)
@@ -258,6 +260,6 @@ class ReportController extends Controller
         $date1_ts = strtotime($date1);
         $date2_ts = strtotime($date2);
         $diff = $date2_ts - $date1_ts;
-        return round($diff / 86400);
+        return round($diff / 86400) == 0 ? 1 : round($diff / 86400);
     }
 }
