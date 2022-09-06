@@ -31,10 +31,10 @@ class ContactController extends Controller
             $uid = auth('api')->user()->uid;
             $restaurant = Restaurant::where('restaurant_id', $request->post('restaurant_id'))
                 ->first();
-            
+
             $contact = new Contact;
             $message = 'Contact sent successfully';
-            
+
             $contact->restaurant_id = $request->post('restaurant_id');
             $contact->name = $request->post('name');
             $contact->subject = $request->post('subject');
