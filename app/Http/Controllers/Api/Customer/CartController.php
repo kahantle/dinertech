@@ -32,14 +32,15 @@ class CartController extends Controller
             ]);
             $uid = auth('api')->user()->uid;
             $restaurantId = $request->post('restaurant_id');
-            
+
             $cartItem = Cart::with(['cartMenuItems' => function($cartItems){
                 $cartItems->select(['cart_menu_item_id','cart_id','menu_id','menu_name','menu_qty','menu_price','menu_total','modifier_total','is_loyalty'])->with(['cartMenuGroups' => function($cartMenuGroups){
                     $cartMenuGroups->select(['cart_modifier_group_id','cart_menu_item_id','menu_id','modifier_group_id','modifier_group_name'])->with('cartMenuGroupItems')->get();
                 }])->get();
             }])->where('restaurant_id',$restaurantId)->where('uid',$uid)->select('cart_id','restaurant_id','uid','sub_total','discount_charge','tax_charge','total_due','is_payment')->first();
+
             if($cartItem){
-                
+
                 DB::beginTransaction();
                 // if((empty($cartItem->promotion_id) || $cartItem->promotion_id == null) && (empty($cartItem->discount_charge) || floatval($cartItem->discount_charge) == 0)){
                     //  if(!$cartItem->promotion_id){
@@ -48,16 +49,24 @@ class CartController extends Controller
                     $promotionTypes = PromotionType::all();
                     foreach($promotionTypes as $promotion_type){
                         /* Promotions Helper logic function */
+                        $test[] = [$promotion_type->id];
                         if(apply_promotion($promotion_type->promotion_name,$uid,$restaurantId,$cartItem) == true){
                            break;
                         }
                     }
                 // }
                 DB::commit();
+
+                $cartItem = Cart::with(['cartMenuItems' => function($cartItems){
+                $cartItems->select(['cart_menu_item_id','cart_id','menu_id','menu_name','menu_qty','menu_price','menu_total','modifier_total','is_loyalty'])->with(['cartMenuGroups' => function($cartMenuGroups){
+                    $cartMenuGroups->select(['cart_modifier_group_id','cart_menu_item_id','menu_id','modifier_group_id','modifier_group_name'])->with('cartMenuGroupItems')->get();
+                }])->get();
+
+            }])->where('restaurant_id',$restaurantId)->where('uid',$uid)->select('cart_id','restaurant_id','uid','sub_total','discount_charge','tax_charge','total_due','is_payment')->first();
                 return response()->json(['cart_list' => $cartItem, 'success' => true], 200);
-            } 
+            }
             return response()->json(['cart_list' => (object)[],'message' => 'Your cart is empty','success' => true], 200);
-           
+
         } catch (\Throwable $th) {
             $errors['success'] = false;
             $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
@@ -112,7 +121,7 @@ class CartController extends Controller
                         $cart_sub_total = $menuItem['menu_total'];
                         $cartMenuItemData->modifier_total = $menuItem['modifier_total'];
                         $cartMenuItemData->is_loyalty = ($menuItem['is_loyalty'] == true) ? 1:0;
-                        $cartMenuItemData->save();                    
+                        $cartMenuItemData->save();
                         if(isset($menuItem['modifier_list'])){
                            foreach($menuItem['modifier_list'] as $modifierKey => $modifier){
                                 $cartModifierGroup = new CartMenuGroup;
@@ -194,7 +203,7 @@ class CartController extends Controller
                 // Cart::where('uid',$uid)->where('restaurant_id',$request->post('restaurant_id'))->where('cart_id',$check_cart->cart_id)->update(['order_type' => $orderType,'sub_total' => number_format($cart_sub_total,2), 'tax_charge' => number_format($taxCharge,2), 'total_due' => number_format($finalTotal,2)]);
                 Cart::where('uid',$uid)->where('restaurant_id',$request->post('restaurant_id'))->where('cart_id',$check_cart->cart_id)->update(['order_type' => $orderType, 'sub_total' => number_format($finalTotal,2), 'total_due' => number_format($finalTotal,2)]);
             }
-            
+
            return response()->json(['success' => true, 'message' => "Item added to the cart successfully."], 200);
         } catch (\Throwable $th) {
             $errors['success'] = false;
@@ -336,7 +345,7 @@ class CartController extends Controller
             $uid = auth('api')->user()->uid;
             $check_cart = Cart::where('uid',$uid)->where('restaurant_id',$request->post('restaurant_id'))->first();
             $cartMenuItems = CartItem::where('cart_id',$check_cart->cart_id);
-            
+
             if($cartMenuItems->get()->count() > 1){
                 CartMenuGroup::where('cart_menu_item_id',$request->post('cart_menu_item_id'))->where('cart_id',$check_cart->cart_id)->delete();
                 CartMenuGroupItem::where('cart_menu_item_id',$request->post('cart_menu_item_id'))->where('cart_id',$check_cart->cart_id)->delete();
@@ -390,12 +399,12 @@ class CartController extends Controller
                         Cart::where('uid',$uid)->where('restaurant_id',$request->post('restaurant_id'))->where('cart_id',$check_cart->cart_id)->update(['sub_total' => number_format($subtotal,2),  'total_due' => number_format($subtotal,2)]);
                         return response()->json(['message' => "Cart quantity increment successfully.", 'success' => true], 200);
                     }else{
-                        return response()->json(['message' => "Cart item not found.", 'success' => false], 400);    
+                        return response()->json(['message' => "Cart item not found.", 'success' => false], 400);
                     }
                 }else{
                     return response()->json(['message' => "Cart item not found.", 'success' => false], 400);
                 }
-            }            
+            }
         } catch (\Throwable $th) {
             $errors['success'] = false;
             $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
