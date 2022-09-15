@@ -30,12 +30,12 @@
                   <img src="{{ asset('assets/images/person.png') }}" class="img-fluid">
                   <div class="chat-name">
                     <div class="cn-left">
-                      <h6>{{$item->order_number}}</h6>
-                      <span>{{$item->user->full_name}}</span>
+                      <h6>{{$item->user->full_name}}</h6>
+                      <span>{{ empty($last_messages[$key]) ? "" : substr($last_messages[$key],0,15)."..." }}</span>
                     </div>
                     <div class="cn-right">
-                      <h6></h6> 
-                      <span>{{$item->order_date}} {{$item->order_time}}</span>
+                      <h6>{{$item->order_number}}</h6>
+                      <span></span>
                     </div>
                   </div>
                   </div>
@@ -83,7 +83,7 @@
             <a href="#0"><img src="{{ asset('assets/images/category-detail.png') }}"></a>
           </div>
         </div>
-  </div> 
+  </div>
 </section>
 @endsection
 @section('scripts')
@@ -132,10 +132,10 @@ $('document').ready(function() {
             },
             complete: function(){
               $("body").preloader('remove');
-            }, 
+            },
             success: function (res) {
               toastr.success(res.message);
-              $("#message").val('');  
+              $("#message").val('');
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 swal.fire("Error deleting!", "Please try again", "error");
@@ -143,11 +143,11 @@ $('document').ready(function() {
         });
     });
 
-    $("#message").keyup(function(event) { 
-        if (event.keyCode === 13) { 
-          $(".sendMessage").click(); 
-        } 
-    }); 
+    $("#message").keyup(function(event) {
+        if (event.keyCode === 13) {
+          $(".sendMessage").click();
+        }
+    });
     // Initialize Firebase
     var config = {
         apiKey: "{{config('services.firebase.api_key')}}",
@@ -165,28 +165,31 @@ $('document').ready(function() {
     firebase.database().ref(url).on('value', function(snapshot) {
         var chat_element = "";
         var value = snapshot.val();
+        let last_msg = "";
         $.each(value, function(index, value){
           if(value.sent_from=='RESTAURANT'){
-          chat_element += ' <li class="company-msg">';
-          chat_element += '      <img src="{{ asset("assets/images/person.png") }}" class="img-fluid">';
-          chat_element += '     <div class="cht-msg">'
-          chat_element += '       <p>'+value.message+'</p>';
-          chat_element += '        <span>'+value.message_date+'</span>';
-          chat_element += '      </div>'
-          chat_element += '    </li>'
-        }else{
-          chat_element += ' <li class="client-msg">';
-          chat_element += '      <img src="{{ asset("assets/images/person.png") }}" class="img-fluid">';
-          chat_element += '     <div class="cht-msg">'
-          chat_element += '       <p>'+value.message+'</p>';
-          chat_element += '        <span>'+value.message_date+'</span>';
-          chat_element += '      </div>'
-          chat_element += '    </li>'
-        }
+            chat_element += ' <li class="company-msg">';
+            chat_element += '      <img src="{{ asset("assets/images/person.png") }}" class="img-fluid">';
+            chat_element += '     <div class="cht-msg">'
+            chat_element += '       <p>'+value.message+'</p>';
+            chat_element += '        <span>'+value.message_date+'</span>';
+            chat_element += '      </div>'
+            chat_element += '    </li>'
+            }else{
+            chat_element += ' <li class="client-msg">';
+            chat_element += '      <img src="{{ asset("assets/images/person.png") }}" class="img-fluid">';
+            chat_element += '     <div class="cht-msg">'
+            chat_element += '       <p>'+value.message+'</p>';
+            chat_element += '        <span>'+value.message_date+'</span>';
+            chat_element += '      </div>'
+            chat_element += '    </li>'
+            }
           $(".msg-body").html(chat_element);
-          $("#message").val('');  
+          $("#message").val('');
           lastIndex = index;
+          last_msg = value.message;
         });
+        console.log(last_msg);
     });
 
     $(document).on("click",".chat-content",function(){
@@ -225,13 +228,13 @@ $('document').ready(function() {
           }
 
           var update_url = '/'+db_name+'/'+resturant_id+'/'+order_id+'/'+index+'/';
-          // value.is_read = 1; 
-          value.isseen = true;       
+          // value.is_read = 1;
+          value.isseen = true;
           var updates = {};
           updates[update_url] = value;
           firebase.database().ref().update(updates);
           $(".msg-body").html(chat_element);
-            $("#message").val('');  
+            $("#message").val('');
             lastIndex = index;
           });
         });
@@ -247,7 +250,7 @@ $('document').ready(function() {
                 order_number : $("#order_id").text(),
             },
             success: function (res) {
-              console.log("message counter update."); 
+              console.log("message counter update.");
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 console.log("message counter not update.");

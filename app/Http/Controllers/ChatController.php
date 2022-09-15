@@ -21,7 +21,8 @@ class ChatController extends Controller
         $this->database = $database;
     }
 
-    public function index(Request $request){
+   public function index(Request $request){
+
         try{
             $user = Auth::user()->uid;
             $restaurant = Restaurant::where('uid', $user)->first();
@@ -38,7 +39,17 @@ class ChatController extends Controller
             }
             $orders = $orders->get();
             $resturant_id = $restaurant->restaurant_id;
-            return view('chat.index',compact('orders','resturant_id','orderNumber'));
+
+            foreach ($orders as $key => $order) {
+                $reference = $this->database->getReference('/chats/'.$resturant_id.'/'.$order->order_number.'/'.$order->user->uid.'/');
+                if ($value = $reference->getValue()) {
+                    $last_messages[] = $value[array_key_last($value)]['message'];
+                } else {
+                    $last_messages[] = "";
+                }
+            }
+
+            return view('chat.index',compact('orders','resturant_id','orderNumber','last_messages'));
         }catch (ApiException $e) {
             $request = $e->getRequest();
         }
@@ -105,6 +116,6 @@ class ChatController extends Controller
                 return true;
             }
         }
-        
+
     }
 }
