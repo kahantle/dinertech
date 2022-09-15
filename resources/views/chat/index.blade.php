@@ -25,21 +25,23 @@
                   <i class="fa fa-search searchTextBtn" aria-hidden="true"></i>
                   <input type="search" id="chat-search" class="searchText" value="{{$orderNumber}}" placeholder="Search here">
                 </div>
-                  @foreach($orders as $key=>$item)
-                  <div class="chat-content @if($key==0) active @endif" data-customer_id="{{$item->user->uid}}" data-user_name="{{$item->user->full_name}}" data-order_id="{{$item->order_number}}" data-id="{{$item->order_id}}" >
-                  <img src="{{ asset('assets/images/person.png') }}" class="img-fluid">
-                  <div class="chat-name">
-                    <div class="cn-left">
-                      <h6>{{$item->user->full_name}}</h6>
-                      <span>{{ empty($last_messages[$key]) ? "" : substr($last_messages[$key],0,15)."..." }}</span>
-                    </div>
-                    <div class="cn-right">
-                      <h6>{{$item->order_number}}</h6>
-                      <span></span>
-                    </div>
-                  </div>
-                  </div>
-                  @endforeach
+                @foreach($orders as $key=>$item)
+                    @if (!empty($last_messages[$key]))
+                        <div class="chat-content @if($key==0) active @endif" data-customer_id="{{$item->user->uid}}" data-user_name="{{$item->user->full_name}}" data-order_id="{{$item->order_number}}" data-id="{{$item->order_id}}" >
+                            <img src="{{ asset('assets/images/person.png') }}" class="img-fluid">
+                            <div class="chat-name">
+                                <div class="cn-left">
+                                <h6>{{$item->user->full_name}}</h6>
+                                <span>{{ empty($last_messages[$key]) ? "" : substr($last_messages[$key],0,15)."..." }}</span>
+                                </div>
+                                <div class="cn-right">
+                                <h6>{{$item->order_number}}</h6>
+                                <span></span>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                @endforeach
               </div>
             </div>
             <div class="col-lg-8 p-0">
