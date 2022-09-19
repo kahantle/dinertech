@@ -191,7 +191,6 @@ $('document').ready(function() {
           lastIndex = index;
           last_msg = value.message;
         });
-        console.log(last_msg);
     });
 
     $(document).on("click",".chat-content",function(){
