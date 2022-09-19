@@ -6,6 +6,7 @@ files:
 permissions:
   - object: /var/www/html/web
     pattern: "**"
+    except: [/var/www/html/web/storage/*,/var/www/html/web/bootstrap/cache/*]
     owner: ubuntu
     group: www-data
     type:
