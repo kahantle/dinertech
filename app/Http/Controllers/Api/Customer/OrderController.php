@@ -48,7 +48,7 @@ class OrderController extends Controller
                 // $list = $list->where('order_progress_status',Config::get('constants.ORDER_STATUS.INITIAL'));
                 // $list =  $list->orWhere('order_progress_status',Config::get('constants.ORDER_STATUS.ACCEPTED'));
                 // $list =  $list->orWhere('order_progress_status',Config::get('constants.ORDER_STATUS.PREPARED'));
-               
+
             }else{
                 // $list =  $list->where('order_progress_status',Config::get('constants.ORDER_STATUS.CANCEL'));
                 // $list = $list->orWhere('order_progress_status',Config::get('constants.ORDER_STATUS.COMPLETED'));
@@ -119,10 +119,10 @@ class OrderController extends Controller
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
             }
 
+            $uid = auth('api')->user()->uid;
             $cartId = $request->post('cart_id');
             $check_cart = Cart::where('uid',$uid)->where('restaurant_id',$request->post('restaurant_id'))->where('cart_id',$cartId)->first();
 
-            $uid = auth('api')->user()->uid;
             DB::beginTransaction();
             $order = new Order;
             $order->uid = $uid;
@@ -153,9 +153,9 @@ class OrderController extends Controller
                 foreach ($request->post('menu_item') as $key => $menuItem) {
                     $menu_price = MenuItem::where('menu_id',$menuItem['menu_id'])->where('restaurant_id',$request->post('restaurant_id'))->first();
                     $menuItemData = New OrderMenuItem;
-                    $menuItemData->menu_id =    $menuItem['menu_id']; 
-                    $menuItemData->menu_name =  $menuItem['item_name']; 
-                    $menuItemData->menu_total = $menuItem['menu_total']; 
+                    $menuItemData->menu_id =    $menuItem['menu_id'];
+                    $menuItemData->menu_name =  $menuItem['item_name'];
+                    $menuItemData->menu_total = $menuItem['menu_total'];
                     $menuItemData->menu_qty =   $menuItem['item_qty'];
                     $menuItemData->menu_price = $menu_price->item_price;
                     $menuItemData->menu_total = $menuItem['menu_total'];
@@ -168,7 +168,7 @@ class OrderController extends Controller
                             $menuModifier->modifier_group_id = $modifierGroup['modifier_group_id'];
                             $menuModifier->modifier_group_name = $modifierGroup['modifier_group_name'];
                             $menuModifier->order_menu_item_id = $menuItemData->order_menu_item_id;
-                            $menuModifier->menu_id =  $menuItem['menu_id']; 
+                            $menuModifier->menu_id =  $menuItem['menu_id'];
                             $menuModifier->order_id = $order->order_id;
                             if($menuModifier->save()) {
                                 foreach ($modifierGroup['modifier_items'] as $key => $modierMenu) {
@@ -196,7 +196,7 @@ class OrderController extends Controller
                 $restaurant = Restaurant::with(['order' => function($order) use($uid,$orderNumber){
                     $order->with('user')->where('uid',$uid)->where('order_number',$orderNumber)->first();
                 }])->find($request->post('restaurant_id'));
-                
+
                 if($request->post('is_feature') == 1){
                     // if($request->post('isCash') == 0)
                     // {
@@ -210,7 +210,7 @@ class OrderController extends Controller
                         case '0':
                             $restaurant->notify(new PlaceFutureOrderCash($restaurant));
                             break;
-                        
+
                         default:
                             $restaurant->notify(new PlaceFutureOrderCard($restaurant));
                             break;
@@ -220,7 +220,7 @@ class OrderController extends Controller
                         case '0':
                             $restaurant->notify(new PlaceOrderCash($restaurant));
                             break;
-                        
+
                         default:
                             $restaurant->notify(new PlaceOrderCard($restaurant));
                             break;
@@ -271,7 +271,7 @@ class OrderController extends Controller
                     }
                 }
 
-                
+
                 if($check_cart) {
                     CartItem::where('cart_id',$check_cart->cart_id)->delete();
                     CartMenuGroup::where('cart_id',$check_cart->cart_id)->delete();
