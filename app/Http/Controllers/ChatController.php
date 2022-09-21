@@ -43,12 +43,14 @@ class ChatController extends Controller
             foreach ($orders as $key => $order) {
                 $reference = $this->database->getReference('/chats/'.$resturant_id.'/'.$order->order_number.'/'.$order->user->uid.'/');
                 if ($value = $reference->getValue()) {
-                    $last_messages[] = $value[array_key_last($value)]['message'];
+                    $last_messages[$key]['value'] = $value[array_key_last($value)]['message'];
+                    $last_messages[$key]['is_seen'] = $value[array_key_last($value)]['message'] == true ?? false;
                 } else {
-                    $last_messages[] = "";
+                    $last_messages[$key]['value'] = "";
+                    $last_messages[$key]['is_seen'] = "";
                 }
             }
-
+            // return  $last_messages;
             return view('chat.index',compact('orders','resturant_id','orderNumber','last_messages'));
         }catch (ApiException $e) {
             $request = $e->getRequest();
@@ -68,7 +70,7 @@ class ChatController extends Controller
                 'full_name' => $user->first_name." ".$user->last_name,
                 'message' => $request->message,
                 'message_date'=>date("Y-m-d H:i:A"),
-                'isseen'=>true,
+                'isseen'=>false,
                 'order_number'=>$order_id,
                 'receiver'=>$customer_id,
                 'sender'=>$user_id,

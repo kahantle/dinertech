@@ -32,9 +32,10 @@
                             <div class="chat-name">
                                 <div class="cn-left">
                                 <h6>{{$item->user->full_name}}</h6>
-                                <span>{{ empty($last_messages[$key]) ? "" : substr($last_messages[$key],0,15)."..." }}</span>
+                                <span>{{ empty($last_messages[$key]['value']) ? "" : substr($last_messages[$key]['value'],0,15)."..." }}</span>
                                 </div>
                                 <div class="cn-right">
+                                {{ $last_messages[$key]['is_seen'] ? 'red dot' : '' }}
                                 <h6>{{$item->order_number}}</h6>
                                 <span></span>
                                 </div>
