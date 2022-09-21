@@ -101,6 +101,7 @@ var resturant_id = {!! json_encode($resturant_id) !!};
 </script>
 <script>
 $('document').ready(function() {
+    console.log({{date("Y-m-d H:i:s") }});
   $(document).on('click', '.searchTextBtn', function() {
     var text = $(".searchText").val();
     window.location.href = "http://" + window.location.host + window.location.pathname + '?order_id=' + text;
