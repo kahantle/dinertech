@@ -35,8 +35,9 @@
                                 <span>{{ empty($last_messages[$key]['value']) ? "" : substr($last_messages[$key]['value'],0,15)."..." }}</span>
                                 </div>
                                 <div class="cn-right">
-                                {{ $last_messages[$key]['is_seen'] ? '' : '' }}
+
                                 <h6>{{$item->order_number}}</h6>
+                                <i class="{{ $last_messages[$key]['is_seen'] ? 'fa fa-circle text-danger display-1' : '' }}"></i>
                                 <span></span>
                                 </div>
                             </div>

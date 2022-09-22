@@ -879,9 +879,9 @@ div#modifierGroupPopUp .content .type-row ul p {
     border-radius: 100%;
 }
 .field-popup .accordion .card-header:after {
-    font-family: 'FontAwesome';  
+    font-family: 'FontAwesome';
     content: "\f068";
-    float: right; 
+    float: right;
     color: #fff;
     position: absolute;
     right: 25px;
@@ -3153,12 +3153,12 @@ input#chat-search {
 }
 
 .cn-right h6 {
-    position: relative;
+    /* position: relative; */
     /* display: inline-block; */
-    width: 20px;
-    height: 20px;
+    /* width: 20px;
+    height: 20px; */
     /* right: 0; */
-    /* float: right; */
+    float: right;
     margin-left: auto;
     display: flex;
     z-index: 1;
@@ -3169,11 +3169,19 @@ input#chat-search {
     color: #fff;
 }
 
+.cn-right i{
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 5px;
+}
+
 .cn-right h6:empty {
     opacity: 0;
 }
 
-.cn-right h6:before {
+/* .cn-right h6:before {
     content: '';
     background: #d50f1c;
     position: absolute;
@@ -3183,7 +3191,7 @@ input#chat-search {
     width: 20px;
     border-radius: 100%;
     z-index: -1;
-}
+} */
 
 .chat-header {
     display: flex;
