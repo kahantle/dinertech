@@ -35,7 +35,7 @@
                                 <span>{{ empty($last_messages[$key]['value']) ? "" : substr($last_messages[$key]['value'],0,15)."..." }}</span>
                                 </div>
                                 <div class="cn-right">
-                                {{ $last_messages[$key]['is_seen'] ? 'red dot' : '' }}
+                                {{ $last_messages[$key]['is_seen'] ? '' : '' }}
                                 <h6>{{$item->order_number}}</h6>
                                 <span></span>
                                 </div>
@@ -101,7 +101,6 @@ var resturant_id = {!! json_encode($resturant_id) !!};
 </script>
 <script>
 $('document').ready(function() {
-    console.log({{date("Y-m-d H:i:s") }});
   $(document).on('click', '.searchTextBtn', function() {
     var text = $(".searchText").val();
     window.location.href = "http://" + window.location.host + window.location.pathname + '?order_id=' + text;
