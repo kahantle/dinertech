@@ -201,7 +201,6 @@ $('document').ready(function() {
         order_id=$(this).data('order_id');
         var user = $(this).data('user_name');
         var customer_id = $(this).data('customer_id');
-        console.log(customer_id);
         $("#customerId").val(customer_id);
         $("#order_id").text(order_id);
         $("#order_user").text(user);
