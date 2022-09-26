@@ -25,6 +25,7 @@ Route::prefix('customer')->namespace('Api\Customer')->group(function () {
     Route::post('/forgot-password', 'UserController@forgotPassword')->name('customer.forgot');
     Route::post('/verify-forgot-otp', 'UserController@forgotVerifyOtp')->name('customer.otp.verfy.forgot');
     Route::post('/reset-password', 'UserController@resetPassword')->name('customer.otp.verfy.resetPassword');
+    Route::post('/delete-account', 'UserController@deleteAccount')->name('customer.delete-account');
 });
 
 Route::namespace ('Api')->group(function () {
@@ -44,7 +45,7 @@ Route::namespace ('Api')->group(function () {
         Route::post('/modifier-list', 'ModifierController@getModifierList')->name('customer.modifier.without.auth.list');
         Route::post('/promotion-list', 'PromotionController@getRecords')->name('customer.promotion.without.auth.get');
         Route::post('/logout', 'UserController@logout')->name('customer.logout');
-        
+
         //Role Customer
         Route::middleware(['auth:api', 'role-customer'])->group(function () {
             Route::post('/category', 'CategoryController@getCategoryList')->name('customer.category.list');
@@ -211,7 +212,7 @@ Route::namespace ('Api')->group(function () {
                 Route::post('/notification', 'ChatNumberController@sendChatNotification')->name('customer.chat.notification');
                 Route::post('/message/read','ChatNumberController@readChatMessage')->name('chat.read.message');
             });
-        
+
             Route::prefix('account')->group(function () {
                 Route::post('/setting/update', 'AccountController@updateSetting')->name('account.update.setting');
             });

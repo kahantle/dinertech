@@ -49,6 +49,7 @@ class UserController extends Controller
                 ->whereHas('restaurant_user', function ($query) use ($restaurantId) {
                     $query->where('restaurant_id', $restaurantId);
                 })
+                ->where('status','!=','DELETED')
                 ->where(function ($query) use ($email, $mobile) {
                     $query->where('email_id', $email);
                     $query->orWhere('mobile_number', $mobile);
@@ -454,4 +455,14 @@ class UserController extends Controller
             return response()->json($errors, 401);
         }
     }
+
+    public function deleteAccount()
+    {
+        $user = auth('api')->user();
+        $user->update([
+            'status' => Config::get('constants.STATUS.DELETED')
+        ]);
+        return response()->json(['message' => 'Account deleted successfully.', 'success' => true], 200);
+    }
+
 }

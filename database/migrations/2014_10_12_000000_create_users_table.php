@@ -22,7 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('mobile_number')->unique();
             $table->string('profile_image')->nullable();
             $table->string('fcm_id')->nullable();
-            $table->enum('status', ['ACTIVE', 'INACTIVE'])->default('ACTIVE');
+            $table->enum('status', ['ACTIVE', 'INACTIVE' , 'DELETED'])->default('ACTIVE');
             $table->timestamp('is_verified_at')->nullable();
             $table->string('password');
             $table->string('otp')->nullable();

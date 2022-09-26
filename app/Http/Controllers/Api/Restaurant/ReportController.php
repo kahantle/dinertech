@@ -154,9 +154,10 @@ class ReportController extends Controller
 
             // --------------------------------- clients data logic  ------------------------------------
 
-            $result['all_clients'] = User::where('role',Config::get('constants.ROLES.CUSTOMER'))->count();
+            $result['all_clients'] = User::where('role',Config::get('constants.ROLES.CUSTOMER'))->where('status','ACTIVE')->count();
 
             $result['new_client'] = User::where('role',Config::get('constants.ROLES.CUSTOMER'))
+            ->where('status','ACTIVE')
             ->whereBetween('created_at',[$duration])
             ->count();
 
