@@ -78,11 +78,14 @@ class ChatController extends Controller
                 'user_id'=>$customer_id
             ];
             $restaurant = Restaurant::where('uid', $user_id)->first();
-            $newPostKey = $database->getReference(Config::get('constants.FIREBASE_DB_NAME'))->push()->getKey();
-            $url = Config::get('constants.FIREBASE_DB_NAME').'/'.$restaurant->restaurant_id.'/'.$order_id."/".$customer_id ;
-            $updates = [$url.$newPostKey  => $postData];
-            $database->getReference()->update($updates);
+            // $newPostKey = $database->getReference(Config::get('constants.FIREBASE_DB_NAME'))->push()->getKey();
+            // $url = Config::get('constants.FIREBASE_DB_NAME').'/'.$restaurant->restaurant_id.'/'.$order_id."/".$customer_id ;
+            // return $url.$newPostKey;
+            // $updates = [$url.$newPostKey  => $postData];
+            // $database->getReference()->update($updates);
             // $database->getReference(Config::get('constants.FIREBASE_DB_NAME'))->update($updates);
+            $url = Config::get('constants.FIREBASE_DB_NAME').'/'.$restaurant->restaurant_id.'/'.$order_id."/".$customer_id.'/';
+            $database->getReference($url)->push($postData);
             return response()->json(['success'=> true,'message'=> 'Message successfully sent!']);
         }catch (ApiException $e) {
             $request = $e->getRequest();
