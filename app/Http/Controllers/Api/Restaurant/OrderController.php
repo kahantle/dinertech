@@ -22,7 +22,7 @@ class OrderController extends Controller
 {
     public function getOrderList(Request $request)
     {
-        
+
         try {
             $request_data = $request->json()->all();
             $validator = Validator::make($request_data,['restaurant_id' => 'required','order_status' => 'required|integer']);
@@ -33,7 +33,7 @@ class OrderController extends Controller
             $list = Order::where('restaurant_id', $request->post('restaurant_id'))
             ->where('order_status',$request->post('order_status'))
             ->with('user');
-            
+
             if($request->post('order_status') == 0)
             {
                 $list = $list->whereDate('order_date','=',$today->format('Y-m-d'));
@@ -111,7 +111,7 @@ class OrderController extends Controller
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
             }
             $uid = auth('api')->user()->uid;
-       
+
             DB::beginTransaction();
             $order = new Order;
             $order->uid = $uid;
@@ -136,9 +136,9 @@ class OrderController extends Controller
             if($order->save()){
                 foreach ($request->post('menu_item') as $key => $menuItem) {
                     $menuItemData = New OrderMenuItem;
-                    $menuItemData->menu_id =    $menuItem['menu_id']; 
-                    $menuItemData->menu_name =  $menuItem['menu_name']; 
-                    $menuItemData->menu_total = $menuItem['menu_total']; 
+                    $menuItemData->menu_id =    $menuItem['menu_id'];
+                    $menuItemData->menu_name =  $menuItem['menu_name'];
+                    $menuItemData->menu_total = $menuItem['menu_total'];
                     $menuItemData->menu_qty =   $menuItem['menu_qty'];
                     $menuItemData->menu_total = $menuItem['menu_total'];
                     $menuItemData->modifier_total = $menuItem['modifier_total'];
@@ -149,7 +149,7 @@ class OrderController extends Controller
                             $menuModifier->modifier_group_id = $modifierGroup['modifier_group_id'];
                             $menuModifier->modifier_group_name = $modifierGroup['modifier_group_name'];
                             $menuModifier->order_menu_item_id = $menuItemData->order_menu_item_id;
-                            $menuModifier->menu_id =    $menuItem['menu_id']; 
+                            $menuModifier->menu_id =    $menuItem['menu_id'];
                             $menuModifier->order_id =$order->order_id;
                             if($menuModifier->save()){
                             foreach ($modifierGroup['modifier_item'] as $key => $modierMenu) {
@@ -418,7 +418,7 @@ class OrderController extends Controller
             //     $result[$key]['notification_badge'] = $count ;
             // }
 
-            
+
         } catch (\Throwable $th) {
             $errors['success'] = false;
             $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');

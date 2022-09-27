@@ -27,6 +27,7 @@ class CreateOrdersTable extends Migration
             $table->string('cart_charge')->default(0);
             $table->string('delivery_charge')->default(0);
             $table->string('discount_charge')->default(0);
+            $table->string('sales_tax')->default(0);
             $table->date('feature_date')->nullable();
             $table->time('feature_time')->nullable();
             $table->boolean('is_feature')->default(0);

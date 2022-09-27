@@ -146,6 +146,7 @@ class OrderController extends Controller
             $order->is_tip   = $request->post('is_tip');
             $order->tip_amount = $request->post('tip_amount');
             $order->delivery_charge = $request->post('delivery_charge');
+            $order->sales_tax = $request->post('sales_tax');
             $order->comments = $request->post('comments');
             $order->grand_total = $request->post('grand_total');
             $order->order_progress_status = Config::get('constants.ORDER_STATUS.INITIAL');
