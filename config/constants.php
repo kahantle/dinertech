@@ -12,8 +12,7 @@ return [
     'STATUS' => [
         'ACTIVE' => 'ACTIVE',
         'INACTIVE' => 'INACTIVE',
-        'SCHEDULE' => 'SCHEDULE',
-        'DELETED' => 'DELETED'
+        'SCHEDULE' => 'SCHEDULE'
     ],
     'PAYMENT_STATUS' => [
         'PAID' => 'PAID',

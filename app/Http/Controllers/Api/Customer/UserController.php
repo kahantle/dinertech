@@ -459,9 +459,10 @@ class UserController extends Controller
     public function deleteAccount()
     {
         $user = auth('api')->user();
-        $user->update([
-            'status' => Config::get('constants.STATUS.DELETED')
-        ]);
+        $user->delete();
+        // $user->update([
+        //     'status' => Config::get('constants.STATUS.DELETED')
+        // ]);
         return response()->json(['message' => 'Account deleted successfully.', 'success' => true], 200);
     }
 
