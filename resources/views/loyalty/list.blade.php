@@ -176,7 +176,7 @@
                                             </td>
                                         </tr>
                                     </tbody>
-                                </table>        
+                                </table>
                             @endforeach
                         </div>
                     </div>
@@ -220,7 +220,7 @@
                                             <td class="inner-second-rules-inner "><span class="order-numerber-blog "></span>
                                                 <p class="m-0 pl-5 ">{{ $rules->point }} Points </p>
                                             </td>
-                                            
+
                                             <td class="reports-blog-swc">
                                                 <span class="more">
                                                     @foreach ($rulesItems[$rules->rules_id] as $categoryName => $items)
@@ -301,7 +301,7 @@
                         <div class="form-group">
                             <input type="number" class="form-control" name="point" placeholder="Enter Number Of Loyalty points" min="1" id="amount-points">
                         </div>
-                    
+
                         <div class="modal-footer-blog">
                             <button type="submit" class="btn btn-first loyalty-edit">Add Loyalty</button>
                             <button type="button" class="btn btn-second" data-dismiss="modal">Cancel</button>
@@ -333,7 +333,7 @@
                             <input type="number" class="form-control" name="point"
                                 placeholder="Enter Number Of Loyalty Points" min="1" id="category-points">
                         </div>
-                    
+
                         <div class="modal-footer-blog">
                             <button type="submit" class="btn btn-first loyalty-edit">Add Loyalty</button>
                             <button type="button" class="btn btn-second" data-dismiss="modal">Cancel</button>

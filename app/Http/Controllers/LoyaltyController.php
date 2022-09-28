@@ -73,7 +73,7 @@ class LoyaltyController extends Controller
                 $data['subscription']['type'] = $subscription->subscription->subscription_type;
                 if($subscription->status == Config::get('constants.STATUS.SCHEDULE')){
                     $data['subscription']['start_date'] = \Carbon\Carbon::parse($subscription->start_date)->subMonths()->format('M d Y');
-                    $data['subscription']['end_date'] = \Carbon\Carbon::parse($subscription->start_date)->format('M d Y');                     
+                    $data['subscription']['end_date'] = \Carbon\Carbon::parse($subscription->start_date)->format('M d Y');
                 }else{
                     $data['subscription']['start_date'] = \Carbon\Carbon::parse($subscription->start_date)->format('M d Y');
                     $data['subscription']['end_date'] = \Carbon\Carbon::parse($subscription->end_date)->format('M d Y');
@@ -87,11 +87,11 @@ class LoyaltyController extends Controller
             {
                 foreach($loyaltyItems->rulesItems as $items)
                 {
-                    foreach ($items->menuItems as $menu) 
+                    foreach ($items->menuItems as $menu)
                     {
                         if($items->category_id == $menu->category_id)
                         {
-                            $menus[$items->loyalty_rule_id][$items->categories->category_name][] = $menu->item_name; 
+                            $menus[$items->loyalty_rule_id][$items->categories->category_name][] = $menu->item_name;
                             $menuItems = $menus;
                         }
                     }
@@ -128,10 +128,10 @@ class LoyaltyController extends Controller
     public function store(Request $request)
     {
         try {
-            
+
             $uid = Auth::user()->uid;
             $restaurant = Restaurant::where('uid', $uid)->first();
-            
+
             if($request->post('loyaltyId') != null){
                 $loyalty = Loyalty::where('loyalty_id',$request->post('loyaltyId'))->where('restaurant_id',$restaurant->restaurant_id)->first();
                 $loyalty->point = $request->post('point');
@@ -160,7 +160,7 @@ class LoyaltyController extends Controller
                         $loyaltyCategory->uid = $uid;
                         $loyaltyCategory->loyalty_id = $request->post('loyaltyId');
                         $loyaltyCategory->category_id = $value;
-                        $loyaltyCategory->save();    
+                        $loyaltyCategory->save();
                     }
                     Toastr::success($message, '', Config::get('constants.toster'));
                 }
@@ -177,14 +177,14 @@ class LoyaltyController extends Controller
                     $loyalty->save();
                     Toastr::success($message, '', Config::get('constants.toster'));
                 }
-                
+
                 if ($request->post('loyalty_type') == Config::get('constants.LOYALTY_TYPE.AMOUNT_SPENT')) {
                     $loyalty->loyalty_type = Config::get('constants.LOYALTY_TYPE.AMOUNT_SPENT');
                     $loyalty->amount = $request->post('amount');
                     $loyalty->save();
                     Toastr::success($message, '', Config::get('constants.toster'));
                 }
-                
+
                 if ($request->post('loyalty_type') == Config::get('constants.LOYALTY_TYPE.CATEGORY_BASED')) {
                     $loyalty->loyalty_type = Config::get('constants.LOYALTY_TYPE.CATEGORY_BASED');
                     $loyalty->save();
@@ -196,7 +196,7 @@ class LoyaltyController extends Controller
                         $loyaltyCategory->uid = $uid;
                         $loyaltyCategory->loyalty_id = $loyalty->loyalty_id;
                         $loyaltyCategory->category_id = $value;
-                        $loyaltyCategory->save();    
+                        $loyaltyCategory->save();
                     }
                     Toastr::success($message, '', Config::get('constants.toster'));
                 }
@@ -206,7 +206,7 @@ class LoyaltyController extends Controller
             // $errors['success'] = false;
 			// $errors['message'] = $th->getMessage();
 			// return response()->json($errors, 500);
-            return redirect()->route('loyalty.list')->with('error', $th->getMessage());   
+            return redirect()->route('loyalty.list')->with('error', $th->getMessage());
         }
     }
 
@@ -241,7 +241,7 @@ class LoyaltyController extends Controller
         }
     }
 
-    
+
     /**
      * Remove the specified resource from storage.
      *

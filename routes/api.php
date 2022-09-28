@@ -216,6 +216,13 @@ Route::namespace ('Api')->group(function () {
             Route::prefix('account')->group(function () {
                 Route::post('/setting/update', 'AccountController@updateSetting')->name('account.update.setting');
             });
+
+        });
+
+        Route::prefix('loyalties')->group(function () {
+            Route::get('/list/{user_id}', 'LoyaltiController@index')->name('mobile_view.loyalties.list');
+            Route::post('/add/{user_id}', 'LoyaltiController@store')->name('mobile_view.loyalties.add');
+            Route::post('/delete/{user_id}', 'LoyaltiController@destroy')->name('mobile_view.loyalties.destroy');
         });
     });
 });

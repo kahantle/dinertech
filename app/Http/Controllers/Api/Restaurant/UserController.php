@@ -66,7 +66,7 @@ class UserController extends Controller
                     $user->email_subscription = $user->email_subscription;
                     $user->email_subscription_web_url = ($user->email_subscription == Config::get('constants.STATUS.ACTIVE')) ? route('restaurant.email.campaigns') . '/' . $user->uid : route('restaurant.email.subscriptions.list') . '/' . $user->uid;
                     $user->loyalty_subscription = $user->loyalty_subscription;
-                    $user->loyalty_subscription_web_url = ($user->loyalty_subscription == Config::get('constants.STATUS.ACTIVE')) ? null : route('restaurant.email.subscriptions.list') . '/' . $user->uid;
+                    $user->loyalty_subscription_web_url = ($user->loyalty_subscription == Config::get('constants.STATUS.ACTIVE')) ? route('mobile_view.loyalties.list', $user->uid) : null ;
                     $user->restaurant_name = $user->restaurant->restaurant_name;
                     $user->restaurant_id = $user->restaurant->restaurant_id;
                     $user->restaurant_address = $user->restaurant->restaurant_address;
@@ -74,7 +74,7 @@ class UserController extends Controller
                     $user->restaurant_state = $user->restaurant->restaurant_state;
                     $user->is_pin_protected = ($user->restaurant->is_pin_protected) ? true : false;
                     $user->sales_tax = $user->restaurant->sales_tax;
-                    
+
                     $fcmId = $request->post('fcm_id');
                     $device = $request->post('device');
                     $restaurantFcmToken = RestaurantFcmTokens::where('restaurant_id', $user->restaurant->restaurant_id)->where('fcm_id', $fcmId)->first();
