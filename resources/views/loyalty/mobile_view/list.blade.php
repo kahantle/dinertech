@@ -13,7 +13,7 @@
                     <p>Your Loyality type determines how your customers will earn points and rewards.</p>
                 </div>
                 <div class="row my-4 profile-two-inner profile-third-tinner-blog d-flex align-itemes-center justify-content-center">
-                    <div class="col-lg-3 col-lg-two-inner">
+                    <div class="col-lg-3 col-lg-two-inner d-flex justify-content-center">
                         <div class="card">
                             <div class="card-body">
                                 <h6>Number of Orders</h6>
@@ -25,7 +25,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-lg-two-inner">
+                    <div class="col-lg-3 col-lg-two-inner d-flex justify-content-center my-4 my-lg-0">
                         <div class="card">
                             <div class="card-body">
                                 <h6>Amount Spent</h6>
@@ -37,7 +37,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-lg-two-inner">
+                    <div class="col-lg-3 col-lg-two-inner d-flex justify-content-center">
                         <div class="card">
                             <div class="card-body">
                                 <h6>Category Based </h6>
