@@ -133,7 +133,6 @@
                             </thead>
                         </table>
                         @foreach ($loyaltyRules as $rules)
-                            {{-- {{dd($rules)}} --}}
                             <table class="table table-responsive">
                                 <tbody>
                                     <tr class="header-url header-desk-board">
@@ -270,6 +269,7 @@
                     <form action="{{route('mobile_view.loyalties.destroy',$user_id)}}" method="POST">
                         @csrf
                         <input type="hidden" name="rule_id" id="rule_id">
+                        <input type="hidden" name="loyaltyId" id="loyaltyId">
                         <div class="modal-footer-blog">
                             <button type="submit" class="btn btn-first btn-yes">Yes</button>
                             <button type="button" class="btn btn-second" data-dismiss="modal">Cancel</button>
@@ -386,7 +386,59 @@
 
 @section('scripts')
 <script src="{{ asset('assets/js/select2.min.js') }}"></script>
-<script src="{{ asset('assets/js/loyalty/list.js') }}"></script>
+<script>
+
+    $(function () {
+
+        "use strict";
+
+        var baseUrl = $("[name='base-url']").attr("content");
+
+        $(".select2").select2({
+            placeholder: "Select Category",
+        });
+
+        $(".change-status").on("click", function () {
+            var loyaltyId = $(this).attr("data-loyalty-id");
+            $.ajax({
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                },
+                url: '{{ route('mobile_view.change.status', $user_id) }}',
+                type: "POST",
+                data: {
+                    loyaltyId: loyaltyId,
+                },
+                dataType: "JSON",
+                beforeSend: function () {
+                    $("body").preloader();
+                },
+                complete: function () {
+                    location.reload();
+                    $("body").preloader("remove");
+                },
+                success: function (res) {
+                    console.log(res);
+                },
+            });
+        });
+
+        $(".delete-loyalty").on("click", function () {
+            var loyaltyId = $(this).attr("data-loyalty-id");
+            var loyaltyType = $(this).attr("data-loyalty-type");
+            console.log(loyaltyId + "/" + loyaltyType);
+            $("#deleteModal").modal("show");
+            $("#delete-message").html(
+                "Are you sure you want to delete " +
+                    loyaltyType +
+                    " Loyalty program from the list?"
+            );
+            $("#loyaltyId").val(loyaltyId);
+        });
+
+    });
+
+</script>
 <script src="{{ asset('assets/js/loyalty/rules.js') }}"></script>
 {{-- <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js') }}"></script> --}}
 {{-- {!! JsValidator::formRequest('App\Http\Requests\LoyaltyRequest', '#addOrderLoyaltyPoint') !!} --}}

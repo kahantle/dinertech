@@ -8,6 +8,8 @@ class Loyalty extends Model
 {
     protected $table = 'restaurant_loyalties';
 
+    protected $fillable = ['status'];
+
     protected $primaryKey = 'loyalty_id';
 
     /**

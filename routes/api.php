@@ -223,6 +223,7 @@ Route::namespace ('Api')->group(function () {
             Route::get('/list/{user_id}', 'LoyaltiController@index')->name('mobile_view.loyalties.list');
             Route::post('/add/{user_id}', 'LoyaltiController@store')->name('mobile_view.loyalties.add');
             Route::post('/delete/{user_id}', 'LoyaltiController@destroy')->name('mobile_view.loyalties.destroy');
+            Route::post('/change/status/{user_id}','LoyaltiController@changeStatus')->name('mobile_view.change.status');
         });
     });
 });

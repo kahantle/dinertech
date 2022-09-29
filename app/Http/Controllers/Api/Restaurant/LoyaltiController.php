@@ -210,13 +210,11 @@ class LoyaltiController extends Controller
      */
     public function destroy(Request $request, $user_id)
     {
-        print_r($request->all());
-        // try {
-            return $loyaltyId = $request->post('loyaltyId');
-            return $loyalty = Loyalty::where('loyalty_id',$loyaltyId)->first();
+        try {
+            $loyaltyId = $request->post('loyaltyId');
+            $loyalty = Loyalty::where('loyalty_id',$loyaltyId)->first();
             if($loyalty->status == Config::get('constants.STATUS.ACTIVE')){
-                // Toastr::error('This loyalty program is active.Please inactive first.', '', Config::get('constants.toster'));
-                echo "This loyalty program is active.Please inactive first !";
+                return "This loyalty program is active.Please inactive first !";
             }else{
                 if($loyalty->loyalty_type == Config::get('constants.LOYALTY_TYPE.CATEGORY_BASED')){
                     if($loyalty->delete()){
@@ -228,13 +226,23 @@ class LoyaltiController extends Controller
                         $message = 'Loyalty delete successfully.';
                     }
                 }
-                // Toastr::success($message, '', Config::get('constants.toster'));
-                echo $message;
             }
             return redirect()->route('mobile_view.loyalties.list', $user_id);
-        // } catch (\Throwable $th) {
-        //     Toastr::error('Some error in loyalty delete.', '', Config::get('constants.toster'));
-        //     echo "Some error in loyalty delete";
-        // }
+        } catch (\Throwable $th) {
+            Toastr::error('Some error in loyalty delete.', '', Config::get('constants.toster'));
+            echo "Some error in loyalty delete";
+        }
+    }
+
+    public function changeStatus(Request $request, $user_id)
+    {
+        $loyaltyId = $request->post('loyaltyId');
+        $uid = $user_id;
+        $restaurant = Restaurant::where('uid', $uid)->first();
+        $loyalty = Loyalty::where('loyalty_id',$loyaltyId)->where('restaurant_id',$restaurant->restaurant_id)->first();
+        $loyalty->status == 'ACTIVE' ? $loyalty->update(['status' => Config::get('constants.STATUS.INACTIVE')]) : $loyalty->update(['status' => Config::get('constants.STATUS.ACTIVE')]);
+        // Loyalty::where('loyalty_id',$loyaltyId)->where('restaurant_id',$restaurant->restaurant_id)->update(['status' => Config::get('constants.STATUS.ACTIVE')]);
+        return response()->json(['success' => true,'message' => 'Status Change Successfully.'],200);
+
     }
 }
