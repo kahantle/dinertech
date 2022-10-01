@@ -185,10 +185,23 @@ class LoyaltiController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($user_id, Request $request)
     {
-        //
+        $uid = User::find($user_id)->uid;
+        $restaurant = Restaurant::where('uid', $uid)->first();
+
+        $loyaltyId = $request->post('loyaltyId');
+        $loyaltyType = $request->post('loyaltyType');
+        $loyalty = Loyalty::where('loyalty_id',$loyaltyId)->where('loyalty_type',$loyaltyType)->where('restaurant_id',$restaurant->restaurant_id);
+        if($loyaltyType == Config::get('constants.LOYALTY_TYPE.CATEGORY_BASED')){
+            $loyalty = $loyalty->with('categories')->first();
+        }else{
+            $loyalty = $loyalty->first();
+        }
+        $data = ['success' => true,'loyalty' => $loyalty];
+        return response()->json($data, 200);
     }
+
 
     /**
      * Update the specified resource in storage.

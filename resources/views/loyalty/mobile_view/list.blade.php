@@ -414,11 +414,62 @@
                     $("body").preloader();
                 },
                 complete: function () {
-                    location.reload();
                     $("body").preloader("remove");
                 },
                 success: function (res) {
                     console.log(res);
+                },
+            });
+        });
+
+        $(".edit-loyalty").on("click", function () {
+            var loyaltyId = $(this).attr("data-loyalty-id");
+            var loyaltyType = $(this).attr("data-loyalty-type");
+            $.ajax({
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                },
+                url: '{{ route("mobile_view.loyalties.edit", $user_id) }}',
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    loyaltyId: loyaltyId,
+                    loyaltyType: loyaltyType,
+                },
+                beforeSend: function () {
+                    $("body").preloader();
+                },
+                complete: function () {
+                    $("body").preloader("remove");
+                },
+                success: function (response) {
+                    if (response.success) {
+                        $(".loyalty-id").val(response.loyalty.loyalty_id);
+                        $(".loyalty-edit").html("Update Loyalty");
+                        if (response.loyalty.no_of_orders != null) {
+                            console.log('1');
+                            $("#noOfOrders").val(response.loyalty.no_of_orders);
+                            $("#points").val(response.loyalty.point);
+                            $("#orderLoyalty").modal("show");
+                        }
+                        else if (response.loyalty.amount != null) {
+                            console.log('2');
+                            $("#amount").val(response.loyalty.amount);
+                            $("#amount-points").val(response.loyalty.point);
+                            $("#amount_spent").modal("show");
+                        }
+                        else {
+                            console.log(response.loyalty);
+                            $("#categories option").prop('selected',false);
+                            $("#category-points").val(response.loyalty.point);
+                            response.loyalty.categories.forEach(element => {
+                                $("#categories option[value="+element.category_id+"]").attr("selected","selected");
+                            });
+                            $("#category_based").modal("show");
+                            $(".select2").select2();
+                        }
+
+                    }
                 },
             });
         });
