@@ -44,7 +44,7 @@ class CustomerChat extends Notification
     public function toFcm($notifiable)
     {
         return FcmMessage::create()
-            ->setData(['notification_type' => 'MSG_Restaurant', 'order_id' => $this->messageData['order_id'], 'order_number' => $this->messageData['order_number'], 'message' => $this->messageData['message'], 'time' => date('H:i A')])
+            ->setData(['notification_type' => 'MSG_Restaurant',  'chat_data' => $this->messageData['chat_data'], 'order_id' => $this->messageData['order_id'], 'order_number' => $this->messageData['order_number'], 'message' => $this->messageData['message'], 'time' => date('H:i A')])
             ->setNotification(\NotificationChannels\Fcm\Resources\Notification::create()
                     ->setTitle('Chat message')
                     ->setBody($this->messageData['message']))

@@ -75,7 +75,7 @@ class ChatNumberController extends Controller
             $message = $request->post('message');
             $order = Order::where('order_number', $orderNumber)->where('restaurant_id', $restaurantId)->first();
             $user = User::where('uid', $order->uid)->first();
-            $messageData = ['message' => $message, 'order_id' => (string) $order->order_id, 'order_number' => (string) $order->order_number];
+            $messageData = ['message' => $message, 'chat_data' => $request->post('chat_data'), 'order_id' => (string) $order->order_id, 'order_number' => (string) $order->order_number];
             $user->notify(new CustomerChat($messageData));
             return response()->json(['message' => 'Chat notification send successfully.', 'success' => true], 200);
         } catch (\Throwable $th) {

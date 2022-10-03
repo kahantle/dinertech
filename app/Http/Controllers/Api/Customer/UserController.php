@@ -441,7 +441,7 @@ class UserController extends Controller
             $restaurant = Restaurant::with(['order' => function ($order) use ($orderId, $restaurantId) {
                 $order->where('order_number', $orderId)->where('restaurant_id', $restaurantId)->first();
             }])->first();
-            $messageData = ['message' => $message, 'chat_data' => $request->post('chat_data'), 'order_id' => (string) $restaurant->order->order_id, 'order_number' => (string) $restaurant->order->order_number];
+            $messageData = ['message' => $message,'order_id' => (string) $restaurant->order->order_id, 'order_number' => (string) $restaurant->order->order_number];
             $restaurant->notify(new RestaurantChat($messageData));
             $messageCount = $restaurant->order->customer_msg_count + 1;
             Order::where('order_id',$restaurant->order->order_id)->where('restaurant_id',$restaurantId)->update(['customer_msg_count' => $messageCount]);
