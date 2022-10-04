@@ -58,7 +58,7 @@ class PromotionController extends Controller
         return view('promotion.details',);
     }
 
- 
+
    public function type()
     {
         $promotionType = PromotionType::where('status','active')->get();
@@ -106,7 +106,7 @@ class PromotionController extends Controller
 
     public function storeCart(Request $request){
         try {
-           
+
             if($request->post('restaurant_user_id')){
                 $uid = $request->post('restaurant_user_id');
             } else {
@@ -125,7 +125,7 @@ class PromotionController extends Controller
                 $promotion = new  Promotion;
                 $message = 'Promotion added successfully.';
             }
-            
+
             $promotion->restaurant_id = $restaurant->restaurant_id;
             $promotion->promotion_type_id = 1 ;
             $promotion->promotion_code = ($request->post('promotion_code')) ? $request->post('promotion_code') : null;
@@ -154,7 +154,7 @@ class PromotionController extends Controller
                 }else{
                     Toastr::error( $message,'', Config::get('constants.toster'));
                     return redirect()->route('promotion');
-                }   
+                }
             }
         } catch (\Throwable $th) {
             Toastr::error('Please try again something wrong.','', Config::get('constants.toster'));
@@ -240,7 +240,7 @@ class PromotionController extends Controller
                         }
                     }
                 }
-                
+
                 if($request->post('restaurant_user_id'))
                 {
                     return redirect()->back();
@@ -260,9 +260,9 @@ class PromotionController extends Controller
                     Toastr::error( $message,'', Config::get('constants.toster'));
                     return redirect()->route('promotion');
                 }
-            }            
+            }
         } catch (\Throwable $th) {
-            
+
             Toastr::success('Please try again something wrong.','', Config::get('constants.toster'));
             return redirect()->route('promotion');
         }
@@ -275,7 +275,7 @@ class PromotionController extends Controller
     }
 
     public function storefreedelivery(Request $request){
-        
+
         try {
             if($request->post('restaurant_user_id')){
                 $uid = $request->post('restaurant_user_id');
@@ -294,7 +294,7 @@ class PromotionController extends Controller
                 $promotion = new  Promotion;
                 $message = 'Promotion added successfully.';
             }
-            
+
             $promotion->restaurant_id = $restaurant->restaurant_id;
             $promotion->promotion_type_id = 3 ;
             $promotion->promotion_code = $request->post('promotion_code');
@@ -327,7 +327,7 @@ class PromotionController extends Controller
                     Toastr::error( $message,'', Config::get('constants.toster'));
                     return redirect()->route('promotion');
                 }
-            }            
+            }
         } catch (\Throwable $th) {
             Toastr::success('Please try again something wrong.','', Config::get('constants.toster'));
             return redirect()->route('promotion');
@@ -348,7 +348,7 @@ class PromotionController extends Controller
             } else {
                 $uid = Auth::user()->uid;
             }
-            
+
             $restaurant = Restaurant::where('uid', $uid)->first();
             if (!$restaurant) {
                 return redirect()->route('promotion')->with('error', 'Invalid users for this restaurant.');
@@ -360,7 +360,7 @@ class PromotionController extends Controller
                 $promotion = new  Promotion;
                 $message = 'Promotion added successfully.';
             }
-           
+
             $promotion->restaurant_id = $restaurant->restaurant_id;
             $promotion->promotion_type_id = 4 ;
             $promotion->promotion_code = $request->post('promotion_code');
@@ -392,7 +392,7 @@ class PromotionController extends Controller
                     Toastr::error( $message,'', Config::get('constants.toster'));
                     return redirect()->route('promotion');
                 }
-            }            
+            }
         } catch (\Throwable $th) {
             Toastr::success('Please try again something wrong.','', Config::get('constants.toster'));
             return redirect()->route('promotion');
@@ -437,7 +437,6 @@ class PromotionController extends Controller
             $promotion->promotion_name = $request->post('promotion_name');
             $promotion->promotion_details = $request->post('promotion_details');
             $promotion->discount_type = Config::get('constants.DISCOUNT_TYPE.PERCENT');
-            $promotion->discount = $request->post('discount_usd_percentage_amount');
             $promotion->set_minimum_order = ($request->post('set_minimum_order'))?1:0;
             $promotion->set_minimum_order_amount = $request->post('set_minimum_order_amount');
             $promotion->client_type = $request->post('client_type');
@@ -446,7 +445,7 @@ class PromotionController extends Controller
             $promotion->only_selected_payment_method = ($request->post('only_selected_payment_method'))?1:0;
             $promotion->only_selected_cash_delivery_person = ($request->post('only_selected_cash_delivery_person'))?1:0;
             $promotion->only_selected_cash = ($request->post('only_selected_cash'))?1:0;
-            $promotion->only_once_per_client = ($request->post('post')('only_once_per_client'))?0:1;
+            $promotion->only_once_per_client = ($request->post('only_once_per_client'))?0:1;
             $promotion->mark_promoas_status = $request->post('mark_promo_as');
             $promotion->availability = $request->post('availability');
             if ($promotion->save()) {
@@ -492,7 +491,7 @@ class PromotionController extends Controller
                     Toastr::error( $message,'', Config::get('constants.toster'));
                     return redirect()->route('promotion');
                 }
-            }            
+            }
         } catch (\Throwable $th) {
             Toastr::error('Please try again something wrong.','', Config::get('constants.toster'));
             return redirect()->route('promotion');
@@ -511,7 +510,7 @@ class PromotionController extends Controller
 
     public function storeGetOneFreeItems(Request $request){
         try {
-            
+
             if($request->post('restaurant_user_id')){
                 $uid = $request->post('restaurant_user_id');
             } else {
@@ -532,7 +531,7 @@ class PromotionController extends Controller
                 $promotion = new  Promotion;
                 $message = 'Promotion added successfully.';
             }
-            
+
             $promotion->restaurant_id = $restaurant->restaurant_id;
             $promotion->promotion_type_id = 6;
             $promotion->promotion_code = $request->post('promotion_code');
@@ -558,7 +557,7 @@ class PromotionController extends Controller
                 // $promotion->item_group_1 = null;
                 // $promotion->item_group_2 = null;
             }
-            
+
             if($request->post('auto_manually_discount') == Config::get('constants.AUTO_DISCOUNT.2')){
                 $promotion->discount_cheapest = null;
                 $promotion->discount_expensive = null;
@@ -566,7 +565,7 @@ class PromotionController extends Controller
 
 
             if ($promotion->save()) {
-                
+
                 $eligible_item = New PromotionEligibleItem;
                 $eligible_item->eligible_item_id  = 1;
                 $eligible_item->promotion_id = $promotion->promotion_id;
@@ -577,7 +576,7 @@ class PromotionController extends Controller
                 }else{
                     $eligible_item->item_group_discount = null;
                 }
-                
+
                 if($eligible_item->save()){
                     if($request->post('category')){
                         foreach($request->post('category') as $key => $value){
@@ -603,7 +602,7 @@ class PromotionController extends Controller
                         }
                     }
                 }
-                
+
                 $eligible_item = New PromotionEligibleItem;
                 $eligible_item->eligible_item_id  = 2;
                 $eligible_item->promotion_id = $promotion->promotion_id;
@@ -639,7 +638,7 @@ class PromotionController extends Controller
                         }
                     }
                 }
-                
+
                 if($request->post('restaurant_user_id')){
                     return redirect()->back();
                 }else{
@@ -653,7 +652,7 @@ class PromotionController extends Controller
                     Toastr::error( $message,'', Config::get('constants.toster'));
                     return redirect()->route('promotion');
                 }
-            }            
+            }
         } catch (\Throwable $th) {
             Toastr::success('Please try again something wrong.','', Config::get('constants.toster'));
             return redirect()->route('promotion');
@@ -672,7 +671,7 @@ class PromotionController extends Controller
 
     public function storeMealBundleItems(Request $request){
         try {
-            
+
             if($request->post('restaurant_user_id')){
                 $uid = $request->post('restaurant_user_id');
             } else  {
@@ -709,7 +708,7 @@ class PromotionController extends Controller
             $promotion->only_once_per_client = ($request->post('only_once_per_client'))?0:1;
             $promotion->mark_promoas_status = $request->post('mark_promo_as');
             $promotion->availability = $request->post('availability');
-            
+
             $counter = 1;
             if ($promotion->save()) {
                 if(is_array($request->post('category'))){
@@ -757,7 +756,7 @@ class PromotionController extends Controller
                     Toastr::error( $message,'', Config::get('constants.toster'));
                     return redirect()->route('promotion');
                 }
-            }            
+            }
         } catch (\Throwable $th) {
             Toastr::success('Please try again something wrong.','', Config::get('constants.toster'));
             return redirect()->route('promotion');
@@ -776,7 +775,7 @@ class PromotionController extends Controller
 
     public function storeBuyTwoThreeItems(Request $request){
         try {
-            
+
             if($request->post('restaurant_user_id')){
                 $uid = $request->post('restaurant_user_id');
             } else {
@@ -820,7 +819,7 @@ class PromotionController extends Controller
                 $promotion->discount_cheapest = NULL;
                 $promotion->discount_expensive = NULL;
             }
-            
+
             if ($promotion->save()) {
                 $counter = 1;
                 if(is_array($request->post('category'))){
@@ -875,7 +874,7 @@ class PromotionController extends Controller
                     Toastr::error( $message,'', Config::get('constants.toster'));
                     return redirect()->route('promotion');
                 }
-            }            
+            }
         } catch (\Throwable $th) {
             Toastr::success('Please try again something wrong.','', Config::get('constants.toster'));
             return redirect()->route('promotion');
@@ -895,7 +894,7 @@ class PromotionController extends Controller
 
     public function storeFixedDiscountItems(Request $request){
         try {
-            
+
             if($request->post('restaurant_user_id')){
                 $uid = $request->post('restaurant_user_id');
             }else{
@@ -934,7 +933,7 @@ class PromotionController extends Controller
             $promotion->only_once_per_client = ($request->post('only_once_per_client'))?0:1;
             $promotion->mark_promoas_status = $request->post('mark_promo_as');
             $promotion->availability = $request->post('availability');
-            
+
             if ($promotion->save()) {
                 $counter = 1;
                 if(is_array($request->post('category'))){
@@ -983,7 +982,7 @@ class PromotionController extends Controller
                     Toastr::error( $message,'', Config::get('constants.toster'));
                     return redirect()->route('promotion');
                 }
-            }            
+            }
         } catch (\Throwable $th) {
             Toastr::success('Please try again something wrong.','', Config::get('constants.toster'));
             return redirect()->route('promotion');
@@ -1003,7 +1002,7 @@ class PromotionController extends Controller
 
     public function storeDiscountComboItems(Request $request){
         try {
-            
+
             if($request->post('restaurant_user_id')){
                 $uid = $request->post('restaurant_user_id');
             } else {
@@ -1040,7 +1039,7 @@ class PromotionController extends Controller
             $promotion->only_once_per_client = ($request->post('only_once_per_client'))?0:1;
             $promotion->mark_promoas_status = $request->post('mark_promo_as');
             $promotion->availability = $request->post('availability');
-            
+
             if ($promotion->save()) {
                 $counter = 1;
                 if(is_array($request->post('category'))){
@@ -1074,7 +1073,7 @@ class PromotionController extends Controller
                         $counter++;
                     }
                 }
-                
+
                 if($request->post('restaurant_user_id')){
                     return redirect()->back();
                 } else {
@@ -1088,7 +1087,7 @@ class PromotionController extends Controller
                     Toastr::error( $message,'', Config::get('constants.toster'));
                     return redirect()->route('promotion');
                 }
-            }            
+            }
         } catch (\Throwable $th) {
             Toastr::success('Please try again something wrong.','', Config::get('constants.toster'));
             return redirect()->route('promotion');
@@ -1145,7 +1144,7 @@ class PromotionController extends Controller
             if($type==1){//DONE
                 if($formType == 'Add'){
                     return view('promotion.cart.add',compact('webview','uid'));
-                } else {   
+                } else {
                     return view('promotion.cart.edit',compact('promotion','webview','uid'));
                 }
             }else if($type==2){//DONE

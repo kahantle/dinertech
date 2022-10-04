@@ -16,7 +16,7 @@
         {{ Form::open(array('route' => array('promotion.add.freeItem.webView'),'id'=>'promotionForm','method'=>'POST','class'=>'','files'=>'true')) }}
         <input type="hidden" name="restaurant_user_id" value="{{$uid}}">
     @else
-        {{ Form::open(array('route' => array('promotion.add.free.items.post'),'id'=>'promotionForm','method'=>'POST','class'=>'','files'=>'true')) }}   
+        {{ Form::open(array('route' => array('promotion.add.free.items.post'),'id'=>'promotionForm','method'=>'POST','class'=>'','files'=>'true')) }}
     @endif
 
     <section id="wrapper">
@@ -39,26 +39,26 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="@if($webview == 1) col-md-5 @else col-lg-5 @endif">
-                        <div class="form-group"> 
+                        <div class="form-group">
                             <img src="{{ asset('assets/images/percentage.png') }}">
                             <input type="text" class="form-control" id="promotion_code" name="promotion_code" placeholder="Promo code(Optional)" maxlength="15">
                         </div>
-                        <div class="form-group"> 
+                        <div class="form-group">
                             <img src="{{ asset('assets/images/speaker.png') }}">
-                            <input type="text" class="form-control" id="promotion_name" name="promotion_name" placeholder="Enter Title"> 
+                            <input type="text" class="form-control" id="promotion_name" name="promotion_name" placeholder="Enter Title">
                         </div>
-                        <div class="form-group"> 
+                        <div class="form-group">
                             <img src="{{ asset('assets/images/description.png') }}">
                             <textarea type="text" class="form-control" id="promotion_details" name="promotion_details" placeholder="Enter Description(Optional)"></textarea>
                         </div>
                     </div>
-                    
+
                     <div class="@if($webview == 1) col-md-7 @else col-lg-7 @endif promotion-add-border">
 
                         <div class="form-group select-input input-popup">
                             <a href="#field-one">
                               <img src="{{ asset('assets/images/modifiers-black.png') }}">
-                              <p name="slct" id="slct" class="form-control">Eligible Items</p>  
+                              <p name="slct" id="slct" class="form-control">Eligible Items</p>
                             </a>
                         </div>
 
@@ -66,14 +66,14 @@
                             <input type="text" style="clip-path: circle(0);height: 0;padding: 0; width: 0; position: absolute; opacity: 0;" id="hidden_eligible_item" name="hidden_eligible_item" />
                         </div>
 
-                        <div class="text-promotion">
-                            <h5>Discount</h5> 
+                        {{-- <div class="text-promotion">
+                            <h5>Discount</h5>
                         </div>
 
-                        <div class="form-group">   
-                            <img src="{{ asset('assets/images/tag-d.png') }}">              
+                        <div class="form-group">
+                            <img src="{{ asset('assets/images/tag-d.png') }}">
                             <input type="text" class="form-control discount_percentage" id="discount_amount" name="discount_usd_percentage_amount" class="discount_amount" placeholder="Discount (%)">
-                        </div>
+                        </div> --}}
 
                         <div class="text-promotion">
                             <h5>Minimum Order Amount</h5>
@@ -83,10 +83,10 @@
                             <input type="checkbox" class="checkbox-custom setMinimumOrderAmount" value="allow" id="setMinimumOrderAmount" name="set_minimum_order">
                             <label for="setMinimumOrderAmount">set a minimum order value (recommended)</label>
                         </div>
-    
-                        <div class="form-group minimumAmountDiv" style="display: none"> 
+
+                        <div class="form-group minimumAmountDiv" style="display: none">
                             <img src="{{ asset('assets/images/tag-d.png') }}">
-                            <input type="text" class="form-control" id="minimumAmount" name="set_minimum_order_amount" placeholder="Minimum Order Amount (USD)" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"> 
+                            <input type="text" class="form-control" id="minimumAmount" name="set_minimum_order_amount" placeholder="Minimum Order Amount (USD)" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
                         </div>
 
                         <div class="form-group select-input">
@@ -112,13 +112,13 @@
                         <div class="form-group cs-checkbox">
                             <input type="checkbox" class="checkbox-custom onlyForSelectedPayment" id="payment" name="only_selected_payment_method">
                             <label for="payment">Apply To Selected Payment Methods</label>
-        
+
                             <div class="form-group cs-checkbox onlyForSelectedPaymentDiv" style="display: none">
                                 <div class="cash-blog mt-1">
                                     <input type="checkbox" class="checkbox-custom cash" id="cash" name="only_selected_cash">
                                     <label for="cash">Cash</label>
                                 </div>
-                                
+
                                 <div class="cash-blog">
                                     <input type="checkbox" class="checkbox-custom cardtodelivery" id="cardtodelivery" name="only_selected_cash_delivery_person">
                                     <label for="cardtodelivery">Credit Card</label>
@@ -140,7 +140,7 @@
                             </select>
                         </div>
 
-                        <div class="form-group select-input">   
+                        <div class="form-group select-input">
                             <img src="{{ asset('assets/images/client-t.png') }}">
                             <select name="mark_promo_as" id="mark_promo_as" class="form-control">
                               <option selected disabled>Mark Promo as</option>
@@ -150,7 +150,7 @@
                             </select>
                         </div>
 
-                        <div class="form-group select-input"> 
+                        <div class="form-group select-input">
                             <img src="{{ asset('assets/images/Availability.png') }}">
                             <select name="availability" id="display_time" class="form-control">
                                 <option selected disabled>Availability</option>
@@ -159,7 +159,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        
+
                         <div id="field-one" class="overlay field-popup">
                             <div class="popup text-center">
                               <h2>Eligible Items</h2>
@@ -191,8 +191,8 @@
                                       @endforeach
                                   </div>
                               </div>
-                              <div class="form-group form-btn justify-content-center">   
-                                  <a class="close eligible_popup_close eligible_popup-inner" href="#">Submit</a> 
+                              <div class="form-group form-btn justify-content-center">
+                                  <a class="close eligible_popup_close eligible_popup-inner" href="#">Submit</a>
                               </div>
                             </div>
                         </div>
@@ -211,7 +211,7 @@
                 </div>
             @else
                 <div class="form-group form-btn-menu from-inner">
-                    <div class="btn-custom"> 
+                    <div class="btn-custom">
                         <button type="button" class="btn-grey btn-inner cancel" ><span>Cancel</span></button>
                     </div>
                     <div class="btn-custom">

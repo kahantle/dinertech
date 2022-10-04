@@ -15,6 +15,7 @@ class ModifierController extends Controller
 
     public function addModifierGroup(Request $request)
     {
+        // return $request->all();
         try {
             $request_data = $request->json()->all();
             $validator = Validator::make($request_data, [
@@ -28,7 +29,7 @@ class ModifierController extends Controller
             $modifier->restaurant_id = $request->post('restaurant_id');
             $modifier->modifier_group_name = $request->post('modifier_group_name');
             $modifier->save();
-            return response()->json(['message' => "Modifier added successfully.", 'success' => true], 200);
+            return response()->json(['message' => "Modifier added successfully.", 'success' => true, 'modifier_group_id' => $modifier->modifier_group_id ], 200);
         } catch (\Throwable $th) {
             $errors['success'] = false;
             $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
@@ -138,7 +139,7 @@ class ModifierController extends Controller
 
     /**
      * @method Modifier List
-     * 
+     *
      */
 
     public function getModifierList(Request $request)
