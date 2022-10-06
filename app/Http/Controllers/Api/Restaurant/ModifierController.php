@@ -27,6 +27,8 @@ class ModifierController extends Controller
             }
             $modifier = new  ModifierGroup;
             $modifier->restaurant_id = $request->post('restaurant_id');
+            $modifier->required = $request->post('required');
+            $modifier->type = $request->post('type');
             $modifier->modifier_group_name = $request->post('modifier_group_name');
             $modifier->save();
             return response()->json(['message' => "Modifier added successfully.", 'success' => true, 'modifier_group_id' => $modifier->modifier_group_id ], 200);
