@@ -30,7 +30,7 @@ class Promotion extends Model
         );
     }
 
- 
+
 
     public function promotion_category()
     {

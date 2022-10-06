@@ -72,28 +72,28 @@ class PromotionController extends Controller
         $restaurant = Restaurant::where('uid', $uid)->first();
         $category = Category::where('restaurant_id', $restaurant->restaurant_id)->with('category_item')->get();
         $webview = 0;
-        if($type==1){//DONE
+        if($type==1){ //Done
             $promotion = [];
             return view('promotion.cart.add',compact('promotion','webview'));
-        }else if($type==2){//DONE
+        }else if($type==2){ //Done
             return view('promotion.discount_selected_item.add',compact('category','webview'));
-        }else if($type==3){//DONE
+        }else if($type==3){
             $promotion = [];
             return view('promotion.freedelivery.add',compact('promotion','webview'));
-        }else if($type==4){//DONE
+        }else if($type==4){ //Done
             $promotion = [];
             return view('promotion.paymentmethod.add',compact('promotion','webview'));
-        }else if($type==5){//DONE
+        }else if($type==5){
             return view('promotion.freeitem.add',compact('category','webview'));
-        }else if($type==6){//DONE
+        }else if($type==6){
             return view('promotion.getonefree.add',compact('category','webview'));
-        }else if($type==7){//DONE
+        }else if($type==7){
             return view('promotion.mealbundle.add',compact('category','webview'));
-        }else if($type==8){//DONE
+        }else if($type==8){
             return view('promotion.buytwothree.add',compact('category','webview'));
-        }else if($type==9){//DONE
+        }else if($type==9){
             return view('promotion.fixeddiscount.add',compact('category','webview'));
-        }else if($type==10){//DONE
+        }else if($type==10){
             return view('promotion.discountcombo.add',compact('category','webview'));
         }
     }
@@ -144,6 +144,8 @@ class PromotionController extends Controller
             $promotion->no_extra_charge_type = $request->post('no_extra_charge');
             $promotion->promotion_function = $request->post('promotion_function');
             $promotion->availability = $request->post('availability');
+            $promotion->restricted_days = $request->post('restricted_days');
+            $promotion->restricted_hours = $request->post('restricted_hours');
             if($request->post('restaurant_user_id')){
                 $promotion->save();
                 return redirect()->back();
@@ -211,6 +213,8 @@ class PromotionController extends Controller
             $promotion->only_once_per_client = ($request->post('only_once_per_client'))?0:1;
             $promotion->promotion_function = $request->post('promotion_function');
             $promotion->availability = $request->post('availability');
+            $promotion->restricted_days = $request->post('restricted_days');
+            $promotion->restricted_hours = $request->post('restricted_hours');
             if ($promotion->save()) {
                 if(is_array($request->post('category'))){
                     $eligible_item = New PromotionEligibleItem;
@@ -410,7 +414,6 @@ class PromotionController extends Controller
 
     public function storeFreeItems(Request $request){
         try {
-
             if($request->post('restaurant_user_id')) {
                 $uid = $request->post('restaurant_user_id');
             } else {
@@ -448,6 +451,8 @@ class PromotionController extends Controller
             $promotion->only_once_per_client = ($request->post('only_once_per_client'))?0:1;
             $promotion->mark_promoas_status = $request->post('mark_promo_as');
             $promotion->availability = $request->post('availability');
+            $promotion->restricted_days = $request->post('restricted_days');
+            $promotion->restricted_hours = $request->post('restricted_hours');
             if ($promotion->save()) {
                 if(is_array($request->post('category'))){
                     $eligible_item = New PromotionEligibleItem;
