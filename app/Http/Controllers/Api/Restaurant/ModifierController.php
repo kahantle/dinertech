@@ -59,6 +59,8 @@ class ModifierController extends Controller
             if($modifier){
                 $modifier->restaurant_id = $request->post('restaurant_id');
                 $modifier->modifier_group_name = $request->post('modifier_group_name');
+                $modifier->required = $request->post('required');
+                $modifier->type = $request->post('type');
                 $modifier->save();
                 return response()->json(['message' => "Modifier update successfully.", 'success' => true], 200);
             }
@@ -154,7 +156,7 @@ class ModifierController extends Controller
             }
             $categoryList = ModifierGroup::where('restaurant_id', $request->post('restaurant_id'))
                 ->with('modifier_item')
-                ->get(['modifier_group_id','restaurant_id','modifier_group_name']);
+                ->get(['modifier_group_id','restaurant_id','modifier_group_name','required','type']);
             return response()->json(['modifier_list' => $categoryList, 'success' => true], 200);
         } catch (\Throwable $th) {
             $errors['success'] = false;
