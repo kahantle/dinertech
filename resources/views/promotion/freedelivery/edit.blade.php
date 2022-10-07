@@ -39,14 +39,14 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="@if($webview == 1) col-md-5 @else col-lg-5 @endif">
-                        <div class="form-group"> 
+                        <div class="form-group">
                             <img src="{{ asset('assets/images/percentage.png') }}">
                             <input type="text" class="form-control" id="promotion_code" name="promotion_code" placeholder="Promo code(Optional)" value="{{$promotion->promotion_code}}" maxlength="15">
                         </div>
 
                         <div class="form-group">
                             <img src="{{ asset('assets/images/speaker.png') }}">
-                            <input type="text" class="form-control" id="promotion_name" name="promotion_name" placeholder="Enter Title" 
+                            <input type="text" class="form-control" id="promotion_name" name="promotion_name" placeholder="Enter Title"
                             value="{{$promotion->promotion_name?$promotion->promotion_name:''}}">
                         </div>
 
@@ -57,10 +57,10 @@
                     </div>
                     <div class="@if($webview == 1) col-md-7 @else col-lg-7 @endif promotion-add-border">
                         <div class="text-promotion">
-                            <h5>Discount</h5> 
+                            <h5>Discount</h5>
                         </div>
 
-                        <div class="form-group"> 
+                        <div class="form-group">
                             <img src="{{ asset('assets/images/tag-d.png') }}">
                             <input type="text" class="form-control discount_percentage" id="discount_amount" name="discount_usd_percentage_amount" placeholder="Discount in %" value="{{$promotion->discount}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
                         </div>
@@ -71,15 +71,15 @@
                         </div>
 
                         @if ($promotion->set_minimum_order)
-                            <div class="form-group minimumAmountDiv"> 
-                        @else    
-                            <div class="form-group minimumAmountDiv" style="display: none"> 
+                            <div class="form-group minimumAmountDiv">
+                        @else
+                            <div class="form-group minimumAmountDiv" style="display: none">
                         @endif
                             <img src="{{ asset('assets/images/tag-d.png') }}">
                             <input type="text" class="form-control" id="minimumAmount" name="set_minimum_order_amount" placeholder="Minimum Order Amount" value="{{$promotion->set_minimum_order_amount?$promotion->set_minimum_order_amount:''}}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
                         </div>
-                    
-                        <div class="form-group select-input"> 
+
+                        <div class="form-group select-input">
                             <img src="{{ asset('assets/images/client-t.png') }}">
                             <select name="client_type" id="client_type" class="form-control">
                                <option selected="" value="">Customer type</option>
@@ -98,7 +98,7 @@
                             @else
                                 <div class="form-group cs-checkbox onlyForSelectedPaymentDiv" style="display: none">
                             @endif
-                            
+
                                 <div class="cash-blog mt-1">
                                     <input type="checkbox" class="checkbox-custom cash" id="cash" name="only_selected_cash" {{($promotion->only_selected_cash)?'checked':''}}>
                                     <label for="cash">Cash</label>
@@ -115,7 +115,7 @@
                             <label for="client">Single Use Per Customer</label>
                         </div>
 
-                        <div class="form-group select-input">   
+                        <div class="form-group select-input">
                             <img src="{{ asset('assets/images/client-t.png') }}">
                             <select name="mark_promo_as" id="mark_promo_as" class="form-control">
                               <option selected disabled>Mark Promo as</option>
@@ -124,8 +124,8 @@
                               @endforeach
                             </select>
                         </div>
-                        
-                        <div class="form-group select-input"> 
+
+                        <div class="form-group select-input">
                             <img src="{{ asset('assets/images/Availability.png') }}">
                             <select name="availability" id="display_time" class="form-control">
                                 <option disabled>Availability</option>
@@ -134,6 +134,29 @@
                                 @endforeach
                             </select>
                         </div>
+
+                        <div id="restricted-duration" class="overlay field-popup">
+                            <div class="popup text-center">
+                              <h2>Restricted Duration</h2>
+                              <a class="close eligible_popup_close" href="#">&times;</a>
+                              <div class="content">
+                                <div id="accordion" class="accordion row">
+                                    <div class="form-group col-md-6">
+                                        <label for="daysInput">Days</label>
+                                        <input type="number" name="restricted_days" value="{{$promotion->restricted_days}}" class="form-control input-sm" id="daysInput">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="hoursInput">Hours</label>
+                                        <input type="number" name="restricted_hours" value="{{$promotion->restricted_hours}}" max="23" class="form-control input-sm" id="hoursInput">
+                                    </div>
+                                </div>
+                                <div class="form-group form-btn justify-content-center">
+                                    <a class="close eligible_popup_close eligible_popup-inner" href="#">Submit</a>
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -149,7 +172,7 @@
                 </div>
             @else
                 <div class="form-group form-btn-menu from-inner">
-                    <div class="btn-custom"> 
+                    <div class="btn-custom">
                         <button type="button" class="btn-grey btn-inner cancel" ><span>Cancel</span></button>
                     </div>
                     <div class="btn-custom">
@@ -162,6 +185,14 @@
 @endsection
 
 @section('scripts')
+    <script>
+        $("#display_time").change(function() {
+            if (this.value == "Restricted") {
+                var overlay_url = window.location.href.replace("#","");
+                window.location.href = overlay_url += "#restricted-duration";
+            }
+        });
+    </script>
     <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js')}}"></script>
     <script src="{{ asset('assets/js/common.js')}}"></script>
     <script src="{{ asset('assets/js/type/cart.js')}}"></script>

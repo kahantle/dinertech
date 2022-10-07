@@ -77,15 +77,15 @@ class PromotionController extends Controller
             return view('promotion.cart.add',compact('promotion','webview'));
         }else if($type==2){ //Done
             return view('promotion.discount_selected_item.add',compact('category','webview'));
-        }else if($type==3){
+        }else if($type==3){ //Done
             $promotion = [];
             return view('promotion.freedelivery.add',compact('promotion','webview'));
         }else if($type==4){ //Done
             $promotion = [];
             return view('promotion.paymentmethod.add',compact('promotion','webview'));
-        }else if($type==5){
+        }else if($type==5){ //Done
             return view('promotion.freeitem.add',compact('category','webview'));
-        }else if($type==6){
+        }else if($type==6){ // Done
             return view('promotion.getonefree.add',compact('category','webview'));
         }else if($type==7){
             return view('promotion.mealbundle.add',compact('category','webview'));
@@ -316,6 +316,8 @@ class PromotionController extends Controller
             $promotion->only_once_per_client = ($request->post('only_once_per_client'))?0:1;
             $promotion->mark_promoas_status = $request->post('mark_promo_as');
             $promotion->availability = $request->post('availability');
+            $promotion->restricted_days = $request->post('restricted_days');
+            $promotion->restricted_hours = $request->post('restricted_hours');
             if ($promotion->save()) {
                 if($request->post('restaurant_user_id')){
                     return redirect()->back();
@@ -346,7 +348,7 @@ class PromotionController extends Controller
     }
 
     public function storePaymentMethod(Request $request){
-        try {
+        // try {
             if($request->post('restaurant_user_id')) {
                 $uid = $request->post('restaurant_user_id');
             } else {
@@ -379,9 +381,11 @@ class PromotionController extends Controller
             $promotion->only_selected_payment_method = ($request->post('only_selected_payment_method'))?1:0;
             $promotion->only_selected_cash_delivery_person = ($request->post('only_selected_cash_delivery_person'))?1:0;
             $promotion->only_selected_cash = ($request->post('only_selected_cash'))?1:0;
-            $promotion->only_once_per_client = ($request->post('post')('only_once_per_client'))?0:1;
+            $promotion->only_once_per_client = ($request->post('only_once_per_client'))?0:1;
             $promotion->mark_promoas_status = $request->post('mark_promo_as');
             $promotion->availability = $request->post('availability');
+            $promotion->restricted_days = $request->post('restricted_days');
+            $promotion->restricted_hours = $request->post('restricted_hours');
             if ($promotion->save()) {
                 if($request->post('restaurant_user_id')) {
                     return redirect()->back();
@@ -397,10 +401,10 @@ class PromotionController extends Controller
                     return redirect()->route('promotion');
                 }
             }
-        } catch (\Throwable $th) {
-            Toastr::success('Please try again something wrong.','', Config::get('constants.toster'));
-            return redirect()->route('promotion');
-        }
+        // } catch (\Throwable $th) {
+        //     Toastr::success('Please try again something wrong.','', Config::get('constants.toster'));
+        //     return redirect()->route('promotion');
+        // }
     }
 
     public function editFreeItem(Request $request){
@@ -554,7 +558,8 @@ class PromotionController extends Controller
             $promotion->only_once_per_client = ($request->post('only_once_per_client'))?0:1;
             $promotion->mark_promoas_status = $request->post('mark_promo_as');
             $promotion->availability = $request->post('availability');
-
+            $promotion->restricted_days = $request->post('restricted_days');
+            $promotion->restricted_hours = $request->post('restricted_hours');
             $promotion->auto_manually_discount = $request->post('auto_manually_discount');
             if($request->post('auto_manually_discount') == Config::get('constants.AUTO_DISCOUNT.1')){
                 $promotion->discount_cheapest = $request->post('discount_cheapest');
