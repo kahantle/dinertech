@@ -91,7 +91,7 @@ class PromotionController extends Controller
             return view('promotion.mealbundle.add',compact('category','webview'));
         }else if($type==8){ // Done
             return view('promotion.buytwothree.add',compact('category','webview'));
-        }else if($type==9){
+        }else if($type==9){ // Done
             return view('promotion.fixeddiscount.add',compact('category','webview'));
         }else if($type==10){
             return view('promotion.discountcombo.add',compact('category','webview'));
@@ -944,6 +944,8 @@ class PromotionController extends Controller
             $promotion->only_once_per_client = ($request->post('only_once_per_client'))?0:1;
             $promotion->mark_promoas_status = $request->post('mark_promo_as');
             $promotion->availability = $request->post('availability');
+            $promotion->restricted_days = $request->post('restricted_days');
+            $promotion->restricted_hours = $request->post('restricted_hours');
 
             if ($promotion->save()) {
                 $counter = 1;
@@ -1050,7 +1052,8 @@ class PromotionController extends Controller
             $promotion->only_once_per_client = ($request->post('only_once_per_client'))?0:1;
             $promotion->mark_promoas_status = $request->post('mark_promo_as');
             $promotion->availability = $request->post('availability');
-
+            $promotion->restricted_days = $request->post('restricted_days');
+            $promotion->restricted_hours = $request->post('restricted_hours');
             if ($promotion->save()) {
                 $counter = 1;
                 if(is_array($request->post('category'))){
