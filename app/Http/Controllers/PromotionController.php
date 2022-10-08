@@ -89,7 +89,7 @@ class PromotionController extends Controller
             return view('promotion.getonefree.add',compact('category','webview'));
         }else if($type==7){
             return view('promotion.mealbundle.add',compact('category','webview'));
-        }else if($type==8){
+        }else if($type==8){ // Done
             return view('promotion.buytwothree.add',compact('category','webview'));
         }else if($type==9){
             return view('promotion.fixeddiscount.add',compact('category','webview'));
@@ -821,7 +821,8 @@ class PromotionController extends Controller
             $promotion->mark_promoas_status = $request->post('mark_promo_as');
             $promotion->availability = $request->post('availability');
             $promotion->auto_manually_discount = $request->post('auto_manually_discount');
-
+            $promotion->restricted_days = $request->post('restricted_days');
+            $promotion->restricted_hours = $request->post('restricted_hours');
             if($request->post('auto_manually_discount') == Config::get('constants.AUTO_DISCOUNT.1')){
                 $promotion->discount_cheapest = $request->post('discount_cheapest');
                 $promotion->discount_expensive = $request->post('discount_expensive');

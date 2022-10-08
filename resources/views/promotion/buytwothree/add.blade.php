@@ -40,16 +40,16 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="@if($webview == 1) col-md-5 @else col-lg-5 @endif">
-                        <div class="form-group">   
-                            <img src="{{ asset('assets/images/percentage.png') }}">              
+                        <div class="form-group">
+                            <img src="{{ asset('assets/images/percentage.png') }}">
                             <input type="text" class="form-control" id="promotion_code" name="promotion_code" placeholder="Promo code(Optional)" maxlength="15">
                         </div>
-                        <div class="form-group">   
-                            <img src="{{ asset('assets/images/speaker.png') }}">              
+                        <div class="form-group">
+                            <img src="{{ asset('assets/images/speaker.png') }}">
                             <input type="text" class="form-control" id="promotion_name" name="promotion_name" placeholder="Enter Headline">
                         </div>
-                        <div class="form-group">   
-                            <img src="{{ asset('assets/images/description.png') }}">              
+                        <div class="form-group">
+                            <img src="{{ asset('assets/images/description.png') }}">
                             <textarea type="text" class="form-control" id="promotion_details" name="promotion_details" placeholder="Enter Description(Optional)"></textarea>
                         </div>
                     </div>
@@ -57,7 +57,7 @@
                         <div class="text-promotion">
                             <h5>Eligible Items</h5>
                         </div>
-                        
+
                         <div id="inputFormRow">
                             <div class="input-group">
                                 <div class="input-popup inputpop-inner w-100" id="eligibleItems">
@@ -84,8 +84,8 @@
                                           <input type="text" style="clip-path: circle(0);height: 0;padding: 0; width: 0; position: absolute; opacity: 0;" id="hidden_eligible_item_two" name="hidden_eligible_item_two" />
                                       </div>
                                     </div>
-                                    
-                                   
+
+
                                     <div id="eligible-item-three" class="eligible-item form-group">
                                       <a href="#field-three" class="fill-inner w-100 fill-sec">
                                           <img src="{{ asset('assets/images/order-cart.png')}}" class="items-inner-st-sec wd-dr-wrapper">
@@ -97,7 +97,7 @@
                                           <input type="text" style="clip-path: circle(0);height: 0;padding: 0; width: 0; position: absolute; opacity: 0;" id="hidden_eligible_item_three" name="hidden_eligible_item_three" />
                                       </div>
                                     </div>
-                                    
+
                                 </div>
                             </div>
                         </div>
@@ -112,7 +112,7 @@
 
                         <div class="tab-container">
                             <div class="tab-navigation" id="select-discount-type">
-                                <div class="form-group select-input"> 
+                                <div class="form-group select-input">
                                     <img src="{{ asset('assets/images/Promotion Function.png') }}">
                                     <select id="select-box" class="form-control" name="auto_manually_discount">
                                         @foreach (Config::get('constants.AUTO_DISCOUNT') as $key => $item)
@@ -124,72 +124,72 @@
                             <div id="tab-2" class="tab-content" style="display: none">
                                 <div id="addItemGroup">
                                   <div class="input-group mb-3 manually-discount manually-discount-one">
-                                    <div class="input-group-prepend"> 
+                                    <div class="input-group-prepend">
                                         <span class="input-group-text inner-text-blog">
                                             Items Group 1:
                                         </span>
                                     </div>
                                     <input type="text" class="form-control discount_percentage" value="100"  name="item_group_discount[1]" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text input-group-text-first">%</span> 
+                                        <span class="input-group-text input-group-text-first">%</span>
                                     </div>
                                   </div>
                                   <div class="input-group mb-3 manually-discount manually-discount-two">
-                                    <div class="input-group-prepend"> 
+                                    <div class="input-group-prepend">
                                         <span class="input-group-text inner-text-blog">
                                             Items Group 2:
                                         </span>
                                     </div>
                                     <input type="text" class="form-control discount_percentage" value="0"  name="item_group_discount[2]" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
-                                    <div class="input-group-prepend"> 
-                                        <span class="input-group-text input-group-text-first">%</span> 
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-group-text-first">%</span>
                                     </div>
                                   </div>
                                   <div class="input-group mb-3 manually-discount manually-discount-three">
-                                    <div class="input-group-prepend"> 
+                                    <div class="input-group-prepend">
                                         <span class="input-group-text inner-text-blog">
                                             Items Group 3:
                                         </span>
                                     </div>
                                     <input type="text" class="form-control discount_percentage" value="0"  name="item_group_discount[3]" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
-                                    <div class="input-group-prepend"> 
-                                        <span class="input-group-text input-group-text-first">%</span> 
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-group-text-first">%</span>
                                     </div>
                                   </div>
                                 </div>
                             </div>
                             <div id="tab-1" class="tab-content">
                                 <div class="input-group mb-3">
-                                  <div class="input-group-prepend"> 
+                                  <div class="input-group-prepend">
                                       <span class="input-group-text inner-text-blog">
                                           Discount for cheapest item:
                                       </span>
                                   </div>
                                   <input type="text" class="form-control discount_percentage" value="100" name="discount_cheapest" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" readonly>
-                                  <div class="input-group-prepend"> 
-                                      <span class="input-group-text input-group-text-first">%</span> 
+                                  <div class="input-group-prepend">
+                                      <span class="input-group-text input-group-text-first">%</span>
                                   </div>
                                 </div>
                                 <div id="addDiscountItem">
                                   <div class="input-group mb-3 automatically-discount automatically-discount-two">
-                                    <div class="input-group-prepend"> 
+                                    <div class="input-group-prepend">
                                         <span class="input-group-text inner-text-blog pr-5"></span>
                                     </div>
                                     <input type="text" class="form-control discount_percentage" value="0"  name="item_discount[2]" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" readonly>
-                                    <div class="input-group-prepend"> 
-                                        <span class="input-group-text input-group-text-first">%</span> 
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-group-text-first">%</span>
                                     </div>
                                   </div>
                                 </div>
                                 <div class="input-group mb-3">
-                                    <div class="input-group-prepend"> 
+                                    <div class="input-group-prepend">
                                         <span class="input-group-text inner-text-blog">
                                             Discount for most expensive item:
                                         </span>
                                     </div>
                                     <input type="text" class="form-control discount_percentage" value="0"  name="discount_expensive" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" readonly>
-                                    <div class="input-group-prepend"> 
-                                        <span class="input-group-text input-group-text-first">%</span> 
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-group-text-first">%</span>
                                     </div>
                                 </div>
                             </div>
@@ -227,13 +227,13 @@
                         <div class="form-group cs-checkbox">
                             <input type="checkbox" class="checkbox-custom onlyForSelectedPayment" id="payment" name="only_selected_payment_method">
                             <label for="payment">Apply To Selected Payment Methods</label>
-        
+
                             <div class="form-group cs-checkbox onlyForSelectedPaymentDiv" style="display: none">
                                 <div class="cash-blog mt-1">
                                     <input type="checkbox" class="checkbox-custom cash" id="cash" name="only_selected_cash">
                                     <label for="cash">Cash</label>
                                 </div>
-                                
+
                                 <div class="cash-blog">
                                     <input type="checkbox" class="checkbox-custom cardtodelivery" id="cardtodelivery" name="only_selected_cash_delivery_person">
                                     <label for="cardtodelivery">Credit Card</label>
@@ -246,7 +246,7 @@
                             <label for="client">Single Use Per Customer</label>
                         </div>
 
-                        <div class="form-group select-input">   
+                        <div class="form-group select-input">
                             <img src="{{ asset('assets/images/client-t.png') }}">
                             <select name="mark_promo_as" id="mark_promo_as" class="form-control">
                               <option selected disabled>Mark Promo as</option>
@@ -256,7 +256,7 @@
                             </select>
                         </div>
 
-                        <div class="form-group select-input"> 
+                        <div class="form-group select-input">
                             <img src="{{ asset('assets/images/Availability.png') }}">
                             <select name="availability" id="display_time" class="form-control">
                                 <option selected disabled>Availability</option>
@@ -264,6 +264,29 @@
                                     <option value="{{$item}}">{{$item}}</option>
                                 @endforeach
                             </select>
+                        </div>
+
+
+                        <div id="restricted-duration" class="overlay field-popup">
+                            <div class="popup text-center">
+                              <h2>Restricted Duration</h2>
+                              <a class="close eligible_popup_close" href="#">&times;</a>
+                              <div class="content">
+                                <div id="accordion" class="accordion row">
+                                    <div class="form-group col-md-6">
+                                        <label for="daysInput">Days</label>
+                                        <input type="number" name="restricted_days" class="form-control input-sm" id="daysInput">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="hoursInput">Hours</label>
+                                        <input type="number" name="restricted_hours" max="23" class="form-control input-sm" id="hoursInput">
+                                    </div>
+                                </div>
+                                <div class="form-group form-btn justify-content-center">
+                                    <a class="close eligible_popup_close eligible_popup-inner" href="#">Submit</a>
+                                </div>
+                              </div>
+                            </div>
                         </div>
 
                         <div id="addEligiblePopup">
@@ -298,8 +321,8 @@
                                         @endforeach
                                     </div>
                                   </div>
-                                  <div class="form-group form-btn justify-content-center">   
-                                    <a class="close eligible_popup_remove eligible_popup-inner" href="#" data-popup="one">Submit</a> 
+                                  <div class="form-group form-btn justify-content-center">
+                                    <a class="close eligible_popup_remove eligible_popup-inner" href="#" data-popup="one">Submit</a>
                                   </div>
                                 </div>
                             </div>
@@ -333,8 +356,8 @@
                                         @endforeach
                                     </div>
                                   </div>
-                                  <div class="form-group form-btn justify-content-center">   
-                                    <a class="close eligible_popup_remove eligible_popup-inner" href="#" data-popup="two">Submit</a> 
+                                  <div class="form-group form-btn justify-content-center">
+                                    <a class="close eligible_popup_remove eligible_popup-inner" href="#" data-popup="two">Submit</a>
                                   </div>
                                 </div>
                             </div>
@@ -368,8 +391,8 @@
                                         @endforeach
                                     </div>
                                   </div>
-                                  <div class="form-group form-btn justify-content-center">   
-                                    <a class="close eligible_popup_remove eligible_popup-inner" href="#" data-popup="three">Submit</a> 
+                                  <div class="form-group form-btn justify-content-center">
+                                    <a class="close eligible_popup_remove eligible_popup-inner" href="#" data-popup="three">Submit</a>
                                   </div>
                                 </div>
                             </div>
@@ -389,7 +412,7 @@
                 </div>
             @else
                 <div class="form-group form-btn-menu from-inner">
-                    <div class="btn-custom"> 
+                    <div class="btn-custom">
                         <button type="button" class="btn-grey btn-inner cancel" ><span>Cancel</span></button>
                     </div>
                     <div class="btn-custom">
@@ -403,6 +426,14 @@
 @endsection
 
 @section('scripts')
+    <script>
+        $("#display_time").change(function() {
+            if (this.value == "Restricted") {
+                var overlay_url = window.location.href.replace("#","");
+                window.location.href = overlay_url += "#restricted-duration";
+            }
+        });
+    </script>
     <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js')}}"></script>
     <script src="{{ asset('assets/js/common.js')}}"></script>
     <script src="{{ asset('assets/js/type/buyTwoThree.js')}}"></script>
@@ -413,5 +444,5 @@
     @else
         {!! JsValidator::formRequest('App\Http\Requests\PromotionBuytwoRequest','#promotionForm'); !!}
     @endif
-    
+
 @endsection

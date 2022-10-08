@@ -40,17 +40,17 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="@if($webview == 1) col-md-5 @else col-lg-5 @endif">
-                       <div class="form-group">   
-                            <img src="{{ asset('assets/images/percentage.png') }}">              
+                       <div class="form-group">
+                            <img src="{{ asset('assets/images/percentage.png') }}">
                             <input type="text" class="form-control" id="promotion_code" name="promotion_code" placeholder="Promo code(Optional)" value="{{$promotion->promotion_code}}" maxlength="15">
                             <input type="hidden" id="promotion_id" name="promotion_id" value="{{$promotion->promotion_id}}" />
                         </div>
-                        <div class="form-group">   
-                            <img src="{{ asset('assets/images/speaker.png') }}">              
+                        <div class="form-group">
+                            <img src="{{ asset('assets/images/speaker.png') }}">
                             <input type="text" class="form-control" id="promotion_name" name="promotion_name" placeholder="Enter Headline" value="{{$promotion->promotion_name}}">
                         </div>
-                        <div class="form-group">   
-                            <img src="{{ asset('assets/images/description.png') }}">              
+                        <div class="form-group">
+                            <img src="{{ asset('assets/images/description.png') }}">
                             <textarea type="text" class="form-control" id="promotion_details" name="promotion_details" placeholder="Enter Description(Optional)">{{$promotion->promotion_details}}</textarea>
                         </div>
                     </div>
@@ -88,7 +88,7 @@
 
                         <div class="tab-container">
                             <div class="tab-navigation">
-                                <div class="form-group select-input"> 
+                                <div class="form-group select-input">
                                     <img src="{{ asset('assets/images/Promotion Function.png') }}">
                                     <select id="select-box" class="form-control" name="auto_manually_discount">
                                         @foreach (Config::get('constants.AUTO_DISCOUNT') as $key=>$item)
@@ -105,7 +105,7 @@
                                 <div id="addItemGroup">
                                     @for ($i = 1;$i <= $eligibleItems;$i++)
                                         <div class="input-group mb-3">
-                                            <div class="input-group-prepend"> 
+                                            <div class="input-group-prepend">
                                                 <span class="input-group-text inner-text-blog">
                                                     Items Group {{$i}}:
                                                 </span>
@@ -115,7 +115,7 @@
                                             @endphp
                                             <input type="text" class="form-control discount_percentage" value="{{($discount->item_group_discount != null)?$discount->item_group_discount:0 }}"  name="item_group_discount[{{$i}}]" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
                                             <div class="input-group-prepend">
-                                                <span class="input-group-text input-group-text-first">%</span> 
+                                                <span class="input-group-text input-group-text-first">%</span>
                                             </div>
                                         </div>
                                     @endfor
@@ -127,14 +127,14 @@
                                 <div id="tab-1" class="tab-content" style="display: none">
                             @endif
                                 <div class="input-group mb-3">
-                                    <div class="input-group-prepend"> 
+                                    <div class="input-group-prepend">
                                         <span class="input-group-text inner-text-blog">
                                             Discount for cheapest item:
                                         </span>
                                     </div>
                                     <input type="text" class="form-control discount_percentage" value="100"  name="discount_cheapest" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" readonly>
-                                    <div class="input-group-prepend"> 
-                                        <span class="input-group-text input-group-text-first">%</span> 
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-group-text-first">%</span>
                                     </div>
                                 </div>
                                 <div id="addDiscountItem">
@@ -144,26 +144,26 @@
                                         @endphp
                                         @if ($discount->item_group_discount != null)
                                             <div class="input-group mb-3 automatically-discount automatically-discount-{{convertNumberToWord($i)}}">
-                                                <div class="input-group-prepend"> 
+                                                <div class="input-group-prepend">
                                                     <span class="input-group-text inner-text-blog pr-5"></span>
                                                 </div>
                                                 <input type="text" class="form-control discount_percentage" value="0"  name="item_discount[{{$i}}]" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" readonly>
-                                                <div class="input-group-prepend"> 
-                                                    <span class="input-group-text input-group-text-first">%</span> 
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text input-group-text-first">%</span>
                                                 </div>
                                             </div>
                                         @endif
                                     @endfor
                                 </div>
                                 <div class="input-group mb-3">
-                                    <div class="input-group-prepend"> 
+                                    <div class="input-group-prepend">
                                         <span class="input-group-text inner-text-blog">
                                             Discount for most expensive item:
                                         </span>
                                     </div>
                                     <input type="text" class="form-control discount_percentage" value="0"  name="discount_expensive" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" readonly>
-                                    <div class="input-group-prepend"> 
-                                        <span class="input-group-text input-group-text-first">%</span> 
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text input-group-text-first">%</span>
                                     </div>
                                 </div>
                             </div>
@@ -210,7 +210,7 @@
                                     <input type="checkbox" class="checkbox-custom cash" id="cash" name="only_selected_cash" {{($promotion->only_selected_cash)?'checked':''}}>
                                     <label for="cash">Cash</label>
                                 </div>
-                                
+
                                 <div class="cash-blog">
                                     <input type="checkbox" class="checkbox-custom cardtodelivery" id="cardtodelivery" name="only_selected_cash_delivery_person" {{($promotion->only_selected_cash_delivery_person)?'checked':''}}>
                                     <label for="cardtodelivery">Credit Card</label>
@@ -223,7 +223,7 @@
                             <label for="client">Single Use Per Customer</label>
                         </div>
 
-                        <div class="form-group select-input">   
+                        <div class="form-group select-input">
                             <img src="{{ asset('assets/images/client-t.png') }}">
                             <select name="mark_promo_as" id="mark_promo_as" class="form-control">
                               <option selected disabled>Mark Promo as</option>
@@ -233,7 +233,7 @@
                             </select>
                         </div>
 
-                        <div class="form-group select-input"> 
+                        <div class="form-group select-input">
                             <img src="{{ asset('assets/images/Availability.png') }}">
                             <select name="availability" id="display_time" class="form-control">
                                 <option disabled>Availability</option>
@@ -241,6 +241,28 @@
                                     <option value="{{$item}}" {{($promotion->availability==$item)?'selected':''}}>{{$item}}</option>
                                 @endforeach
                             </select>
+                        </div>
+
+                        <div id="restricted-duration" class="overlay field-popup">
+                            <div class="popup text-center">
+                              <h2>Restricted Duration</h2>
+                              <a class="close eligible_popup_close" href="#">&times;</a>
+                              <div class="content">
+                                <div id="accordion" class="accordion row">
+                                    <div class="form-group col-md-6">
+                                        <label for="daysInput">Days</label>
+                                        <input type="number" name="restricted_days" value="{{$promotion->restricted_days}}" class="form-control input-sm" id="daysInput">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="hoursInput">Hours</label>
+                                        <input type="number" name="restricted_hours" value="{{$promotion->restricted_hours}}" max="23" class="form-control input-sm" id="hoursInput">
+                                    </div>
+                                </div>
+                                <div class="form-group form-btn justify-content-center">
+                                    <a class="close eligible_popup_close eligible_popup-inner" href="#">Submit</a>
+                                </div>
+                              </div>
+                            </div>
                         </div>
 
                         <div id="addEligiblePopup">
@@ -295,7 +317,7 @@
                                     </div>
                                     <div class="form-group form-btn justify-content-center">
                                         <input type="hidden" class="total_item_count_{{convertNumberToWord($i)}}" value="{{$category_item_count}}">
-                                        <a class="close eligible_popup_remove eligible_popup-inner" href="#" data-popup="{{convertNumberToWord($i)}}">Submit</a> 
+                                        <a class="close eligible_popup_remove eligible_popup-inner" href="#" data-popup="{{convertNumberToWord($i)}}">Submit</a>
                                     </div>
                                     </div>
                                 </div>
@@ -317,7 +339,7 @@
                 </div>
             @else
                 <div class="form-group form-btn-menu from-inner">
-                    <div class="btn-custom"> 
+                    <div class="btn-custom">
                         <button type="button" class="btn-grey btn-inner cancel" ><span>Cancel</span></button>
                     </div>
                     <div class="btn-custom">
@@ -331,6 +353,14 @@
 @endsection
 
 @section('scripts')
+    <script>
+        $("#display_time").change(function() {
+            if (this.value == "Restricted") {
+                var overlay_url = window.location.href.replace("#","");
+                window.location.href = overlay_url += "#restricted-duration";
+            }
+        });
+    </script>
     <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js')}}"></script>
     <script src="{{ asset('assets/js/common.js')}}"></script>
     <script src="{{ asset('assets/js/type/buyTwoThree.js')}}"></script>
@@ -340,5 +370,5 @@
         <script src="{{asset('assets/js/type/buyTwoThree-webview.js')}}"></script>
     @else
         {!! JsValidator::formRequest('App\Http\Requests\PromotionBuytwoRequest','#promotionForm'); !!}
-    @endif    
+    @endif
 @endsection
