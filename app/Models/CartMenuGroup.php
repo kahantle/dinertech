@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\ModifierGroup;
 
 class CartMenuGroup extends Model
 {
@@ -19,4 +20,10 @@ class CartMenuGroup extends Model
     {
         return $this->hasMany(CartMenuGroupItem::class, 'cart_modifier_group_id')->select(['cart_modifier_menu_id','cart_menu_item_id','cart_modifier_group_id','modifier_group_item_name','modifier_group_item_price', 'modifier_item_id','modifier_group_id']);
     }
+
+    public function modifierGroup()
+    {
+        return $this->hasMany(ModifierGroup::class,"modifier_group_id","modifier_group_id");
+    }
+
 }

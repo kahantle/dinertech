@@ -235,7 +235,8 @@ class CartController extends Controller
                 return response()->json(['success' => false,'message' => $validator->errors()], 400);
             }
 
-            $cartModifiers = CartMenuGroup::with('cartMenuGroupItems')->where('cart_menu_item_id',$request->post('cart_menu_item_id'))->where('menu_id',$request->post('menu_id'))->get(['cart_modifier_group_id','cart_id','cart_menu_item_id','menu_id','modifier_group_id','modifier_group_name']);
+            $cartModifiers = CartMenuGroup::with('cartMenuGroupItems')->with('modifierGroup')->where('cart_menu_item_id',$request->post('cart_menu_item_id'))->where('menu_id',$request->post('menu_id'))->get(['cart_modifier_group_id','cart_id','cart_menu_item_id','menu_id','modifier_group_id','modifier_group_name']);
+
             if($cartModifiers){
                 return response()->json(['modifier_list' => $cartModifiers,'success' => true], 200);
             }else{
