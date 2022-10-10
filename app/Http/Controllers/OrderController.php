@@ -51,7 +51,7 @@ class OrderController extends Controller
             $order->order_progress_status = $action;
             $order->action_time =  date('Y-m-d h:i:s');
             if($action==='ACCEPTED'){
-                $pikUpTime = Carbon\Carbon::parse($request->post('pick_up_time'))->format('Y-m-d H:i:s a');
+                $pikUpTime = Carbon\Carbon::parse($request->post('pick_up_time'))->format('Y-m-d h:i:s A');
                 $database = app('firebase.database');
                 $order_id =  $id;
                 $customer_id = $order->uid;
