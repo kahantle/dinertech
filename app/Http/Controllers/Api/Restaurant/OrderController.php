@@ -212,7 +212,7 @@ class OrderController extends Controller
             }
 
             $order->isPickUp = true;
-            $order->pickup_time = date('Y-m-d h:i:s A', strtotime($request->post('pickup_time')));
+            $order->pickup_time = $request->post('pickup_time');
             $order->pickup_minutes = $request->post('pickup_minutes');
             $order->order_status = 1;
             $order->order_progress_status = Config::get('constants.ORDER_STATUS.ACCEPTED');
