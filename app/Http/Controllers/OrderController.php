@@ -76,15 +76,7 @@ class OrderController extends Controller
                 $database->getReference()->update($updates);
 
                 $order->pickup_time = $pikUpTime;
-                // $orderPickupTime = $request->post('minutes')." Minutes";
                 $order->pickup_minutes = $request->post('minutes');
-                // if($request->post('type')==='hours'){
-                //     $order->pickup_time = $request->post('minutes')." Hours";
-                //     $orderPickupTime = $request->post('minutes')." Hours";
-                // }else{
-                //     $order->pickup_time = $request->post('minutes')." Minutes";
-                //     $orderPickupTime = $request->post('minutes')." Minutes";
-                // }
             }
             $order->order_status = ($action==Config::get('constants.ORDER_STATUS.CANCEL'))?0:1;
             $order->save();

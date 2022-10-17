@@ -59,9 +59,9 @@
                                                             </a>
                                                         @else
                                                             @if ($order->order_progress_status != Config::get('constants.ORDER_STATUS.ORDER_DUE'))
-                                                                <div class="order-timer order-time-{{$order->order_id}}" data-pickup="{{$order->pickup_time}}" data-pickup-minutes="{{$order->pickup_minutes}}" data-orderId="{{$order->order_id}}"></div>
+                                                                <div class="order-timer order-time-{{$order->order_id}}" data-pickup="{{ date_format(date_create($order->pickup_time), "Y-m-d H:i:s") }}" data-pickup-minutes="{{$order->pickup_minutes}}" data-orderId="{{$order->order_id}}"></div>
                                                             @else
-                                                                <button class="btn-danger btn-due-blog">
+                                                                <button actionclass="btn-danger btn-due-blog">
                                                                     ORDER DUE
                                                                 </button>
                                                             @endif
@@ -145,22 +145,19 @@
             <div class="content">
                 <h5 class="groupHeading">Pickup Time</h5>
                 <div class="row m-0">
-                    <div class="form-group  col-lg-6">
+                    <div class="form-group input-group">
                         <select class="form-control sltDuration " id="sltDuration" name="sltDuration">
                             <option value="">Duration</option>
                             @for ($i = 1; $i <= 60; $i++)
                                 <option value="{{ $i }}">{{ $i }}</option>
                             @endfor
                         </select>
+                        <div class="input-group-append">
+                            <span class="input-group-text">Minutes</span>
+                        </div>
                     </div>
-                    <div class="form-group  col-lg-6">
-                        <select class="form-control sltMinutes " id="sltMinutes" name="sltMinutes">
-                            {{-- <option value="">Type</option> --}}
-                            <option value="minutes">Minutes</option>
-                        </select>
-                        <input type="hidden" id="actionUrl" name="actionUrl" class="actionUrl" />
-                        <input type="hidden" id="pickUpTime" name="pick_up_time" />
-                    </div>
+                    <input type="hidden" id="actionUrl" name="actionUrl" class="actionUrl" />
+                    <input type="hidden" id="pickUpTime" name="pick_up_time" />
                 </div>
             </div>
             <div class="btn-custom">
