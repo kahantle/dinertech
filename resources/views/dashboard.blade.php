@@ -61,7 +61,7 @@
                                                             @if ($order->order_progress_status != Config::get('constants.ORDER_STATUS.ORDER_DUE'))
                                                                 <div class="order-timer order-time-{{$order->order_id}}" data-pickup="{{ date_format(date_create($order->pickup_time), "Y-m-d H:i:s") }}" data-pickup-minutes="{{$order->pickup_minutes}}" data-orderId="{{$order->order_id}}"></div>
                                                             @else
-                                                                <button actionclass="btn-danger btn-due-blog">
+                                                                <button action class="btn-danger btn-due-blog">
                                                                     ORDER DUE
                                                                 </button>
                                                             @endif
