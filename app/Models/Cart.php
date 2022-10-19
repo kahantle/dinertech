@@ -9,7 +9,7 @@ class Cart extends Model
     protected $primaryKey = 'cart_id';
 
     protected $appends = ['modifier_with_out_menu_total','modifier_with_menu_total'];
-    
+
     /**
      * Get all of the menu items for the Cart
      *
@@ -24,6 +24,10 @@ class Cart extends Model
         return $this->hasMany(CartMenuGroupItem::class,  'cart_id');
     }
 
+    public function promotion()
+    {
+        return $this->hasOne(Promotion::class,'promotion_id','promotion_id');
+    }
 
     public function getModifierWithOutMenuTotalAttribute(){
         // return $this->cartMenuItems->where('modifier_total',0.00)->sum('menu_price');

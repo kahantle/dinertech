@@ -37,7 +37,7 @@ class CartController extends Controller
                 $cartItems->select(['cart_menu_item_id','cart_id','menu_id','menu_name','menu_qty','menu_price','menu_total','modifier_total','is_loyalty'])->with(['cartMenuGroups' => function($cartMenuGroups){
                     $cartMenuGroups->select(['cart_modifier_group_id','cart_menu_item_id','menu_id','modifier_group_id','modifier_group_name'])->with('cartMenuGroupItems')->get();
                 }])->get();
-            }])->where('restaurant_id',$restaurantId)->where('uid',$uid)->select('cart_id','restaurant_id','uid','sub_total','discount_charge','tax_charge','total_due','is_payment')->first();
+            }])->where('restaurant_id',$restaurantId)->where('uid',$uid)->select('cart_id','restaurant_id','promotion_id','uid','sub_total','discount_charge','tax_charge','total_due','is_payment')->first();
 
             if($cartItem){
 
@@ -62,7 +62,7 @@ class CartController extends Controller
                     $cartMenuGroups->select(['cart_modifier_group_id','cart_menu_item_id','menu_id','modifier_group_id','modifier_group_name'])->with('cartMenuGroupItems')->get();
                 }])->get();
 
-            }])->where('restaurant_id',$restaurantId)->where('uid',$uid)->select('cart_id','restaurant_id','uid','sub_total','discount_charge','tax_charge','total_due','is_payment')->first();
+            }])->where('restaurant_id',$restaurantId)->where('uid',$uid)->select('cart_id','restaurant_id','promotion_id','uid','sub_total','discount_charge','tax_charge','total_due','is_payment')->with('promotion')->first();
                 return response()->json(['cart_list' => $cartItem, 'success' => true], 200);
             }
             return response()->json(['cart_list' => (object)[],'message' => 'Your cart is empty','success' => true], 200);
