@@ -7,6 +7,10 @@ use App\Models\Restaurant;
 use App\Models\User;
 use Auth;
 use Config;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class DashboardController extends Controller
 {
@@ -24,22 +28,64 @@ class DashboardController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
         $uid = Auth::user()->uid;
         $restaurant = Restaurant::where('uid', $uid)->first();
-        $orders = Order::where('restaurant_id', $restaurant->restaurant_id)
-            ->where(function ($query) {
-                $query->whereNull('order_status');
-                $query->orWhereIn('order_progress_status', [
-                    Config::get('constants.ORDER_STATUS.INTIAL'),
-                    Config::get('constants.ORDER_STATUS.PREPARED'),
-                    Config::get('constants.ORDER_STATUS.ACCEPTED'),
-                    Config::get('constants.ORDER_STATUS.ORDER_DUE'),
-                ]);
-            })->orderByDesc('order_date')->paginate(7);
+        $orders = [];
+
+        // -------------- due orders -----------------
+
+        $due_orders = Order::where([
+                'restaurant_id' => $restaurant->restaurant_id,
+                'order_progress_status'=>'ORDER DUE'
+        ])
+        ->orderBy('pickup_time')->get();
+
+        foreach ($due_orders as $key => $order) {
+            $orders[] = $order;
+        }
+
+        // -------------- Accepted orders -----------------
+
+        $accepted_orders = Order::where([
+            'restaurant_id' => $restaurant->restaurant_id,
+            'order_progress_status'=>'ACCEPTED'
+        ])
+        ->orderBy('pickup_time')->get();
+
+        foreach ($accepted_orders as $key => $order) {
+            $orders[] = $order;
+        }
+
+        // -------------- Initial orders -----------------
+
+        $initial_orders = Order::where([
+            'restaurant_id' => $restaurant->restaurant_id,
+            'order_progress_status'=>'INITIAL',
+            'order_status' => NULL
+        ])->get();
+
+        foreach ($initial_orders as $key => $order) {
+            $orders[] = $order;
+        }
+
+        // ------------ manually paginating orders ----------
+
+        $orders = $this->paginate($orders);
+
         $restaurantId = $restaurant->restaurant_id;
-        return view('dashboard', compact('orders','restaurantId'));
+        return view('dashboard', ['orders' => $orders, 'restaurantId' => $restaurantId]);
+    }
+
+    public function paginate($items, $perPage = 7, $page = null, $options = [])
+    {
+        $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
+        $items = $items instanceof Collection ? $items : Collection::make($items);
+        return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, [
+            'path' => LengthAwarePaginator::resolveCurrentPath(),
+            'pageName' => 'page',
+        ]);
     }
 
 }
