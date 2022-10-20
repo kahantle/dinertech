@@ -137,17 +137,6 @@ class MenuItemController extends Controller
                       'item_img'])
                 ->makeHidden('category');
 
-                foreach ($categoryList as $key => $category) {
-
-                    if ($category['out_of_stock_type'] == "Custom Date" && $category['end_date'] < date("y-m-d")) {
-                        $category->end_date = NULL;
-                        $category->start_date = NULL;
-                        $category->out_of_stock_type = 1;
-                        $category->save();
-                    }
-
-                }
-
             return response()->json(['menu_list' => $categoryList, 'success' => true], 200);
         } catch (\Throwable $th) {
             $errors['success'] = false;

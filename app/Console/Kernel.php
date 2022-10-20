@@ -24,7 +24,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-         $schedule->command('Deleteuser:cron')->hourly();
+        $schedule->command('Deleteuser:cron')->hourly();
+        $schedule->command('stock:update')->hourly();
     }
 
     /**
