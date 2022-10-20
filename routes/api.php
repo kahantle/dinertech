@@ -116,6 +116,7 @@ Route::namespace ('Api')->group(function () {
         Route::post('/verify-forgot-otp', 'UserController@forgotVerifyOtp')->name('restaurant.otp.verfy.forgot');
         Route::post('/reset-password', 'UserController@resetPassword')->name('restaurant.otp.verfy.resetPassword');
         Route::post('/logout', 'UserController@logout')->name('restaurant.logout');
+        Route::post('set-sales-tax', 'UserController@setSalesTax')->name('restaurant.set.sales.tax');
 
         //-------------------------- Restaurant Web-url Route Start---------------------------------------------- //
         //Subscription Route

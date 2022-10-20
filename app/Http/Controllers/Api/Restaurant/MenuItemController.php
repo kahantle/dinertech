@@ -121,7 +121,7 @@ class MenuItemController extends Controller
             $restaurantId = $request->post('restaurant_id');
             $categoryList = MenuItem::where('restaurant_id', $request->post('restaurant_id'))
                 ->with(['modifierList'])
-                ->whereHas('category')
+                // ->whereHas('category')
                 // ->where('modifierList',function($query)use($restaurantId){
                 //     $query->where('restaurant_id',$restaurantId);
                 // })
@@ -140,12 +140,13 @@ class MenuItemController extends Controller
                 foreach ($categoryList as $key => $category) {
 
                     if ($category['out_of_stock_type'] == "Custom Date" && $category['end_date'] < date("y-m-d")) {
+                        $category->end_date = NULL;
+                        $category->start_date = NULL;
                         $category->out_of_stock_type = 1;
                         $category->save();
                     }
 
                 }
-                return $categoryList;
 
             return response()->json(['menu_list' => $categoryList, 'success' => true], 200);
         } catch (\Throwable $th) {

@@ -58,7 +58,7 @@ class UserController extends Controller
                         ->get(['uid', 'first_name', 'last_name',
                             'email_id', 'mobile_number', 'profile_image',
                             'app_notifications', 'chat_notifications',
-                            'location_tracking', 'email_subscription', 'loyalty_subscription'])
+                            'location_tracking', 'email_subscription','sales_tax','loyalty_subscription'])
                         ->first()
                         ->makeHidden('restaurant');
 
@@ -310,4 +310,25 @@ class UserController extends Controller
         }
 
     }
+
+    public function setSalesTax(REQUEST $request)
+    {
+        try {
+
+            $user = auth('api')->user();
+            $user->sales_tax = $request->sales_tax;
+            $user->save();
+            return response()->json(['message' => 'Sales tax set successfully.', 'success' => true], 200);
+
+        } catch (\Throwable $th) {
+            $errors['success'] = false;
+            $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
+            if ($request->debug_mode == 'ON') {
+                $errors['debug'] = $th->getMessage();
+            }
+            return response()->json($errors, 401);
+        }
+
+    }
+
 }
