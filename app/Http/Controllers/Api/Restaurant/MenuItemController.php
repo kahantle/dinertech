@@ -33,7 +33,7 @@ class MenuItemController extends Controller
             if ($validator->fails()) {
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
             }
-            if($request->post('menu_id')){               
+            if($request->post('menu_id')){
                 $data = MenuItem::where('menu_id',$request->post('menu_id'))->first();
                 if(!$data){
                     return response()->json(['message' => "Menu id not correct.", 'success' => true], 200);
@@ -122,10 +122,10 @@ class MenuItemController extends Controller
             $categoryList = MenuItem::where('restaurant_id', $request->post('restaurant_id'))
                 ->with(['modifierList'])
                 ->whereHas('category')
-                // ->where('modifierList',function($query)use($restaurantId){ 
+                // ->where('modifierList',function($query)use($restaurantId){
                 //     $query->where('restaurant_id',$restaurantId);
                 // })
-                ->get(['menu_id', 
+                ->get(['menu_id',
                      'restaurant_id',
                       'category_id',
                       'out_of_stock_type',
@@ -136,6 +136,17 @@ class MenuItemController extends Controller
                       'end_date',
                       'item_img'])
                 ->makeHidden('category');
+
+                foreach ($categoryList as $key => $category) {
+
+                    if ($category['out_of_stock_type'] == "Custom Date" && $category['end_date'] < date("y-m-d")) {
+                        $category->out_of_stock_type = 1;
+                        $category->save();
+                    }
+
+                }
+                return $categoryList;
+
             return response()->json(['menu_list' => $categoryList, 'success' => true], 200);
         } catch (\Throwable $th) {
             $errors['success'] = false;
