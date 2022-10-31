@@ -150,6 +150,26 @@
                             </h4>
                         </div>
                     </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading panle-heading-inner" role="tab" id="headingFour">
+                            <h4 class="panel-title">
+                                <a role="button" href="{{route('feedback.add')}}" aria-expanded="false" aria-controls="collapseThree">
+                                    Feedback
+                                    <i class="arrow-right-heavy-orange">Right</i>
+                                </a>
+                            </h4>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading panle-heading-inner" role="tab" id="headingFour">
+                            <h4 class="panel-title">
+                                <a role="button" href="#" aria-expanded="false" aria-controls="collapseThree">
+                                    Delete Account
+                                    <i class="arrow-right-heavy-orange">Right</i>
+                                </a>
+                            </h4>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="col-md-6 swiches-inner-blog">

@@ -104,12 +104,12 @@
                 <span>account</span>
             </a>
         </li>
-        <li class="{{ Request::is('feedback/*') ? 'active' : '' }}">
+        {{-- <li class="{{ Request::is('feedback/*') ? 'active' : '' }}">
             <a href="{{ route('feedback.add') }}">
                 <img src="{{ asset('images/feedback-icon.png') }}" class="img-fluid">
                 <span>feedback</span>
             </a>
-        </li>
+        </li> --}}
         <li class="{{ Request::is('chat') ? 'active' : '' }}">
             <a href="{{ route('chat') }}">
                 <img src="{{ asset('images/chat-icon.png') }}" class="img-fluid">
