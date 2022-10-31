@@ -33,7 +33,7 @@
               <div class="panel-heading" role="tab" id="headingTwo">
                 <h4 class="panel-title">
                   <a role="button" aria-expanded="false" href="{{route('hours')}}" >
-                    Hours of operations 
+                    Hours of operations
                   </a>
                 </h4>
               </div>
@@ -46,7 +46,7 @@
                   </a>
                 </h4>
               </div>
-            </div> 
+            </div>
           </div>
         </div>
         <div class="col-md-6">
@@ -57,7 +57,7 @@
                   <p>Enable Pin Protected</p>
                 </div>
                 <div class="switch-btn">
-                  <input type="checkbox" class="makeCallNotificationUpdate" id="is_app_notification" 
+                  <input type="checkbox" class="makeCallNotificationUpdate" id="is_app_notification"
                   data-type="Pin" value="{{$restaurant->is_pinprotected}}"
                   @if($restaurant->is_pinprotected)? checked @endif>
                   <span><small></small></span>
@@ -70,8 +70,8 @@
                   <p>App Notification</p>
                 </div>
                 <div class="switch-btn">
-                  <input type="checkbox" class="makeCallNotificationUpdate" id="is_chat_notification" 
-                  data-type="chat" value="{{$user->chat_notifications}}"  
+                  <input type="checkbox" class="makeCallNotificationUpdate" id="is_chat_notification"
+                  data-type="chat" value="{{$user->chat_notifications}}"
                   @if($user->chat_notifications)? checked @endif>
                   <span><small></small></span>
                 </div>
@@ -83,8 +83,8 @@
                   <p>Accepting Online Orders</p>
                 </div>
                 <div class="switch-btn">
-                  <input type="checkbox" class="makeCallNotificationUpdate" id="is_location_tracking" 
-                  data-type="location" value="{{$user->location_tracking}}" 
+                  <input type="checkbox" class="makeCallNotificationUpdate" id="is_location_tracking"
+                  data-type="location" value="{{$user->location_tracking}}"
                   @if($user->location_tracking)? checked @endif>
                   <span><small></small></span>
                 </div>
@@ -162,8 +162,8 @@
                                 <p>Online Orderning System (off/on)</p>
                             </div>
                             <div class="switch-btn">
-                                    <input type="checkbox" class="makeCallNotificationUpdate" id="is_location_tracking" 
-                                    data-type="location" value="{{$user->location_tracking}}" 
+                                    <input type="checkbox" class="makeCallNotificationUpdate" id="is_location_tracking"
+                                    data-type="location" value="{{$user->location_tracking}}"
                                     @if($user->location_tracking)? checked @endif>
                                 <span><small></small></span>
                             </div>
@@ -173,7 +173,7 @@
                                 <p>App Notifications (off/on)</p>
                             </div>
                             <div class="switch-btn">
-                                <input type="checkbox" class="makeCallNotificationUpdate" id="is_chat_notification" 
+                                <input type="checkbox" class="makeCallNotificationUpdate" id="is_chat_notification"
                                 data-type="chat" value="{{$user->chat_notifications}}" @if($user->chat_notifications)? checked @endif>
                                 <span><small></small></span>
                             </div>
@@ -186,7 +186,7 @@
                                 <p>Enable Account Pin</p>
                             </div>
                             <div class="switch-btn">
-                                <input type="checkbox" class="makeCallNotificationUpdate" id="is_app_notification" 
+                                <input type="checkbox" class="makeCallNotificationUpdate" id="is_app_notification"
                                   data-type="Pin" value="{{$restaurant->is_pinprotected}}"
                                   @if($restaurant->is_pinprotected)? checked @endif>
                                 <span><small></small></span>
@@ -201,7 +201,7 @@
                             </div>
                             <div class="switch-btn d-flex align-items-center justify-content-end">
                                 <span class="input-group-text">%</span>
-                                <input type="number" max="100" accuracy="2" min="0" style="padding: 8px 28px 8px 15px; width: 100%;" value="{{($restaurant->sales_tax) ? $restaurant->sales_tax : ''}}" id="tax-value" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+                                <input type="number" max="100" min="0" style="padding: 8px 28px 8px 15px; width: 100%;" value="{{($restaurant->sales_tax) ? $restaurant->sales_tax : ''}}" id="tax-value">
                                 <button type="button" id="save-tax" data-type="sales-tax">Save</button>
                             </div>
                         </label>
@@ -217,6 +217,6 @@
 <script>
   var url = "{{route('update-account-settings')}}";
   var pin_route = "{{route('pin.index')}}";
-</script>  
-<script src="{{asset('/assets/js/account.js')}}"></script>  
+</script>
+<script src="{{asset('/assets/js/account.js')}}"></script>
 @endsection
