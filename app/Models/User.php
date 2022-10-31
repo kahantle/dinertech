@@ -59,7 +59,7 @@ class User extends Authenticatable
 
     public function restaurant()
     {
-        return $this->hasOne('App\Models\Restaurant', 'uid')->select(['restaurant_id', 'uid', 'restaurant_name', 'restaurant_address', 'restaurant_city', 'restaurant_state', 'restaurant_state','sales_tax']);
+        return $this->hasOne('App\Models\Restaurant', 'uid')->select();
     }
 
     public function restaurant_user()
