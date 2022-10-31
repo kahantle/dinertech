@@ -84,13 +84,28 @@ class AccountController extends Controller
             } else if($request->post('type') === 'sales-tax'){
                 $restaurant = Restaurant::where('uid', $uid)->first();
                 $restaurant->sales_tax = $request->post('notification_value');
-                
+
                 if ($restaurant->save()) {
                     $returns['success'] = true;
                     $returns['message'] = "Sales tax change successfully!";
                 } else {
                     $returns['success'] = false;
                     $returns['message'] = "Sales tax does not change successfully!";
+                }
+            }  else if($request->post('type') === 'receipts'){
+                $restaurant = Restaurant::where('uid', $uid)->first();
+                if ($request->post('notification_value') == 0) {
+                    $restaurant->auto_print_receipts = ($request->post('notification_value') == 0) ? 1 : 0;
+                } else {
+                    $restaurant->auto_print_receipts = ($request->post('notification_value') == 1) ? 0 : 1;
+                }
+
+                if ($restaurant->save()) {
+                    $returns['success'] = true;
+                    $returns['message'] = "Auto print receipts Enabled successfully !";
+                } else {
+                    $returns['success'] = false;
+                    $returns['message'] = "Error in Auto print receipts Enabling !";
                 }
             }
 
@@ -106,5 +121,5 @@ class AccountController extends Controller
     {
         return view('account.active_subscription');
     }
-    
+
 }

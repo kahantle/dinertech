@@ -178,6 +178,16 @@
                                 <span><small></small></span>
                             </div>
                         </label>
+                        <label for="auto_print_receipts">
+                            <div class="title">
+                                <p>Automatically Print Receipts When Order Is Accepted (off/on)</p>
+                            </div>
+                            <div class="switch-btn">
+                                <input type="checkbox" class="makeCallNotificationUpdate" id="auto_print_receipts"
+                                data-type="receipts" value="{{$restaurant->auto_print_receipts}}" @if($restaurant->auto_print_receipts) ? checked @endif>
+                                <span><small></small></span>
+                            </div>
+                        </label>
                     </div>
                     <h5>Security</h5>
                     <div class="checkbox switcher">
