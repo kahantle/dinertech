@@ -13,12 +13,13 @@ class AccountController extends Controller
     public function updateSetting(Request $request){
         try {
             $request_data = $request->json()->all();
-            
+
             $validator = Validator::make($request_data, [
                 'restaurant_id' => 'required',
                 'chat_notifications' => 'required',
                 'location_tracking' =>  'required',
-                'sales_tax'         => 'required'
+                'sales_tax'         => 'required',
+                'auto_print_receipts' => 'required'
             ]);
             if ($validator->fails()) {
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
@@ -27,6 +28,7 @@ class AccountController extends Controller
             $restaurant = Restaurant::where('restaurant_id', $request->post('restaurant_id'))
                 ->first();
             $restaurant->sales_tax = $request->post('sales_tax');
+            $restaurant->auto_print_receipts = $request->post('auto_print_receipts');
             $user = User::where('uid',$restaurant->uid)->first();
             if($user){
                 $user->chat_notifications = ($request->post('chat_notifications') == "true") ? 1 : 0;
