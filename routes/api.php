@@ -216,7 +216,7 @@ Route::namespace ('Api')->group(function () {
 
             Route::prefix('account')->group(function () {
                 Route::post('/setting/update', 'AccountController@updateSetting')->name('account.update.setting');
-                Route::get('/settings', 'AccountController@getSettings');
+                Route::post('/settings', 'AccountController@getSettings');
             });
 
         });

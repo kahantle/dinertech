@@ -14,7 +14,7 @@ class AddAutoPrintReceiptsToRestauransTable extends Migration
     public function up()
     {
         Schema::table('restaurants', function (Blueprint $table) {
-            $table->tinyInteger('auto_print_receipts')->after('notification_status')->default(0);
+            $table->boolean('auto_print_receipts')->after('notification_status')->default(false);
         });
     }
 

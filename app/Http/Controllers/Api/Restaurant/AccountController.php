@@ -11,7 +11,7 @@ use Config;
 
 class AccountController extends Controller
 {
-    public function getSettings(Request $request)
+    public function getSettings(REQUEST $request)
     {
         try {
             $restaurant = Restaurant::where('restaurant_id', $request->post('restaurant_id'))->first();
@@ -46,7 +46,7 @@ class AccountController extends Controller
             $restaurant = Restaurant::where('restaurant_id', $request->post('restaurant_id'))
                 ->first();
             $restaurant->sales_tax = $request->post('sales_tax');
-            $restaurant->auto_print_receipts = $request->auto_print_receipts;
+            $restaurant->auto_print_receipts = ($request->post('auto_print_receipts') == "true") ? 1 : 0;
             $user = User::where('uid',$restaurant->uid)->first();
             if($user){
                 $user->chat_notifications = ($request->post('chat_notifications') == "true") ? 1 : 0;

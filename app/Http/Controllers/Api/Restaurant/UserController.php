@@ -316,9 +316,9 @@ class UserController extends Controller
     {
         try {
 
-            $user = auth('api')->user();
-            $user->sales_tax = $request->sales_tax;
-            $user->save();
+            $restaurant = auth('api')->user()->restaurant;
+            $restaurant->sales_tax = $request->sales_tax;
+            $restaurant->save();
             return response()->json(['message' => 'Sales tax set successfully.', 'success' => true], 200);
 
         } catch (\Throwable $th) {
