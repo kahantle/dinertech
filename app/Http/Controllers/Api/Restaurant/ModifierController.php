@@ -240,7 +240,15 @@ class ModifierController extends Controller
 
             } else if ($modifierGroup->maximum > $items_count ) {
 
-                $modifierGroup->maximum = $items_count ;
+                if ($modifierGroup->maximum == $modifierGroup->minimum) {
+
+                    $modifierGroup->maximum = $modifierGroup->minimum = $items_count ;
+
+                } else {
+
+                    $modifierGroup->maximum = $items_count ;
+
+                }
 
                 $modifierGroup->save();
 
