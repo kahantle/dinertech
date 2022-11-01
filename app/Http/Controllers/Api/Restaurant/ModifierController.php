@@ -29,6 +29,13 @@ class ModifierController extends Controller
             $modifier->restaurant_id = $request->post('restaurant_id');
             $modifier->required = $request->post('required');
             $modifier->type = $request->post('type');
+
+            if ($request->post('type') == 1 && $request->post('required')) {
+                $modifier->minimum = $modifier->maximum = 1 ;
+            } else if ($request->post('type') == 1 && !$request->post('required')) {
+                $modifier->minimum = $modifier->maximum = 0 ;
+            }
+
             $modifier->modifier_group_name = $request->post('modifier_group_name');
             $modifier->save();
             return response()->json(['message' => "Modifier added successfully.", 'success' => true, 'modifier_group_id' => $modifier->modifier_group_id ], 200);
@@ -61,6 +68,8 @@ class ModifierController extends Controller
                 $modifier->modifier_group_name = $request->post('modifier_group_name');
                 $modifier->required = $request->post('required');
                 $modifier->type = $request->post('type');
+                $modifier->minimum = $request->post('minimum');
+                $modifier->maximum = $request->post('maximum');
                 $modifier->save();
                 return response()->json(['message' => "Modifier update successfully.", 'success' => true], 200);
             }
@@ -156,7 +165,7 @@ class ModifierController extends Controller
             }
             $categoryList = ModifierGroup::where('restaurant_id', $request->post('restaurant_id'))
                 ->with('modifier_item')
-                ->get(['modifier_group_id','restaurant_id','modifier_group_name','required','type']);
+                ->get(['modifier_group_id','restaurant_id','modifier_group_name','required','type','minimum','maximum']);
             return response()->json(['modifier_list' => $categoryList, 'success' => true], 200);
         } catch (\Throwable $th) {
             $errors['success'] = false;
@@ -207,9 +216,36 @@ class ModifierController extends Controller
             if ($validator->fails()) {
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
             }
+
             ModifierGroupItem::where('modifier_group_id', $request->post('modifier_group_id'))
             ->where('modifier_item_id', $request->post('modifier_item_id'))
             ->delete();
+
+            $items_count = ModifierGroupItem::where('modifier_group_id', $request->post('modifier_group_id'))->count();
+            $modifierGroup = ModifierGroup::where('modifier_group_id', $request->post('modifier_group_id'))->first();
+
+            if ($items_count == 0 ) {
+
+                if ($modifierGroup->required == true) {
+
+                    $modifierGroup->minimum = $modifierGroup->maximum = 1;
+
+                } else {
+
+                    $modifierGroup->minimum = $modifierGroup->maximum = 0;
+
+                }
+
+                $modifierGroup->save();
+
+            } else if ($modifierGroup->maximum > $items_count ) {
+
+                $modifierGroup->maximum = $items_count ;
+
+                $modifierGroup->save();
+
+            }
+
             return response()->json(['message'=> "Modifier Item delete successfully.",'success' => true], 200);
         } catch (\Throwable $th) {
             $errors['success'] = false;
