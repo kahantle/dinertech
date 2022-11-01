@@ -121,7 +121,7 @@ class MenuItemController extends Controller
             $restaurantId = $request->post('restaurant_id');
             $categoryList = MenuItem::where('restaurant_id', $request->post('restaurant_id'))
                 ->with(['modifierList'])
-                // ->whereHas('category')
+                ->whereHas('category')
                 // ->where('modifierList',function($query)use($restaurantId){
                 //     $query->where('restaurant_id',$restaurantId);
                 // })
