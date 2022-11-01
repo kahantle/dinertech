@@ -7,13 +7,31 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Restaurant;
 use Validator;
+use Config;
 
 class AccountController extends Controller
 {
+    public function getSettings(Request $request)
+    {
+        try {
+            $restaurant = Restaurant::where('restaurant_id', $request->post('restaurant_id'))->first();
+            $restaurant_settings = Restaurant::select('sales_tax','is_pinprotected','auto_print_receipts')->where('restaurant_id', $request->post('restaurant_id'))->first();
+            $user_settings = User::select('chat_notifications','location_tracking')->where('uid',$restaurant->uid)->first()->toArray();
+            unset($user_settings['full_name'],$user_settings['image_path']);
+            return response()->json([ 'settings' => array_merge($restaurant_settings->toArray(), $user_settings) , 'message' => "All Settings fetched Successfully.", 'success' => true], 200);
+        } catch (\Throwable $th) {
+            $errors['success'] = false;
+            $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
+            if ($request->debug_mode == 'ON') {
+                $errors['debug'] = $th->getMessage();
+            }
+            return response()->json($errors, 500);
+        }
+    }
+
     public function updateSetting(Request $request){
         try {
             $request_data = $request->json()->all();
-
             $validator = Validator::make($request_data, [
                 'restaurant_id' => 'required',
                 'chat_notifications' => 'required',
@@ -28,7 +46,7 @@ class AccountController extends Controller
             $restaurant = Restaurant::where('restaurant_id', $request->post('restaurant_id'))
                 ->first();
             $restaurant->sales_tax = $request->post('sales_tax');
-            $restaurant->auto_print_receipts = $request->post('auto_print_receipts');
+            $restaurant->auto_print_receipts = $request->auto_print_receipts;
             $user = User::where('uid',$restaurant->uid)->first();
             if($user){
                 $user->chat_notifications = ($request->post('chat_notifications') == "true") ? 1 : 0;
