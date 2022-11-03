@@ -34,7 +34,7 @@ $(document).ready(function() {
           },
           complete: function(){
             $("body").preloader('remove');
-          }, 
+          },
           success: function (res) {
             if(res.success){
               $("#"+currentId).prop('checked',currentValue);
@@ -48,7 +48,7 @@ $(document).ready(function() {
           }
       });
       } else if (result.dismiss === "cancel") {
-     
+
       }
    });
   });
@@ -79,7 +79,7 @@ $(document).ready(function() {
           },
           complete: function(){
             $("body").preloader('remove');
-          }, 
+          },
           success: function (res) {
             if(res.success){
               toastr.success(res.message,'',toastrSetting);
@@ -95,6 +95,66 @@ $(document).ready(function() {
     }
   });
 
+    $(document).on("click", ".delete-account", function (e) {
+        e.stopPropagation();
+        Swal.fire({
+            title: "Are you sure?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, delete it!",
+            animation: true
+        }).then(function(result) {
+            if (result.value) {
+                const { value: password } = Swal.fire({
+                    title: "Enter your password",
+                    confirmButtonText: "Delete Account",
+                    confirmButtonColor: "#f5424e",
+                    input: "password",
+                    inputLabel: "Password",
+                    inputPlaceholder: "Enter your password",
+                    inputAttributes: {
+                        autocapitalize: "off",
+                        autocorrect: "off",
+                        required: "true"
+                    }
+                }).then(function(result) {
+                    $.ajax({
+                        headers: {
+                            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                                "content"
+                            )
+                        },
+                        url: account_delete_url,
+                        type: "POST",
+                        dataType: "json",
+                        data: {
+                            password: result.value
+                        },
+                        beforeSend: function() {
+                            $("body").preloader();
+                        },
+                        complete: function() {
+                            $("body").preloader("remove");
+                        },
+                        success: function (res) {
+                            if (res.success) {
+                                window.location.href = logout_url;
+                            } else {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Oops...",
+                                    text: res.message
+                                });
+                            }
+                        },
+                        error: function(xhr, ajaxOptions, thrownError) {}
+                    });
+                });
+            } else if (result.dismiss === "cancel") {
+                //
+            }
+        });
+    });
 
   $(document).on('click', '.reset_form', function(event) {
     $('#verify_pin')[0].reset();

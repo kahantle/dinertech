@@ -65,6 +65,7 @@ Route::group(['middleware' => ['auth:web']], function () {
         Route::get('/', 'AccountController@index')->name('account');
         Route::post('/update-account-settings', 'AccountController@update')->name('update-account-settings');
         Route::get('/active-subscriptions','AccountController@showActiveSubscription')->name('account.active.subscription');
+        Route::post('/delete','AccountController@deleteAccount')->name('account.delete');
     });
     Route::prefix('chat')->group(function () {
         Route::get('/', 'ChatController@index')->name('chat');

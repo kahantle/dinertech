@@ -27,7 +27,7 @@ class LoginController extends Controller
         ]);
 
         $credentials = ['email_id' => $request->email,'password' => $request->password];
-        if (Auth::guard('admin')->attempt($credentials)) 
+        if (Auth::guard('admin')->attempt($credentials))
         {
             return redirect()->intended('/admin/dashboard');
         }

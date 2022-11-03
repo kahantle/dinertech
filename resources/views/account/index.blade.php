@@ -163,7 +163,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading panle-heading-inner" role="tab" id="headingFour">
                             <h4 class="panel-title">
-                                <a role="button" href="#" aria-expanded="false" aria-controls="collapseThree">
+                                <a role="button" href="javaScript:void(0)" class="delete-account" aria-expanded="false" aria-controls="collapseThree">
                                     Delete Account
                                     <i class="arrow-right-heavy-orange">Right</i>
                                 </a>
@@ -247,6 +247,8 @@
 <script>
   var url = "{{route('update-account-settings')}}";
   var pin_route = "{{route('pin.index')}}";
+  var account_delete_url = " {{ route('account.delete') }}";
+  var logout_url = " {{ route('logout') }} ";
 </script>
 <script src="{{asset('/assets/js/account.js')}}"></script>
 @endsection

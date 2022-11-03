@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Restaurant;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Auth;
 use App\Models\Restaurant;
 use Validator;
 use Config;
@@ -66,4 +67,28 @@ class AccountController extends Controller
             return response()->json($errors, 500);
         }
     }
+
+    public function deleteAccount(Request $request)
+    {
+        try {
+            $user = auth('api')->user();
+            if (!Auth::guard('admin')->attempt(['email_id' => $user->email_id, 'password' => $request->password])) {
+                $returns['success'] = false;
+                $returns['message'] = "Wrong password !";
+            } else {
+                $user->delete();
+                $returns['success'] = true;
+                $returns['message'] = "Account Deleted !";
+            }
+            return response()->json($returns, 200);
+        } catch (\Throwable $th) {
+            $errors['success'] = false;
+            $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
+            if ($request->debug_mode == 'ON') {
+                $errors['debug'] = $th->getMessage();
+            }
+            return response()->json($errors, 500);
+        }
+    }
+
 }

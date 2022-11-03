@@ -9,6 +9,7 @@ use Auth;
 use Config;
 use Illuminate\Http\Request;
 use Session;
+use Illuminate\Support\Facades\Hash;
 use Validator;
 
 class AccountController extends Controller
@@ -120,6 +121,27 @@ class AccountController extends Controller
     public function showActiveSubscription()
     {
         return view('account.active_subscription');
+    }
+
+    public function deleteAccount(Request $request)
+    {
+        try {
+            $user = Auth::user();
+            if (!Auth::attempt(['email_id' => $user->email_id, 'password' => $request->password])) {
+                $returns['success'] = false;
+                $returns['message'] = "Wrong password !";
+            } else {
+                $user->delete();
+                $returns['success'] = true;
+                $returns['message'] = "Account Deleted !";
+            }
+
+            return response()->json($returns,200);
+        }  catch (\Throwable $th) {
+            $returns['success'] = false;
+            $returns['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
+            return response()->json($returns);
+        }
     }
 
 }
