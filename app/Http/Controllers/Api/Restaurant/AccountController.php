@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Restaurant;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\RestaurantFcmTokens;
 use Auth;
 use App\Models\Restaurant;
 use Validator;
@@ -76,6 +77,9 @@ class AccountController extends Controller
                 $returns['success'] = false;
                 $returns['message'] = "Wrong password !";
             } else {
+                RestaurantFcmTokens::where('uid', $user->uid)->delete();
+                $token = auth('api')->user()->token();
+                $token->revoke();
                 $user->delete();
                 $returns['success'] = true;
                 $returns['message'] = "Account Deleted !";

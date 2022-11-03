@@ -285,6 +285,7 @@ class UserController extends Controller
 
     public function logout(Request $request)
     {
+        // return response()->json(['message' => 'You have been successfully logged out!', 'success' => true], 200);
         try {
             $request_data = $request->json()->all();
 
