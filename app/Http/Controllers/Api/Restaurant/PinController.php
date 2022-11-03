@@ -59,6 +59,7 @@ class PinController extends Controller
             $restaurant = Restaurant::where('restaurant_id', $request->post('restaurant_id'))
                 ->first();
             $restaurant->is_pinprotected = 0;
+            $restaurant->pin = NULL;
             if($restaurant->save()){
                 return response()->json(['message' => "Your Pin Disable Successfully.", 'success' => true], 200);
             }
