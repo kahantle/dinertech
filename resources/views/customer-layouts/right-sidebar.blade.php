@@ -102,7 +102,7 @@
                                                         }
                                                         $modifierList = [$cartMenus['modifierGroups'][$key][$item['menu_id']]];
                                                     }
-                                                    
+
                                                     if (isset($modifierItamTotal[$key])) {
                                                         $finalMenuTotal = array_sum($modifierItamTotal[$key]) + $item['item_price'];
                                                         $menuTotal = $finalMenuTotal * $item['quantity'];
@@ -175,7 +175,7 @@
                                                             }
                                                         }
                                                     }
-                                                    
+
                                                     if (isset($modifierItamTotal[$key])) {
                                                         $finalMenuTotal = array_sum($modifierItamTotal[$key]) + $item['item_price'];
                                                         $menuTotal = $finalMenuTotal * $item['quantity'];
