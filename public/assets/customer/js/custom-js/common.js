@@ -309,7 +309,6 @@ $(function() {
         // e.preventDefault();
         var cartKey = $(this).data("cart-item");
         var menuId = $(this).data('menu-id');
-        console.log(menuId);
         $.ajax({
             type: "POST",
             headers: {

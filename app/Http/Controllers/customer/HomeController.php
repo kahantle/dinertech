@@ -57,7 +57,7 @@ class HomeController extends Controller
                 foreach ($data['cartMenus']['cartItems'] as $cartKey => $cartItems) {
                     foreach ($cartItems as $menuId => $item) {
                         array_push($menuIds, $menuId);
-                        if (in_array($item['menu_id'], call_user_func_array('array_merge', $quantityArray))) {
+                        if (in_array($item['menu_id'], $quantityArray)) {
                             foreach ($quantityArray as $key => $oldQuantityArray) {
                                 if ($oldQuantityArray['menu_id'] == $item['menu_id']) {
                                     $quantityArray[$key]['quantity'] += $item['quantity'];

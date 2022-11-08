@@ -22,9 +22,10 @@ class IsCustomer
         {
             if(auth()->user()->role === Config::get('constants.ROLES.CUSTOMER')){
                 return $next($request);
-            } else {
-                return redirect()->route('customer.login');
             }
+            // else {
+            //     return redirect()->route('customer.login');
+            // }
         }
         return redirect()->route('customer.login');
     }
