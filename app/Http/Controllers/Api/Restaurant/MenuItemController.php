@@ -24,7 +24,7 @@ class MenuItemController extends Controller
 
             $validator = Validator::make($request->all(), [
                 'restaurant_id' => 'required',
-                'modifier_id' => 'required',
+                // 'modifier_id' => 'required',
                 'item_name' => 'required',
                 'item_details' => 'required',
                 'category_id' => 'required',
@@ -50,7 +50,8 @@ class MenuItemController extends Controller
                     $data->item_img = $save_name;
                 }
                 if($data->save()){
-                     MenuModifierItem::where('modifier_id',$request->post('modifier_id'))->delete();
+                    //  MenuModifierItem::where('modifier_id',$request->post('modifier_id'))->delete();
+                    MenuModifierItem::where('menu_id',$data->menu_id)->delete();
                     $menu = new  MenuModifierItem;
                     $menuRow =array();
                     $modifiers = explode(",",$request->post('modifier_id'));

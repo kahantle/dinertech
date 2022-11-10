@@ -238,7 +238,8 @@ $(function() {
                 menuId: menuId
             },
             dataType: "html",
-            success: function(response) {
+            success: function (response) {
+                console.log(response);
                 if (response) {
                     $("#add-order-" + menuId).hide();
                     $(".without-modifier-quantity-" + menuId).removeClass('d-none');
