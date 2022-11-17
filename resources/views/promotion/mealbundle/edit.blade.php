@@ -40,17 +40,17 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="@if($webview == 1) col-md-5 @else col-lg-5 @endif">
-                        <div class="form-group">   
-                            <img src="{{ asset('assets/images/percentage.png') }}">              
+                        <div class="form-group">
+                            <img src="{{ asset('assets/images/percentage.png') }}">
                             <input type="text" class="form-control" id="promotion_code" name="promotion_code" placeholder="Promo code(Optional)" value="{{$promotion->promotion_code}}" maxlength="15">
                             <input type="hidden" id="promotion_id" name="promotion_id" value="{{$promotion->promotion_id}}" />
                         </div>
-                        <div class="form-group">   
-                            <img src="{{ asset('assets/images/speaker.png') }}">              
+                        <div class="form-group">
+                            <img src="{{ asset('assets/images/speaker.png') }}">
                             <input type="text" class="form-control" id="promotion_name" name="promotion_name" placeholder="Enter Title" value="{{$promotion->promotion_name}}">
                         </div>
-                        <div class="form-group">   
-                            <img src="{{ asset('assets/images/description.png') }}">              
+                        <div class="form-group">
+                            <img src="{{ asset('assets/images/description.png') }}">
                             <textarea type="text" class="form-control" id="promotion_details" name="promotion_details" placeholder="Enter Description(Optional)">{{$promotion->promotion_details}}</textarea>
                         </div>
                     </div>
@@ -80,9 +80,9 @@
                             <button id="addEligibleItems" type="button" class="btn btn-info add-button">Add</button>
                         </div>
 
-                        <div class="form-group minimumAmountDiv"> 
+                        <div class="form-group minimumAmountDiv">
                             <img src="{{ asset('assets/images/tag-d.png')}}">
-                            <input type="text" class="form-control" id="minimumAmount" name="flat_price" value="{{$promotion->discount}}" placeholder="Flat Price (USD)" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"> 
+                            <input type="text" class="form-control" id="minimumAmount" name="flat_price" value="{{$promotion->discount}}" placeholder="Flat Price (USD)" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
                         </div>
 
                         <div class="form-group select-input">
@@ -122,12 +122,12 @@
                             @else
                                 <div class="form-group cs-checkbox onlyForSelectedPaymentDiv" style="display: none">
                             @endif
-                            
+
                                 <div class="cash-blog mt-1">
                                     <input type="checkbox" class="checkbox-custom cash" id="cash" name="only_selected_cash" {{($promotion->only_selected_cash)?'checked':''}}>
                                     <label for="cash">Cash</label>
                                 </div>
-                                
+
                                 <div class="cash-blog">
                                     <input type="checkbox" class="checkbox-custom cardtodelivery" id="cardtodelivery" name="only_selected_cash_delivery_person" {{($promotion->only_selected_cash_delivery_person)?'checked':''}}>
                                     <label for="cardtodelivery">Credit Card</label>
@@ -140,7 +140,7 @@
                             <label for="client">Single Use Per Customer</label>
                         </div>
 
-                        <div class="form-group select-input">   
+                        <div class="form-group select-input">
                             <img src="{{ asset('assets/images/client-t.png') }}">
                             <select name="mark_promo_as" id="mark_promo_as" class="form-control">
                               <option selected disabled>Mark Promo as</option>
@@ -150,7 +150,7 @@
                             </select>
                         </div>
 
-                        <div class="form-group select-input"> 
+                        <div class="form-group select-input">
                             <img src="{{ asset('assets/images/Availability.png') }}">
                             <select name="availability" id="display_time" class="form-control">
                                 <option disabled>Availability</option>
@@ -212,7 +212,7 @@
                                     </div>
                                     <div class="form-group form-btn justify-content-center">
                                         <input type="hidden" class="total_item_count_{{convertNumberToWord($i)}}" value="{{$category_item_count}}">
-                                        <a class="close eligible_popup_remove eligible_popup-inner" href="#" data-popup="{{convertNumberToWord($i)}}">Submit</a> 
+                                        <a class="close eligible_popup_remove eligible_popup-inner" href="#" data-popup="{{convertNumberToWord($i)}}">Submit</a>
                                     </div>
                                     </div>
                                 </div>
@@ -232,8 +232,8 @@
                 </div>
             @else
                 <div class="form-group form-btn-menu from-inner">
-                    <div class="btn-custom"> 
-                        <button type="button" class="btn-grey btn-inner cancel" ><span>Cancel</span></button>
+                    <div class="btn-custom">
+                        <button type="button" class="btn-grey btn-inner cancel"><span><a style="color:black" href="/close">Cancel</a></span></button>
                     </div>
                     <div class="btn-custom">
                         <button type="submit" class="btn-blue btn-inner formsubmit" ><span>Update</span></button>
@@ -245,7 +245,7 @@
 @endsection
 
 @section('scripts')
-    
+
     <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js')}}"></script>
     <script src="{{ asset('assets/js/common.js')}}"></script>
     <script src="{{ asset('assets/js/type/mealbundle.js')}}"></script>
