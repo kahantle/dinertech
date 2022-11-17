@@ -128,12 +128,7 @@ $(function () {
         }
     });
 
-    $(".cancel").on('click', function () {
-
-        if (getPlatform() == 'Android') {
-            Android.showToast("back");
-        } else if (getPlatform() == 'iOS') {
-            window.webkit.messageHandlers.jsMessageHandler.postMessage("back");
-        }
+    $(".cancel").on("click", function() {
+        Android.showToast("back");
     });
 });
