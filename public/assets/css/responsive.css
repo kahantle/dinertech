@@ -645,9 +645,9 @@
         width: 100%;
     }
     /** other pages **/
-    #wrapper {
+    /* #wrapper {
         padding-left: 100px !important;
-    }
+    } */
     #wrapper #sidebar-wrapper {
         width: 100px;
     }
