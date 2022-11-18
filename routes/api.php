@@ -138,6 +138,7 @@ Route::namespace ('Api')->group(function () {
         //-------------------------- Restaurant Web-url Route End---------------------------------------------- //
 
         Route::middleware(['auth:api', 'role-restaurant'])->group(function () {
+
             Route::post('/category', 'CategoryController@getCategoryList')->name('customer.category.list');
             Route::post('/category/item', 'CategoryController@getCategoryItemList')->name('customer.category.item.list');
             Route::post('/category/add', 'CategoryController@addCategory')->name('customer.category.add');
@@ -215,6 +216,7 @@ Route::namespace ('Api')->group(function () {
             });
 
             Route::prefix('account')->group(function () {
+                Route::post('subscriptions', 'AccountController@getSubscriptions');
                 Route::post('/setting/update', 'AccountController@updateSetting')->name('account.update.setting');
                 Route::post('/settings', 'AccountController@getSettings');
                 Route::post('/delete', 'AccountController@deleteAccount');
