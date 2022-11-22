@@ -33,16 +33,14 @@ class CardController extends Controller
 
     public function getCardsList()
     {
-        
+
         $uid = Auth::user()->uid;
         $restaurantId = session()->get('restaurantId');
-        // $data['cards'] = Card::where('uid',$uid)->where('restaurant_id',$restaurantId)->get(['card_id','card_holder_name','card_number','card_expire_date','card_cvv','card_type','status']);
         $data['cards'] = getUserCards($restaurantId,$uid);
         $data['orderDetails'] = array();
-        $data['cartMenus'] = getCartItem();
         $data['title'] = 'Payment Cards';
         return view('customer.card.index',$data);
-        
+
     }
 
     public function create()
@@ -75,15 +73,15 @@ class CardController extends Controller
             }
             elseif($request->card_type == 'Mastercard')
             {
-                $cardType = 'MASTER_CARD';   
+                $cardType = 'MASTER_CARD';
             }
-            elseif ($request->card_type == 'Discover') 
+            elseif ($request->card_type == 'Discover')
             {
-                $cardType = 'DISCOVER'; 
+                $cardType = 'DISCOVER';
             }
             elseif($request->card_type == 'AMEX')
             {
-                $cardType = 'AMERICAN_EXPRESS';   
+                $cardType = 'AMERICAN_EXPRESS';
             }
             else
             {

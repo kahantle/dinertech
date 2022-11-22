@@ -49,101 +49,58 @@ class CartController extends Controller
     public function addToCart(Request $request)
     {
         $uid = auth()->id();
-        $check_cart = Cart::where('uid',$uid)->first();
-        $menuItem = MenuItem::with('modifierList')->where('menu_id',$request->menuId)->first();
+        $cart = Cart::where('uid',$uid)->first();
+        $menuItem = MenuItem::where('menu_id',$request->menuId)->first();
         $finalTotal = 0;
-        if($check_cart == NULL){
+
+        if($cart == NULL){
             $cart_sub_total = 0;
             $cart = new Cart;
             $cart->restaurant_id = 1;
             $cart->uid = $uid;
             $cart->order_type = Config::get('constants.ORDER_TYPE.2');
             $cart->is_payment = Config::get('constants.ORDER_PAYMENT_TYPE.CARD_PAYMENT');
-
-            if ($cart->save()) {
-                $cartMenuItemData = new CartItem;
-                $cartMenuItemData->cart_id = $cart->cart_id;
-                $cartMenuItemData->category_id = $menuItem->category_id;
-                $cartMenuItemData->menu_id = $menuItem->menu_id;
-                $cartMenuItemData->menu_name = $menuItem->item_name;
-                $cartMenuItemData->menu_qty = 1;
-                $cartMenuItemData->menu_price = $menuItem->item_price;
-                $cartMenuItemData->menu_total = $menuItem->item_price;
-                $cart_sub_total = $menuItem->item_price;
-                $cartMenuItemData->modifier_total = $menuItem->item_price;
-                $cartMenuItemData->is_loyalty = 0;
-                if ($cartMenuItemData->save()) {
-                    return "Success";
-                }
-            }
-
+            $cart->save();
         }
 
-        // if ($request->ajax()) {
+        $cart_sub_total = $cart->sub_total;
+        $cartMenuItemData = new CartItem;
+        $cartMenuItemData->cart_id = $cart->cart_id;
+        $cartMenuItemData->category_id = $menuItem->category_id;
+        $cartMenuItemData->menu_id = $menuItem->menu_id;
+        $cartMenuItemData->menu_name = $menuItem->item_name;
+        $cartMenuItemData->menu_qty = 1;
+        $cartMenuItemData->menu_price = $menuItem->item_price;
+        $cartMenuItemData->menu_price = $menuItem->item_price;
+        $cartMenuItemData->item_img = $menuItem->getMenuImgAttribute();
+        $cart_sub_total = $menuItem->item_price;
+        $cartMenuItemData->modifier_total = $menuItem->item_price;
+        $cartMenuItemData->is_loyalty = 0;
+        if ($cartMenuItemData->save()) {
+            return "Success";
+        }
+    }
 
-        //     $cart = session()->get('cart', []);
-        //     $menuId = $request->post('menuId');
-        //     $menuItem = MenuItem::where('menu_id', $menuId)->first();
-        //     $modifierGroupIds = array();
-        //     $modifierItemsArray = array();
-        //     if (isset($request->modifierGroupId) && isset($request->modifierItems)) {
-        //         foreach ($request->modifierGroupId as $modifierGroupId) {
-        //             if (isset($request->modifierItems[$modifierGroupId])) {
-        //                 array_push($modifierGroupIds, $modifierGroupId);
-        //                 $modifierItemsArray = $request->modifierItems;
-        //             }
-        //         }
-        //         $cartItems = session()->get('cart');
-        //         $repeat = 0;
-        //         if (!empty($cartItems)) {
-        //             foreach ($cartItems as $key => $catValue) {
-        //                 if ($cartItems[$key][$menuId]['menu_id'] == $menuId) {
-        //                     $repeat = 1;
-        //                     break;
-        //                 }
-        //             }
-        //         }
-
-        //         $cart[][$menuId] = [
-        //             "menu_id" => $menuId,
-        //             "item_name" => $menuItem->item_name,
-        //             "quantity" => 1,
-        //             "item_price" => $menuItem->item_price,
-        //             "item_img" => $menuItem->getMenuImgAttribute(),
-        //             "modifier" => $modifierGroupIds,
-        //             "repeat" => $repeat,
-        //             "modifier_item" => $modifierItemsArray,
-        //         ];
-        //     } else {
-        //         $cart[][$menuId] = [
-        //             "menu_id" => $menuId,
-        //             "item_name" => $menuItem->item_name,
-        //             "quantity" => 1,
-        //             "item_price" => $menuItem->item_price,
-        //             "item_img" => $menuItem->getMenuImgAttribute(),
-        //             "modifier" => [],
-        //             "modifier_item" => [],
-        //         ];
-        //     }
-        //     session()->put('cart', $cart);
-        //     return "Success";
-        // }
+    public function quantityChange(Request $request)
+    {
+        $cart = Cart::where('uid', auth()->id())->first();
+        $cartMenuItem = $cart->cartMenuItems->where('menu_id', $request->menuId)->first();
+        $request->action == 'increament' ? $cartMenuItem->menu_qty = $cartMenuItem->menu_qty + 1 :  $cartMenuItem->menu_qty = $cartMenuItem->menu_qty - 1 ;
+        if ($cartMenuItem->save()) {
+            return response()->json(['success' => true, 'new_qty' => $cartMenuItem->menu_qty], 200);
+        } else {
+            return response()->json(['success' => false], 200);
+        }
     }
 
     public function removeItem(Request $request)
     {
-        // $removeKey,$menuId
-        if ($request->ajax()) {
-            $removeKey = $request->post('removeKey');
-            $menuId = $request->post('menuId');
-            $cartItems = session()->get('cart');
-
-            if (isset($cartItems[$removeKey])) {
-                unset($cartItems[$removeKey]);
-                session()->put('cart', $cartItems);
-            }
-            return response()->json(['success' => true], 200);
-            // return redirect()->back();
+        $cart = Cart::where('uid', auth()->id())->first();
+        $cartMenuItem = $cart->cartMenuItems->where('menu_id', $request->menuId)->first();
+        if ($cartMenuItem->delete()) {
+            return response()->json(['success' => true, ], 200);
+        } else {
+            return response()->json(['success' => false], 200);
         }
     }
 
@@ -256,41 +213,5 @@ class CartController extends Controller
 
         session()->put('cart', $cartItems);
         return redirect()->back();
-    }
-
-    public function quantityIncrement(Request $request)
-    {
-
-        if ($request->ajax()) {
-            $cartItems = session()->get('cart', []);
-            $menuId = $request->menuId;
-            $menuKey = $request->menuKey;
-            if (isset($cartItems[$menuKey][$menuId])) {
-                if ($cartItems[$menuKey][$menuId]['quantity'] == 10) {
-                    $cartItems[$menuKey][$menuId]['quantity'] = 10;
-                } else {
-                    $cartItems[$menuKey][$menuId]['quantity']++;
-                }
-            }
-            session()->put('cart', $cartItems);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public function quantityDecrement(Request $request)
-    {
-        $cartItems = session()->get('cart', []);
-        $menuId = $request->menuId;
-        $menuKey = $request->menuKey;
-        if (isset($cartItems[$menuKey][$menuId])) {
-            $cartItems[$menuKey][$menuId]['quantity']--;
-            if ($cartItems[$menuKey][$menuId]['quantity'] == 0) {
-                $cartItems[$menuKey][$menuId]['quantity'] = 1;
-            }
-        }
-        session()->put('cart', $cartItems);
-        return true;
     }
 }

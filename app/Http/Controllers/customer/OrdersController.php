@@ -35,7 +35,6 @@ class OrdersController extends Controller
             ->orWhere('order_progress_status', Config::get('constants.ORDER_STATUS.PREPARED'))
             ->orderBy('order_date', 'desc')
             ->get();
-        $data['cartMenus'] = getCartItem();
         $restaurantId = session()->get('restaurantId');
         $data['cards'] = getUserCards($restaurantId, $uid);
         $data['title'] = 'Orders';

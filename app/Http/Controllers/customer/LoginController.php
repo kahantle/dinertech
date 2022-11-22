@@ -43,7 +43,7 @@ class LoginController extends Controller
     public function attemptLogin(Request $request)
     {
         $username = $request->post('username');
-        $restaurantId = session()->get('restaurantId');
+        $restaurantId = 1;
         $user = User::where('role', Config::get('constants.ROLES.CUSTOMER'))
             ->whereHas('restaurant_user', function ($query) use ($restaurantId) {
                 $query->where('restaurant_id', $restaurantId);
@@ -70,7 +70,7 @@ class LoginController extends Controller
         //     $login_array = (['email_id' => $user->email_id, 'password' => $request->password]);
         // }
         $login_array = (['email_id' => $user->email_id, 'password' => $request->password]);
-        
+
         if (auth()->attempt($login_array)) {
             return "Success";
         } else {

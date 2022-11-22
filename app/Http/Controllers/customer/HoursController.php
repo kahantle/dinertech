@@ -20,7 +20,6 @@ class HoursController extends Controller
         $data['address'] = $restaurant;
 
         $data['cards'] = getUserCards($restaurantId, $uid);
-        $data['cartMenus'] = getCartItem();
         $data['title'] = 'Information';
         return view('customer.hours.index', $data);
     }

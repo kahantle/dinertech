@@ -6,9 +6,6 @@
                 <div class="card-inner-body">
                     <div class="d-flex align-items-center w-100 justify-content-between mb-4">
                         <h5 class="card-title m-0">My Order</h5>
-                        {{-- <a href="javascripts:;">
-                            <p class="card-text m-0">Edit</p>
-                        </a> --}}
                     </div>
 
                     <div class="d-flex align-items-center wd-dr-now">
@@ -66,193 +63,52 @@
                     </div>
                 </div>
                 @auth
-                    <div class="scroll-inner-blog mt-4">
-                        @php
-                            $cartTotal = 0;
-                            $finalMenuTotal = 0;
-                            $modifierItamTotal = [];
-                            $cartItemCount = 0;
-                        @endphp
-
-                        @forelse ($cartMenus['cartItems'] as $key => $cartItems)
-                            @foreach ($cartItems as $menuId => $item)
-                                @php
-                                    if ($menuId == $item['menu_id']) {
-                                        $cartItemCount++;
-                                    } else {
-                                        $cartItemCount = 0;
-                                    }
-                                @endphp
-                                @if (!empty($item['item_img']))
-                                    <div class="d-flex wp-border-size-blog @if ($key != 0) mt-2 @endif">
-                                        <div class="wb-inner-system">
-                                            <img src="{{ $item['item_img'] }}" class="img-fluid">
+                @php
+                    $cartTotal = 0;
+                @endphp
+                <div class="scroll-inner-blog mt-4">
+                    @php
+                        $cart = getCart($restaurantId = 1)
+                    @endphp
+                    @if (!empty($cart->cartMenuItems))
+                        @forelse ($cart->cartMenuItems as $key => $item)
+                            @php
+                                $cartTotal += $item['menu_price']*$item['menu_qty'];
+                            @endphp
+                            <div class="d-flex rounded wp-border-size-blog @if ($key != 0) mt-2 @endif">
+                                <div class="wb-inner-system">
+                                    <img src="{{ $item['item_img'] }}" class="img-fluid">
+                                </div>
+                                <div class="wb-inner-system-first">
+                                    <div class="d-flex wd-menu-photo justify-content-between w-100">
+                                        <div class="no-photos-blog">
+                                            <p class="m-0"> {{ $item['menu_name'] }}</p>
                                         </div>
-                                        <div class="wb-inner-system-first">
-                                            <div class="d-flex wd-menu-photo justify-content-between w-100">
-                                                <div class="no-photos-blog">
-                                                    <p class="m-0"> {{ $item['item_name'] }}</p>
-                                                </div>
-                                                @php
-                                                    if (isset($cartMenus['modifierGroups'][$key])) {
-                                                        foreach (call_user_func_array('array_merge', $cartMenus['modifierGroups'][$key]) as $modifireItemKey => $modifierItems) {
-                                                            foreach ($modifierItems['modifier_item'] as $modifierItem) {
-                                                                $modifierItamTotal[$key][] = $modifierItem['modifier_group_item_price'];
-                                                            }
-                                                        }
-                                                        $modifierList = [$cartMenus['modifierGroups'][$key][$item['menu_id']]];
-                                                    }
-
-                                                    if (isset($modifierItamTotal[$key])) {
-                                                        $finalMenuTotal = array_sum($modifierItamTotal[$key]) + $item['item_price'];
-                                                        $menuTotal = $finalMenuTotal * $item['quantity'];
-                                                        $cartTotal += $menuTotal;
-                                                        $menuItem[] = ['menu_id' => $item['menu_id'], 'menu_name' => $item['item_name'], 'menu_total' => $menuTotal, 'menu_qty' => $item['quantity'], 'modifier_total' => array_sum($modifierItamTotal[$key]), 'modifier_list' => call_user_func_array('array_merge', $modifierList)];
-                                                    } else {
-                                                        $menuTotal = $item['item_price'] * $item['quantity'];
-                                                        $cartTotal += $menuTotal;
-                                                        $menuItem[] = ['menu_id' => $item['menu_id'], 'menu_name' => $item['item_name'], 'menu_total' => $menuTotal, 'menu_qty' => $item['quantity'], 'modifier_total' => 0];
-                                                    }
-                                                @endphp
-                                                <div class="d-flex">
-                                                    <p class="m-0">${{ number_format($menuTotal, 2) }}</p>
-                                                    <a href="javascript:void(0)" class="cart-remove"
-                                                        data-cart-item="{{ $key }}"
-                                                        data-menu-id="{{ $item['menu_id'] }}"><span aria-hidden="true"
-                                                            class="ml-2">×</span>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                            @if (!empty($item['modifier']))
-                                                @if (isset($cartMenus['modifierGroups'][$key]))
-                                                    @foreach (call_user_func_array('array_merge', $cartMenus['modifierGroups'][$key]) as $modifireItemKey => $modifierItems)
-                                                        @foreach ($modifierItems['modifier_item'] as $modifierItem)
-                                                            <p class="m-0 modifire-wd">
-                                                                {{ $modifierItem['modifier_group_item_name'] }}</p>
-                                                        @endforeach
-                                                    @endforeach
-                                                @endif
-                                                <div class="quantity">
-                                                    <span class="quantity__minus cart_quantity_minus"
-                                                        data-menu-id="{{ $item['menu_id'] }}"
-                                                        data-cart-item="{{ $key }}">-</span>
-                                                    <input name="quantity[]" type="text" class="quantity__input"
-                                                        value="{{ $item['quantity'] }}" readonly>
-                                                    <span class="quantity__plus cart_quantity_plus"
-                                                        data-menu-id="{{ $item['menu_id'] }}"
-                                                        data-cart-item="{{ $key }}">+</span>
-                                                </div>
-                                            @else
-                                                <div class="quantity">
-                                                    <span class="without-modifier-minus quantity__minus"
-                                                        data-menu-id="{{ $item['menu_id'] }}"
-                                                        data-cart-item="{{ $key }}">-</span>
-                                                    <input name="quantity[]" type="text"
-                                                        class="quantity__input quantity-{{ $item['menu_id'] }}"
-                                                        value="{{ $item['quantity'] }}">
-                                                    <span class="quantity__plus without-modifier-plus"
-                                                        data-menu-id="{{ $item['menu_id'] }}"
-                                                        data-cart-item="{{ $key }}">+</span>
-                                                </div>
-                                            @endif
+                                        <div class="d-flex">
+                                            <p class="m-0">${{ number_format($item['menu_price'], 2) }}</p>
+                                            <a href="#" class="cart-remove"
+                                                data-menu-id="{{ $item['menu_id'] }}"><span aria-hidden="true"
+                                                class="ml-2">×</span>
+                                            </a>
                                         </div>
                                     </div>
-                                    <input type="hidden" name="menuItem"
-                                        value="{{ base64_encode(json_encode($menuItem)) }}">
-                                @else
-                                    <div class="d-flex wp-border-size-blog @if ($key != 0) mt-2 @endif">
-                                        <div class="wb-inner-system"></div>
-                                        <div class="wb-inner-system-first">
-                                            <div class="d-flex wd-menu-photo justify-content-between w-100">
-                                                <div class="with-photos">
-                                                    <p class="m-0"> {{ $item['item_name'] }}</p>
-                                                </div>
-                                                @php
-                                                    if (isset($cartMenus['modifierGroups'][$key])) {
-                                                        foreach (call_user_func_array('array_merge', $cartMenus['modifierGroups'][$key]) as $modifireItemKey => $modifierItems) {
-                                                            foreach ($modifierItems['modifier_item'] as $modifierItem) {
-                                                                $modifierItamTotal[$key][] = $modifierItem['modifier_group_item_price'];
-                                                            }
-                                                        }
-                                                    }
-
-                                                    if (isset($modifierItamTotal[$key])) {
-                                                        $finalMenuTotal = array_sum($modifierItamTotal[$key]) + $item['item_price'];
-                                                        $menuTotal = $finalMenuTotal * $item['quantity'];
-                                                        $cartTotal += $menuTotal;
-                                                    } else {
-                                                        $menuTotal = $item['item_price'] * $item['quantity'];
-                                                        $cartTotal += $menuTotal;
-                                                    }
-                                                @endphp
-                                                <div class="d-flex">
-                                                    <p class="m-0">${{ number_format($menuTotal, 2) }}</p>
-                                                    {{-- <span aria-hidden="true" class="ml-2">×</span> --}}
-                                                    <a href="javascript:void(0)" class="cart-remove ml-2"
-                                                        data-cart-item="{{ $key }}"
-                                                        data-menu-id="{{ $item['menu_id'] }}"><span aria-hidden="true"
-                                                            class="ml-2">×</span>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                            @if (!empty($item['modifier']))
-                                                @if (isset($cartMenus['modifierGroups'][$key]))
-                                                    @php
-                                                        $modifierList = [$cartMenus['modifierGroups'][$key][$item['menu_id']]];
-                                                    @endphp
-                                                    @foreach (call_user_func_array('array_merge', $cartMenus['modifierGroups'][$key]) as $modifireItemKey => $modifierItems)
-                                                        @foreach ($modifierItems['modifier_item'] as $modifierItem)
-                                                            <p class="m-0 modifire-wd">
-                                                                {{ $modifierItem['modifier_group_item_name'] }}</p>
-                                                        @endforeach
-                                                    @endforeach
-                                                @endif
-                                                <div class="quantity">
-                                                    <span class="quantity__minus cart_quantity_minus"
-                                                        data-menu-id="{{ $item['menu_id'] }}"
-                                                        data-cart-item="{{ $key }}">-</span>
-                                                    <input name="quantity[]" type="text" class="quantity__input"
-                                                        value="{{ $item['quantity'] }}" readonly>
-                                                    <span class="quantity__plus cart_quantity_plus"
-                                                        data-menu-id="{{ $item['menu_id'] }}"
-                                                        data-cart-item="{{ $key }}">+</span>
-                                                </div>
-                                            @else
-                                                <div class="quantity">
-                                                    <span class="without-modifier-minus quantity__minus"
-                                                        data-menu-id="{{ $item['menu_id'] }}"
-                                                        data-cart-item="{{ $key }}">-</span>
-                                                    <input name="quantity[]" type="text"
-                                                        class="quantity__input quantity-{{ $item['menu_id'] }}"
-                                                        value="{{ $item['quantity'] }}" readonly>
-                                                    <span class="quantity__plus without-modifier-plus"
-                                                        data-menu-id="{{ $item['menu_id'] }}"
-                                                        data-cart-item="{{ $key }}">+</span>
-                                                </div>
-                                            @endif
-                                        </div>
+                                    <div class="product-quantity product-quantity-{{ $item->menu_id }} d-inline-flex mt-2">
+                                        <span class="product-quantity-minus without-modifier-minus" data-menu-id="{{ $item->menu_id }}"></span>
+                                        <input type="number" value="{{ $cart->cartMenuItems->where('menu_id',$item->menu_id)->first()->menu_qty }}" class="quantity-{{ $item->menu_id }}" readonly />
+                                        <span class="product-quantity-plus without-modifier-plus" data-menu-id="{{ $item->menu_id }}"></span>
                                     </div>
-                                @endif
-                            @endforeach
+                                </div>
+                            </div>
                         @empty
                             <div class="iconic-blog text-center">
                                 <i class="fa fa-cart-plus" aria-hidden="true"></i>
                                 <p>Cart empty</p>
                             </div>
                         @endforelse
+                    @endif
                     </div>
                     <div class="card-inner-body mt-5">
                         <h5 class="md-payment-blog">Payment Methods</h5>
-
-                        {{-- <div class="d-flex radio w-100 align-items-center">
-                            <input type="radio" class="paymentType" name="paymentType" value="card" checked>
-                            <label class="radio-label">Card</label>
-                        </div>
-
-                        <div class="d-flex radio w-100 align-items-center">
-                            <input type="radio" class="paymentType" name="paymentType" value="cash">
-                            <label class="radio-label">Cash</label>
-                        </div> --}}
 
                         <div class="form-check w-100 align-items-center d-flex custom-radio">
                             <input class="form-check-input" type="radio" name="paymentType" value="card" id="card_payment"
@@ -325,9 +181,8 @@
                                 @endif
                             </div>
                         </div>
-
                         @php
-                            $finalTotal = $cartTotal + 0;
+                            $finalTotal = $cartTotal;
                         @endphp
                         <div id="checkout">
                             <div class="d-flex align-items-center justify-content-between w-100 wd-wrapper-total-first">
@@ -365,6 +220,7 @@
                             <button class="btn btn-submit-inner" type="submit">Checkout</button>
                         </div>
                     </div>
+
                 @endauth
             </form>
         </div>

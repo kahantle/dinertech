@@ -269,8 +269,7 @@ Route::prefix('customer')->group(function () {
         Route::post('/opencart-alert-modal', 'customer\CartController@cartAlert');
         Route::post('/add-to-repeatLast', 'customer\CartController@addToRepeatLast');
         Route::post('/quantity-decrease', 'customer\CartController@quantityDecrease');
-        Route::post('/quantity-increment', 'customer\CartController@quantityIncrement');
-        Route::post('/quantity-decrement', 'customer\CartController@quantityDecrement');
+        Route::post('/quantity-change', 'customer\CartController@quantityChange');
 
         /* Promotion */
         Route::get('/promotion', 'customer\PromotionController@show')->name('customer.show.promotions');

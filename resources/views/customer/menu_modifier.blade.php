@@ -18,10 +18,12 @@
                         @if ($modifierlist->allow_multiple == 0)
                             @foreach ($modifierlist->modifier_item as $modifierItem)
                                 <div class="wd-check-input">
-                                    <input type="radio" name="modifierItems[{{ $modifierlist->modifier_group_id }}][]"
-                                        class="radioModifierItem" value="{{ $modifierItem->modifier_item_id }}"
-                                        data-modifier-item="{{ $modifierItem->modifier_group_item_name }}" />
-                                    <label>{{ $modifierItem->modifier_group_item_name }}</label>
+                                    <label>
+                                        <input type="radio" name="modifierItems[{{ $modifierlist->modifier_group_id }}][]"
+                                            class="radioModifierItem" value="{{ $modifierItem->modifier_item_id }}"
+                                            data-modifier-item="{{ $modifierItem->modifier_group_item_name }}" />
+                                        {{ $modifierItem->modifier_group_item_name }}
+                                    </label>
                                     <span>$ {{ $modifierItem->modifier_group_item_price }}</span>
                                 </div>
                             @endforeach

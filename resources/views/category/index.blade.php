@@ -53,7 +53,7 @@
               </div>
             </div>
           </div>
-        </div>    
+        </div>
         @endforeach
         <div class="w-100 pagination-links"> {{ $categories->links() }}</div>
     @else
@@ -64,5 +64,5 @@
 </section>
 @endsection
 @section('scripts')
-<script src="{{asset('/assets/js/category.js')}}"></script>    
+<script src="{{asset('/assets/js/category.js')}}"></script>
 @endsection

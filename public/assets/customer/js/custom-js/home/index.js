@@ -53,7 +53,7 @@ $(function() {
                 categoryId: categoryId
             },
             dataType: "json",
-            success: function(response) {
+            success: function (response) {
                 $("#style-4").html(response.view);
 
                 // Configure/customize these variables.
@@ -526,9 +526,8 @@ $(function() {
                     searchItem: searchItem
                 },
                 dataType: "json",
-                success: function(response) {
+                success: function (response) {
                     if (response) {
-                        console.log("if");
                         $("#menuItems").addClass('d-none');
                         // $("#searchItems").addClass('d-block');
                         $("#searchItems").html(response.view);

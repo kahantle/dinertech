@@ -22,7 +22,7 @@ class CartItem extends Model
     }
 
     public function getImagePathAttribute(){
-        $menu = $this->image($this->menu_id);
+        return $menu = $this->image($this->menu_id);
         if($menu){
             if(!$menu->item_img){
                 return '';
@@ -31,7 +31,7 @@ class CartItem extends Model
         }
     }
 
-    
+
     /**
      * Get the menu image associated with the CartItem
      *
