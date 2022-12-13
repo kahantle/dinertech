@@ -5,7 +5,10 @@ namespace App\Http\Controllers\customer;
 use App\Http\Controllers\Controller;
 use App\Models\MenuItem;
 use App\Models\CartItem;
+use App\Models\CartMenuGroup;
 use App\Models\Cart;
+use App\Models\ModifierGroupItem;
+use App\Models\CartMenuGroupItem;
 use App\Models\ModifierGroup;
 use Illuminate\Http\Request;
 use Config;
@@ -48,6 +51,7 @@ class CartController extends Controller
 
     public function addToCart(Request $request)
     {
+
         $uid = auth()->id();
         $cart = Cart::where('uid',$uid)->first();
         $menuItem = MenuItem::where('menu_id',$request->menuId)->first();
@@ -76,15 +80,42 @@ class CartController extends Controller
         $cart_sub_total = $menuItem->item_price;
         $cartMenuItemData->modifier_total = $menuItem->item_price;
         $cartMenuItemData->is_loyalty = 0;
-        if ($cartMenuItemData->save()) {
-            return "Success";
+        $cartMenuItemData->save();
+        if(isset($request->modifierItems)){
+            $modifierItems = $request->modifierItems;
+            foreach($modifierItems as $modifier_group_id => $modifier_group_item_ids){
+                $modifier = ModifierGroup::select('modifier_group_id','modifier_group_name')->where('modifier_group_id', $modifier_group_id)->first();
+                $cartModifierGroup = new CartMenuGroup;
+                $cartModifierGroup->cart_id = $cart->cart_id;
+                $cartModifierGroup->cart_menu_item_id = $cartMenuItemData->cart_menu_item_id;
+                $cartModifierGroup->menu_id = $request->menuId;
+                $cartModifierGroup->modifier_group_id = $modifier->modifier_group_id;
+                $cartModifierGroup->modifier_group_name = $modifier->modifier_group_name;
+                $cartModifierGroup->save();
+
+                foreach ($modifier_group_item_ids as $key => $item_id) {
+                   $modifierGroupItem = ModifierGroupItem::where('modifier_item_id',$item_id)->first();
+                    $cartModifierItem = new CartMenuGroupItem;
+                    $cartModifierItem->cart_id = $cart->cart_id;
+                    $cartModifierItem->cart_menu_item_id = $cartMenuItemData->cart_menu_item_id;
+                    $cartModifierItem->menu_id = $request->menuId;
+                    $cartModifierItem->cart_modifier_group_id = $cartModifierGroup->cart_modifier_group_id;
+                    $cartModifierItem->modifier_item_id = $modifierGroupItem->modifier_item_id;
+                    $cartModifierItem->modifier_group_id = $modifier->modifier_group_id;
+                    $cartModifierItem->modifier_group_item_name = $modifierGroupItem->modifier_group_item_name;
+                    $cartModifierItem->modifier_group_item_price = $modifierGroupItem->modifier_group_item_price;
+                    $cartModifierItem->save();
+                }
+
+            }
         }
+        return response()->json(['status' => true,'menu_id' => $cartMenuItemData->menu_id], 200);
     }
 
     public function quantityChange(Request $request)
     {
         $cart = Cart::where('uid', auth()->id())->first();
-        $cartMenuItem = $cart->cartMenuItems->where('menu_id', $request->menuId)->first();
+        $cartMenuItem = $cart->cartMenuItems->where('cart_menu_item_id', $request->cartMenuItemId)->first();
         $request->action == 'increament' ? $cartMenuItem->menu_qty = $cartMenuItem->menu_qty + 1 :  $cartMenuItem->menu_qty = $cartMenuItem->menu_qty - 1 ;
         if ($cartMenuItem->save()) {
             return response()->json(['success' => true, 'new_qty' => $cartMenuItem->menu_qty], 200);
@@ -96,39 +127,43 @@ class CartController extends Controller
     public function removeItem(Request $request)
     {
         $cart = Cart::where('uid', auth()->id())->first();
-        $cartMenuItem = $cart->cartMenuItems->where('menu_id', $request->menuId)->first();
-        if ($cartMenuItem->delete()) {
-            return response()->json(['success' => true, ], 200);
+        $cartMenuItem = $cart->cartMenuItems->where('cart_menu_item_id', $request->cartMenuItemId)->first();
+        $menuId = $cartMenuItem->menu_id;
+
+        $modifier_items = $cart->cartMenuModifierItems->where('cart_id',$cart->cart_id)->where('cart_menu_item_id', $request->cartMenuItemId);
+        $modifier_groups = CartMenuGroup::where('cart_id',$cart->cart_id)->where('cart_menu_item_id', $request->cartMenuItemId)->get();
+
+        if (count($modifier_groups) > 0) {
+            foreach ($modifier_items as $key => $item) {
+                $item->delete();
+            }
+
+            foreach ($modifier_groups as $key => $group) {
+                $group->delete();
+            }
+        }
+
+        $delete_item = $cartMenuItem->delete();
+
+        if (count($cart->cartMenuItems) === 0) {
+            return "test";
+            $cart->delete();
+        }
+
+        if ($delete_item) {
+            return response()->json(['success' => true, 'menu_id' => $menuId], 200);
         } else {
             return response()->json(['success' => false], 200);
         }
     }
 
-    public function cartAlert(Request $request)
+    public function modalForPlusWithModifiers(Request $request)
     {
-        if ($request->ajax()) {
-            $menuId = $request->menuId;
-            $cartItems = session()->get('cart');
-            $modifierGroupIds = array();
-            $modifierGroupItems = array();
-            $cartArray = array_column($cartItems, $menuId);
-            $data['cartKey'] = key(array_slice($cartItems, -1, 1, true));
-
-            array_push($modifierGroupIds, end($cartArray)['modifier']);
-            foreach (end($cartArray)['modifier_item'] as $modifierGroup) {
-                foreach ($modifierGroup as $key => $modifieritem) {
-                    array_push($modifierGroupItems, $modifieritem);
-                }
-            }
-
-            $modifierGroupIds = call_user_func_array('array_merge', $modifierGroupIds);
-            $data['menuItem'] = MenuItem::where('menu_id', $menuId)->first();
-            $data['modifierGroups'] = ModifierGroup::with(['modifier_item' => function ($query) use ($modifierGroupItems, $modifierGroupIds) {
-                $query->whereIn('modifier_item_id', $modifierGroupItems)->whereIn('modifier_group_id', $modifierGroupIds)->get();
-            }])->whereIn('modifier_group_id', $modifierGroupIds)->get();
-            $data['cartKey'] = $request->cartKey;
-            return response()->json(['view' => \View('customer.cart.open_alert', $data)->render()], 200);
-        }
+        $cart = Cart::where('uid', auth()->id())->first();
+        $cartMenuItem = $cart->cartMenuItems->where('cart_menu_item_id', $request->cartMenuItemId)->first();
+        $data['cart_menu_item_id'] = $request->cartMenuItemId;
+        $data['menuItem'] = MenuItem::where('menu_id', $cartMenuItem->menu_id)->first();
+        return response()->json(['view' => \View('customer.cart.open_alert', $data)->render()], 200);
     }
 
     public function addToRepeatLast(Request $request)
@@ -142,21 +177,6 @@ class CartController extends Controller
                 $cartItems[$cartKey][$menuId]['quantity']++;
             }
 
-            session()->put('cart', $cartItems);
-            return true;
-        }
-    }
-
-    public function quantityDecrease(Request $request)
-    {
-        if ($request->ajax()) {
-            $cartItems = session()->get('cart', []);
-            $menuId = $request->menuId;
-            foreach ($cartItems as $key => $items) {
-                if (isset($cartItems[$key][$menuId])) {
-                    $cartItems[$key][$menuId]['quantity']--;
-                }
-            }
             session()->put('cart', $cartItems);
             return true;
         }

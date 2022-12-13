@@ -1,5 +1,5 @@
 <?php
- 
+
 namespace App\Http\Controllers\Api\Customer;
 
 use App\Http\Controllers\Controller;
@@ -12,10 +12,10 @@ use Config;
 
 class PromotionController extends Controller
 {
-    
+
     public function getRecords(Request $request)
-    {   
-        try { 
+    {
+        try {
             $request_data = $request->json()->all();
                 $validator = Validator::make($request_data, [ 'restaurant_id' => 'required'
             ]);
@@ -23,7 +23,7 @@ class PromotionController extends Controller
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
             }
             if(auth('api')->check()){
-                
+
                 // $uid = auth('api')->user()->uid;
                 // $orders = Order::where('uid',$uid)->where('restaurant_id',$request->post('restaurant_id'))->get();
                 $promotionList = Promotion::where('restaurant_id',$request->post('restaurant_id'))->where('client_type',Config::get('constants.PROMOTION_STATUS.AnyClient'));
@@ -70,8 +70,8 @@ class PromotionController extends Controller
     {
         try {
             $request_data = $request->json()->all();
-            $validator = Validator::make($request_data, 
-                [ 
+            $validator = Validator::make($request_data,
+                [
                     'restaurant_id' => 'required',
                     'promotion_id'  => 'required'
                 ]
@@ -98,7 +98,7 @@ class PromotionController extends Controller
             if ($request->debug_mode == 'ON') {
                 $errors['debug'] = $th->getMessage();
             }
-            return response()->json($errors, 500);            
+            return response()->json($errors, 500);
         }
     }
 }

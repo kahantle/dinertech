@@ -30,9 +30,9 @@ class StripeController extends Controller
     public function createCharge(Request $request)
     {
         try {
-            
+
             $request_data = $request->json()->all();
-            
+
             $validator = Validator::make($request_data, [
                "amount" => "required",
                "currency" => "required",
@@ -41,18 +41,18 @@ class StripeController extends Controller
             if ($validator->fails()) {
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
             }
-            
+
             $stripe = new \Stripe\StripeClient(
                 env('STRIPE_SECRET')
             );
-            
+
             $charge = $stripe->charges->create([
                         'amount' => $request->post('amount'),
                         'currency' => $request->post('currency'),
                         'source' => $request->post('source'),
                         'description' => ($request->post('description')) ? $request->post('description') : null,
                         ]);
-            
+
             // Check that it was paid:
 	        if ($charge->paid == true) {
                 return response()->json(['message' => 'Payment has been charged!!','stripe_payment_id' => $charge->created,'success' => true], 200);

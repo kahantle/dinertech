@@ -13,16 +13,17 @@
                     <div class="p-0 rateYo" data-rating="5"></div>
                     <p class="more wd-dr-lor">{{ $item->item_details }}</p>
                     <div class="d-flex justify-content-end w-100 align-items-center">
-                        <div class="product-quantity product-quantity-{{ $item->menu_id }} {{ in_array($item->menu_id, $cartItemIds) ? 'd-inline-flex' : 'd-none' }} ">
-                            <span class="product-quantity-minus without-modifier-minus" data-menu-id="{{ $item->menu_id }}"></span>
-                            <input type="number" value="{{ in_array($item->menu_id, $cartItemIds) ? $cart->cartMenuItems->where('menu_id',$item->menu_id)->first()->menu_qty : 1 }}" class="quantity-{{ $item->menu_id }}" readonly />
-                            <span class="product-quantity-plus without-modifier-plus" data-menu-id="{{ $item->menu_id }}"></span>
+                        <div class="product-quantity product-quantity-{{ $item->menu_id }} {{ in_array($item->menu_id, $cartMenuItemIds) ? 'd-inline-flex' : 'd-none' }} ">
+                            <span class="product-quantity-minus" data-cart-menu-item-id="{{ in_array($item->menu_id, $cartMenuItemIds) ? array_keys($cartMenuItemIds, $item->menu_id)[0] : ""  }}"></span>
+                            <input type="number" value="{{ in_array($item->menu_id, $cartMenuItemIds) ? $cart->cartMenuItems->where('menu_id',$item->menu_id)->first()->menu_qty : 1 }}" class="quantity-{{ in_array($item->menu_id, $cartMenuItemIds) ? array_keys($cartMenuItemIds, $item->menu_id)[0] : "" }}" readonly />
+                            <span class="product-quantity-plus {{ $item->modifierList->count() > 0 ? 'have-modifiers' : '' }}" data-menu-id="{{$item->menu_id}}" data-cart-menu-item-id="{{ in_array($item->menu_id, $cartMenuItemIds) ? array_keys($cartMenuItemIds, $item->menu_id)[0] : ""    }}"></span>
                         </div>
                         <button type="button"
-                            class="btn btn-dark add-to-order add-order-{{ $item->menu_id }} {{ $item->modifierList->count() > 0 ? 'have-modifiers' : '' }} {{ in_array($item->menu_id, $cartItemIds) ? 'd-none' : '' }}"
-                            data-menu-id="{{ $item->menu_id }}">
+                            class="btn btn-dark add-to-order add-order-{{ $item->menu_id }} {{ $item->modifierList->count() > 0 ? 'have-modifiers' : '' }} {{ in_array($item->menu_id, $cartMenuItemIds) ? 'd-none' : '' }}"
+                            data-menu-id="{{ $item->menu_id  }}">
                             Add To Order
                         </button>
+                        <div class="repeat-last-add-modal-{{ in_array($item->menu_id, $cartMenuItemIds) ? array_keys($cartMenuItemIds, $item->menu_id)[0] : "" }}"></div>
                     </div>
                     <div class="modifiers-{{ $item->menu_id }}"></div>
                 </div>

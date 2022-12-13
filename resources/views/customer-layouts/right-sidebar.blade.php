@@ -65,6 +65,7 @@
                 @auth
                 @php
                     $cartTotal = 0;
+                    $modifierTotal = 0;
                 @endphp
                 <div class="scroll-inner-blog mt-4">
                     @php
@@ -82,20 +83,35 @@
                                 <div class="wb-inner-system-first">
                                     <div class="d-flex wd-menu-photo justify-content-between w-100">
                                         <div class="no-photos-blog">
-                                            <p class="m-0"> {{ $item['menu_name'] }}</p>
+                                            <p class="m-0"> {{ $item['menu_name'] }}  ( ${{ $item['menu_price']}} × {{$item['menu_qty'] }} ) </p>
                                         </div>
                                         <div class="d-flex">
-                                            <p class="m-0">${{ number_format($item['menu_price'], 2) }}</p>
+                                            <p class="m-0">${{ number_format($item['menu_price']*$item['menu_qty'], 2) }}</p>
                                             <a href="#" class="cart-remove"
-                                                data-menu-id="{{ $item['menu_id'] }}"><span aria-hidden="true"
-                                                class="ml-2">×</span>
+                                                data-cart-menu-item-id="{{ $item['cart_menu_item_id'] }}"><span aria-hidden="true"
+                                                class="ml-2">&#9940</span>
                                             </a>
                                         </div>
                                     </div>
-                                    <div class="product-quantity product-quantity-{{ $item->menu_id }} d-inline-flex mt-2">
-                                        <span class="product-quantity-minus without-modifier-minus" data-menu-id="{{ $item->menu_id }}"></span>
-                                        <input type="number" value="{{ $cart->cartMenuItems->where('menu_id',$item->menu_id)->first()->menu_qty }}" class="quantity-{{ $item->menu_id }}" readonly />
-                                        <span class="product-quantity-plus without-modifier-plus" data-menu-id="{{ $item->menu_id }}"></span>
+                                        <div class="product-quantity product-quantity-{{ $item->menu_id }} d-inline-flex mt-2">
+                                        <span class="product-quantity-minus" data-cart-menu-item-id="{{ $item->cart_menu_item_id }}"></span>
+                                        <input type="number" value="{{ $cart->cartMenuItems->where('cart_menu_item_id',$item->cart_menu_item_id)->first()->menu_qty }}" class="quantity-{{ $item->cart_menu_item_id }}" readonly />
+                                        <span class="product-quantity-plus" data-cart-menu-item-id="{{ $item->cart_menu_item_id }}"></span>
+                                    </div>
+                                    <div class="my-2">
+                                        @foreach ($item->CartMenuGroups as $modifier_group)
+                                            <div>
+                                                <span class="font-weight-bold text-primary">{{ $modifier_group->modifier_group_name }} : </span>
+
+                                                @foreach ($modifier_group->CartMenuGroupItems as $modifier_item)
+                                                    <span class="font-weight-bold">{{ $modifier_item->modifier_group_item_name."( $".$modifier_item->modifier_group_item_price.")" }}</span>
+                                                    @php
+                                                        $modifierTotal += $modifier_item->modifier_group_item_price;
+                                                    @endphp
+                                                @endforeach
+
+                                            </div>
+                                        @endforeach
                                     </div>
                                 </div>
                             </div>
@@ -207,8 +223,8 @@
                             </div>
                             <div class="d-flex align-items-center justify-content-between w-100 wd-wrapper-total">
                                 <span>Total</span>
-                                <span>${{ number_format($finalTotal, '2') }}</span>
-                                <input type="hidden" name="grand_total" value="{{ $finalTotal }}">
+                                <span>${{ number_format($finalTotal + $modifierTotal, '2') }}</span>
+                                <input type="hidden" name="grand_total" value="{{ $finalTotal + $modifierTotal }}">
                             </div>
                         </div>
                         <input type="hidden" name="order_status" id="order_status" value="0">

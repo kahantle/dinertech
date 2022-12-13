@@ -13,31 +13,20 @@
                 </div>
                 <div class="modal-body">
                     @foreach ($item->modifierList as $modifierlist)
-                        <input type="hidden" name="modifierGroupId[]" value="{{ $modifierlist->modifier_group_id }}">
+                        <input type="hidden" name="modifierGroupIds[]" value="{{ $modifierlist->modifier_group_id }}">
                         <h6>{{ $modifierlist->modifier_group_name }}</h6>
-                        @if ($modifierlist->allow_multiple == 0)
-                            @foreach ($modifierlist->modifier_item as $modifierItem)
-                                <div class="wd-check-input">
-                                    <label>
-                                        <input type="radio" name="modifierItems[{{ $modifierlist->modifier_group_id }}][]"
-                                            class="radioModifierItem" value="{{ $modifierItem->modifier_item_id }}"
-                                            data-modifier-item="{{ $modifierItem->modifier_group_item_name }}" />
-                                        {{ $modifierItem->modifier_group_item_name }}
-                                    </label>
-                                    <span>$ {{ $modifierItem->modifier_group_item_price }}</span>
-                                </div>
-                            @endforeach
-                        @else
-                            @foreach ($modifierlist->modifier_item as $modifierItem)
-                                <div class="wd-check-input">
-                                    <input type="checkbox"
-                                        name="modifierItems[{{ $modifierlist->modifier_group_id }}][]"
-                                        class="modifierItem" value="{{ $modifierItem->modifier_item_id }}"
-                                        data-modifier-item="{{ $modifierItem->modifier_group_item_name }}" /><label>{{ $modifierItem->modifier_group_item_name }}</label>
-                                    <span>$ {{ $modifierItem->modifier_group_item_price }}</span>
-                                </div>
-                            @endforeach
-                        @endif
+                        @foreach ($modifierlist->modifier_item as $modifierItem)
+                            <div class="wd-check-input">
+                                <label>
+                                    <input type="{{ $modifierlist->allow_multiple == 0 ? 'radio' : 'checkbox' }}"
+                                    name="modifierItems[{{ $modifierlist->modifier_group_id }}][]"
+                                    class="{{ $modifierlist->allow_multiple == 0 ? 'radioModifierItem' : 'modifierItem' }}" value="{{ $modifierItem->modifier_item_id }}"
+                                    data-modifier-item="{{ $modifierItem->modifier_group_item_name }}" />
+                                    {{ $modifierItem->modifier_group_item_name }}
+                                </label>
+                                <span>$ {{ $modifierItem->modifier_group_item_price }}</span>
+                            </div>
+                        @endforeach
                     @endforeach
                 </div>
                 <div class="modal-footer">

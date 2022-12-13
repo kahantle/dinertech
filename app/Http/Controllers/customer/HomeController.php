@@ -8,6 +8,7 @@ use App\Models\MenuItem;
 use App\Models\Order;
 use App\Models\Promotion;
 use App\Models\User;
+use App\Models\Cart;
 use Auth;
 use Config;
 use Illuminate\Http\Request;
@@ -15,11 +16,13 @@ use Illuminate\Support\Facades\Http;
 
 class HomeController extends Controller
 {
+
     public function index()
     {
         $restaurantId = 1;
         if (Auth::check()) {
             $uid = Auth::user()->uid;
+            $cart = Cart::where(['uid' => $uid, 'restaurant_id' => $restaurantId])->first();
             $data['cards'] = getUserCards($restaurantId, $uid);
             $data['cart'] = $cart  = getCart();
             $data['cart'] = $cart = getCart($restaurantId);
@@ -38,7 +41,7 @@ class HomeController extends Controller
         $restaurantId = 1;
         $data['cart'] = $cart = getCart($restaurantId);
         $data['cartMenuItems'] = getCartQty();
-        $data['cartItemIds'] = !empty($cart) ? array_column($cart->cartMenuItems->toArray(),'menu_id') : [];
+        $data['cartMenuItemIds'] = !empty($cart) ? array_column($cart->cartMenuItems->toArray(),'menu_id','cart_menu_item_id') : [];
         $data['category'] = Category::where('restaurant_id', $restaurantId)->where('category_id', $categoryId)->first();
         $data['menuItems'] = MenuItem::with('modifierList')->where('restaurant_id', $restaurantId)->where('category_id', $categoryId)->get();
         return response()->json(['view' => \View::make('customer.menu_item', $data)->render()], 200);
@@ -49,7 +52,7 @@ class HomeController extends Controller
         $searchItem = $request->searchItem;
         $restaurantId = 1;
         $data['cart'] = $cart = getCart($restaurantId);
-        $data['cartItemIds'] = !empty($cart) ? array_column($cart->cartMenuItems->toArray(),'menu_id') : [];
+        $data['cartMenuItemIds'] = !empty($cart) ? array_column($cart->cartMenuItems->toArray(),'menu_id') : [];
         $data['menuItems'] = MenuItem::where('restaurant_id', $restaurantId)->where('item_name', 'like', '%' . $searchItem . '%')->get();
         return response()->json(['view' => \View::make('customer.menu_item', $data)->render()], 200);
     }

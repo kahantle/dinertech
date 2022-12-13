@@ -266,7 +266,7 @@ Route::prefix('customer')->group(function () {
 
         /* Add To Cart */
         Route::post('/add-to-cart', 'customer\CartController@addToCart')->name('customer.addToCart');
-        Route::post('/opencart-alert-modal', 'customer\CartController@cartAlert');
+        Route::post('/modal-for-plus-with-modifiers', 'customer\CartController@modalForPlusWithModifiers');
         Route::post('/add-to-repeatLast', 'customer\CartController@addToRepeatLast');
         Route::post('/quantity-decrease', 'customer\CartController@quantityDecrease');
         Route::post('/quantity-change', 'customer\CartController@quantityChange');
