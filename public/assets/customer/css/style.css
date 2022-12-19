@@ -106,6 +106,37 @@ html.html-active {
     }
 }
 
+ /* promotion.html */
+ .data_feather_copy {
+     transform: rotatey(180deg);
+     cursor: pointer;
+ }
+
+ .promotion_text-cololr {
+     color: #535bfe;
+ }
+
+ .promotion_bg-cololr {
+     background-color: #535bfe;
+     color: #fff;
+ }
+
+ .promotion_b-redi {
+     border-radius: 0px 0px 15px 15px !important;
+ }
+
+ .p-contec-footer {
+     position: absolute;
+     bottom: 0;
+     left: 0;
+     width: 100%;
+     border-radius: 15px;
+ }
+
+ .margin-bottom-56 {
+     margin-bottom: 56px;
+ }
+
 .sin-log-bg {
     background: url(../images/back-img.jpg);
     width: 100%;

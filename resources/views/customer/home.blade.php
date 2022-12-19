@@ -3,6 +3,7 @@
 @section('css')
     <!-- Rating bar css -->
     <link rel="stylesheet" href="{{ asset('assets/customer/css/rateYo/2.3.2/jquery.rateyo.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{asset('assets/customer/css/promotion_page.css')}}">
 @endsection
 
 @section('content')

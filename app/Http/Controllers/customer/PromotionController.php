@@ -5,6 +5,7 @@ namespace App\Http\Controllers\customer;
 use App\Http\Controllers\Controller;
 use App\Models\MenuItem;
 use App\Models\Promotion;
+use App\Models\Cart;
 use App\Models\PromotionCategoryItem;
 use Auth;
 use Illuminate\Http\Request;
@@ -14,10 +15,14 @@ class PromotionController extends Controller
 
     public function index()
     {
-        $data['promotionLists'] = Promotion::where('restaurant_id', getRestaurantId())
+        $restaurantId = 1;
+        $data['promotions'] = Promotion::where('restaurant_id', 1)
             ->with('promotion_item')
             ->get();
         $data['title'] = 'Promotions';
+        $uid = Auth::user()->uid;
+        $data['cards'] = getUserCards($restaurantId, $uid);
+
         return view('customer.promotions.index', $data);
     }
 

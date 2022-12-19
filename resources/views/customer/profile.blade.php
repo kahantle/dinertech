@@ -21,7 +21,7 @@
                                                         <img src="{{ route('display.image', [Config::get('constants.IMAGES.USER_IMAGE_PATH'), $customer->profile_image]) }}"
                                                             class="profile-pic">
                                                     </div>
-                                                @else 
+                                                @else
                                                     <img src="{{asset('assets/images/user.png')}}" class="profile-pic">
                                                 @endif
                                                 <div class="p-image d-none">
@@ -73,7 +73,7 @@
                                                 id="inputaddress" rows="3 " placeholder="Address"
                                                 disabled="disabled"></textarea>
                                             @endif
-                                            
+
                                         </div>
                                         <button type="submit " class="btn btn-user-profile submitProfile"
                                             alt="Update Profile" disabled>

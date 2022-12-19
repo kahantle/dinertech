@@ -5,7 +5,7 @@
 	<div class="add-address-banner wd-dr-inner-blog">
         <div class="container">
            <div class="wd-dr-chat-left">
-            <div class="wd-dr-chat-inner"> 
+            <div class="wd-dr-chat-inner">
                 <h1>
                     Promotions
                 </h1>

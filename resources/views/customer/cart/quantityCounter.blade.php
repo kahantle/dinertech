@@ -30,7 +30,7 @@
             <div class="value-button decrease modifier-decrease" id="decrease-{{$menuId}}" value="Decrease Value" data-menu-id="{{$menuId}}">-</div>
                 <input type="number" id="quantity-{{$menuId}}" value="0" class="number"/>
             <div class="value-button increase modifier-increase" id="increase-{{$menuId}}" value="Increase Value" data-menu-id="{{$menuId}}">+</div>
-        </div> 
+        </div>
     @endif
 @else
     @if(in_array($menuId,$menuIds))
@@ -40,7 +40,7 @@
                     @if($quantity['menu_id'] == $menuId)
                         <input type="number" id="quantity-{{$menuId}}" value="{{$quantity['quantity']}}" class="number" max="10"/>
                     @endif
-                @endforeach	
+                @endforeach
             <div class="value-button increase" id="increase-{{$menuId}}" value="Increase Value" data-menu-id="{{$menuId}}">+</div>
         </div>
     @else

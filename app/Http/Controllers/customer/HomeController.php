@@ -22,10 +22,7 @@ class HomeController extends Controller
         $restaurantId = 1;
         if (Auth::check()) {
             $uid = Auth::user()->uid;
-            $cart = Cart::where(['uid' => $uid, 'restaurant_id' => $restaurantId])->first();
             $data['cards'] = getUserCards($restaurantId, $uid);
-            $data['cart'] = $cart  = getCart();
-            $data['cart'] = $cart = getCart($restaurantId);
         }
         $promotionLists = Promotion::where('restaurant_id', $restaurantId);
         $data['promotionLists'] = $promotionLists->get();

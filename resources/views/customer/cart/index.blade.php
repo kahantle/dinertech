@@ -9,7 +9,7 @@
 	<div class="add-address-banner wd-dr-inner-blog">
         <div class="container">
            <div class="wd-dr-chat-left">
-            <div class="wd-dr-chat-inner"> 
+            <div class="wd-dr-chat-inner">
                 <h1>
                     Your Cart
                 </h1>
@@ -31,7 +31,7 @@
 								Cart Items
 							</h3>
 							@include('customer.messages')
-							@php 
+							@php
 								$cartTotal = 0;
 								$finalMenuTotal = 0;
 								$modifierItamTotal = array();
@@ -58,7 +58,7 @@
 																			@php
 																				$modifierItamTotal[$key][] = $modifierItem['modifier_group_item_price'];
 																			@endphp
-																			
+
 																			<span class="extra-name">
 																				@if($menuIteamKey == 0)
 																					{{$modifierItem['modifier_group_item_name']}}
@@ -71,7 +71,7 @@
 																	{{-- @endforeach --}}
 																</ul>
 															</div>
-															
+
 															@php
 																$modifierList = [$modifierGroups[$key][$item['menu_id']]];
 															@endphp
@@ -84,14 +84,14 @@
 													$finalMenuTotal = array_sum($modifierItamTotal[$key]) + $item['item_price'];
 													$menuTotal = $finalMenuTotal * $item['quantity'];
 													$cartTotal += $menuTotal;
-											
+
 													$menuItem[] = ['menu_id' => $item['menu_id'],'menu_name' => $item['item_name'],'menu_total' => $menuTotal,'menu_qty' => $item['quantity'],'modifier_total' => array_sum($modifierItamTotal[$key]),'modifier_list' => call_user_func_array('array_merge',$modifierList)];
 												@endphp
 											@else
 												@php
 													$menuTotal = $item['item_price'] * $item['quantity'];
 													$cartTotal += $menuTotal;
-												
+
 													$menuItem[] = ['menu_id' => $item['menu_id'],'menu_name' => $item['item_name'],'menu_total' => $menuTotal,'menu_qty' => $item['quantity'],'modifier_total' => 0];
 												@endphp
 											@endif
@@ -115,7 +115,7 @@
 									</div>
 								@endforeach
 							@endforeach
-							
+
 							{{--<input type="hidden" name="modifierList" value="{{base64_encode(json_encode($modifierList))}}">
 							<input type="hidden" name="modifierItemArray" value="{{base64_encode(json_encode($modifierItemArray))}}">--}}
 							<input type="hidden" name="menuItem" value="{{base64_encode(json_encode($menuItem))}}">
@@ -152,7 +152,7 @@
 										When would you like your order?
 									</span>
 									<div class="options hide">
-										
+
 										<div class="col-md-12">
 											<div class="col-md-2">
 												<span>Now</span>
@@ -167,13 +167,13 @@
 											</div>
 											<div class="col-md-8">
 												<input class="form-check-input timingDropDown" type="radio" name="order_status" value="1">
-											</div>	
+											</div>
 										</div>
 									</div>
 								</div>
 							</a>
 						</div>
-					
+
 						<div class="col-sm-3">
 							<h3>
 								Order Charges
