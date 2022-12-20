@@ -52,6 +52,12 @@
                         <span>Chats</span>
                     </a>
                 </li>
+                <li class="{{ Request::is('customer/setting/*') ? 'active' : '' }}">
+                    <a href="{{ route('customer.settings') }}">
+                        <i data-feather="settings"></i>
+                        <span>Account Settings</span>
+                    </a>
+                </li>
             </ul>
             @auth
                 <ul class="nav-list-ul mt-4">

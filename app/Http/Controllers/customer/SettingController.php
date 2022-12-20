@@ -9,25 +9,33 @@ use Auth;
 
 class SettingController extends Controller
 {
+
+    public function index()
+    {
+        $data['title'] = 'setting';
+        $data['user'] = Auth::user();
+        return view('customer.settings.index',$data);
+    }
+
     public function settingUpdate(Request $request)
     {
         if($request->ajax())
         {
-            $uid = Auth::user()->uid;
+            $user = Auth::user();
 
             if($request->type == 'app_setting')
             {
-                User::where('uid',$uid)->update(['app_notifications' => $request->value]);
+                $user->update(['app_notifications' => $user->app_notifications == 1 ? 0 : 1]);
             }
 
             if($request->type == 'chat_setting')
             {
-                User::where('uid',$uid)->update(['chat_notifications' => $request->value]);
+                $user->update(['chat_notifications' => $user->chat_notifications == 1 ? 0 : 1]);
             }
 
             if($request->type == 'location_setting')
             {
-                User::where('uid',$uid)->update(['location_tracking' => $request->value]);
+                $user->update(['location_tracking' => $user->location_tracking == 1 ? 0 : 1]);
             }
 
             return true;

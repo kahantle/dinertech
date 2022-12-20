@@ -313,7 +313,8 @@ Route::prefix('customer')->group(function () {
         Route::post('/change-password/submit', 'customer\ProfileController@changePasswordSubmit')->name('customer.changepassword.submit');
 
         /* Setting */
-        Route::post('/setting/update', 'customer\SettingController@settingUpdate');
+        Route::post('/setting/update', 'customer\SettingController@settingUpdate')->name('customer.settings.update');
+        Route::get('/setting', 'customer\SettingController@index')->name('customer.settings');
 
         /* Feedback */
         Route::get('/feedback', 'customer\FeedbackController@index')->name('customer.feedback.index');
