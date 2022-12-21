@@ -48,6 +48,7 @@ Route::namespace ('Api')->group(function () {
 
         //Role Customer
         Route::middleware(['auth:api', 'role-customer'])->group(function () {
+            Route::get('check-cart-points','LoyaltyRuleController@checkCartPoints');
             Route::post('/category', 'CategoryController@getCategoryList')->name('customer.category.list');
             Route::post('/profile', 'UserController@profile')->name('customer.profile');
             Route::post('/category-menu', 'MenuItemController@getMenuList')->name('customer.category.menu.list');
