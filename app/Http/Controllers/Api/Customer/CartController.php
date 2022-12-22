@@ -15,6 +15,7 @@ use App\Models\CartMenuGroup;
 use App\Models\CartMenuGroupItem;
 use App\Models\PromotionType;
 use App\Models\Promotion;
+use Auth;
 
 class CartController extends Controller
 {
@@ -93,6 +94,13 @@ class CartController extends Controller
                 // 'is_loyalty'  =>  'required',
             ]);
 
+            $user = Auth::user();
+            foreach ($request->post('menu_item') as $menu_item) {
+                if ($menu_item['is_loyalty'] == true) {
+                    $user->update(['total_points' => $user->total_points - $menu_item['loyalty_point']]);
+                }
+            }
+
             if($validator->fails()){
                 return response()->json(['success' => false,'message' => $validator->errors()], 400);
             }
@@ -121,6 +129,7 @@ class CartController extends Controller
                         $cart_sub_total = $menuItem['menu_total'];
                         $cartMenuItemData->modifier_total = $menuItem['modifier_total'];
                         $cartMenuItemData->is_loyalty = ($menuItem['is_loyalty'] == true) ? 1:0;
+                        $cartMenuItemData->loyalty_point = $menuItem['loyalty_point'];
                         $cartMenuItemData->save();
                         if(isset($menuItem['modifier_list'])){
                            foreach($menuItem['modifier_list'] as $modifierKey => $modifier){
@@ -168,6 +177,7 @@ class CartController extends Controller
                     $cartMenuItemData->menu_total = $menuItem['menu_total'];
                     $cart_sub_total += $menuItem['menu_total'];
                     $cartMenuItemData->is_loyalty = ($menuItem['is_loyalty'] == true) ? 1:0;
+                    $cartMenuItemData->loyalty_point = $menuItem['loyalty_point'];
                     $cartMenuItemData->save();
                     if(isset($menuItem['modifier_list'])){
                         foreach($menuItem['modifier_list'] as $modifierKey => $modifier){
@@ -341,6 +351,12 @@ class CartController extends Controller
 
             if($validator->fails()){
                 return response()->json(['success' => false,'message' => $validator->errors()], 400);
+            }
+
+            $cart_menu_item = CartItem::where('cart_menu_item_id',$request->post('cart_menu_item_id'))->first();
+            if ($cart_menu_item->is_loyalty == 1) {
+                $user = Auth::user();
+                $user->update(['total_points' => $user->total_points + (int)$cart_menu_item->loyalty_point]);
             }
 
             $uid = auth('api')->user()->uid;

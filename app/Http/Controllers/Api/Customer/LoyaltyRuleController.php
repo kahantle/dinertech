@@ -111,18 +111,26 @@ class LoyaltyRuleController extends Controller
             return false;
         }
         $loyaltyItmeId = $cart->cartMenuItems[0]->menu_id;
+
+        $loyaltiesItemPoints = $this->getItemPoints($loyaltyItmeId);
+
+        return $totalPoints >= $loyaltiesItemPoints ? true : false ;
+    }
+
+    public function getItemPoints($menu_id)
+    {
+        $restaurant_id = 1;
         $loyalties = LoyaltyRule::with(['rulesItems'])->where('restaurant_id',$restaurant_id)->get(['rules_id','restaurant_id','point']);
         $data = [] ;
         foreach ($loyalties as $key => $loyalty) {
             $rulesItems = $loyalty->rulesItems;
             foreach($rulesItems as $item){
-                if ($item->menu_id == $loyaltyItmeId) {
+                if ($item->menu_id == $menu_id) {
                     $data[] =$loyalty->point;
                 }
             }
         }
-        $loyaltiesItemPoints = $data[0];
-
-        return $totalPoints >= $loyaltiesItemPoints ? true : false ;
+        return $data[0];
     }
+
 }
