@@ -107,6 +107,9 @@ class LoyaltyRuleController extends Controller
         {
             $q->where('is_loyalty',1)->get();
         }])->where('restaurant_id',$restaurant_id)->where('uid',$uid)->first();
+        if(count($cart->cartMenuItems) == 0) {
+            return false;
+        }
         $loyaltyItmeId = $cart->cartMenuItems[0]->menu_id;
         $loyalties = LoyaltyRule::with(['rulesItems'])->where('restaurant_id',$restaurant_id)->get(['rules_id','restaurant_id','point']);
         $data = [] ;
