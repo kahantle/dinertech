@@ -48,7 +48,7 @@
                 </div>
                 <div class="right-s">
                   <p>{{($item->promotion_code?$item->promotion_code:"-")}}</p>
-                 
+
                   <p>{{($item->promotion_used)?$item->promotion_used:"-"}}</p>
                   <p>{{$item->created_at}}</p>
                   <div class="category">
@@ -90,5 +90,5 @@
 @endsection
 @section('scripts')
 <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js')}}"></script>
-<script src="{{asset('/assets/js/promotion.js')}}"></script>    
+<script src="{{asset('/assets/js/promotion.js')}}"></script>
 @endsection

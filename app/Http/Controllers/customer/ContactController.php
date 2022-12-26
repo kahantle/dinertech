@@ -21,6 +21,7 @@ class ContactController extends Controller
         if (!$restaurant) {
             return back()->with('error', 'Invalid user for this restaurant.');
         }
+        $data['cards'] = getUserCards($restaurantId, $uid);
         $data['address'] = $restaurant;
         $data['title'] = 'Contact Us';
         return view('customer.contact.index', $data);

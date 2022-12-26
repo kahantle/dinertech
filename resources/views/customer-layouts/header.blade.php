@@ -58,6 +58,12 @@
                         <span>Account Settings</span>
                     </a>
                 </li>
+                <li class="{{ Request::is('customer/contact-us/*') ? 'active' : '' }}">
+                    <a href="{{ route('customer.contact-us') }}">
+                        <i data-feather="phone"></i>
+                        <span>Contact Us</span>
+                    </a>
+                </li>
             </ul>
             @auth
                 <ul class="nav-list-ul mt-4">

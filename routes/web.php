@@ -330,6 +330,10 @@ Route::prefix('customer')->group(function () {
         Route::post('/getChats', 'customer\ChatController@getChat');
         Route::post('/send/message', 'customer\ChatController@sendMessage');
         Route::get('/chat/export/{orderId}', 'customer\ChatController@chatExport');
+
+        // contact us
+        Route::get('contact-us','customer\ContactController@index')->name('customer.contact-us');
+
     });
 });
 

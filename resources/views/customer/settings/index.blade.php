@@ -42,7 +42,7 @@
             </div>
             <div class="w-100" align="center">
                 <div class="aco-button-g my-2">
-                    <button class="btn d-inline-flex my-2 trigger">
+                    <button class="btn d-inline-flex my-2 trigger delete-account">
                         <i class="mx-2" data-feather="trash"></i>
                         Delete Account
                     </button>
@@ -50,6 +50,37 @@
             </div>
         </div>
     </section>
+    <div class="modal-delete">
+        <div class="modal-content">
+            <div class="woring-icon">
+                <div class="woring-icon-content">!</div>
+            </div>
+            <div class="text-center woring-titel">
+                <h2>Are you sure?</h2>
+                <p>You won't be able to revert this!</p>
+            </div>
+            <div class="d-flex justify-content-center mt-3">
+                <button class="btn btn-primary trigger-ok close-button-success mx-2">Yes, delete it!</button>
+                <button class="btn close-button btn-danger mx-2">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal-delete-ok">
+        <div class="modal-content">
+            <div class="woring-icon-ok">
+                <div class="woring-icon-content-ok">
+                    <i data-feather="check"></i>
+                </div>
+            </div>
+            <div class="text-center woring-titel">
+                <h2>Deleted!</h2>
+                <p>Your file has been deleted.</p>
+            </div>
+            <div class="d-flex justify-content-center mt-3">
+                <button class="btn btn-primary close-button-ok mx-2">ok</button>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('scripts')
@@ -70,6 +101,69 @@ function updateSetting(type, value) {
         }
     });
 }
+
+var account_delete_url = " {{ route('account.delete') }}";
+
+$(document).on("click", ".delete-account", function (e) {
+    e.stopPropagation();
+    Swal.fire({
+        title: "Are you sure?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it!",
+        animation: true
+    }).then(function(result) {
+        if (result.value) {
+            const { value: password } = Swal.fire({
+                title: "Enter your password",
+                confirmButtonText: "Delete Account",
+                confirmButtonColor: "#f5424e",
+                input: "password",
+                inputLabel: "Password",
+                inputPlaceholder: "Enter your password",
+                inputAttributes: {
+                    autocapitalize: "off",
+                    autocorrect: "off",
+                    required: "true"
+                }
+            }).then(function(result) {
+                $.ajax({
+                    headers: {
+                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                            "content"
+                        )
+                    },
+                    url: account_delete_url,
+                    type: "POST",
+                    dataType: "json",
+                    data: {
+                        password: result.value
+                    },
+                    beforeSend: function() {
+                        $("body").preloader();
+                    },
+                    complete: function() {
+                        $("body").preloader("remove");
+                    },
+                    success: function (res) {
+                        if (res.success) {
+                            window.location.href = logout_url;
+                        } else {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Oops...",
+                                text: res.message
+                            });
+                        }
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {}
+                });
+            });
+        } else if (result.dismiss === "cancel") {
+            //
+        }
+    });
+});
 
 </script>
 
