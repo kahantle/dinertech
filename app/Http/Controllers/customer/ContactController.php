@@ -23,6 +23,7 @@ class ContactController extends Controller
         }
         $data['cards'] = getUserCards($restaurantId, $uid);
         $data['address'] = $restaurant;
+        $data['cards'] = getUserCards($restaurantId,$uid);
         $data['title'] = 'Contact Us';
         return view('customer.contact.index', $data);
     }
