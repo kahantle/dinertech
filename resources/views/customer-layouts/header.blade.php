@@ -28,6 +28,12 @@
                         <span>Orders</span>
                     </a>
                 </li>
+                <li class="{{ Request::is('customer/loyalty*') ? 'active' : '' }}">
+                    <a href="">
+                        <i data-feather="gift"></i>
+                        <span>Loyalty</span>
+                    </a>
+                </li>
                 <li class="{{ Request::is('customer/promotions*') ? 'active' : '' }}">
                     <a href="{{route('customer.promotions')}}">
                         <i data-feather="smartphone"></i>
@@ -65,20 +71,6 @@
                     </a>
                 </li>
             </ul>
-            @auth
-                <ul class="nav-list-ul mt-4">
-                    <li>
-                        <form method="POST" action="{{ route('customer.logout') }}">
-                            @csrf
-                            <a href="{{ route('customer.logout') }}"
-                                onclick="event.preventDefault();this.closest('form').submit();" alt="Logout">
-                                <i data-feather="log-out"></i>
-                                <span>Logout</span>
-                            </a>
-                        </form>
-                    </li>
-                </ul>
-            @endauth
         </div>
     </div>
 </nav>

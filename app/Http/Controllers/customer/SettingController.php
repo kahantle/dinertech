@@ -12,7 +12,7 @@ class SettingController extends Controller
 
     public function index()
     {
-        $data['title'] = 'setting';
+        $data['title'] = 'Setting';
         $data['user'] = Auth::user();
         return view('customer.settings.index',$data);
     }
