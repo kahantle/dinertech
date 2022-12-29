@@ -483,4 +483,26 @@ class CartController extends Controller
             return response()->json($errors, 500);
         }
     }
+
+    public function removePromotion(Request $request)
+    {
+        try{
+            $cart = Cart::where([
+                'uid' => auth('api')->user()->uid,
+                'restaurant_id' => $request->post('restaurant_id'),
+                'cart_id' => $request->post('cart_id')
+            ])->first();
+
+            $cart->promotion_id = NULL;
+            return $cart->save() ? response()->json(['message' => "Promotion removed successfully !", 'success' => false], 400) : "" ;
+
+        } catch (\Throwable $th) {
+            $errors['success'] = false;
+            $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
+            if($request->post('debug_mode') == 'ON'){
+                $errors['debug'] = $th->getMessage();
+            }
+            return response()->json($errors, 500);
+        }
+    }
 }

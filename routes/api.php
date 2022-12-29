@@ -104,6 +104,7 @@ Route::namespace ('Api')->group(function () {
                 Route::post('/getMenu/modifier','CartController@getCartMenuModifier')->name('customer.cart.getMenu.modifier');
                 Route::post('/customize/modifier','CartController@customizeModifier')->name('customer.cart.customize.modifier');
                 Route::post('/delete','CartController@destroy')->name('customer.cart.delete');
+                Route::post('/remove-promotion','CartController@removePromotion');
             });
         });
     });
