@@ -15,6 +15,7 @@ use App\Models\CartMenuGroup;
 use App\Models\CartMenuGroupItem;
 use App\Models\PromotionType;
 use App\Models\Promotion;
+use App\Models\PromotionCategoryItem;
 use Auth;
 
 class CartController extends Controller
@@ -499,7 +500,7 @@ class CartController extends Controller
             ])->first();
 
             $cart->promotion_id = NULL;
-            return $cart->save() ? response()->json(['message' => "Promotion removed successfully !", 'success' => false], 400) : "" ;
+            return $cart->save() ? response()->json(['message' => "Promotion removed successfully !", 'success' => true]) : "" ;
 
         } catch (\Throwable $th) {
             $errors['success'] = false;
@@ -510,4 +511,54 @@ class CartController extends Controller
             return response()->json($errors, 500);
         }
     }
+
+    public function applyPromotion(Request $request)
+    {
+        try{
+
+            $promotion = Promotion::with('eligible_items')->where([
+                'restaurant_id' => $request->post('restaurant_id'),
+                'promotion_code' => $request->post('promotion_code')
+            ])->first();
+
+            if (!$promotion) {
+                return response()->json(['message' => "Invalid promotion code !", 'success' => false]) ;
+            }
+
+            $promotion_category_items = PromotionCategoryItem::where('promotion_id',$promotion->promotion_id)->with('category_item')->get();
+
+            $eligible_item_ids = [];
+
+            foreach ($promotion_category_items as $promotion_category_item) {
+                $eligible_item_ids[] = $promotion_category_item->category_item[0]->menu_id;
+            };
+
+            $cart = Cart::find($request->post('cart_id'));
+
+            $cartItemIds = [];
+
+            foreach($cart->cartMenuItems as $item) {
+                $cartItemIds[] = $item->menu_id;
+            }
+
+            if (count(array_intersect($eligible_item_ids,$cartItemIds)) > 0) {
+                $cart->promotion_id = $promotion->promotion_id;
+                if ($cart->save()) {
+                    return response()->json(['message' => "Promotion appllied !", 'success' => true]);
+                }
+            } else {
+                return response()->json(['message' => "Promotion is not elegible for any item of the Cart !", 'success' => false]);
+            }
+
+        }catch (\Throwable $th) {
+            $errors['success'] = false;
+            $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
+            if($request->post('debug_mode') == 'ON'){
+                $errors['debug'] = $th->getMessage();
+            }
+            return response()->json($errors, 500);
+        }
+
+    }
+
 }
