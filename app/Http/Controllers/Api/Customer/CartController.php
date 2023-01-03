@@ -544,7 +544,14 @@ class CartController extends Controller
             if (count(array_intersect($eligible_item_ids,$cartItemIds)) > 0) {
                 $cart->promotion_id = $promotion->promotion_id;
                 if ($cart->save()) {
-                    return response()->json(['message' => "Promotion appllied !", 'success' => true]);
+                    return response()->json([
+                        'message' => "Promotion appllied !",
+                        'data' => [
+                            'promotion_code' => $promotion->promotion_code,
+                            'promotion_name' => $promotion->promotion_name,
+                            'promotion_details' => $promotion->promotion_details
+                        ],
+                        'success' => true]);
                 }
             } else {
                 return response()->json(['message' => "Promotion is not elegible for any item of the Cart !", 'success' => false]);
