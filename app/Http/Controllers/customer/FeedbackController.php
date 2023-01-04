@@ -13,7 +13,6 @@ class FeedbackController extends Controller
     public function index()
     {
         $data['cartMenus'] = getCartItem();
-        $restaurantId = session()->get('restaurantId');
         $uid = Auth::user()->uid;
         $data['cards'] = getUserCards($restaurantId, $uid);
 

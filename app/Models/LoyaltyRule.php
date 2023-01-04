@@ -25,7 +25,7 @@ class LoyaltyRule extends Model
     // {
     //     return $this->hasMany(LoyaltyRuleItem::class, 'loyalty_rule_id', 'rules_id')->with('menuItems');
     // }
-    
+
     /**
      * Get all of the comments for the LoyaltyRule
      *
@@ -42,5 +42,5 @@ class LoyaltyRule extends Model
               'loyalty_rule_id',
         );
     }
-    
+
 }

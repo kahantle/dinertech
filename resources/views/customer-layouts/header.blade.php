@@ -4,7 +4,7 @@
         <div class="logo-img-ar">
             <img class="lazy" data-src="{{ asset('assets/customer/images/chat/logo.png') }}">
         </div>
-        @auth
+        {{-- @auth
             <div class="wd-dr-sec-das">
                 @if (Auth::user()->profile_image)
                     <img src="{{ route('display.image', [Config::get('constants.IMAGES.USER_IMAGE_PATH'), Auth::user()->profile_image]) }}"
@@ -13,7 +13,7 @@
                 <h3 class="m-0">{{ \Auth::user()->full_name }}</h3>
                 <p class="mt-1">My Profile </p>
             </div>
-        @endauth
+        @endauth --}}
         <div class="nav-list-ar">
             <ul class="nav-list-ul">
                 <li class="{{ Request::is('customer') ? 'active' : '' }}">
@@ -29,7 +29,7 @@
                     </a>
                 </li>
                 <li class="{{ Request::is('customer/loyalty*') ? 'active' : '' }}">
-                    <a href="">
+                    <a href="{{ route('customer.loyalty') }}">
                         <i data-feather="gift"></i>
                         <span>Loyalty</span>
                     </a>

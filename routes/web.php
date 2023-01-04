@@ -331,6 +331,10 @@ Route::prefix('customer')->group(function () {
         Route::post('/send/message', 'customer\ChatController@sendMessage');
         Route::get('/chat/export/{orderId}', 'customer\ChatController@chatExport');
 
+        //Loyalty
+
+        Route::get('loyalty', 'customer\LoyaltyController@index')->name('customer.loyalty');
+
         // contact us
         Route::get('contact-us','customer\ContactController@index')->name('customer.contact-us');
 

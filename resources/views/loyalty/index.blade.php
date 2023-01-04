@@ -101,7 +101,7 @@
                     <p class="border-0">Subscribe today for just ${{$totalAmount}} with a recurring subscription of $29.00
                         occurring on your
                         account bill date of the {{$startDate}}<sup>th</sup>.</p>
-                    
+
                     <h4>Enter Your Credit / Debit Card Details</h4>
                     <form action="{{ route('loyalty.payment') }}" method="post" id="loyalty-payment">
                         @csrf
