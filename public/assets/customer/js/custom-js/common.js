@@ -97,7 +97,7 @@ $(function() {
         $(".repeat-last-modal-" + cartMenuItemId).modal("hide");
     });
 
-    function addToCart(data, menu_id = null) {
+    const addToCart = (data, menu_id = null) => {
         $.ajax({
             type: "POST",
             headers: {
@@ -123,7 +123,7 @@ $(function() {
         });
     }
 
-    function removeItem(cart_menu_item_id) {
+    const removeItem = cart_menu_item_id => {
         $.ajax({
             type: "POST",
             headers: {
@@ -134,7 +134,7 @@ $(function() {
                 cartMenuItemId: cart_menu_item_id
             },
             dataType: "json",
-            success: function (response) {
+            success: response => {
                 if (response) {
                     $(".add-order-" + response.menu_id).removeClass("d-none");
                     $(".product-quantity-" + response.menu_id).removeClass("d-inline-flex").addClass("d-none");
@@ -142,12 +142,15 @@ $(function() {
                     $(".scroll-inner-blog").load(
                         window.location.href + " .scroll-inner-blog"
                     );
+                    $(".content").load(
+                        window.location.href + " .content"
+                    )
                 }
             }
         });
     }
 
-    function showMenuModifiers(menuId) {
+    const showMenuModifiers = menuId => {
         $.ajax({
             type: "POST",
             headers: {
@@ -158,14 +161,14 @@ $(function() {
                 menuId: menuId
             },
             dataType: "json",
-            success: function(response) {
+            success: response => {
                 $(".modifiers-" + menuId).html(response.view);
                 $(".modifier-modal-" + menuId).modal("show");
             }
         });
     }
 
-    function quantityChange(cartMenuItemId, action) {
+    const quantityChange = (cartMenuItemId, action) => {
         $.ajax({
             type: "POST",
             headers: {
@@ -176,7 +179,7 @@ $(function() {
                 cartMenuItemId: cartMenuItemId,
                 action: action
             },
-            success: function(response) {
+            success: response => {
                 if (response) {
                     $(".quantity-" + cartMenuItemId).val(response.new_qty);
                     $("#checkout").load(window.location.href + " #checkout");

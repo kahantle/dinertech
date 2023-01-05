@@ -11,6 +11,7 @@ use App\Models\ModifierGroupItem;
 use App\Models\CartMenuGroupItem;
 use App\Models\ModifierGroup;
 use Illuminate\Http\Request;
+use App\Models\LoyaltyRule;
 use Config;
 
 class CartController extends Controller
@@ -56,6 +57,19 @@ class CartController extends Controller
         $cart = Cart::where('uid',$uid)->first();
         $menuItem = MenuItem::where('menu_id',$request->menuId)->first();
         $finalTotal = 0;
+        $isloyalty = 0;
+        $loyaltyPoints = 0;
+
+        if(isset($request->loyaltyRuleId)) {
+            $loyaltyRule = LoyaltyRule::where('rules_id',$request->loyaltyRuleId)->first();
+            $user = auth()->user();
+            $user->update([
+                'total_points' => $user->total_points - $loyaltyRule->point
+            ]);
+            $menuItem->item_price = 0;
+            $loyaltyPoints = $loyaltyRule->point;
+            $isloyalty = 1;
+        }
 
         if($cart == NULL){
             $cart_sub_total = 0;
@@ -79,7 +93,8 @@ class CartController extends Controller
         $cartMenuItemData->item_img = $menuItem->getMenuImgAttribute();
         $cart_sub_total = $menuItem->item_price;
         $cartMenuItemData->modifier_total = $menuItem->item_price;
-        $cartMenuItemData->is_loyalty = 0;
+        $cartMenuItemData->is_loyalty = $isloyalty;
+        $cartMenuItemData->loyalty_point = $loyaltyPoints;
         $cartMenuItemData->save();
         if(isset($request->modifierItems)){
             $modifierItems = $request->modifierItems;
@@ -129,6 +144,13 @@ class CartController extends Controller
         $cart = Cart::where('uid', auth()->id())->first();
         $cartMenuItem = $cart->cartMenuItems->where('cart_menu_item_id', $request->cartMenuItemId)->first();
         $menuId = $cartMenuItem->menu_id;
+        $user = auth()->user();
+
+        if ($cartMenuItem->is_loyalty == 1) {
+            $user->update([
+                'total_points' => $user->total_points + $cartMenuItem->loyalty_point
+            ]);
+        }
 
         $modifier_items = $cart->cartMenuModifierItems->where('cart_id',$cart->cart_id)->where('cart_menu_item_id', $request->cartMenuItemId);
         $modifier_groups = CartMenuGroup::where('cart_id',$cart->cart_id)->where('cart_menu_item_id', $request->cartMenuItemId)->get();
@@ -144,17 +166,10 @@ class CartController extends Controller
         }
 
         $delete_item = $cartMenuItem->delete();
-
-        if (count($cart->cartMenuItems) === 0) {
-            return "test";
-            $cart->delete();
-        }
-
-        if ($delete_item) {
-            return response()->json(['success' => true, 'menu_id' => $menuId], 200);
-        } else {
-            return response()->json(['success' => false], 200);
-        }
+        $cart = Cart::where('uid', auth()->id())->first();
+        count($cart->cartMenuItems) == 0 ? $cart->delete() : '';
+        $data = $delete_item ? ['success' => true, 'menu_id' => $menuId] : ['success' => false] ;
+        return response()->json($data, 200);
     }
 
     public function modalForPlusWithModifiers(Request $request)

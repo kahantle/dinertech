@@ -3156,9 +3156,13 @@
  }
 
  .card-points-blog-inner {
-     cursor: not-allowed;
+     cursor: not-allowed !important;
      opacity: 0.6;
      position: relative;
+ }
+
+ .card-points-blog-inner button {
+    cursor: not-allowed !important;
  }
 
  .card-points-blog-inner .card-body p {
