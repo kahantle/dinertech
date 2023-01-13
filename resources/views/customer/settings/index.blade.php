@@ -103,12 +103,13 @@ function updateSetting(type, value) {
 }
 
 var account_delete_url = " {{ route('account.delete') }}";
+var logout_url = " {{ route('logout') }} "
 
 $(document).on("click", ".delete-account", function (e) {
     e.stopPropagation();
     Swal.fire({
         title: "Are you sure?",
-        icon: "warning",
+        icon: "info",
         showCancelButton: true,
         confirmButtonText: "Yes, delete it!",
         animation: true
@@ -146,6 +147,7 @@ $(document).on("click", ".delete-account", function (e) {
                         $("body").preloader("remove");
                     },
                     success: function (res) {
+                        console.log(res);
                         if (res.success) {
                             window.location.href = logout_url;
                         } else {
