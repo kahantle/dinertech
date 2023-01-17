@@ -75,6 +75,7 @@
                         @forelse ($cart->cartMenuItems as $key => $item)
                             @php
                                 $cartTotal += $item['menu_price']*$item['menu_qty'];
+                                $menuItem[] = ['menu_id' => $item['menu_id'], 'menu_name' => $item['menu_name'], 'menu_total' => 0, 'menu_qty' => $item['menu_qty'], 'modifier_total' => 0];
                             @endphp
                             <div class="d-flex rounded wp-border-size-blog @if ($key != 0) mt-2 @endif">
                                 <div class="wb-inner-system">
@@ -123,6 +124,7 @@
                         @endforelse
                     @endif
                     </div>
+                    <input type="hidden" name="menuItem" value="{{ base64_encode(json_encode($menuItem)) }}">
                     <div class="card-inner-body mt-5">
                         <h5 class="md-payment-blog">Payment Methods</h5>
 

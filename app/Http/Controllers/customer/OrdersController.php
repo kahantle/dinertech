@@ -66,7 +66,6 @@ class OrdersController extends Controller
         $data['groupIteamArray'] = $groupIteamArray;
         $data['orderMenuGroups'] = $orderMenuGroups;
         $data['cards'] = getUserCards($restaurantId, $uid);
-        $data['cartMenus'] = getCartItem();
         $data['title'] = 'Order Detail';
         return view('customer.order.detail', $data);
     }
@@ -99,15 +98,12 @@ class OrdersController extends Controller
             return redirect()->back()->with('error', 'Please Select Order Timing.');
         }
         $orderDetails = ['order_status' => $request->order_status, 'menu_item' => json_decode(base64_decode($request->menuItem)), 'instruction' => $request->instruction, 'cart_charge' => $request->cart_charge, 'sales_tax' => $request->sales_tax, 'discount_charge' => $request->discount_charge, 'orderDate' => $request->orderDate, 'orderTime' => $request->orderTime, 'grand_total' => $request->grand_total];
-        // session()->put('orderDetails', $orderArray);
-        // $orderDetails = session()->get('orderDetails');
         $uid = Auth::user()->uid;
         $restaurantId = session()->get('restaurantId');
         $loyalty = Loyalty::where('status',Config::get('constants.STATUS.ACTIVE'))->first();
         if($loyalty){
             if($loyalty->loyalty_type == Config::get('constants.LOYALTY_TYPE.NO_OF_ORDERS')){
                 $noOfOrders = Order::where('uid',$uid)->count();
-                dd($noOfOrders->no_of_orders);
             }else if($loyalty->loyalty_type == Config::get('constants.LOYALTY_TYPE.AMOUNT_SPENT')){
 
             }else if($loyalty->loyalty_type == Config::get('constants.LOYALTY_TYPE.CATEGORY_BASED')){
@@ -241,7 +237,6 @@ class OrdersController extends Controller
                         session()->forget('promotion');
                         session()->forget('orderDetails');
                         $data['title'] = 'Success Order';
-                        $data['cartMenus'] = getCartItem();
                         $data['cards'] = getUserCards($restaurantId, $uid);
 
                         return view('customer.order.success', $data);
@@ -291,6 +286,8 @@ class OrdersController extends Controller
                 $order->comments = (empty($orderDetails['instruction'])) ? '' : $orderDetails['instruction'];
                 $order->grand_total = $this->convertNumberFormat($orderDetails['grand_total']);
                 $order->order_progress_status = Config::get('constants.ORDER_STATUS.INITIAL');
+
+
                 if ($order->save()) {
                     foreach ($orderDetails['menu_item'] as $key => $menuItem) {
                         $menuItemData = new OrderMenuItem;
@@ -338,11 +335,7 @@ class OrdersController extends Controller
                         }
                     }
                     DB::commit();
-                    session()->forget('cart');
-                    session()->forget('promotion');
-                    session()->forget('orderDetails');
                     $data['title'] = 'Success Order';
-                    $data['cartMenus'] = getCartItem();
                     $data['cards'] = getUserCards($restaurantId, $uid);
 
                     return view('customer.order.success', $data);
