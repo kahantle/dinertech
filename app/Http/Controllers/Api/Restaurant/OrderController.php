@@ -400,7 +400,11 @@ class OrderController extends Controller
                 ->with('orderItems','user')
                 ->latest()
                 ->get();
-            return response()->json(['order' => $order, 'success' => true], 200);
+            return response()->json([
+                'order' => $order,
+                'auto_print_receipts' => Restaurant::select('auto_print_receipts')->where('restaurant_id', $request->post('restaurant_id'))->first()->auto_print_receipts,
+                'success' => true
+            ], 200);
             // $result = [];
             // foreach ($order as $key => $value) {
             //     $database = app('firebase.database');

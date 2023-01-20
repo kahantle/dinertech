@@ -233,7 +233,7 @@
             @else
                 <div class="form-group form-btn-menu from-inner">
                     <div class="btn-custom">
-                        <button type="button" class="btn-grey btn-inner cancel" ><span>Cancel</span></button>
+                        <button type="button" class="btn-grey btn-inner cancel"><span><a style="color:black" href="/close">Cancel</a></span></button>
                     </div>
                     <div class="btn-custom">
                         <button type="submit" class="btn-blue btn-inner formsubmit" ><span>Add</span></button>

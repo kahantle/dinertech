@@ -63,7 +63,7 @@
     }
 
     /* .pro-card.detail{
-        display: block!important; 
+        display: block!important;
     } */
     .order-details-inner-blog {
         flex-flow: column !important;
@@ -814,9 +814,10 @@
     }
 
     /** other pages **/
-    #wrapper {
+    
+    /* #wrapper {
         padding-left: 100px !important;
-    }
+    } */
 
     #wrapper #sidebar-wrapper {
         width: 100px;

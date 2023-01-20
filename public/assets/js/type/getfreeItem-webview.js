@@ -112,7 +112,24 @@ $(function () {
         }
     });
 
+    function getPlatform() {
+        var platform = ["Win32", "Android", "iOS"];
+
+        for (var i = 0; i < platform.length; i++) {
+            if (navigator.platform.indexOf(platform[i]) > -1) {
+                return platform[i];
+            }
+        }
+    }
+
     $(".cancel").on('click', function () {
-        Android.showToast("back");
+            $(document).prop("title", "test");
+        if (getPlatform() == "Android") {
+            Android.showToast("back");
+        } else if (getPlatform() == "iOS") {
+            $(document).prop("title", "test");
+            // window.webkit.messageHandlers.jsMessageHandler.postMessage("back");
+            // window.alert("back");
+        }
     });
 });

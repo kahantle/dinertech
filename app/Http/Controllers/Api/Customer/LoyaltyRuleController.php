@@ -7,6 +7,7 @@ use App\Models\LoyaltyRule;
 use App\Models\LoyaltyRuleItem;
 use App\Models\Restaurant;
 use App\Models\MenuItem;
+use App\Models\Cart;
 use Illuminate\Http\Request;
 use Config;
 use Validator;
@@ -96,4 +97,40 @@ class LoyaltyRuleController extends Controller
     {
         //
     }
+
+    public function checkCartPoints()
+    {
+        $restaurant_id = 1;
+        $uid = Auth::id();
+        $totalPoints = Auth::user()->total_points;
+        $cart = Cart::with(['cartMenuItems' => function ($q)
+        {
+            $q->where('is_loyalty',1)->get();
+        }])->where('restaurant_id',$restaurant_id)->where('uid',$uid)->first();
+        if(count($cart->cartMenuItems) == 0) {
+            return false;
+        }
+        $loyaltyItmeId = $cart->cartMenuItems[0]->menu_id;
+
+        $loyaltiesItemPoints = $this->getItemPoints($loyaltyItmeId);
+
+        return $totalPoints >= $loyaltiesItemPoints ? true : false ;
+    }
+
+    public function getItemPoints($menu_id)
+    {
+        $restaurant_id = 1;
+        $loyalties = LoyaltyRule::with(['rulesItems'])->where('restaurant_id',$restaurant_id)->get(['rules_id','restaurant_id','point']);
+        $data = [] ;
+        foreach ($loyalties as $key => $loyalty) {
+            $rulesItems = $loyalty->rulesItems;
+            foreach($rulesItems as $item){
+                if ($item->menu_id == $menu_id) {
+                    $data[] =$loyalty->point;
+                }
+            }
+        }
+        return $data[0];
+    }
+
 }

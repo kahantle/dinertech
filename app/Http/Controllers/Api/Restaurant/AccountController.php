@@ -95,4 +95,18 @@ class AccountController extends Controller
         }
     }
 
+    public function getSubscriptions(Request $request)
+    {
+        try {
+            $user = auth('api')->user();
+            $returns['email_subscription'] = $user->email_subscription;
+            $returns['loyalty_subscription'] = $user->loyalty_subscription;
+            $returns['success'] = true;
+            return response()->json($returns, 200);
+        } catch (\Throwable $th) {
+            $errors['success'] = false;
+            $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
+            return response()->json($errors, 500);
+        }
+    }
 }

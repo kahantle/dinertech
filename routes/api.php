@@ -48,6 +48,7 @@ Route::namespace ('Api')->group(function () {
 
         //Role Customer
         Route::middleware(['auth:api', 'role-customer'])->group(function () {
+            Route::get('check-cart-points','LoyaltyRuleController@checkCartPoints');
             Route::post('/category', 'CategoryController@getCategoryList')->name('customer.category.list');
             Route::post('/profile', 'UserController@profile')->name('customer.profile');
             Route::post('/category-menu', 'MenuItemController@getMenuList')->name('customer.category.menu.list');
@@ -103,6 +104,8 @@ Route::namespace ('Api')->group(function () {
                 Route::post('/getMenu/modifier','CartController@getCartMenuModifier')->name('customer.cart.getMenu.modifier');
                 Route::post('/customize/modifier','CartController@customizeModifier')->name('customer.cart.customize.modifier');
                 Route::post('/delete','CartController@destroy')->name('customer.cart.delete');
+                Route::post('/remove-promotion','CartController@removePromotion');
+                Route::post('/apply-promotion','CartController@applyPromotion');
             });
         });
     });
@@ -138,6 +141,7 @@ Route::namespace ('Api')->group(function () {
         //-------------------------- Restaurant Web-url Route End---------------------------------------------- //
 
         Route::middleware(['auth:api', 'role-restaurant'])->group(function () {
+
             Route::post('/category', 'CategoryController@getCategoryList')->name('customer.category.list');
             Route::post('/category/item', 'CategoryController@getCategoryItemList')->name('customer.category.item.list');
             Route::post('/category/add', 'CategoryController@addCategory')->name('customer.category.add');
@@ -215,6 +219,7 @@ Route::namespace ('Api')->group(function () {
             });
 
             Route::prefix('account')->group(function () {
+                Route::post('subscriptions', 'AccountController@getSubscriptions');
                 Route::post('/setting/update', 'AccountController@updateSetting')->name('account.update.setting');
                 Route::post('/settings', 'AccountController@getSettings');
                 Route::post('/delete', 'AccountController@deleteAccount');

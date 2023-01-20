@@ -15,6 +15,8 @@ use App\Models\CartMenuGroup;
 use App\Models\CartMenuGroupItem;
 use App\Models\PromotionType;
 use App\Models\Promotion;
+use App\Models\PromotionCategoryItem;
+use Auth;
 
 class CartController extends Controller
 {
@@ -41,6 +43,7 @@ class CartController extends Controller
 
             if($cartItem){
 
+                $promotion_id = $cartItem->promotion_id;
                 DB::beginTransaction();
                 // if((empty($cartItem->promotion_id) || $cartItem->promotion_id == null) && (empty($cartItem->discount_charge) || floatval($cartItem->discount_charge) == 0)){
                     //  if(!$cartItem->promotion_id){
@@ -57,12 +60,16 @@ class CartController extends Controller
                 // }
                 DB::commit();
 
-                $cartItem = Cart::with(['cartMenuItems' => function($cartItems){
-                $cartItems->select(['cart_menu_item_id','cart_id','menu_id','menu_name','menu_qty','menu_price','menu_total','modifier_total','is_loyalty'])->with(['cartMenuGroups' => function($cartMenuGroups){
-                    $cartMenuGroups->select(['cart_modifier_group_id','cart_menu_item_id','menu_id','modifier_group_id','modifier_group_name'])->with('cartMenuGroupItems')->get();
-                }])->get();
+                $cartItem = Cart::where('restaurant_id',$restaurantId)->where('uid',$uid)->first();
+                $cartItem->promotion_id = $promotion_id;
+                $cartItem->save();
 
-            }])->where('restaurant_id',$restaurantId)->where('uid',$uid)->select('cart_id','restaurant_id','promotion_id','uid','sub_total','discount_charge','tax_charge','total_due','is_payment')->with('promotion')->first();
+                $cartItem = Cart::with(['cartMenuItems' => function($cartItems){
+                    $cartItems->select(['cart_menu_item_id','cart_id','menu_id','menu_name','menu_qty','menu_price','menu_total','modifier_total','is_loyalty'])->with(['cartMenuGroups' => function($cartMenuGroups){
+                        $cartMenuGroups->select(['cart_modifier_group_id','cart_menu_item_id','menu_id','modifier_group_id','modifier_group_name'])->with('cartMenuGroupItems')->get();
+                    }])->get();
+                }])->where('restaurant_id',$restaurantId)->where('uid',$uid)->select('cart_id','restaurant_id','promotion_id','uid','sub_total','discount_charge','tax_charge','total_due','is_payment')->with('promotion')->first();
+
                 return response()->json(['cart_list' => $cartItem, 'success' => true], 200);
             }
             return response()->json(['cart_list' => (object)[],'message' => 'Your cart is empty','success' => true], 200);
@@ -93,6 +100,13 @@ class CartController extends Controller
                 // 'is_loyalty'  =>  'required',
             ]);
 
+            $user = Auth::user();
+            foreach ($request->post('menu_item') as $menu_item) {
+                if ($menu_item['is_loyalty'] == true) {
+                    $user->update(['total_points' => $user->total_points - $menu_item['loyalty_point']]);
+                }
+            }
+
             if($validator->fails()){
                 return response()->json(['success' => false,'message' => $validator->errors()], 400);
             }
@@ -121,6 +135,7 @@ class CartController extends Controller
                         $cart_sub_total = $menuItem['menu_total'];
                         $cartMenuItemData->modifier_total = $menuItem['modifier_total'];
                         $cartMenuItemData->is_loyalty = ($menuItem['is_loyalty'] == true) ? 1:0;
+                        $cartMenuItemData->loyalty_point = $menuItem['loyalty_point'];
                         $cartMenuItemData->save();
                         if(isset($menuItem['modifier_list'])){
                            foreach($menuItem['modifier_list'] as $modifierKey => $modifier){
@@ -168,6 +183,7 @@ class CartController extends Controller
                     $cartMenuItemData->menu_total = $menuItem['menu_total'];
                     $cart_sub_total += $menuItem['menu_total'];
                     $cartMenuItemData->is_loyalty = ($menuItem['is_loyalty'] == true) ? 1:0;
+                    $cartMenuItemData->loyalty_point = $menuItem['loyalty_point'];
                     $cartMenuItemData->save();
                     if(isset($menuItem['modifier_list'])){
                         foreach($menuItem['modifier_list'] as $modifierKey => $modifier){
@@ -343,6 +359,12 @@ class CartController extends Controller
                 return response()->json(['success' => false,'message' => $validator->errors()], 400);
             }
 
+            $cart_menu_item = CartItem::where('cart_menu_item_id',$request->post('cart_menu_item_id'))->first();
+            if ($cart_menu_item->is_loyalty == 1) {
+                $user = Auth::user();
+                $user->update(['total_points' => $user->total_points + (int)$cart_menu_item->loyalty_point]);
+            }
+
             $uid = auth('api')->user()->uid;
             $check_cart = Cart::where('uid',$uid)->where('restaurant_id',$request->post('restaurant_id'))->first();
             $cartMenuItems = CartItem::where('cart_id',$check_cart->cart_id);
@@ -467,4 +489,83 @@ class CartController extends Controller
             return response()->json($errors, 500);
         }
     }
+
+    public function removePromotion(Request $request)
+    {
+        try{
+            $cart = Cart::where([
+                'uid' => auth('api')->user()->uid,
+                'restaurant_id' => $request->post('restaurant_id'),
+                'cart_id' => $request->post('cart_id')
+            ])->first();
+
+            $cart->promotion_id = NULL;
+            return $cart->save() ? response()->json(['message' => "Promotion removed successfully !", 'success' => true]) : "" ;
+
+        } catch (\Throwable $th) {
+            $errors['success'] = false;
+            $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
+            if($request->post('debug_mode') == 'ON'){
+                $errors['debug'] = $th->getMessage();
+            }
+            return response()->json($errors, 500);
+        }
+    }
+
+    public function applyPromotion(Request $request)
+    {
+        try{
+
+            $promotion = Promotion::with('eligible_items')->where([
+                'restaurant_id' => $request->post('restaurant_id'),
+                'promotion_code' => $request->post('promotion_code')
+            ])->first();
+
+            if (!$promotion) {
+                return response()->json(['message' => "Invalid promotion code !", 'success' => false]) ;
+            }
+
+            $promotion_category_items = PromotionCategoryItem::where('promotion_id',$promotion->promotion_id)->with('category_item')->get();
+
+            $eligible_item_ids = [];
+
+            foreach ($promotion_category_items as $promotion_category_item) {
+                $eligible_item_ids[] = $promotion_category_item->category_item[0]->menu_id;
+            };
+
+            $cart = Cart::find($request->post('cart_id'));
+
+            $cartItemIds = [];
+
+            foreach($cart->cartMenuItems as $item) {
+                $cartItemIds[] = $item->menu_id;
+            }
+
+            if (count(array_intersect($eligible_item_ids,$cartItemIds)) > 0) {
+                $cart->promotion_id = $promotion->promotion_id;
+                if ($cart->save()) {
+                    return response()->json([
+                        'message' => "Promotion appllied !",
+                        'data' => [
+                            'promotion_code' => $promotion->promotion_code,
+                            'promotion_name' => $promotion->promotion_name,
+                            'promotion_details' => $promotion->promotion_details
+                        ],
+                        'success' => true]);
+                }
+            } else {
+                return response()->json(['message' => "Promotion is not elegible for any item of the Cart !", 'success' => false]);
+            }
+
+        }catch (\Throwable $th) {
+            $errors['success'] = false;
+            $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
+            if($request->post('debug_mode') == 'ON'){
+                $errors['debug'] = $th->getMessage();
+            }
+            return response()->json($errors, 500);
+        }
+
+    }
+
 }
