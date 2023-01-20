@@ -124,7 +124,7 @@
                         @endforelse
                     @endif
                     </div>
-                    <input type="hidden" name="menuItem" value="{{ base64_encode(json_encode($menuItem)) }}">
+                    <input type="hidden" name="menuItem" value="{{ isset($menuItem) ? base64_encode(json_encode($menuItem)) : '' }}">
                     <div class="card-inner-body mt-5">
                         <h5 class="md-payment-blog">Payment Methods</h5>
 
