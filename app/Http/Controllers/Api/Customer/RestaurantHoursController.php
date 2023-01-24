@@ -23,15 +23,15 @@ class RestaurantHoursController extends Controller
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
             }
             // $list = RestaurantHours::where('restaurant_id', $request->post('restaurant_id'))
-            //     ->get(['restaurant_hour_id', 
+            //     ->get(['restaurant_hour_id',
             //          'restaurant_id',
             //           'day',
             //           'opening_time',
             //           'closing_time']);
             $list  = RestaurantHours::select('restaurant_hour_id','hours_group_id','restaurant_id',\DB::raw("GROUP_CONCAT(day) as `groupDayS`"))->with(['allTimes' => function($query){
-                $query->select('restaurant_time_id','restaurant_hour_id','opening_time','closing_time');
+                $query->select('restaurant_time_id','restaurant_hour_id','opening_time','closing_time','hour_type');
             }])->groupBy('hours_group_id')->where('restaurant_id', $request->post('restaurant_id'))->get();
-            
+
             return response()->json(['list' => $list, 'success' => true], 200);
         } catch (\Throwable $th) {
             $errors['success'] = false;

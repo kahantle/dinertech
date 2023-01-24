@@ -33,7 +33,7 @@ class RestaurantHoursController extends Controller
             $menuRow =array();
             $requestDays = explode(",",$request->post('days'));
             $requestHours = $request->post('hours');
-            
+
             if(is_array($requestDays)){
                 foreach ($requestDays as $key => $value) {
                     $countRestaurantHours = RestaurantHours::where('day',strtolower($value))
@@ -54,7 +54,7 @@ class RestaurantHoursController extends Controller
             $countRestaurantHours = RestaurantHours::where('restaurant_id',$request->post('restaurant_id'))
                                     ->orderBy('hours_group_id','desc')
                                     ->get();
-                                   
+
             $groupId = ($countRestaurantHours)?$countRestaurantHours->count()+1:1;
             // $data=array();
             // foreach ($requestDays as $key => $value) {
@@ -81,6 +81,7 @@ class RestaurantHoursController extends Controller
                     $hour_time->restaurant_id = $request->post('restaurant_id');
                     $hour_time->opening_time = $time['opening_time'];
                     $hour_time->closing_time = $time['closing_time'];
+                    $hour_time->hour_type = $time['hour_type'];
                     $hour_time->save();
                 }
             }
@@ -88,6 +89,7 @@ class RestaurantHoursController extends Controller
         } catch (\Throwable $th) {
             $errors['success'] = false;
             $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
+            $errors['debug'] = $th->getMessage();
             if ($request->debug_mode == 'ON') {
                 $errors['debug'] = $th->getMessage();
             }
@@ -149,6 +151,7 @@ class RestaurantHoursController extends Controller
                     $hour_time->restaurant_id = $request->post('restaurant_id');
                     $hour_time->opening_time = $time['opening_time'];
                     $hour_time->closing_time = $time['closing_time'];
+                    $hour_time->hour_type = $time['hour_type'];
                     $hour_time->save();
                 }
             }
@@ -189,7 +192,7 @@ class RestaurantHoursController extends Controller
             // ->groupBy('restaurant_hours.hours_group_id')
             // ->get();
             $list  = RestaurantHours::select('restaurant_hour_id','hours_group_id','restaurant_id',\DB::raw("GROUP_CONCAT(day) as `groupDayS`"))->with(['allTimes' => function($query){
-                $query->select('restaurant_time_id','restaurant_hour_id','opening_time','closing_time');
+                $query->select('restaurant_time_id','restaurant_hour_id','opening_time','closing_time','hour_type');
             }])->groupBy('hours_group_id')->where('restaurant_id', $request->post('restaurant_id'))->get();
             return response()->json(['list' => $list, 'success' => true], 200);
         } catch (\Throwable $th) {
