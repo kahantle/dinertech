@@ -15,7 +15,6 @@ class ProfileController extends Controller
     {
         if (Auth::check()) {
             $data['customer'] = User::with('address')->findOrFail(Auth::user()->uid);
-            $data['cartMenus'] = getCartItem();
             $restaurantId = session()->get('restaurantId');
             $uid = Auth::user()->uid;
             $data['cards'] = getUserCards($restaurantId, $uid);
@@ -23,7 +22,6 @@ class ProfileController extends Controller
             return view('customer.profile', $data);
         }
         return redirect()->route('customer.index');
-        // abort('404');
     }
 
     public function update(Request $request)

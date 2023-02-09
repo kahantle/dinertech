@@ -12,9 +12,8 @@ class FeedbackController extends Controller
 {
     public function index()
     {
-        $data['cartMenus'] = getCartItem();
         $uid = Auth::user()->uid;
-        $data['cards'] = getUserCards($restaurantId, $uid);
+        $data['cards'] = getUserCards(1, $uid);
 
         $data['title'] = 'Feedback';
         return view('customer.feedback.index', $data);
