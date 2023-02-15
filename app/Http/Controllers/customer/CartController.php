@@ -152,7 +152,7 @@ class CartController extends Controller
             ]);
         }
 
-        $modifier_items = $cart->cartMenuModifierItems->where('cart_id',$cart->cart_id)->where('cart_menu_item_id', $request->cartMenuItemId);
+        $modifier_items = $cart->cartMenuModifierItems->where('cart_id',$cart->cart_id)->where('cart_menu_item_id', $request->cartMenuItemId)->get();
         $modifier_groups = CartMenuGroup::where('cart_id',$cart->cart_id)->where('cart_menu_item_id', $request->cartMenuItemId)->get();
 
         if (count($modifier_groups) > 0) {

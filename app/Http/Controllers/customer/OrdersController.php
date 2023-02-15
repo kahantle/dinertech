@@ -4,6 +4,8 @@ namespace App\Http\Controllers\customer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Card;
+use App\Models\Cart;
+use App\Models\CartMenuGroup;
 use App\Models\CustomerAddress;
 use App\Models\Order;
 use App\Models\Loyalty;
@@ -90,6 +92,31 @@ class OrdersController extends Controller
     public function convertNumberFormat($amount)
     {
         return number_format($amount, '2');
+    }
+
+    public function emptyCart()
+    {
+        $cart = Cart::where('uid', auth()->id())->first();
+        $cartMenuItem = $cart->cartMenuItems;
+        $modifier_items = $cart->cartMenuModifierItems->where('cart_id',$cart->cart_id);
+        $modifier_groups = CartMenuGroup::where('cart_id',$cart->cart_id)->get();
+
+        // if (count($modifier_groups) > 0) {
+        //     foreach ($modifier_items as $key => $item) {
+        //         $item->delete();
+        //     }
+
+        //     foreach ($modifier_groups as $key => $group) {
+        //         $group->delete();
+        //     }
+        // }
+
+        foreach ($cartMenuItem as $item) {
+            $item->delete();
+        }
+
+        $cart = Cart::where('uid', auth()->id())->first();
+        count($cart->cartMenuItems) == 0 ? $cart->delete() : '';
     }
 
     public function placeOrder(Request $request)
@@ -233,9 +260,7 @@ class OrdersController extends Controller
                             }
                         }
                         DB::commit();
-                        session()->forget('cart');
-                        session()->forget('promotion');
-                        session()->forget('orderDetails');
+                        $this->emptyCart();
                         $data['title'] = 'Success Order';
                         $data['cards'] = getUserCards($restaurantId, $uid);
 
@@ -337,7 +362,7 @@ class OrdersController extends Controller
                     DB::commit();
                     $data['title'] = 'Success Order';
                     $data['cards'] = getUserCards($restaurantId, $uid);
-
+                    $this->emptyCart();
                     return view('customer.order.success', $data);
                 } else {
                     DB::rollBack();
