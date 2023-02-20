@@ -35,8 +35,7 @@ class CardController extends Controller
     {
 
         $uid = Auth::user()->uid;
-        $restaurantId = session()->get('restaurantId');
-        $data['cards'] = getUserCards($restaurantId,$uid);
+        $data['cards'] = getUserCards(1,$uid);
         $data['orderDetails'] = array();
         $data['title'] = 'Payment Cards';
         return view('customer.card.index',$data);
@@ -63,7 +62,6 @@ class CardController extends Controller
         ]);
 
         $uid = Auth()->user()->uid;
-        $restaurantId = session()->get('restaurantId');
 
         if(isset($request->card_type))
         {
@@ -93,15 +91,14 @@ class CardController extends Controller
             $cardType = 'UNKNOWN';
         }
 
-
         $card = new Card();
         $card->uid = $uid;
-        $card->restaurant_id = $restaurantId;
+        $card->restaurant_id = 1;
         $card->card_holder_name = $request->card_holder_name;
         $card->card_number = $request->card_number;
         $card->card_expire_date = $request->card_expire_date;
         $card->card_cvv = $request->card_cvv;
-        $card->card_type = $cardType;
+        $card->card_type = 'AMERICAN_EXPRESS';
         $card->save();
 
         return redirect()->route('customer.cards')->with('success','Card Add Successfully.');
