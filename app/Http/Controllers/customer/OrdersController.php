@@ -126,7 +126,7 @@ class OrdersController extends Controller
         }
         $orderDetails = ['order_status' => $request->order_status, 'menu_item' => json_decode(base64_decode($request->menuItem)), 'instruction' => $request->instruction, 'cart_charge' => $request->cart_charge, 'sales_tax' => $request->sales_tax, 'discount_charge' => $request->discount_charge, 'orderDate' => $request->orderDate, 'orderTime' => $request->orderTime, 'grand_total' => $request->grand_total];
         $uid = Auth::user()->uid;
-        $restaurantId = session()->get('restaurantId');
+        $restaurantId = 1;
         $loyalty = Loyalty::where('status',Config::get('constants.STATUS.ACTIVE'))->first();
         if($loyalty){
             if($loyalty->loyalty_type == Config::get('constants.LOYALTY_TYPE.NO_OF_ORDERS')){
