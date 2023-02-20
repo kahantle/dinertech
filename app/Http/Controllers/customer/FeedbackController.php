@@ -29,22 +29,19 @@ class FeedbackController extends Controller
             'message' => 'required',
         ]);
 
-        $restaurantId = session()->get('restaurantId');
         $uid = Auth::user()->uid;
 
         $feedback = new CustomerFeedback;
-        $feedback->restaurant_id = $restaurantId;
+        $feedback->restaurant_id = 1;
         $feedback->uid = $uid;
         $feedback->name = $request->name;
         $feedback->phone = $request->phone_number;
         $feedback->email = $request->email;
         $feedback->feedback_type = $request->feedback_type;
         $feedback->suggestion = $request->message;
-        if ($feedback->save()) {
-            return redirect()->back()->with('success', 'Feedback sent successfully.');
-        } else {
-            return redirect()->back()->with('error', Config('constants.COMMON_MESSAGE.COMMON_MESSAGE'));
-        }
+
+        return $feedback->save() ? redirect()->back()->with('success', 'Feedback sent successfully.') : redirect()->back()->with('error', Config('constants.COMMON_MESSAGE.COMMON_MESSAGE'));
+
     }
 
 }
