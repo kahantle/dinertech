@@ -1,5 +1,6 @@
 <div class="col-xl-4 col-lg-12 col-md-12 wd-dr-dashboart-inner">
-    <div class="card">
+    <div class="Promotion-content">
+        <div class="card order-content">
         <div class="card-body">
             <form action="{{ route('customer.cart.submit.order') }}" method="post">
                 @csrf
@@ -125,7 +126,37 @@
                     @endif
                     </div>
                     <input type="hidden" name="menuItem" value="{{ isset($menuItem) ? base64_encode(json_encode($menuItem)) : '' }}">
-                    <div class="card-inner-body mt-5">
+                    <div class="promotion-iner-blog mt-3 Promotion-btn-click ">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="d-flex align-items-center">
+                                <img width="35px" src="{{asset('assets/images/divition-icon.png')}}"
+                                    alt="" />
+                                <div class="mx-2">
+                                    <h5 class="mb-0 promotion_text-cololr">Promotion</h5>
+                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing
+                                        elit.
+                                    </p>
+                                </div>
+                            </div>
+                            <div>
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="promotion-iner-blog-close">
+                        <div class="d-flex align-items-center">
+                            <div class="mx-2">
+                                <i class="bg-danger b-redic-50 text-white"
+                                    data-feather="x-circle"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0 text-dark">PRO010</h6>
+                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-inner-body">
                         <h5 class="md-payment-blog">Payment Methods</h5>
 
                         <div class="form-check w-100 align-items-center d-flex custom-radio">
@@ -241,6 +272,97 @@
 
                 @endauth
             </form>
+        </div>
+    </div>
+    <div class="apply-content">
+        <div class="card ">
+            <div class="card-body">
+                <!-- header Apply Coupons -->
+                <div class="d-flex align-items-center promotion_text-cololr">
+                    <i class="fas fa-arrow-left btn-back-Promotion"></i>
+                    <h3 class="t-center w-100">
+                        Apply Coupons
+                    </h3>
+                </div>
+                <div class="card p-3 Apply-schar mt-3">
+                    <div class="input-group">
+                        <div class="input-group-prepend mx-2">
+                            <img width="30px" src="./assets/images/divition-icon.png"
+                                alt="" />
+                        </div>
+                        <input type="text" class="b-0-outline"
+                            aria-label="Amount (to the nearest dollar)"
+                            placeholder="Enter Promocode">
+                        <div class="input-group-append">
+                            <span class="input-group-text">Apply</span>
+                        </div>
+                    </div>
+                </div>
+                <h3 class="my-4">Best Offers</h3>
+                <div class="card mt-2 a-card-all-css">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h5 class="text-uppercase mb-0 promotion_text-cololr">
+                                    drinkstime04</h5>
+                                <p class="text-capitalize mb-0">Lorem ipsum dolor sit,
+                                    amet
+                                    consectetur adipisicing elit.</p>
+                            </div>
+                            <div>
+                                <h5 class="text-capitalize cursor-pointer">apply</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-white border-top a-card-footer">
+                        <p class="text-capitalize text-capitalize">Lorem, ipsum dolor
+                            sit
+                            amet consectetur adipisicing elit.</p>
+                    </div>
+                </div>
+                <div class="card mt-2 a-card-all-css">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h5 class="text-uppercase mb-0 promotion_text-cololr">
+                                    drinkstime04</h5>
+                                <p class="text-capitalize mb-0">Lorem ipsum dolor sit,
+                                    amet
+                                    consectetur adipisicing elit.</p>
+                            </div>
+                            <div>
+                                <h5 class="text-capitalize cursor-pointer">apply</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-white border-top a-card-footer">
+                        <p class="text-capitalize text-capitalize">Lorem, ipsum dolor
+                            sit
+                            amet consectetur adipisicing elit.</p>
+                    </div>
+                </div>
+                <div class="card mt-2 a-card-all-css">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h5 class="text-uppercase mb-0 promotion_text-cololr">
+                                    drinkstime04</h5>
+                                <p class="text-capitalize mb-0">Lorem ipsum dolor sit,
+                                    amet
+                                    consectetur adipisicing elit.</p>
+                            </div>
+                            <div>
+                                <h5 class="text-capitalize cursor-pointer">apply</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-white border-top a-card-footer">
+                        <p class="text-capitalize text-capitalize">Lorem, ipsum dolor
+                            sit
+                            amet consectetur adipisicing elit.</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

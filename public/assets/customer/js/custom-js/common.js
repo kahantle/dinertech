@@ -6,6 +6,16 @@ $(function() {
         $('.lazy').lazy();
     });
 
+    $(".Promotion-btn-click").click(function() {
+        // $(".Promotion-content").css("display", "none");
+        // $(".apply-content").css("display", "block");
+    });
+
+    $(".btn-back-Promotion").click(function() {
+        $(".apply-content").css("display", "none");
+        $(".Promotion-content").css("display", "block");
+    });
+
     feather.replace();
 
     $(document.body).delegate(".cart-remove", "click", function() {
