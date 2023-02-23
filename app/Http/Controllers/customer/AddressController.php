@@ -23,7 +23,7 @@ class AddressController extends Controller
     public function create()
     {
         $data['title'] = 'Add New Address - Dinertech';
-        return view('customer.address.create',$data);   
+        return view('customer.address.create',$data);
     }
 
     public function store(Request $request)
@@ -46,7 +46,7 @@ class AddressController extends Controller
         $customerAddress->type  = $request->address_type;
         if($customerAddress->save())
         {
-            return redirect()->route("customer.address.index")->with('success','Address add sucessfully.');
+            return redirect()->back()->with('success','Address add sucessfully.');
         }
         else
         {
