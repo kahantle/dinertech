@@ -7,8 +7,8 @@ $(function() {
     });
 
     $(".Promotion-btn-click").click(function() {
-        // $(".Promotion-content").css("display", "none");
-        // $(".apply-content").css("display", "block");
+        $(".Promotion-content").css("display", "none");
+        $(".apply-content").css("display", "block");
     });
 
     $(".btn-back-Promotion").click(function() {

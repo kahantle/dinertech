@@ -5,6 +5,7 @@ namespace App\Http\Controllers\customer;
 use App\Http\Controllers\Controller;
 use App\Models\CustomerAddress;
 use App\Models\User;
+use App\Models\Promotion;
 use Auth;
 use Config;
 use Illuminate\Http\Request;
@@ -15,7 +16,7 @@ class ProfileController extends Controller
     {
         if (Auth::check()) {
             $data['customer'] = User::with('address')->findOrFail(Auth::user()->uid);
-            $restaurantId = session()->get('restaurantId');
+            $restaurantId = 1;
             $uid = Auth::user()->uid;
             $data['cards'] = getUserCards($restaurantId, $uid);
             $data['title'] = 'Profile';

@@ -43,6 +43,7 @@
                             </div>
                         </div>
                     </div>
+                    <input type="hidden" name="promotion_id" class="promotion_id_field">
                     <p id="output" class="set-order-msg">Current Timing Is set in Your Order</p>
                     <div class="align-items-center wd-dr-now my-4 d-none">
                         <div class="input-group w-auto">
@@ -274,94 +275,56 @@
             </form>
         </div>
     </div>
-    <div class="apply-content">
-        <div class="card ">
-            <div class="card-body">
-                <!-- header Apply Coupons -->
-                <div class="d-flex align-items-center promotion_text-cololr">
-                    <i class="fas fa-arrow-left btn-back-Promotion"></i>
-                    <h3 class="t-center w-100">
-                        Apply Coupons
-                    </h3>
-                </div>
-                <div class="card p-3 Apply-schar mt-3">
-                    <div class="input-group">
-                        <div class="input-group-prepend mx-2">
-                            <img width="30px" src="./assets/images/divition-icon.png"
-                                alt="" />
-                        </div>
-                        <input type="text" class="b-0-outline"
-                            aria-label="Amount (to the nearest dollar)"
-                            placeholder="Enter Promocode">
-                        <div class="input-group-append">
-                            <span class="input-group-text">Apply</span>
-                        </div>
+</div>
+<div class="apply-content">
+    <div class="card ">
+        <div class="card-body">
+            <!-- header Apply Coupons -->
+            <div class="d-flex align-items-center promotion_text-cololr">
+                <i class="fas fa-arrow-left btn-back-Promotion cursor-pointer"></i>
+                <h3 class="t-center w-100">
+                    Apply Coupons
+                </h3>
+            </div>
+            <div class="card p-3 Apply-schar mt-3">
+                <div class="input-group">
+                    <div class="input-group-prepend mx-2">
+                        <img width="30px" src="./assets/images/divition-icon.png"
+                            alt="" />
+                    </div>
+                    <input type="text" class="b-0-outline"
+                        aria-label="Amount (to the nearest dollar)"
+                        placeholder="Enter Promocode">
+                    <div class="input-group-append">
+                        <span class="input-group-text">Apply</span>
                     </div>
                 </div>
-                <h3 class="my-4">Best Offers</h3>
-                <div class="card mt-2 a-card-all-css">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <h5 class="text-uppercase mb-0 promotion_text-cololr">
-                                    drinkstime04</h5>
-                                <p class="text-capitalize mb-0">Lorem ipsum dolor sit,
-                                    amet
-                                    consectetur adipisicing elit.</p>
-                            </div>
-                            <div>
-                                <h5 class="text-capitalize cursor-pointer">apply</h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-footer bg-white border-top a-card-footer">
-                        <p class="text-capitalize text-capitalize">Lorem, ipsum dolor
-                            sit
-                            amet consectetur adipisicing elit.</p>
-                    </div>
-                </div>
-                <div class="card mt-2 a-card-all-css">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <h5 class="text-uppercase mb-0 promotion_text-cololr">
-                                    drinkstime04</h5>
-                                <p class="text-capitalize mb-0">Lorem ipsum dolor sit,
-                                    amet
-                                    consectetur adipisicing elit.</p>
-                            </div>
-                            <div>
-                                <h5 class="text-capitalize cursor-pointer">apply</h5>
+            </div>
+            <h3 class="my-4">Best Offers</h3>
+            <div style="max-height: 400px;overflow-y: auto;">
+                @php
+                    $promotions = \App\Models\Promotion::where('restaurant_id', 1)->with('promotion_item')->get();
+                @endphp
+                @foreach ($promotions as $promotion)
+                    <div class="card mt-2 a-card-all-css">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h5 class="text-uppercase mb-0 promotion_text-cololr">{{$promotion->promotion_code}}</h5>
+                                    <p class="text-capitalize mb-0">{{$promotion->promotion_name}}</p>
+                                </div>
+                                <div>
+                                    <h5 class="text-capitalize cursor-pointer" onclick="applyPromotion({{$promotion->promotion_id}})">apply</h5>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="card-footer bg-white border-top a-card-footer">
-                        <p class="text-capitalize text-capitalize">Lorem, ipsum dolor
-                            sit
-                            amet consectetur adipisicing elit.</p>
-                    </div>
-                </div>
-                <div class="card mt-2 a-card-all-css">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <h5 class="text-uppercase mb-0 promotion_text-cololr">
-                                    drinkstime04</h5>
-                                <p class="text-capitalize mb-0">Lorem ipsum dolor sit,
-                                    amet
-                                    consectetur adipisicing elit.</p>
-                            </div>
-                            <div>
-                                <h5 class="text-capitalize cursor-pointer">apply</h5>
-                            </div>
+                        <div class="card-footer bg-white border-top a-card-footer">
+                            <p class="text-capitalize text-capitalize">Lorem, ipsum dolor
+                                sit
+                                amet consectetur adipisicing elit.</p>
                         </div>
                     </div>
-                    <div class="card-footer bg-white border-top a-card-footer">
-                        <p class="text-capitalize text-capitalize">Lorem, ipsum dolor
-                            sit
-                            amet consectetur adipisicing elit.</p>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
     </div>

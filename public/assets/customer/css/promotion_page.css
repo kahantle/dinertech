@@ -2661,6 +2661,7 @@
  }
 
  .order-feedback-blog {
+     /* background-color: #e5e5e5 !important; */
      width: 100%;
      padding: 40px;
  }
@@ -3620,7 +3621,6 @@
  .orders {
      box-shadow: -2px 3px 5px 0px #7d7fb1;
      border-radius: 15px;
-     cursor: pointer;
  }
 
  .betty-burger {
