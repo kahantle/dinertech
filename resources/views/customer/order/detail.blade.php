@@ -1,5 +1,9 @@
 @extends('customer-layouts.app')
 
+@section('css')
+    <link rel="stylesheet" type="text/css" href="{{asset('assets/customer/css/promotion_page.css')}}">
+@endsection
+
 @section('content')
     <section class="dash-body-ar wd-dr-dash-inner">
         <div class="wrp-ar-nav-body">
