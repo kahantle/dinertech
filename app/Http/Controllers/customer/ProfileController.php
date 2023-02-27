@@ -20,6 +20,7 @@ class ProfileController extends Controller
             $uid = Auth::user()->uid;
             $data['cards'] = getUserCards($restaurantId, $uid);
             $data['title'] = 'Profile';
+            $data['addresses'] = CustomerAddress::all();
             return view('customer.profile', $data);
         }
         return redirect()->route('customer.index');
@@ -91,4 +92,14 @@ class ProfileController extends Controller
             }
         }
     }
+
+    public function fetchAddresses(Request $request)
+    {
+        $term = $request->keyword;
+        $addresses = CustomerAddress::where('address','LIKE','%'.$term.'%')->get();
+        return response()->json([
+            'addresses' => $addresses
+        ], 200);
+    }
+
 }

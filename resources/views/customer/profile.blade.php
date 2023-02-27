@@ -35,7 +35,7 @@
                                     </h3>
                                     <p class="text-dark text-center font-weight-bold">{{$customer->mobile_number }}</p>
                                     <div class="order-user-name">
-                                        <div class="manage-address promotion_text-cololr p-3">
+                                        <div class="manage-address promotion_text-cololr p-3 cursor-pointer">
                                             <div class="d-flex align-items-center justify-content-between">
                                                 <div class="row align-items-center">
                                                     <div class="col-md-2 col-2">
@@ -56,7 +56,7 @@
                                                 <i class="fas fa-chevron-right"></i>
                                             </div>
                                         </div>
-                                        <div class="change-password promotion_text-cololr p-3">
+                                        <div class="change-password promotion_text-cololr p-3 cursor-pointer">
                                             <div class="d-flex align-items-center justify-content-between">
                                                 <div class="row align-items-center">
                                                     <div class="col-md-2 col-2">
@@ -239,28 +239,25 @@
                                 </div>
                                 <div class="order-user-name">
                                     <h4 class="promotion_text-cololr">Recently Used</h4>
-                                    <div class="order-content p-4 my-2">
-                                        <div class="d-flex align-items-end justify-content-between">
-                                            <div class="row align-items-center">
-                                                <div class="col-md-2 text-center">
-                                                    <img width="30px"
-                                                        src="{{asset('assets/images/loction_mangeAddress.png')}}" alt="">
-                                                </div>
-                                                <div class="col-md-10">
-                                                    <div>
-                                                        <h4 class="mb-0">home</h4>
-                                                        <p class="text-dark mb-0">Lorem ipsum, dolor sit amet
-                                                            consectetur adipisicing elit. Id aspernatur
-                                                            inventore enim cumque quos adipisci quasi rerum, vel
-                                                            molestias facilis dolorum distinctio quaerat eos
-                                                            maxime, magnam consequuntur at fuga quisquam!
-                                                        </p>
+                                    @foreach ($addresses as $address)
+                                        <div class="order-content p-4 my-2">
+                                            <div class="d-flex align-items-end justify-content-between">
+                                                <div class="row align-items-center">
+                                                    <div class="col-md-2 text-center">
+                                                        <img width="30px"
+                                                            src="{{asset('assets/images/loction_mangeAddress.png')}}" alt="">
+                                                    </div>
+                                                    <div class="col-md-10">
+                                                        <div>
+                                                            <h4 class="mb-0">{{$address->type}}</h4>
+                                                            <p class="text-dark mb-0">{{$address->address}}</p>
+                                                        </div>
                                                     </div>
                                                 </div>
+                                                {{-- <p class="promotion_text-cololr mx-2">8.7 Mile</p> --}}
                                             </div>
-                                            <p class="promotion_text-cololr mx-2">8.7 Mile</p>
                                         </div>
-                                    </div>
+                                    @endforeach
                                 </div>
                             </div>
                             <div class="order-content order-content-second change-password-content-update">
@@ -306,6 +303,9 @@
             </div>
         </div>
     </section>
+    <div class="text-center betty-burger">
+        <img src="{{asset('/assets/images/betty burger logo/horizontal_splash_logo_primary.png')}}" alt="">
+    </div>
 @endsection
 
 @section('scripts')
