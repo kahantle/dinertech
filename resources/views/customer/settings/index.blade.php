@@ -82,3 +82,91 @@
         </div>
     </div>
 @endsection
+
+@section('scripts')
+
+<script>
+
+function updateSetting(type, value) {
+    $.ajax({
+        type: "POST",
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        url: "{{ route('customer.settings.update') }}",
+        data: {
+            type: type
+        },
+        success: function(data) {
+        }
+    });
+}
+
+var account_delete_url = " {{ route('account.delete') }}";
+var logout_url = " {{ route('logout') }} "
+
+$(document).on("click", ".delete-account", function (e) {
+    e.stopPropagation();
+    Swal.fire({
+        title: "Are you sure?",
+        icon: "info",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it!",
+        animation: true
+    }).then(function(result) {
+        if (result.value) {
+            const { value: password } = Swal.fire({
+                title: "Enter your password",
+                confirmButtonText: "Delete Account",
+                confirmButtonColor: "#f5424e",
+                input: "password",
+                inputLabel: "Password",
+                inputPlaceholder: "Enter your password",
+                inputAttributes: {
+                    autocapitalize: "off",
+                    autocorrect: "off",
+                    required: "true"
+                }
+            }).then(function(result) {
+                $.ajax({
+                    headers: {
+                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                            "content"
+                        )
+                    },
+                    url: account_delete_url,
+                    type: "POST",
+                    dataType: "json",
+                    data: {
+                        password: result.value
+                    },
+                    beforeSend: function() {
+                        $("body").preloader();
+                    },
+                    complete: function() {
+                        $("body").preloader("remove");
+                    },
+                    success: function (res) {
+                        console.log(res);
+                        if (res.success) {
+                            window.location.href = logout_url;
+                        } else {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Oops...",
+                                text: res.message
+                            });
+                        }
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {}
+                });
+            });
+        } else if (result.dismiss === "cancel") {
+            //
+        }
+    });
+});
+
+</script>
+
+@endsection
