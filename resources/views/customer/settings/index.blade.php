@@ -140,14 +140,7 @@ $(document).on("click", ".delete-account", function (e) {
                     data: {
                         password: result.value
                     },
-                    beforeSend: function() {
-                        $("body").preloader();
-                    },
-                    complete: function() {
-                        $("body").preloader("remove");
-                    },
                     success: function (res) {
-                        console.log(res);
                         if (res.success) {
                             window.location.href = logout_url;
                         } else {
