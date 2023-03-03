@@ -46,7 +46,7 @@ class RestaurantHoursController extends Controller
         $data  = RestaurantHours::with('allTimes')->where(['restaurant_id' => $request->restaurant_id,'day' => strtolower($request->day)])->first();
 
         if (empty($data)) {
-            return response()->json(['success' => false, 'message' => 'You can not place order in this time please check restaurant time !']);
+            return response()->json(['success' => false, 'message' => 'You can not place order at this time please check restaurant time !']);
         }
 
         $testResult  = [];
@@ -56,13 +56,13 @@ class RestaurantHoursController extends Controller
         }
 
         if (!in_array(true,$testResult)) {
-            return response()->json(['success' => false, 'message' => 'You can not place order in this time please check restaurant time !']);
+            return response()->json(['success' => false, 'message' => 'You can not place order at this time please check restaurant time !']);
         }
 
         $restaurant = Restaurant::where('restaurant_id', $request->restaurant_id)->first();
 
         if($restaurant->online_order_status == 0){
-            return response()->json(['success' => false, 'message' => "Restaurant can't able to accept online order in this time !"]);
+            return response()->json(['success' => false, 'message' => "Restaurant is not accepting the online orders at the moment !"]);
         }
 
         return response()->json(['success' => true, 'message' => '']);
