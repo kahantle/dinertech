@@ -56,6 +56,7 @@ Route::namespace ('Api')->group(function () {
             Route::post('/menu', 'MenuItemController@getMenuList')->name('customer.menu.list');
             Route::post('/search/menu', 'MenuItemController@searchMenu')->name('customer.menu.search');
             Route::post('/hours', 'RestaurantHoursController@get')->name('customer.menu.hours');
+            Route::post('/check-availability','RestaurantHoursController@checkAvailability')->name('customer.check-availability');
             Route::post('/change-password', 'UserController@changePassword')->name('customer.change.password');
             Route::prefix('promotion')->group(function () {
                 Route::post('/list', 'PromotionController@getRecords')->name('customer.promotion.get');
