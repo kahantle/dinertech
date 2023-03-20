@@ -8,6 +8,8 @@
                 padding-left : 0px
             }
         </style>
+           <!-- datepicker and time -->
+           <link rel="stylesheet" href="{{asset('vendor/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}">
     @endif
 @endsection
 
@@ -161,7 +163,7 @@
                                         </div>
                                         <div class="form-group col-md-6">
                                             <label for="hoursInput">Hours</label>
-                                            <input type="number" name="restricted_hours" value="{{$promotion->restricted_hours}}" max="23" class="form-control input-sm" id="hoursInput">
+                                            <input type="text" id="start_time" name="restricted_hours" value="{{$promotion->restricted_hours}}" class="form-control input-sm" placeholder="Select Time" name="start_time" autocomplete="off" />
                                         </div>
                                     </div>
                                     <div class="form-group form-btn justify-content-center">
@@ -206,14 +208,38 @@
             }
         });
     </script>
+     <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                jQuery('#start_time, #end_time, #appt_time, #meet_time, #odd_time').timepicker({
+
+                });
+            });
+    </script>
     <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js')}}"></script>
     <script src="{{ asset('assets/js/common.js')}}"></script>
     <script src="{{ asset('assets/js/type/cart.js')}}"></script>
     <script src="{{asset('vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}"></script>
+    <script src="{{asset('vendor/timepicker-bs4.js')}}" defer="defer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.11.4/dayjs.min.js" integrity="sha512-Ot7ArUEhJDU0cwoBNNnWe487kjL5wAOsIYig8llY/l0P2TUFwgsAHVmrZMHsT8NGo+HwkjTJsNErS6QqIkBxDw==" crossorigin="anonymous" referrerpolicy="no-referrer" defer="defer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/js/bootstrap.bundle.min.js" integrity="sha512-igl8WEUuas9k5dtnhKqyyld6TzzRjvMqLC79jkgT3z02FvJyHAuUtyemm/P/jYSne1xwFI06ezQxEwweaiV7VA==" crossorigin="anonymous" referrerpolicy="no-referrer" defer="defer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js" integrity="sha512-Tn2m0TIpgVyTzzvmxLNuqbSJH3JP8jm+Cy3hvHrW7ndTDcJ1w5mBiksqDBb8GpE2ksktFvDB/ykZ0mDpsZj20w==" crossorigin="anonymous" referrerpolicy="no-referrer" defer="defer"></script>
     @if ($webview == 1)
         <script src="{{asset('assets/customer/js/jquery.validate.min.js')}}"></script>
         <script src="{{asset('assets/customer/js/additional-methods.min.js')}}"></script>
         <script src="{{asset('assets/js/type/cart-webview.js')}}"></script>
+          <!-- datepicker and time -->
+          <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                jQuery('#start_time, #end_time, #appt_time, #meet_time, #odd_time').timepicker({
+
+                });
+            });
+        </script>
+        <script src="{{asset('vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}"></script>
+        <script src="{{asset('vendor/timepicker-bs4.js')}}" defer="defer"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.11.4/dayjs.min.js" integrity="sha512-Ot7ArUEhJDU0cwoBNNnWe487kjL5wAOsIYig8llY/l0P2TUFwgsAHVmrZMHsT8NGo+HwkjTJsNErS6QqIkBxDw==" crossorigin="anonymous" referrerpolicy="no-referrer" defer="defer"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/js/bootstrap.bundle.min.js" integrity="sha512-igl8WEUuas9k5dtnhKqyyld6TzzRjvMqLC79jkgT3z02FvJyHAuUtyemm/P/jYSne1xwFI06ezQxEwweaiV7VA==" crossorigin="anonymous" referrerpolicy="no-referrer" defer="defer"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js" integrity="sha512-Tn2m0TIpgVyTzzvmxLNuqbSJH3JP8jm+Cy3hvHrW7ndTDcJ1w5mBiksqDBb8GpE2ksktFvDB/ykZ0mDpsZj20w==" crossorigin="anonymous" referrerpolicy="no-referrer" defer="defer"></script>
     @else
         {!! JsValidator::formRequest('App\Http\Requests\PromotionCartRequest','#promotionForm'); !!}
     @endif
