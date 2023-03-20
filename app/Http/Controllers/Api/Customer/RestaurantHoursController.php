@@ -12,8 +12,6 @@ use Config;
 
 class RestaurantHoursController extends Controller
 {
-
-
     public function get(Request $request)
     {
         try {
