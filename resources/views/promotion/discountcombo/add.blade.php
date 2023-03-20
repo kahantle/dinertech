@@ -2,6 +2,7 @@
 
 @section('css')
     <link rel="stylesheet" href="{{ asset('/assets/css/promotion_style.css') }}">
+    <link rel="stylesheet" href="{{asset('vendor/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}">
     @if ($webview == 1)
         <style>
             #wrapper{
@@ -191,8 +192,8 @@
                               <div class="content">
                                 <div id="accordion" class="accordion row">
                                     <div class="form-group col-md-6">
-                                        <label for="daysInput">Days</label>
-                                        <input type="number" name="restricted_days" class="form-control input-sm" id="daysInput">
+                                        <label for="daysInput">Date</label>
+                                        <input data-provide="datepicker"  value=""  data-date-autoclose="true" class="form-control" placeholder="Select Date" data-date-format="mm-dd-yyyy" name="restricted_days" id="daysInput">
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label for="hoursInput">Hours</label>
@@ -359,6 +360,7 @@
     <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js')}}"></script>
     <script src="{{ asset('assets/js/common.js')}}"></script>
     <script src="{{ asset('assets/js/type/buyTwoThree.js')}}"></script>
+    <script src="{{asset('vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}"></script>
     @if ($webview == 1)
         <script src="{{asset('assets/customer/js/jquery.validate.min.js')}}"></script>
         <script src="{{asset('assets/customer/js/additional-methods.min.js')}}"></script>

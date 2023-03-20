@@ -17,7 +17,7 @@
                     </div>
                 </div>
             </nav>
-        </div>
+        </div> 
         <div class="add-category Promotion menu dashboard content-wrapper category category-insides-blog category_main">
             @include('common.flashMessage')
 

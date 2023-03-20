@@ -52,7 +52,6 @@ class ChatController extends Controller
     public function sendMessage(Request $request)
     {
         if ($request->ajax()) {
-
             date_default_timezone_set(session()->get('sys_timezone'));
             $database = app('firebase.database');
             $orderId = $request->orderId;
@@ -71,6 +70,7 @@ class ChatController extends Controller
                 'sent_from' => Config::get('constants.ROLES.CUSTOMER'),
                 'user_id' => $userId,
             ];
+            
             $newPostKey = $database->getReference(Config::get('constants.FIREBASE_DB_NAME'))->push()->getKey();
             $url = Config::get('constants.FIREBASE_DB_NAME') . '/' . $restaurantId . '/' . $orderId . "/" . $userId . "/";
             $updates = [$url . $newPostKey => $messageData];

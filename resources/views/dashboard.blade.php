@@ -18,7 +18,7 @@
                         </div>
                     </div>
                 </div>
-            </nav>
+            </nav> 
         </div>
         <div class="dashboard category content-wrapper pt-1" id="recent-order">
             <div class="dash-second">

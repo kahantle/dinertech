@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
 class HomeController extends Controller
-{
+{ 
 
     public function index()
     {
@@ -60,6 +60,12 @@ class HomeController extends Controller
         $restaurantId = 1;
         $data['item'] = MenuItem::with('modifierList', 'modifierList.modifier_item')->where('restaurant_id', $restaurantId)->where('menu_id', $menuId)->first();
         return response()->json(['view' => \View::make('customer.menu_modifier', $data)->render()], 200);
+    }
+    public function setSystemTime(Request $request)
+    {
+        if ($request->ajax()) {
+            session()->put('sys_timezone', $request->get('sys_timezone'));
+        }
     }
 
 }

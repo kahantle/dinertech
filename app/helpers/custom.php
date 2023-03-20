@@ -16,6 +16,7 @@ use Cartalyst\Stripe\Stripe;
 // use Config;
 
 
+
 if (!function_exists('getRestaurantId')) {
     function getRestaurantId()
     {
@@ -33,6 +34,35 @@ if (!function_exists('getUserCards')) {
         } else {
             return null;
         }
+    }
+}
+
+if (!function_exists('getCartItem')) {
+    function getCartItem()
+    {
+        $cartItems = session()->get('cart');
+        if (!empty($cartItems)) {
+            // $cartMenus = array();
+            foreach ($cartItems as $cartKey => $items) {
+                foreach ($items as $menu) {
+                    // array_push($cartMenus,$menu);
+                    $modifierGroupIds = $menu['modifier'];
+                    if (!empty($menu['modifier'])) {
+                        $modifierGroupItems = call_user_func_array('array_merge', $menu['modifier_item']);
+
+                        $modifierGroups = ModifierGroup::with(['modifier_item' => function ($query) use ($modifierGroupItems, $modifierGroupIds) {
+                            $query->whereIn('modifier_item_id', $modifierGroupItems)->whereIn('modifier_group_id', $modifierGroupIds)->get(['modifier_item_id', 'modifier_group_id', 'modifier_group_item_name', 'modifier_group_id', 'modifier_group_item_price']);
+                        }])->whereIn('modifier_group_id', $menu['modifier'])->get(['modifier_group_id', 'modifier_group_name', 'restaurant_id']);
+                        $modifierItems[$cartKey][$menu['menu_id']] = $modifierGroups->toArray();
+                        $data['modifierGroups'] = $modifierItems;
+                    }
+                }
+            }
+            $data['cartItems'] = $cartItems;
+        } else {
+            $data['cartItems'] = array();
+        }
+        return $data;
     }
 }
 

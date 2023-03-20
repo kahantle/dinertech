@@ -78,14 +78,14 @@
               </label>
             </div>
             <div class="checkbox switcher">
-              <label for="is_location_tracking">
+              <label for="is_online_order">
                 <div class="title">
                   <p>Accepting Online Orders</p>
                 </div>
                 <div class="switch-btn">
-                  <input type="checkbox" class="makeCallNotificationUpdate" id="is_location_tracking"
-                  data-type="location" value="{{$user->location_tracking}}"
-                  @if($user->location_tracking)? checked @endif>
+                <input type="checkbox" class="makeCallNotificationUpdate" id="is_online_order"
+                data-type="location" value="{{$user->online_order_status}}"
+                @if($user->online_order_status)? checked @endif>
                   <span><small></small></span>
                 </div>
               </label>

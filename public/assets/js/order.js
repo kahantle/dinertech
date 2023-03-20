@@ -1,4 +1,4 @@
-$(document).ready(function () {
+$(document).ready(function () { 
     var baseUrl = $("[name='base-url']").attr("content");
     $(document).on("click", ".action", function() {
         var url = $(this).data("route");

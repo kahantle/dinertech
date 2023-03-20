@@ -2,6 +2,7 @@
 
 @section('css')
     <link rel="stylesheet" href="{{ asset('/assets/css/promotion_style.css') }}">
+    <link rel="stylesheet" href="{{asset('vendor/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}">
     @if ($webview == 1)
         <style>
             #wrapper{
@@ -160,6 +161,28 @@
                             </select>
                         </div>
 
+                        <div id="restricted-duration" class="overlay field-popup">
+                            <div class="popup text-center">
+                              <h2>Restricted Duration</h2>
+                              <a class="close eligible_popup_close" href="#">&times;</a>
+                              <div class="content">
+                                <div id="accordion" class="accordion row">
+                                    <div class="form-group col-md-6">
+                                        <label for="daysInput">Date</label>
+                                        <input data-provide="datepicker"  value="<?php echo \Carbon\Carbon::parse($promotion->restricted_days)->format('m-d-Y'); ?>"  data-date-autoclose="true" class="form-control" placeholder="Select Date" data-date-format="mm-dd-yyyy" name="restricted_days" id="daysInput">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="hoursInput">Hours</label>
+                                        <input type="number" name="restricted_hours" value="{{$promotion->restricted_hours}}" max="23" class="form-control input-sm" id="hoursInput">
+                                    </div>
+                                </div>
+                                <div class="form-group form-btn justify-content-center">
+                                    <a class="close eligible_popup_close eligible_popup-inner" href="#">Submit</a>
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+
                         <div id="addEligiblePopup">
                             @for ($i = 1;$i <= $eligibleItems;$i++)
                                 <div id="field-{{convertNumberToWord($i)}}" class="overlay field-popup">
@@ -246,9 +269,18 @@
 
 @section('scripts')
 
+    <script>
+        $("#display_time").change(function() {
+            if (this.value == "Restricted") {
+                var overlay_url = window.location.href.replace("#","");
+                window.location.href = overlay_url += "#restricted-duration";
+            }
+        });
+    </script>
     <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js')}}"></script>
     <script src="{{ asset('assets/js/common.js')}}"></script>
     <script src="{{ asset('assets/js/type/mealbundle.js')}}"></script>
+    <script src="{{asset('vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}"></script>
     <script>
         var category = {!! json_encode($category) !!};
         var is_edit = 0;

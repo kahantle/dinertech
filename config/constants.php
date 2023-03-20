@@ -87,7 +87,7 @@ return [
     ],
     'ORDER_TYPE' => [
         '1' => 'Any Type',
-        '2' => 'Pickup Time',
+        '2' => 'Pickup Type',
         // '3' => 'Delhivery'
     ],
     'MARK_PROMO_AS' => [

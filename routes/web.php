@@ -251,6 +251,12 @@ Route::prefix('customer')->group(function () {
     Route::post('/promotions/menu/getMenuModifier', 'customer\PromotionController@promotionMenuModifier')->name('customer.promotion.menu.modifier');
     Route::post('/promotion/menu/add-to-cart', 'customer\PromotionController@promotionMenuAddCart')->name('customer.promotion.menu.add.cart');
 
+    /*New Prmotion*/
+    Route::post('/newpromotion', 'customer\NewPromotionContoller@discountcart');
+
+    /*Remove Couoen */
+    Route::post('/remove_coupon_code','customer\NewPromotionContoller@remove_coupon_code');
+
     /* Google Signing */
     Route::get('auth/google', 'customer\GoogleController@redirectToGoogle')->name('customer.google.login');
     Route::get('auth/google/callback', 'customer\GoogleController@handleGoogleCallback')->name('customer.google.redirectUrl');
@@ -275,6 +281,8 @@ Route::prefix('customer')->group(function () {
         Route::get('/promotion', 'customer\PromotionController@show')->name('customer.show.promotions');
         Route::get('/promotion/get/eligible-items/{promotionId}', 'customer\PromotionController@getEligibleItems')->name('customer.promotions.getEligibleItems');
         Route::get('/promotion/apply/{promotionId}', 'customer\PromotionController@applyPromotion')->name('customer.apply.promotion');
+
+      
 
         /* Hours */
         Route::get('/restaurant/information', 'customer\HoursController@index')->name('customer.restaurant.information');
@@ -340,7 +348,7 @@ Route::prefix('customer')->group(function () {
 
     });
 });
-
+ 
 //-------------------------- Admin Route ---------------------------------------------- //
 
 Route::prefix('admin')->group(function () {

@@ -32,7 +32,7 @@
                                                         <li>
                                                             <a href="#chat-{{ $orderId['order_id'] }}" data-toggle="tab"
                                                                 class="{{ $active }} click-chat odrdetail"
-                                                                data-orderid="{{ $orderId['order_id'] }}">
+                                                                data-orderid="{{ $orderIds['order_id'] }}">
                                                                 <img src="{{ empty(Auth::user()->profile_image) ? asset('assets/customer/images/Logo-Round.png') : route('display.image', [Config::get('constants.IMAGES.USER_IMAGE_PATH'), Auth::user()->profile_image]) }}"
                                                                     class="img-fluid">
                                                                 <div class="d-flex flex-column">
@@ -157,7 +157,7 @@
                                                                     <input type="text" placeholder="Input Message"
                                                                         class="form-control desktopMessage voice-message{{ $orderId['order_id'] }}"
                                                                         id="message-output">
-                                                                    <button class="submit sendMessage" alt="Submit"><i
+                                                                    <button class="submit sendMessage" data-orderid="{{ $orderId['order_id'] }}" alt="Submit"><i
                                                                             class="fa fa-paper-plane"
                                                                             aria-hidden="true"></i></button>
                                                                     <button class="submit micro start" alt="Micro"

@@ -30,7 +30,7 @@
                   <span>declined by restaurant</span>
                 </a>
               </li>
-            </ul>
+            </ul>  
             <div class="tab-content">
               <div class="tab-pane active" id="complete" role="tabpanel">
                 <div class="t-c">

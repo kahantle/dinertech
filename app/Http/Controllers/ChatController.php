@@ -24,6 +24,7 @@ class ChatController extends Controller
    public function index(Request $request){
 
         try{
+              $database = app('firebase.database');
             $user = Auth::user()->uid;
             $restaurant = Restaurant::where('uid', $user)->first();
             $orders = Order::where('restaurant_id', $restaurant->restaurant_id)
@@ -57,7 +58,6 @@ class ChatController extends Controller
         }
     }
 
-
     public function sendMessages(Request $request) {
         try{
             $database = app('firebase.database');
@@ -85,7 +85,9 @@ class ChatController extends Controller
             // $database->getReference()->update($updates);
             // $database->getReference(Config::get('constants.FIREBASE_DB_NAME'))->update($updates);
             $url = Config::get('constants.FIREBASE_DB_NAME').'/'.$restaurant->restaurant_id.'/'.$order_id."/".$customer_id.'/';
+
             $database->getReference($url)->push($postData);
+
             return response()->json(['success'=> true,'message'=> 'Message successfully sent!']);
         }catch (ApiException $e) {
             $request = $e->getRequest();

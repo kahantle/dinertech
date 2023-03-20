@@ -15,7 +15,7 @@ use Config;
 use Toastr;
 use Carbon;
 use PDF;
-
+ 
 
 class OrderController extends Controller
 {
@@ -33,7 +33,7 @@ class OrderController extends Controller
 		$orderAddress = CustomerAddress::where('customer_address_id',$order->address_id)->first();
 		return view('orders.order-details',compact('order','userdata','orderAddress'));
 	}
-
+ 
 	public function OrderAction(Request $request,$id,$action){
         try {
 

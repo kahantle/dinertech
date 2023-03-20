@@ -32,7 +32,7 @@
             </div>
         </div>
     </section>
-@endsection
+@endsection 
 
 @section('scripts')
 

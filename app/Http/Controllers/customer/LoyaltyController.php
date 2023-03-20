@@ -20,3 +20,4 @@ class LoyaltyController extends Controller
         return view('customer.loyalty.index',$data);
     }
 }
+ 

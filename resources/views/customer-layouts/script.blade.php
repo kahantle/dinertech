@@ -13,4 +13,79 @@
 <script src="{{ asset('assets/customer/js/custom-js/common.js') }}"></script>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{{ asset('assets/customer/js/jquery.lazy.min.js') }}"></script>
+<script>
+$(".coupenremove").hide();
+function applyCoupenCode() {
+    var coupon_code = $('#coupon_code').val();
+    var grand_total = $('#grand_total').val();
+    var itemFormData = {
+        'coupon_code': coupon_code, 
+        'grand_total': grand_total,
+    };
+    if (coupon_code != '') {
+        $.ajax({
+            type: "post",
+            url: 'customer/newpromotion',
+            data: itemFormData,
+            dataType: "json",
+            cache: true,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(result) {
+                var discount=parseFloat(result.discount);
+                if(result.status=='success'){
+                    $('.coupenremove').show();
+                    $('#coupon_code_msgs').hide();
+                    $('#discount').html('$' + discount.toFixed(2));
+                    $('#total_price').html('$' + result.itemPrice.toFixed(2));
+                    $('.couponcode').html(result.couponcode);
+                    $(".apply-content").css("display", "none");
+                    $(".Promotion-content").css("display", "block");
+                }else{
+                    $('#grand_total').val();
+                    $(".apply-content").css("display", "none");
+                    $(".Promotion-content").css("display", "block"); 
+                } 
+                $('#coupon_code_msgs').html(result.msg);
+            }
+        });
+    } else {
+        $('#coupen_code_msg').html('Please enter coupen Code')
+    }
+}
+var removecoupen = "{{ url('customer/remove_coupon_code') }}";
+
+function remove_coupon_code() {
+    $('#coupon_code_msg').html('');
+    var coupon_code = $('#coupon_code').val();
+    $('#coupon_code').val('');
+    var grand_total = $('#grand_total').val();
+    var removecoupendata = {
+        'coupon_code': coupon_code,
+        'grand_total': grand_total,
+    };
+    if (coupon_code != '') {
+        $.ajax({
+            type: 'post',
+            url: removecoupen,
+            data: removecoupendata,
+            dataType: "json",
+            cache: true,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(result) {
+                if (result != '') {
+                    $('#discount').html('$0.00');
+                    $('.coupenremove').hide();
+                    $('#total_price').html('$' + result.grand_total + '.00');
+                } else {
+
+                }
+            }
+        });
+    }
+}
+</script>
 @yield('scripts')

@@ -6,12 +6,14 @@ $(function() {
     $(".sendMessage").on("click", function() {
         var orderId = $(this).attr('data-orderid');
         var message = '';
+        
 
         if ($(".chat-desktop").length == 1) {
-            message = $(".desktopMessage-" + orderId).val();
+            message = $(".desktopMessage").val();
             $(".desktopMessage-" + orderId).val('');
         } else if ($(".chat-mobile").length == 1) {
-            message = $(".mobileMessage-" + orderId).val();
+            alert(2);
+            message = $(".mobileMessage").val();
             $(".mobileMessage-" + orderId).val('');
         }
         $.ajax({
@@ -32,8 +34,10 @@ $(function() {
     });
 
     $(document).on('keyup', "#message-output", function(event) {
+       
         if (event.keyCode === 13) {
             var orderId = $(this).attr('data-orderid');
+            alert(orderId);
             var message = '';
 
             if ($(".chat-desktop").length == 1) {

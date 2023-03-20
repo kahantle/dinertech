@@ -56,6 +56,7 @@ Route::namespace ('Api')->group(function () {
             Route::post('/menu', 'MenuItemController@getMenuList')->name('customer.menu.list');
             Route::post('/search/menu', 'MenuItemController@searchMenu')->name('customer.menu.search');
             Route::post('/hours', 'RestaurantHoursController@get')->name('customer.menu.hours');
+            Route::post('/check-availability','RestaurantHoursController@checkAvailability')->name('customer.check-availability');
             Route::post('/change-password', 'UserController@changePassword')->name('customer.change.password');
             Route::prefix('promotion')->group(function () {
                 Route::post('/list', 'PromotionController@getRecords')->name('customer.promotion.get');
@@ -164,7 +165,7 @@ Route::namespace ('Api')->group(function () {
             Route::post('/category-menu', 'MenuItemController@getMenuListByCategory')->name('customer.category.menu.list');
             Route::prefix('promotion-type')->group(function () {
                 Route::post('/', 'PromotionTypeController@getRecords')->name('restaurant.promotion.type.list');
-            });
+            }); 
             Route::prefix('promotion')->group(function () {
                 Route::post('/add', 'PromotionController@addRecord')->name('restaurant.promotion.add');
                 Route::post('/list', 'PromotionController@getRecords')->name('restaurant.promotion.get');

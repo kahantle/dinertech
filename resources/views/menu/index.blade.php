@@ -20,7 +20,7 @@
             <a href="{{route('add.menu')}}"><i class="fa fa-plus" aria-hidden="true"></i></a>
           </div>
         </div>
-      </div>
+      </div> 
     </nav>
   </div>
   <div class="menu content-wrapper">

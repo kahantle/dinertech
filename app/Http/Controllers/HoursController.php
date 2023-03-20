@@ -113,7 +113,7 @@ class HoursController extends Controller
           $hour = new RestaurantHours;
           $hour->restaurant_id = $restaurant->restaurant_id;
           $hour->hours_group_id = $groupId;
-          $hour->day            = strtolower($value);
+          $hour->day = strtolower($value);
           $hour->save();
 
           foreach($request->post('opening_hours') as $timeKey => $timeValue){

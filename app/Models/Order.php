@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     protected $primaryKey = 'order_id';
-    protected $appends = ['user_name'];
+    protected $appends = ['user_name']; 
 
 
     public function orderItems()
