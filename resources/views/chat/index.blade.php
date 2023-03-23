@@ -229,12 +229,16 @@ $('document').ready(function() {
             chat_element += '    </li>'
           }
 
-          var update_url = '/'+db_name+'/'+resturant_id+'/'+order_id+'/'+index+'/';
-          // value.is_read = 1;
-          value.isseen = true;
+          var update_url = '/' + db_name + '/' + resturant_id + '/' + order_id + '/' +
+                            customer_id + '/' + index;
+          // // value.is_read = 1;
+          // value.isseen = true;
+          // var updates = {};
+          // updates[update_url] = value;
+          // firebase.database().ref().update(updates);
           var updates = {};
-          updates[update_url] = value;
-          firebase.database().ref().update(updates);
+            updates[update_url] = value;
+            firebase.database().ref(update_url).update({isseen:true});
           $(".msg-body").html(chat_element);
             $("#message").val('');
             lastIndex = index;

@@ -62,7 +62,7 @@ class ChatController extends Controller
         try{
             $database = app('firebase.database');
             $order_id =  $request->order_id;
-            $customer_id = $request->customer_id;
+            $customer_id= $request->customer_id;
             $user = User::where('uid',$customer_id)->first();
                 // Create a key for a new post
             $user_id = Auth::user()->uid;

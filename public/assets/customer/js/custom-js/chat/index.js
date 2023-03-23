@@ -9,8 +9,8 @@ $(function() {
         
 
         if ($(".chat-desktop").length == 1) {
-            message = $(".desktopMessage").val();
-            $(".desktopMessage-" + orderId).val('');
+            var message = $(".desktopMessage").val();
+            $(".desktopMessage" + orderId).val('');
         } else if ($(".chat-mobile").length == 1) {
             alert(2);
             message = $(".mobileMessage").val();
@@ -41,7 +41,7 @@ $(function() {
             var message = '';
 
             if ($(".chat-desktop").length == 1) {
-                message = $(".desktopMessage-" + orderId).val();
+                message = $(".desktopMessage").val();
                 $(".desktopMessage-" + orderId).val('');
             } else if ($(".chat-mobile").length == 1) {
                 message = $(".mobileMessage-" + orderId).val();

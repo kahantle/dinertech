@@ -7,9 +7,12 @@ use App\Models\MenuItem;
 use App\Models\Promotion;
 use App\Models\Restaurant;
 use Illuminate\Http\Request;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Auth;
 use Stripe\Customer;
+use Carbon\Carbon;
+use DateTime;
+use DateTimeZone;
 
 class NewPromotionContoller extends Controller
 {
@@ -25,7 +28,7 @@ class NewPromotionContoller extends Controller
          $msg='';
          if($restaurant != '' && $restaurant != '0')
          {
-             $result = Promotion::select('promotions.*')->where('promotion_code', $request->coupon_code)->where('restaurant_id', getRestaurantId())->first();
+             $result = Promotion::select("*",DB::raw("CONCAT(promotions.restricted_days,' ',promotions.restricted_hours) AS publish_date_time"))->where('promotion_code', $request->coupon_code)->where('restaurant_id', getRestaurantId())->first();
            
              $availability=$result->availability;
              $couponcode=$request->coupon_code;
@@ -290,6 +293,7 @@ class NewPromotionContoller extends Controller
                         $status="error";
                         $msg="Coupen is Expired";
                     }
+
                 }
             }
              

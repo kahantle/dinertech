@@ -217,6 +217,7 @@
         <script src="{{asset('assets/customer/js/additional-methods.min.js')}}"></script>
         <script src="{{asset('assets/js/type/cart-webview.js')}}"></script>
           <!-- datepicker and time -->
+
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 jQuery('#start_time, #end_time, #appt_time, #meet_time, #odd_time').timepicker({

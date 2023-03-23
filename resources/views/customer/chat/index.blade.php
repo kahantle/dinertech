@@ -154,7 +154,7 @@
                                                             </div>
                                                             <div class="message-input">
                                                                 <div class="wrap">
-                                                                    <input type="text" placeholder="Input Message"
+                                                                    <input type="text" value="" placeholder="Input Message"
                                                                         class="form-control desktopMessage voice-message{{ $orderId['order_id'] }}"
                                                                         id="message-output">
                                                                     <button class="submit sendMessage" data-orderid="{{ $orderId['order_id'] }}" alt="Submit"><i
@@ -281,13 +281,14 @@
                         }
 
                         // var update_url = '/' + db_name + '/' + resturant_id + '/' + order_id + '/' + index;
-                        // var update_url = '/' + db_name + '/' + resturant_id + '/' + order_id + '/' +
-                        //     customer_id + '/' + index;
+                        var update_url = '/' + db_name + '/' + resturant_id + '/' + order_id + '/' +
+                            customer_id + '/' + index;
+                        console.log(update_url);
 
-                        // value.isseen = false;
-                        // var updates = {};
-                        // updates[update_url] = value;
-                        // firebase.database().ref(update_url).update({isseen:true});
+                        // value.isseen = true;
+                        var updates = {};
+                        updates[update_url] = value;
+                        firebase.database().ref(update_url).update({isseen:true});
                         $(".chats").html(chat_element);
                         $("#message-output").val('');
                         lastIndex = index;
