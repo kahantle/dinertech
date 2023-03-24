@@ -171,7 +171,7 @@
                         </select>
                     </div>
 
-                    <div id="restricted-duration" class="overlay field-popup">
+                    <!-- <div id="restricted-duration" class="overlay field-popup">
                         <div class="popup text-center">
                             <h2>Restricted Duration</h2>
                             <a class="close eligible_popup_close" href="#">&times;</a>
@@ -191,7 +191,42 @@
                             </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
+                        <div class="modal fade" id="Admin" role="dialog" tabindex="-1">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h2 class="modal-title">Restricted Duration</h2><button aria-label="Close"
+                                            class="close" data-dismiss="modal" type="button"><span
+                                                aria-hidden="true">&times;</span></button>
+                                    </div>
+                                    <div class="modal-body text-center">
+                                        <div class="accordion row" id="accordion">
+                                            <div class="form-group col-md-6">
+                                                <label for="daysInput">Date</label>
+                                                <input data-provide="datepicker"
+                                                    value="<?php echo \Carbon\Carbon::parse($promotion->restricted_days)->format('m-d-Y'); ?>"
+                                                    data-date-autoclose="true" class="form-control"
+                                                    placeholder="Select Date" data-date-format="mm-dd-yyyy"
+                                                    name="restricted_days" id="daysInput">
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label for="hoursInput">Hours</label>
+                                                <input type="text" id="start_time" name="restricted_hours"
+                                                    value="{{$promotion->restricted_hours}}"
+                                                    class="form-control input-sm" placeholder="Select Time"
+                                                    name="start_time" autocomplete="off" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer justify-content-center">
+                                        <button class="btn btn-submit" data-dismiss="modal"
+                                            type="button">Submit</button>
+                                        {{-- <button class="btn btn-primary" type="button">Save changes</button> --}}
+                                    </div>
+                                </div><!-- /.modal-content -->
+                            </div><!-- /.modal-dialog -->
+                        </div><!-- /.modal -->
 
                     <div id="field-one" class="overlay field-popup">
                       <div class="popup text-center">
@@ -274,18 +309,26 @@
 @endsection
 
 @section('scripts')
+    <script>
+    $("#availability").on("change", function() {
+        var sOptionVal = $(this).val();
+        if (sOptionVal == 'Restricted') {
+            $('#Admin').modal('show');
+        }
+    });
+    </script>
 <script>
     var item_count = {!! json_encode($category_item_count) !!};
     if(item_count){
       $("#slct").text(item_count+" Eligible items selected.");
       $("#hidden_eligible_item").val(item_count)
     }
-    $("#availability").change(function() {
-        if (this.value == "Restricted") {
-            var overlay_url = window.location.href.replace("#","");
-            window.location.href = overlay_url += "#restricted-duration";
-        }
-    });
+    // $("#availability").change(function() {
+    //     if (this.value == "Restricted") {
+    //         var overlay_url = window.location.href.replace("#","");
+    //         window.location.href = overlay_url += "#restricted-duration";
+    //     }
+    // });
 </script>
 <script>
             document.addEventListener('DOMContentLoaded', function () {

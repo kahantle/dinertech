@@ -579,3 +579,73 @@ top: 0!important;
 .promotion-add-border {
     border-left: 2px solid #c3c3c4;
 }
+
+
+
+
+
+/* Jignesh Style */
+.modal-footer {
+  padding: 1rem 1rem 2rem 1rem;
+  border-top: none;
+}
+
+
+.btn-submit{
+background-color: #5e5ed6;
+position: unset;
+color: #fff;
+transition: all 200ms;
+font-size: 20px;
+ font-weight: bold;
+ text-decoration: none;
+ text-shadow: none;
+float: none;
+padding: 6px 52px!important;
+border-radius: 10px;
+opacity:unset;
+}
+
+.modal-title {
+
+  width: 100%;
+  text-align: center;
+}
+
+
+
+.modal-title {
+color: #434753;
+font-size: 24px;
+
+}
+
+.modal-header .close {
+  padding: 1rem;
+position: absolute;
+top: 20px;
+right: 30px;
+transition: all 200ms;
+font-size: 30px;
+font-weight: bold;
+text-decoration: none;
+color: #333;
+}
+.modal-header {
+
+
+  padding: 1.5rem 1rem 0.8rem 1rem;
+
+}
+.modal-body {
+
+  padding: 2rem 1rem 0rem 1rem;
+}
+.modal {
+  position: absolute;
+  top: 35%;
+  right: 0%;
+  bottom: 0px;
+  left: 0;
+
+}
