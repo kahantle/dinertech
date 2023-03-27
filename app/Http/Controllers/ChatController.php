@@ -24,7 +24,7 @@ class ChatController extends Controller
    public function index(Request $request){
 
         try{
-              $database = app('firebase.database');
+            $database = app('firebase.database');
             $user = Auth::user()->uid;
             $restaurant = Restaurant::where('uid', $user)->first();
             $orders = Order::where('restaurant_id', $restaurant->restaurant_id)
@@ -63,9 +63,12 @@ class ChatController extends Controller
             $database = app('firebase.database');
             $order_id =  $request->order_id;
             $customer_id= $request->customer_id;
+            $uid=$request->uid;
             $user = User::where('uid',$customer_id)->first();
                 // Create a key for a new post
             $user_id = Auth::user()->uid;
+
+            $userid=Auth::user();
             $postData =(object) [
                 'full_name' => $user->first_name." ".$user->last_name,
                 'message' => $request->message,
@@ -93,6 +96,11 @@ class ChatController extends Controller
             $request = $e->getRequest();
         }
     }
+        public function storeToken(Request $request)
+        {
+            auth()->user()->update(['device_key'=>$request->token]);
+            return response()->json(['Token successfully stored.']);
+        }
 
     public function readChatMessage(Request $request)
     {

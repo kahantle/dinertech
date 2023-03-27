@@ -30,14 +30,24 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    // 'firebase' => [
+    //     'api_key' => 'AIzaSyBcS3jwiaCmOd1QvubJj63mbnAeR4wgXHY',
+    //     'auth_domain' => 'dinnertech-customer-a1ad9.firebaseapp.com',
+    //     'database_url' => 'https://dinnertech-customer-a1ad9-default-rtdb.firebaseio.com',
+    //      //   'secret' => 'nw7gfrCXmuPfVZ4bMSsOCYeEr7ZwB6897CjyugzU',
+    //     'storage_bucket' => 'dinnertech-customer-a1ad9.appspot.com',
+    //     'project_id' => 'dinnertech-customer-a1ad9',
+    //     'messaging_sender_id' => 'G-CQCME6WE0F'
+    // ],
     'firebase' => [
-        'api_key' => 'AIzaSyBcS3jwiaCmOd1QvubJj63mbnAeR4wgXHY',
-        'auth_domain' => 'dinnertech-customer-a1ad9.firebaseapp.com',
-        'database_url' => 'https://dinnertech-customer-a1ad9-default-rtdb.firebaseio.com',
-         //   'secret' => 'nw7gfrCXmuPfVZ4bMSsOCYeEr7ZwB6897CjyugzU',
-        'storage_bucket' => 'dinnertech-customer-a1ad9.appspot.com',
-        'project_id' => 'dinnertech-customer-a1ad9',
-        'messaging_sender_id' => 'G-CQCME6WE0F'
+        'apiKey'=> 'AIzaSyBcS3jwiaCmOd1QvubJj63mbnAeR4wgXHY',
+        'authDomain'=> 'dinnertech-customer-a1ad9.firebaseapp.com',
+        'databaseURL'=> 'https://dinnertech-customer-a1ad9-default-rtdb.firebaseio.com',
+        'projectId'=> 'dinnertech-customer-a1ad9',
+        'storageBucket'=> 'dinnertech-customer-a1ad9.appspot.com',
+        'messagingSenderId'=> '877680709',
+        'appId'=> '1:877680709:web:76f6017ff40ed6907dab2c',
+        'measurementId'=> 'G-CQCME6WE0F'
     ],
 
     'google' => [

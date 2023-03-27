@@ -45,7 +45,7 @@ Route::namespace ('Auth')->group(function () {
     Route::post('/updatePassword', 'ForgotPasswordController@updatePassword')->name('updatePassword.post');
     Route::view('/status', 'auth.login')->name('status');
     Route::get('/active-request', 'VerificationController@accountActiveRequest')->name('account.active.request');
-});
+}); 
 Route::group(['middleware' => ['auth:web']], function () {
     Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
     Route::get('/menu', 'MenuController@index')->name('menu');
@@ -69,6 +69,7 @@ Route::group(['middleware' => ['auth:web']], function () {
     });
     Route::prefix('chat')->group(function () {
         Route::get('/', 'ChatController@index')->name('chat');
+        Route::post('/store-token', 'ChatController@storeToken')->name('store.token');
         Route::get('/{order_number}', 'ChatController@index')->name('chat.order');
         Route::post('/sendMessages', 'ChatController@sendMessages')->name('chat.send');
         Route::post('/getMessages', 'ChatController@getMessages')->name('chat.get');
@@ -335,6 +336,7 @@ Route::prefix('customer')->group(function () {
 
         /* Chat */
         Route::get('/chats', 'customer\ChatController@index')->name('customer.chat.index');
+        Route::post('/chats/store-token', 'customer\ChatController@storeToken')->name('customer.store.token');
         Route::post('/getChats', 'customer\ChatController@getChat');
         Route::post('/send/message', 'customer\ChatController@sendMessage');
         Route::get('/chat/export/{orderId}', 'customer\ChatController@chatExport');

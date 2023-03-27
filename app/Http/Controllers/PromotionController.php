@@ -128,12 +128,6 @@ class PromotionController extends Controller
                 $message = 'Promotion added successfully.';
             }
 
-            
-                $restricted_days = Carbon::createFromFormat('m-d-Y', $request->post('restricted_days'))->format('Y-m-d');
-                // dd($request->post('restricted_days'),$restricted_days);    
-                // $restricteddays = $restricted_days->format('Y-m-d');
-                // dd($restricted_days,$restricteddays);
-
             $promotion->restaurant_id = $restaurant->restaurant_id;
             $promotion->promotion_type_id = 1 ;
             $promotion->promotion_code = ($request->post('promotion_code')) ? $request->post('promotion_code') : null;
@@ -152,8 +146,13 @@ class PromotionController extends Controller
             $promotion->no_extra_charge_type = $request->post('no_extra_charge');
             $promotion->promotion_function = $request->post('promotion_function');
             $promotion->availability = $request->post('availability');
-            $promotion->restricted_days = $restricted_days;
-            $promotion->restricted_hours = $request->post('restricted_hours');
+            if(!empty( $request->post('restricted_days')) &&  $request->post('restricted_days') != '') {
+            $promotion->restricted_days = Carbon::createFromFormat('m-d-Y', $request->post('restricted_days') ? $request->post('restricted_days') : null)->format('Y-m-d');
+            }
+            if(!empty( $request->post('restricted_hours')) &&  $request->post('restricted_hours') != '') {
+                $promotion->restricted_hours = $request->post('restricted_hours') ? $request->post('restricted_hours') : null;
+            }
+
             if($request->post('restaurant_user_id')){
                 $promotion->save();
                 return redirect()->back();
@@ -205,7 +204,6 @@ class PromotionController extends Controller
                 $message = 'Promotion added successfully.';
             }
 
-            $restricted_days = Carbon::createFromFormat('m-d-Y', $request->post('restricted_days'))->format('Y-m-d');
 
             $promotion->restaurant_id = $restaurant->restaurant_id;
             $promotion->promotion_type_id = 2 ;
@@ -225,8 +223,12 @@ class PromotionController extends Controller
             $promotion->only_once_per_client = ($request->post('only_once_per_client'))?0:1;
             $promotion->promotion_function = $request->post('promotion_function');
             $promotion->availability = $request->post('availability');
-            $promotion->restricted_days = $restricted_days;
-            $promotion->restricted_hours = $request->post('restricted_hours');
+            if(!empty( $request->post('restricted_days')) &&  $request->post('restricted_days') != '') {
+                $promotion->restricted_days = Carbon::createFromFormat('m-d-Y', $request->post('restricted_days') ? $request->post('restricted_days') : null)->format('Y-m-d');
+            }
+            if(!empty( $request->post('restricted_hours')) &&  $request->post('restricted_hours') != '') {
+                $promotion->restricted_hours = $request->post('restricted_hours') ? $request->post('restricted_hours') : null;
+            }
             if ($promotion->save()) {
                 if(is_array($request->post('category'))){
                     $eligible_item = New PromotionEligibleItem;
@@ -311,7 +313,6 @@ class PromotionController extends Controller
                 $message = 'Promotion added successfully.';
             }
 
-            $restricted_days = Carbon::createFromFormat('m-d-Y', $request->post('restricted_days'))->format('Y-m-d');
 
             $promotion->restaurant_id = $restaurant->restaurant_id;
             $promotion->promotion_type_id = 3 ;
@@ -330,8 +331,12 @@ class PromotionController extends Controller
             $promotion->only_once_per_client = ($request->post('only_once_per_client'))?0:1;
             $promotion->mark_promoas_status = $request->post('mark_promo_as');
             $promotion->availability = $request->post('availability');
-            $promotion->restricted_days = $restricted_days;
-            $promotion->restricted_hours = $request->post('restricted_hours');
+            if(!empty( $request->post('restricted_days')) &&  $request->post('restricted_days') != '') {
+                $promotion->restricted_days = Carbon::createFromFormat('m-d-Y', $request->post('restricted_days') ? $request->post('restricted_days') : null)->format('Y-m-d');
+                }
+            if(!empty( $request->post('restricted_hours')) &&  $request->post('restricted_hours') != '') {
+                $promotion->restricted_hours = $request->post('restricted_hours') ? $request->post('restricted_hours') : null;
+            }
             if ($promotion->save()) {
                 if($request->post('restaurant_user_id')){
                     return redirect()->back();
@@ -381,7 +386,6 @@ class PromotionController extends Controller
                 $message = 'Promotion added successfully.';
             }
 
-            $restricted_days = Carbon::createFromFormat('m-d-Y', $request->post('restricted_days'))->format('Y-m-d');
 
             $promotion->restaurant_id = $restaurant->restaurant_id;
             $promotion->promotion_type_id = 4 ;
@@ -400,8 +404,12 @@ class PromotionController extends Controller
             $promotion->only_once_per_client = ($request->post('only_once_per_client'))?0:1;
             $promotion->mark_promoas_status = $request->post('mark_promo_as');
             $promotion->availability = $request->post('availability');
-            $promotion->restricted_days = $restricted_days;
-            $promotion->restricted_hours = $request->post('restricted_hours');
+            if(!empty( $request->post('restricted_days')) &&  $request->post('restricted_days') != '') {
+                $promotion->restricted_days = Carbon::createFromFormat('m-d-Y', $request->post('restricted_days') ? $request->post('restricted_days') : null)->format('Y-m-d');
+                }
+            if(!empty( $request->post('restricted_hours')) &&  $request->post('restricted_hours') != '') {
+                $promotion->restricted_hours = $request->post('restricted_hours') ? $request->post('restricted_hours') : null;
+            }
             if ($promotion->save()) {
                 if($request->post('restaurant_user_id')) {
                     return redirect()->back();
@@ -455,7 +463,6 @@ class PromotionController extends Controller
                 $message = 'Promotion added successfully.';
             }
 
-            $restricted_days = Carbon::createFromFormat('m-d-Y', $request->post('restricted_days'))->format('Y-m-d');
 
             $promotion->restaurant_id = $restaurant->restaurant_id;
             $promotion->promotion_type_id = 5 ;
@@ -474,8 +481,12 @@ class PromotionController extends Controller
             $promotion->only_once_per_client = ($request->post('only_once_per_client'))?0:1;
             $promotion->mark_promoas_status = $request->post('mark_promo_as');
             $promotion->availability = $request->post('availability');
-            $promotion->restricted_days = $restricted_days;
-            $promotion->restricted_hours = $request->post('restricted_hours');
+            if(!empty( $request->post('restricted_days')) &&  $request->post('restricted_days') != '') {
+                $promotion->restricted_days = Carbon::createFromFormat('m-d-Y', $request->post('restricted_days') ? $request->post('restricted_days') : null)->format('Y-m-d');
+                }
+            if(!empty( $request->post('restricted_hours')) &&  $request->post('restricted_hours') != '') {
+                $promotion->restricted_hours = $request->post('restricted_hours') ? $request->post('restricted_hours') : null;
+            }
             if ($promotion->save()) {
                 if(is_array($request->post('category'))){
                     $eligible_item = New PromotionEligibleItem;
@@ -560,7 +571,6 @@ class PromotionController extends Controller
                 $message = 'Promotion added successfully.';
             }
 
-            $restricted_days = Carbon::createFromFormat('m-d-Y', $request->post('restricted_days'))->format('Y-m-d');
 
             $promotion->restaurant_id = $restaurant->restaurant_id;
             $promotion->promotion_type_id = 6;
@@ -579,8 +589,12 @@ class PromotionController extends Controller
             $promotion->only_once_per_client = ($request->post('only_once_per_client'))?0:1;
             $promotion->mark_promoas_status = $request->post('mark_promo_as');
             $promotion->availability = $request->post('availability');
-            $promotion->restricted_days = $restricted_days;
-            $promotion->restricted_hours = $request->post('restricted_hours');
+            if(!empty( $request->post('restricted_days')) &&  $request->post('restricted_days') != '') {
+                $promotion->restricted_days = Carbon::createFromFormat('m-d-Y', $request->post('restricted_days') ? $request->post('restricted_days') : null)->format('Y-m-d');
+            }
+            if(!empty( $request->post('restricted_hours')) &&  $request->post('restricted_hours') != '') {
+                $promotion->restricted_hours = $request->post('restricted_hours') ? $request->post('restricted_hours') : null;
+            }
             $promotion->auto_manually_discount = $request->post('auto_manually_discount');
             if($request->post('auto_manually_discount') == Config::get('constants.AUTO_DISCOUNT.1')){
                 $promotion->discount_cheapest = $request->post('discount_cheapest');
@@ -742,8 +756,12 @@ class PromotionController extends Controller
             $promotion->only_once_per_client = ($request->post('only_once_per_client'))?0:1;
             $promotion->mark_promoas_status = $request->post('mark_promo_as');
             $promotion->availability = $request->post('availability');
-            $promotion->restricted_days = $restricted_days;
-            $promotion->restricted_hours = $request->post('restricted_hours');
+            if(!empty( $request->post('restricted_days')) &&  $request->post('restricted_days') != '') {
+                $promotion->restricted_days = Carbon::createFromFormat('m-d-Y', $request->post('restricted_days') ? $request->post('restricted_days') : null)->format('Y-m-d');
+                }
+            if(!empty( $request->post('restricted_hours')) &&  $request->post('restricted_hours') != '') {
+                $promotion->restricted_hours = $request->post('restricted_hours') ? $request->post('restricted_hours') : null;
+            }
 
             $counter = 1;
             if ($promotion->save()) {
@@ -832,7 +850,6 @@ class PromotionController extends Controller
                 $message = 'Promotion added successfully.';
             }
 
-            $restricted_days = Carbon::createFromFormat('m-d-Y', $request->post('restricted_days'))->format('Y-m-d');
 
             $promotion->restaurant_id = $restaurant->restaurant_id;
             $promotion->promotion_type_id = 8;
@@ -850,8 +867,12 @@ class PromotionController extends Controller
             $promotion->mark_promoas_status = $request->post('mark_promo_as');
             $promotion->availability = $request->post('availability');
             $promotion->auto_manually_discount = $request->post('auto_manually_discount');
-            $promotion->restricted_days =$restricted_days;
-            $promotion->restricted_hours = $request->post('restricted_hours');
+            if(!empty( $request->post('restricted_days')) &&  $request->post('restricted_days') != '') {
+                $promotion->restricted_days = Carbon::createFromFormat('m-d-Y', $request->post('restricted_days') ? $request->post('restricted_days') : null)->format('Y-m-d');
+                }
+            if(!empty( $request->post('restricted_hours')) &&  $request->post('restricted_hours') != '') {
+                $promotion->restricted_hours = $request->post('restricted_hours') ? $request->post('restricted_hours') : null;
+            }
             if($request->post('auto_manually_discount') == Config::get('constants.AUTO_DISCOUNT.1')){
                 $promotion->discount_cheapest = $request->post('discount_cheapest');
                 $promotion->discount_expensive = $request->post('discount_expensive');
@@ -956,7 +977,6 @@ class PromotionController extends Controller
                 $message = 'Promotion added successfully.';
             }
 
-            $restricted_days = Carbon::createFromFormat('m-d-Y', $request->post('restricted_days'))->format('Y-m-d');
 
             $promotion->restaurant_id = $restaurant->restaurant_id;
             $promotion->promotion_type_id = 9;
@@ -976,8 +996,12 @@ class PromotionController extends Controller
             $promotion->only_once_per_client = ($request->post('only_once_per_client'))?0:1;
             $promotion->mark_promoas_status = $request->post('mark_promo_as');
             $promotion->availability = $request->post('availability');
-            $promotion->restricted_days = $restricted_days;
-            $promotion->restricted_hours = $request->post('restricted_hours');
+            if(!empty( $request->post('restricted_days')) &&  $request->post('restricted_days') != '') {
+                $promotion->restricted_days = Carbon::createFromFormat('m-d-Y', $request->post('restricted_days') ? $request->post('restricted_days') : null)->format('Y-m-d');
+                }
+            if(!empty( $request->post('restricted_hours')) &&  $request->post('restricted_hours') != '') {
+                $promotion->restricted_hours = $request->post('restricted_hours') ? $request->post('restricted_hours') : null;
+            }
 
             if ($promotion->save()) {
                 $counter = 1;
@@ -1069,7 +1093,6 @@ class PromotionController extends Controller
                 $message = 'Promotion added successfully.';
             }
 
-            $restricted_days = Carbon::createFromFormat('m-d-Y', $request->post('restricted_days'))->format('Y-m-d');
 
             $promotion->restaurant_id = $restaurant->restaurant_id;
             $promotion->promotion_type_id = 10;
@@ -1087,8 +1110,12 @@ class PromotionController extends Controller
             $promotion->only_once_per_client = ($request->post('only_once_per_client'))?0:1;
             $promotion->mark_promoas_status = $request->post('mark_promo_as');
             $promotion->availability = $request->post('availability');
-            $promotion->restricted_days =$restricted_days ;
-            $promotion->restricted_hours = $request->post('restricted_hours');
+            if(!empty( $request->post('restricted_days')) &&  $request->post('restricted_days') != '') {
+                $promotion->restricted_days = Carbon::createFromFormat('m-d-Y', $request->post('restricted_days') ? $request->post('restricted_days') : null)->format('Y-m-d');
+                }
+            if(!empty( $request->post('restricted_hours')) &&  $request->post('restricted_hours') != '') {
+                $promotion->restricted_hours = $request->post('restricted_hours') ? $request->post('restricted_hours') : null;
+            }
             if ($promotion->save()) {
                 $counter = 1;
                 if(is_array($request->post('category'))){

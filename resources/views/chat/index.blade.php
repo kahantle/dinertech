@@ -28,6 +28,7 @@
                 @foreach($orders as $key=>$item)
                     @if (!empty($last_messages[$key]))
                         <div class="chat-content @if($key==0) active @endif" data-customer_id="{{$item->user->uid}}" data-user_name="{{$item->user->full_name}}" data-order_id="{{$item->order_number}}" data-id="{{$item->order_id}}" >
+                        <input type="hidden" name="uid" id="uid" value="{{$item->uid}}">
                             <img src="{{ asset('assets/images/person.png') }}" class="img-fluid">
                             <div class="chat-name">
                                 <div class="cn-left">
@@ -116,6 +117,7 @@ $('document').ready(function() {
     }
   });
   $(document).on("click",".sendMessage",function(){
+    var uid = $("#uid").val();
       if(!$("#message").val()) return
         $.ajax({
             headers: {
@@ -125,6 +127,7 @@ $('document').ready(function() {
             type: "POST",
             dataType: "json",
             data:{
+                uid :$("#uid").val(),
                 message:$("#message").val(),
                 // order_id:$(".active").data('order_id'),
                 order_id : $("#order_id").text(),
@@ -145,23 +148,37 @@ $('document').ready(function() {
                 swal.fire("Error deleting!", "Please try again", "error");
             }
         });
-    });
+  });
 
     $("#message").keyup(function(event) {
         if (event.keyCode === 13) {
           $(".sendMessage").click();
         }
     });
+
     // Initialize Firebase
+
+    // var config = {
+    //     apiKey: "{{config('services.firebase.api_key')}}",
+    //     authDomain: "{{config('services.firebase.auth_domain')}}",
+    //     databaseURL: "{{config('services.firebase.database_url')}}",
+    //     projectId: "{{config('services.firebase.project_id')}}",
+    //     storageBucket: "{{config('services.firebase.storage_bucket')}}",
+    //     messagingSenderId: "{{config('services.firebase.messaging_sender_id')}}"
+    // };
     var config = {
-        apiKey: "{{config('services.firebase.api_key')}}",
-        authDomain: "{{config('services.firebase.auth_domain')}}",
-        databaseURL: "{{config('services.firebase.database_url')}}",
-        projectId: "{{config('services.firebase.project_id')}}",
-        storageBucket: "{{config('services.firebase.storage_bucket')}}",
-        messagingSenderId: "{{config('services.firebase.messaging_sender_id')}}"
+        apiKey: "{{config('services.firebase.apiKey')}}",
+        authDomain: "{{config('services.firebase.authDomain')}}",
+        databaseURL: "{{config('services.firebase.databaseURL')}}",
+        projectId: "{{config('services.firebase.projectId')}}",
+        storageBucket: "{{config('services.firebase.storageBucket')}}",
+        messagingSenderId: "{{config('services.firebase.messagingSenderId')}}",
+        appId : "{{config('services.firebase.appId')}}",
+        measurementId : "{{config('services.firebase.measurementId')}}",
     };
     firebase.initializeApp(config);
+
+
     var order_id=$(".active").data('order_id');
     var customer_id = $(".active").data('customer_id');
     var url = '/'+db_name+'/'+resturant_id+'/'+order_id+'/'+customer_id+'/';

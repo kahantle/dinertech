@@ -8,6 +8,7 @@ use App\Models\Order;
 use Auth;
 use Config;
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class ChatController extends Controller
 {
@@ -74,6 +75,8 @@ class ChatController extends Controller
             $newPostKey = $database->getReference(Config::get('constants.FIREBASE_DB_NAME'))->push()->getKey();
             $url = Config::get('constants.FIREBASE_DB_NAME') . '/' . $restaurantId . '/' . $orderId . "/" . $userId . "/";
             $updates = [$url . $newPostKey => $messageData];
+
+
             $database->getReference()->update($updates);
             $restaurant = Restaurant::with(['order' => function ($order) use ($orderId, $restaurantId) {
                 $order->where('order_number', $orderId)->where('restaurant_id', $restaurantId)->first();
@@ -82,6 +85,11 @@ class ChatController extends Controller
             Order::where('order_number',$orderId)->where('restaurant_id',$restaurantId)->update(['customer_msg_count' => $messageCount]);
             return true;
         }
+    }
+    public function storeToken(Request $request)
+    {
+        auth()->user()->update(['device_key'=>$request->token]);
+        return response()->json(['Token successfully stored.']);
     }
 
     public function chatExport($orderId)

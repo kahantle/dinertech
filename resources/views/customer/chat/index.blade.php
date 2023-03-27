@@ -70,7 +70,7 @@
                                                                         class="form-control mobileMessage-{{ $orderId['order_id'] }} voice-message{{ $orderId['order_id'] }}"
                                                                         id="message-output"
                                                                         data-orderid="{{ $orderId['order_id'] }}">
-                                                                    <button class="submit sendMessage" alt="Submit"
+                                                                    <button class="submit  sendMessage" alt="Submit"
                                                                         data-orderid="{{ $orderId['order_id'] }}"><i
                                                                             class="fa fa-paper-plane"
                                                                             aria-hidden="true"></i></button>
@@ -193,16 +193,29 @@
     <script src="{{ asset('assets/customer/js/custom-js/chat/index.js') }}"></script>
     <script src="{{ asset('/assets/js/firebase.js') }}"></script>
     <script>
-        // Initialize Firebase
+    // var config = {
+    //     apiKey: "{{config('services.firebase.api_key')}}",
+    //     authDomain: "{{config('services.firebase.auth_domain')}}",
+    //     databaseURL: "{{config('services.firebase.database_url')}}",
+    //     projectId: "{{config('services.firebase.project_id')}}",
+    //     storageBucket: "{{config('services.firebase.storage_bucket')}}",
+    //     messagingSenderId: "{{config('services.firebase.messaging_sender_id')}}"
+    // };
+
         var config = {
-            apiKey: "{{ config('services.firebase.api_key') }}",
-            authDomain: "{{ config('services.firebase.auth_domain') }}",
-            databaseURL: "{{ config('services.firebase.database_url') }}",
-            projectId: "{{ config('services.firebase.project_id') }}",
-            storageBucket: "{{ config('services.firebase.storage_bucket') }}",
-            messagingSenderId: "{{ config('services.firebase.messaging_sender_id') }}"
+            apiKey: "{{config('services.firebase.apiKey')}}",
+            authDomain: "{{config('services.firebase.authDomain')}}",
+            databaseURL: "{{config('services.firebase.databaseURL')}}",
+            projectId: "{{config('services.firebase.projectId')}}",
+            storageBucket: "{{config('services.firebase.storageBucket')}}",
+            messagingSenderId: "{{config('services.firebase.messagingSenderId')}}",
+            appId : "{{config('services.firebase.appId')}}",
+            measurementId : "{{config('services.firebase.measurementId')}}",
         };
         firebase.initializeApp(config);
+
+
+
         var order_id = $(".getChat").attr('data-orderid');
 
         var customer_id = '{{ auth()->user()->uid }}';
@@ -283,7 +296,6 @@
                         // var update_url = '/' + db_name + '/' + resturant_id + '/' + order_id + '/' + index;
                         var update_url = '/' + db_name + '/' + resturant_id + '/' + order_id + '/' +
                             customer_id + '/' + index;
-                        console.log(update_url);
 
                         // value.isseen = true;
                         var updates = {};
