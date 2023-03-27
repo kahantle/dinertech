@@ -199,10 +199,12 @@ class OrderController extends Controller
                 'pickup_time' => 'required',
                 'pickup_minutes' => 'required',
             ]);
-            if ($validator->fails()) {
+            if ($validator->fails()) { 
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
             }
             DB::beginTransaction();
+            $restaurant = Restaurant::where('restaurant_id',$request->post('restaurant_id'))->first();
+            $restaurantname=$restaurant->restaurant_name;
             $order =  Order::where('restaurant_id', $request->post('restaurant_id'))
             ->where('order_id',$request->post('order_id'))
             ->whereNull('order_status')
@@ -240,7 +242,7 @@ class OrderController extends Controller
                 $url = Config::get('constants.FIREBASE_DB_NAME').'/'.$user_id.'/'.$order_id."/"."/".$customer_id."/" ;
                 $updates = [$url.$newPostKey  => $postData];
                 $database->getReference()->update($updates);
-                return response()->json(['message' => "Order accepted successfully.", 'success' => true], 200);
+                return response()->json(['message' => "Your $restaurantname Order Is Accepted!", 'success' => true], 200);
             }else{
                 DB::rollBack();
                 return response()->json(['message' => "Order does not accepted successfully.", 'success' => true], 401);
@@ -269,6 +271,8 @@ class OrderController extends Controller
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
             }
             DB::beginTransaction();
+            $restaurant = Restaurant::where('restaurant_id',$request->post('restaurant_id'))->first();
+            $restaurantname=$restaurant->restaurant_name;
             $order =  Order::where('restaurant_id', $request->post('restaurant_id'))
             ->where('order_id',$request->post('order_id'))
             ->whereNull('order_status')
@@ -283,7 +287,7 @@ class OrderController extends Controller
                 DB::commit();
                 $user = User::find($order->uid);
                 $user->notify(new DeclineOrder($order));
-                return response()->json(['message' => "Order declined successfully.", 'success' => true], 200);
+                return response()->json(['message' => "Your $restaurantname Order Is Cancel by restaurant!", 'success' => true], 200);
             }else{
                 DB::rollBack();
                 return response()->json(['message' => "Order does not cancel successfully.", 'success' => true], 401);
@@ -312,6 +316,8 @@ class OrderController extends Controller
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
             }
             DB::beginTransaction();
+            $restaurant = Restaurant::where('restaurant_id',$request->post('restaurant_id'))->first();
+            $restaurantname=$restaurant->restaurant_name;
             $order =  Order::where('restaurant_id', $request->post('restaurant_id'))
             ->where('order_id',$request->post('order_id'))
             ->first();
@@ -322,7 +328,7 @@ class OrderController extends Controller
                     DB::commit();
                     $user = User::find($order->uid);
                     $user->notify(new PreparedOrder);
-                    return response()->json(['message' => "Order has been Prepared Now.", 'success' => true], 200);
+                    return response()->json(['message' => "Your $restaurantname Order Is Ready!", 'success' => true], 200);
                 }else{
                     DB::rollBack();
                     return response()->json(['message' => "Order does not prepared successfully.", 'success' => true], 401);

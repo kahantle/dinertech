@@ -94,7 +94,7 @@ Route::namespace ('Api')->group(function () {
                 Route::post('/create/connection/token', 'StripeController@getConnectionToken')->name('customer.stripe.createConnectionToken');
                 Route::post('/create/charge', 'StripeController@createCharge')->name('customer.stripe.createCharge');
             });
-            Route::prefix('loyalties')->group(function(){
+            Route::prefix('loyalties')->group(function(){ 
                 Route::post('/','LoyaltyRuleController@index')->name('customer.loyalties');
             });
             Route::prefix('cart')->group(function(){

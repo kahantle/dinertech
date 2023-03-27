@@ -70,7 +70,7 @@
                                                                         class="form-control mobileMessage-{{ $orderId['order_id'] }} voice-message{{ $orderId['order_id'] }}"
                                                                         id="message-output"
                                                                         data-orderid="{{ $orderId['order_id'] }}">
-                                                                    <button class="submit  sendMessage" alt="Submit"
+                                                                    <button class="submit sendMessage" alt="Submit"
                                                                         data-orderid="{{ $orderId['order_id'] }}"><i
                                                                             class="fa fa-paper-plane"
                                                                             aria-hidden="true"></i></button>

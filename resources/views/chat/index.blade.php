@@ -178,7 +178,6 @@ $('document').ready(function() {
     };
     firebase.initializeApp(config);
 
-
     var order_id=$(".active").data('order_id');
     var customer_id = $(".active").data('customer_id');
     var url = '/'+db_name+'/'+resturant_id+'/'+order_id+'/'+customer_id+'/';

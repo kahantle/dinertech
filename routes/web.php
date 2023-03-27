@@ -120,7 +120,7 @@ Route::group(['middleware' => ['auth:web']], function () {
         Route::post('/action/{id}/{action}', 'OrderController@OrderAction')->name('action.order');
         Route::get('/pdf/{id}', 'OrderController@generate_invoice')->name('order.pdf');
         Route::post('/status/due','OrderController@orderDueStatus')->name('order.status.due');
-    });
+    }); 
     Route::prefix('promotion')->group(function () {
         Route::get('/', 'PromotionController@index')->name('promotion');
         Route::get('/type', 'PromotionController@type')->name('promotion.type.list');

@@ -91,6 +91,10 @@ class ChatController extends Controller
 
             $database->getReference($url)->push($postData);
 
+
+            //Push Notification
+            // FCM response
+
             return response()->json(['success'=> true,'message'=> 'Message successfully sent!']);
         }catch (ApiException $e) {
             $request = $e->getRequest();
