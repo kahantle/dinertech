@@ -14,16 +14,16 @@ use NotificationChannels\Fcm\Resources\ApnsFcmOptions;
 
 class DeclineOrder extends Notification
 {
-    
+    public $orderdata;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($order)
     {
-        //
+        $this->orderdata = $order;
     }
 
     /**
@@ -45,11 +45,12 @@ class DeclineOrder extends Notification
      */
     public function toFcm($notifiable)
     {
+        
         return FcmMessage::create()
             ->setData(['notification_type' => 'Decline Order'])
             ->setNotification(\NotificationChannels\Fcm\Resources\Notification::create()
                 ->setTitle('Order Declined')
-                ->setBody("Your Order ".$notifiable->order_number." has declined by The Restaurant.If any amount debit from your account, that will be credited in your account with in 7 Days."))
+                ->setBody("Your ".$this->orderdata['restaurant_name']." Order ".$this->orderdata['order_number']." has declined by The Restaurant.If any amount debit from your account, that will be credited in your account with in 7 Days."))
             ->setAndroid(
                 AndroidConfig::create()
                     ->setFcmOptions(AndroidFcmOptions::create()->setAnalyticsLabel('analytics'))

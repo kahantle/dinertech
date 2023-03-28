@@ -214,9 +214,6 @@
         };
         firebase.initializeApp(config);
 
-
-
-
         var order_id = $(".getChat").attr('data-orderid');
 
         var customer_id = '{{ auth()->user()->uid }}';

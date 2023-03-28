@@ -188,7 +188,6 @@ class OrderController extends Controller
         }
     }
 
-
     public function makeOrder(Request $request)
     {
         try {
@@ -203,7 +202,8 @@ class OrderController extends Controller
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
             }
             DB::beginTransaction();
-            // $restaurant = Restaurant::where('restaurant_id',$request->post('restaurant_id'))->first();
+            $restaurant = Restaurant::with('user')->first();
+            $restaurantname=$restaurant->restaurant_name;
             $order =  Order::where('restaurant_id', $request->post('restaurant_id'))
             ->where('order_id',$request->post('order_id'))
             ->whereNull('order_status')
@@ -220,7 +220,9 @@ class OrderController extends Controller
             if($order->save()){
                 DB::commit();
                 $user = User::find($order->uid);
-                $user->notify(new AcceptOrder);
+                // echo($restaurant);
+                // return;
+                $user->notify(new AcceptOrder($restaurant));
                 $database = app('firebase.database');
                 $order_id =  $order->order_number;
                 $customer_id = $order->uid;
@@ -271,10 +273,16 @@ class OrderController extends Controller
             }
             DB::beginTransaction();
             $restaurant = Restaurant::where('restaurant_id',$request->post('restaurant_id'))->first();
-            $order =  Order::where('restaurant_id', $request->post('restaurant_id'))
-            ->where('order_id',$request->post('order_id'))
-            ->whereNull('order_status')
+            // $order =  Order::where('restaurant_id', $request->post('restaurant_id'))
+            // ->where('order_id',$request->post('order_id'))
+            // ->whereNull('order_status')
+            // ->first();
+            $order = Order::select('orders.order_id','orders.uid','orders.restaurant_id',
+            'orders.stripe_payment_id','orders.order_number','restaurants.restaurant_name')
+            ->join('restaurants','restaurants.restaurant_id','orders.restaurant_id')
+            ->where('orders.restaurant_id', $request->post('restaurant_id'))
             ->first();
+
             if(!$order){
                 return response()->json(['message' => "Invalid Order or already procceed.", 'success' => true], 401);
             }
@@ -314,7 +322,7 @@ class OrderController extends Controller
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
             }
             DB::beginTransaction();
-            // $restaurant = Restaurant::where('restaurant_id',$request->post('restaurant_id'))->first();
+            $restaurant = Restaurant::where('restaurant_id',$request->post('restaurant_id'))->first();
             $order =  Order::where('restaurant_id', $request->post('restaurant_id'))
             ->where('order_id',$request->post('order_id'))
             ->first();
@@ -324,7 +332,7 @@ class OrderController extends Controller
                 if($order->save()){
                     DB::commit();
                     $user = User::find($order->uid);
-                    $user->notify(new PreparedOrder);
+                    $user->notify(new PreparedOrder($restaurant));
                     return response()->json(['message' => "Order has been Prepared Now.", 'success' => true], 200);
                 }else{
                     DB::rollBack();
