@@ -76,6 +76,7 @@ class ChatController extends Controller
             $url = Config::get('constants.FIREBASE_DB_NAME') . '/' . $restaurantId . '/' . $orderId . "/" . $userId . "/";
             $updates = [$url . $newPostKey => $messageData];
 
+
             $database->getReference()->update($updates);
             $restaurant = Restaurant::with(['order' => function ($order) use ($orderId, $restaurantId) {
                 $order->where('order_number', $orderId)->where('restaurant_id', $restaurantId)->first();

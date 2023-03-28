@@ -221,7 +221,7 @@ class OrderController extends Controller
                         case '0':
                             $restaurant->notify(new PlaceOrderCash($restaurant));
                             break;
-
+ 
                         default:
                             $restaurant->notify(new PlaceOrderCard($restaurant));
                             break;

@@ -203,7 +203,7 @@ class OrderController extends Controller
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
             }
             DB::beginTransaction();
-            $restaurant = Restaurant::where('restaurant_id',$request->post('restaurant_id'))->first();
+            // $restaurant = Restaurant::where('restaurant_id',$request->post('restaurant_id'))->first();
             $order =  Order::where('restaurant_id', $request->post('restaurant_id'))
             ->where('order_id',$request->post('order_id'))
             ->whereNull('order_status')
@@ -220,7 +220,7 @@ class OrderController extends Controller
             if($order->save()){
                 DB::commit();
                 $user = User::find($order->uid);
-                $user->notify(new AcceptOrder($restaurant));
+                $user->notify(new AcceptOrder);
                 $database = app('firebase.database');
                 $order_id =  $order->order_number;
                 $customer_id = $order->uid;
@@ -314,7 +314,7 @@ class OrderController extends Controller
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
             }
             DB::beginTransaction();
-            $restaurant = Restaurant::where('restaurant_id',$request->post('restaurant_id'))->first();
+            // $restaurant = Restaurant::where('restaurant_id',$request->post('restaurant_id'))->first();
             $order =  Order::where('restaurant_id', $request->post('restaurant_id'))
             ->where('order_id',$request->post('order_id'))
             ->first();
@@ -324,7 +324,7 @@ class OrderController extends Controller
                 if($order->save()){
                     DB::commit();
                     $user = User::find($order->uid);
-                    $user->notify(new PreparedOrder($restaurant));
+                    $user->notify(new PreparedOrder);
                     return response()->json(['message' => "Order has been Prepared Now.", 'success' => true], 200);
                 }else{
                     DB::rollBack();

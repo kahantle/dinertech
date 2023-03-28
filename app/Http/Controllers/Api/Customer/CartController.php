@@ -405,7 +405,7 @@ class CartController extends Controller
                 $uid = auth('api')->user()->uid;
                 $check_cart = Cart::where('uid',$uid)->where('restaurant_id',$request->post('restaurant_id'))->first();
                 if($check_cart){
-                    $cartItem = CartItem::where('cart_menu_item_id',$request->post('cart_menu_item_id'))->where('menu_id',$request->post('menu_id'))->where('cart_id',$check_cart->cart_id)->first();
+                    $cartItem = CartItem::where('cart_id',$check_cart->cart_id)->first();
                     if($cartItem){
                         $menuOldQuantity = $cartItem->menu_qty;
                         $menuOldTotal  = $cartItem->menu_total;

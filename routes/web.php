@@ -278,7 +278,7 @@ Route::prefix('customer')->group(function () {
         Route::post('/quantity-decrease', 'customer\CartController@quantityDecrease');
         Route::post('/quantity-change', 'customer\CartController@quantityChange');
 
-        /* Promotion */
+        /* Promotion */ 
         Route::get('/promotion', 'customer\PromotionController@show')->name('customer.show.promotions');
         Route::get('/promotion/get/eligible-items/{promotionId}', 'customer\PromotionController@getEligibleItems')->name('customer.promotions.getEligibleItems');
         Route::get('/promotion/apply/{promotionId}', 'customer\PromotionController@applyPromotion')->name('customer.apply.promotion');

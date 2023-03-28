@@ -157,7 +157,7 @@
                                                                     <input type="text" value="" placeholder="Input Message"
                                                                         class="form-control desktopMessage voice-message{{ $orderId['order_id'] }}"
                                                                         id="message-output">
-                                                                    <button class="submit  sendMessage" data-orderid="{{ $orderId['order_id'] }}" alt="Submit"><i
+                                                                    <button class="submit sendMessage" data-orderid="{{ $orderId['order_id'] }}" alt="Submit"><i
                                                                             class="fa fa-paper-plane"
                                                                             aria-hidden="true"></i></button>
                                                                     <button class="submit micro start" alt="Micro"
@@ -214,7 +214,8 @@
         };
         firebase.initializeApp(config);
 
-        //Push Notification
+
+
 
         var order_id = $(".getChat").attr('data-orderid');
 

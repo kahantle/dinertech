@@ -47,7 +47,7 @@ class PreparedOrder extends Notification
             ->setData(['notification_type' => 'Prepared Order'])
             ->setNotification(\NotificationChannels\Fcm\Resources\Notification::create()
                 ->setTitle('Order Prepared')
-                ->setBody('Your' .$notifiable->restaurant->restaurant_name.' Order Is Ready!'))
+                ->setBody("Your Order has been prepared by restaurant."))
             ->setAndroid(
                 AndroidConfig::create()
                     ->setFcmOptions(AndroidFcmOptions::create()->setAnalyticsLabel('analytics'))
