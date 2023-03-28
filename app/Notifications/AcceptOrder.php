@@ -47,7 +47,7 @@ class AcceptOrder extends Notification
             ->setData(['notification_type' => 'Accept Order'])
             ->setNotification(\NotificationChannels\Fcm\Resources\Notification::create()
                 ->setTitle('Order Accepted')
-                ->setBody("Your order has been accepted by the restaurant."))
+                ->setBody('Your'.$notifiable->restaurant->restaurant_name.' Order Is Accepted!.'))
             ->setAndroid(
                 AndroidConfig::create()
                     ->setFcmOptions(AndroidFcmOptions::create()->setAnalyticsLabel('analytics'))

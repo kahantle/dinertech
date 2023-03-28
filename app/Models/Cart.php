@@ -17,7 +17,7 @@ class Cart extends Model
      */
     public function cartMenuItems()
     {
-        return $this->hasMany(CartItem::class,  'cart_id');
+        return $this->hasMany(CartItem::class,  'cart_id'); 
     }
 
     public function cartMenuModifierItems(){

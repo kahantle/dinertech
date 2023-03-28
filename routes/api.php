@@ -108,7 +108,7 @@ Route::namespace ('Api')->group(function () {
                 Route::post('/remove-promotion','CartController@removePromotion');
                 Route::post('/apply-promotion','CartController@applyPromotion');
             });
-        });
+        }); 
     });
 
     //API FOR restaurant

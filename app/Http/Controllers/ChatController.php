@@ -90,9 +90,7 @@ class ChatController extends Controller
             $url = Config::get('constants.FIREBASE_DB_NAME').'/'.$restaurant->restaurant_id.'/'.$order_id."/".$customer_id.'/';
 
             $database->getReference($url)->push($postData);
-
-
-            //Push Notification
+         
             // FCM response
 
             return response()->json(['success'=> true,'message'=> 'Message successfully sent!']);

@@ -177,6 +177,8 @@ $('document').ready(function() {
         measurementId : "{{config('services.firebase.measurementId')}}",
     };
     firebase.initializeApp(config);
+    const messaging = firebase.messaging(); 
+    //Push Notification
 
     var order_id=$(".active").data('order_id');
     var customer_id = $(".active").data('customer_id');

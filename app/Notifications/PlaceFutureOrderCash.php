@@ -36,7 +36,7 @@ class PlaceFutureOrderCash extends Notification
         // return ['mail'];
         return [FcmChannel::class];
     }
-
+ 
     public function toFcm($notifiable)
     {
         return FcmMessage::create()
