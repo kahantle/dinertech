@@ -128,7 +128,7 @@ class CartController extends Controller
     }
 
     public function quantityChange(Request $request)
-    {
+    { 
         $cart = Cart::where('uid', auth()->id())->first();
         $cartMenuItem = $cart->cartMenuItems->where('cart_menu_item_id', $request->cartMenuItemId)->first();
         $request->action == 'increament' ? $cartMenuItem->menu_qty = $cartMenuItem->menu_qty + 1 :  $cartMenuItem->menu_qty = $cartMenuItem->menu_qty - 1 ;

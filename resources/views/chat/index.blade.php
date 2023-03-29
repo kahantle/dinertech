@@ -75,7 +75,7 @@
                   <input type="text" id="message" name="message" placeholder="Message">
                   <div class="cf-icon">
                     <input type="hidden" id="customerId">
-                    <a href="#0"><img src="{{ asset('assets/images/send.png') }}" class="send-icon sendMessage"></a>
+                    <a href="#0"><img src="{{ asset('assets/images/send.png') }}" class="send-icon  sendMessage"></a>
                     <a href="#0"><img src="{{ asset('assets/images/microphone.png') }}" class="microphone-icon "></a>
                   </div>
                 </div>
@@ -177,8 +177,6 @@ $('document').ready(function() {
         measurementId : "{{config('services.firebase.measurementId')}}",
     };
     firebase.initializeApp(config);
-    const messaging = firebase.messaging(); 
-    //Push Notification
 
     var order_id=$(".active").data('order_id');
     var customer_id = $(".active").data('customer_id');

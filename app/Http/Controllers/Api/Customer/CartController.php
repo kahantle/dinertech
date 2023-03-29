@@ -405,21 +405,23 @@ class CartController extends Controller
                 $uid = auth('api')->user()->uid;
                 $check_cart = Cart::where('uid',$uid)->where('restaurant_id',$request->post('restaurant_id'))->first();
                 if($check_cart){
-                    $cartItem = CartItem::where('cart_id',$check_cart->cart_id)->first();
+                    //   $cartItem = CartItem::where('cart_id',$check_cart->cart_id)->first();
+                      $cartItem = CartItem::where('cart_menu_item_id',$request->post('cart_menu_item_id'))->where('menu_id',$request->post('menu_id'))->where('cart_id',$check_cart->cart_id)->first();
                     if($cartItem){
                         $menuOldQuantity = $cartItem->menu_qty;
-                        $menuOldTotal  = $cartItem->menu_total;
+                        $menuOldTotal  = number_format($cartItem->menu_total,2);
+                        $menuprice=$cartItem->menu_price;
                         $menuNewQuantity = $menuOldQuantity + 1;
                         $cartItem->menu_qty = $menuNewQuantity;
-                        $cartItem->menu_total = number_format($menuOldTotal * $menuNewQuantity,2);
+                        $cartItem->menu_total = number_format($menuprice * $menuNewQuantity,2);
                         $cartItem->save();
 
-                        $subtotal = CartItem::where('cart_id',$check_cart->cart_id)->sum('menu_total'); 
+                        $subtotal = CartItem::where('cart_id',$check_cart->cart_id)->sum('menu_total');
                         // $restaurant = Restaurant::where('restaurant_id',$request->post('restaurant_id'))->first();
                         // $salesTax = $restaurant->sales_tax;
                         // $taxCharge = ($subtotal * $salesTax) / 100;
                         // $finalTotal = $subtotal + $taxCharge;
-                        Cart::where('uid',$uid)->where('restaurant_id',$request->post('restaurant_id'))->where('cart_id',$check_cart->cart_id)->update(['sub_total' => number_format($subtotal,2),  'total_due' => number_format($subtotal,2)]);
+                        Cart::where('uid',$uid)->where('restaurant_id',$request->post('restaurant_id'))->where('cart_id',$check_cart->cart_id)->update(['sub_total' => number_format($subtotal,2),'total_due' => number_format($subtotal,2)]);
                         return response()->json(['message' => "Cart quantity increment successfully.", 'success' => true], 200);
                     }else{
                         return response()->json(['message' => "Cart item not found.", 'success' => false], 400);

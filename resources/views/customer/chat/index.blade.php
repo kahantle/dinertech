@@ -70,7 +70,7 @@
                                                                         class="form-control mobileMessage-{{ $orderId['order_id'] }} voice-message{{ $orderId['order_id'] }}"
                                                                         id="message-output"
                                                                         data-orderid="{{ $orderId['order_id'] }}">
-                                                                    <button class="submit sendMessage" alt="Submit"
+                                                                    <button class="submit sendToken sendMessage" alt="Submit"
                                                                         data-orderid="{{ $orderId['order_id'] }}"><i
                                                                             class="fa fa-paper-plane"
                                                                             aria-hidden="true"></i></button>
@@ -154,10 +154,10 @@
                                                             </div>
                                                             <div class="message-input">
                                                                 <div class="wrap">
-                                                                    <input type="text" value="" placeholder="Input Message"
+                                                                <input type="text" value="" placeholder="Input Message"
                                                                         class="form-control desktopMessage voice-message{{ $orderId['order_id'] }}"
                                                                         id="message-output">
-                                                                    <button class="submit sendMessage" data-orderid="{{ $orderId['order_id'] }}" alt="Submit"><i
+                                                                    <button class="submit  sendMessage" data-orderid="{{ $orderId['order_id'] }}" alt="Submit"><i
                                                                             class="fa fa-paper-plane"
                                                                             aria-hidden="true"></i></button>
                                                                     <button class="submit micro start" alt="Micro"
@@ -213,6 +213,8 @@
             measurementId : "{{config('services.firebase.measurementId')}}",
         };
         firebase.initializeApp(config);
+
+
 
         var order_id = $(".getChat").attr('data-orderid');
 

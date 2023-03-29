@@ -67,7 +67,7 @@
                         </div>
                     </div>
                     @auth
-                    @php 
+                    @php  
                     $cartTotal = 0;
                     $modifierTotal = 0; 
                     @endphp

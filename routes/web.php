@@ -271,7 +271,7 @@ Route::prefix('customer')->group(function () {
         Route::post('/getMenumodifier', 'customer\HomeController@getMenumodifier');
         Route::post('/search/menuitem', 'customer\HomeController@searchMenu');
 
-        /* Add To Cart */
+        /* Add To Cart */ 
         Route::post('/add-to-cart', 'customer\CartController@addToCart')->name('customer.addToCart');
         Route::post('/modal-for-plus-with-modifiers', 'customer\CartController@modalForPlusWithModifiers');
         Route::post('/add-to-repeatLast', 'customer\CartController@addToRepeatLast');
