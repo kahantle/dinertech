@@ -409,11 +409,11 @@ class CartController extends Controller
                       $cartItem = CartItem::where('cart_menu_item_id',$request->post('cart_menu_item_id'))->where('menu_id',$request->post('menu_id'))->where('cart_id',$check_cart->cart_id)->first();
                     if($cartItem){
                         $menuOldQuantity = $cartItem->menu_qty;
-                        $menuOldTotal  = number_format($cartItem->menu_total,2);
+                        $modifier_total  = $cartItem->modifier_total;
                         $menuprice=$cartItem->menu_price;
                         $menuNewQuantity = $menuOldQuantity + 1;
                         $cartItem->menu_qty = $menuNewQuantity;
-                        $cartItem->menu_total = number_format($menuprice * $menuNewQuantity,2);
+                        $cartItem->menu_total = number_format($menuprice * $menuNewQuantity + $modifier_total,2);
                         $cartItem->save();
 
                         $subtotal = CartItem::where('cart_id',$check_cart->cart_id)->sum('menu_total');
@@ -458,11 +458,12 @@ class CartController extends Controller
                     $cartItem = CartItem::where('cart_menu_item_id',$request->post('cart_menu_item_id'))->where('menu_id',$request->post('menu_id'))->where('cart_id',$check_cart->cart_id)->first();
                     if($cartItem){
                         $menuOldQuantity = $cartItem->menu_qty;
-                        $menuOldTotal  = $cartItem->menu_price + $cartItem->modifier_total;
+                        $modifier_total=$cartItem->modifier_total;
+                        $menu_price  = $cartItem->menu_price;
                         $menuNewQuantity = $menuOldQuantity - 1;
                         if($menuNewQuantity != 0){
                             $cartItem->menu_qty = $menuNewQuantity;
-                            $cartItem->menu_total = number_format($menuOldTotal * $menuNewQuantity,2);
+                            $cartItem->menu_total = number_format($menu_price * $menuNewQuantity + $modifier_total,2);
                             $cartItem->save();
 
                             $subtotal = CartItem::where('cart_id',$check_cart->cart_id)->sum('menu_total');
@@ -491,7 +492,6 @@ class CartController extends Controller
             return response()->json($errors, 500);
         }
     }
-
     public function removePromotion(Request $request)
     {
         try{
