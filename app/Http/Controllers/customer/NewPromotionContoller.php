@@ -18,151 +18,23 @@ class NewPromotionContoller extends Controller
 {
     public function discountcart(Request $request)
     {
-     if ($request->ajax()) {
-         $itemPrice = 0;
-         $uid = Auth::user()->uid;
-         $restaurant = getRestaurantId();
-         $discount=0;
-         $item=0;
-         $status='';
-         $msg='';
-         if($restaurant != '' && $restaurant != '0')
-         {
-             $result = Promotion::select("*",DB::raw("CONCAT(promotions.restricted_days,' ',promotions.restricted_hours) AS publish_date_time"))->where('promotion_code', $request->coupon_code)->where('restaurant_id', getRestaurantId())->first();
-           
-             $availability=$result->availability;
-             $couponcode=$request->coupon_code;
-            if($result->status=='ACTIVE'){
-                if($availability == 'Always Available')
-                { 
-                    $promotionfunction=$result->promotion_function;
-                    if($promotionfunction!='' && $promotionfunction=='Open')
-                    {
-                            $customertype=$result->client_type;
-                        if($customertype!= '' && $customertype=='Any Customer,New or Returning')
-                        {
-                                $minimumorder = $result->set_minimum_order_amount;
-                            if($minimumorder>0){
-                                $grand_total=$request->grand_total;
-                                if($minimumorder<$grand_total){
-                                    $ordertype=$result->order_type;
-                                    $cash=$result->only_selected_cash;
-                                    $card=$result->only_selected_cash_delivery_person;
-                                    if($cash != 0 && $cash== 1)
-                                    {
-                                        if($ordertype != '' && $ordertype == 'Pickup Type'){
-                                                $status="success";
-                                                $msg="Coupon code applied";
-                                        }
-                                        elseif($ordertype != '' && $ordertype == 'Any Type'){
-                                            $status="success";
-                                            $msg="Coupon code applied";
-                                        }
-                                    }
-                                    elseif($card != 0 && $card==1)
-                                    {
-                                        if($ordertype != '' && $ordertype == 'Pickup Type'){
-                                            $status="success";
-                                            $msg="Coupon code applied";
-                                        }
-                                        elseif($ordertype != '' && $ordertype == 'Any Type'){
-                                            $status="success";
-                                            $msg="Coupon code applied";
-                                        }
-                                    }
-                                }
-                                else{
-                                    $status='error';
-                                    $msg="Cart amount must be less then $minimumorder";
-                                }
-                            }
-                        }
-                        elseif($customertype!= '' && $customertype =='Only New Customer'){
-                            $minimumorder = $result->set_minimum_order_amount;
-                            if($minimumorder>0){
-                                $grand_total=$request->grand_total;
-                                if($minimumorder<$grand_total){
-                                    $ordertype=$result->order_type;
-                                    $cash=$result->only_selected_cash;
-                                    $card=$result->only_selected_cash_delivery_person;
-                                    if($cash != 0 && $cash== 1)
-                                    {
-                                        if($ordertype != '' && $ordertype == 'Pickup Type'){
-                                            $status="success";
-                                            $msg="Coupon code applied";
-                                        }
-                                        elseif($ordertype != '' && $ordertype == 'Any Type'){
-                                            $status="success";
-                                            $msg="Coupon code applied";
-                                        }
-                                    }
-                                    elseif($card != 0 && $card==1)
-                                    {
-                                        if($ordertype != '' && $ordertype == 'Pickup Type'){
-                                            $status="success";
-                                            $msg="Coupon code applied";
-                                        }
-                                        elseif($ordertype != '' && $ordertype == 'Any Type'){
-                                            $status="success";
-                                            $msg="Coupon code applied";
-                                        }
-                                    }
-                                }
-                                else{
-                                    $status='error';
-                                    $msg="Cart amount must be less then $minimumorder";
-                                }
-                            }
-                        }
-                        elseif($customertype!= '' && $customertype =='Only Returning Customer'){
-                            $minimumorder = $result->set_minimum_order_amount;
-                            if($minimumorder>0){
-                                $grand_total=$request->grand_total;
-                                if($minimumorder<$grand_total){
-                                    $ordertype=$result->order_type;
-                                     $cash=$result->only_selected_cash;
-                                     $card=$result->only_selected_cash_delivery_person;
-                                        if($cash != 0 && $cash== 1)
-                                        {
-                                            if($ordertype != '' && $ordertype == 'Pickup Type'){
-                                                $status="success";
-                                                $msg="Coupon code applied";
-                                            }
-                                            elseif($ordertype != '' && $ordertype == 'Any Type'){
-                                                $status="success";
-                                                $msg="Coupon code applied";
-                                            }
-                                        }
-                                        elseif($card != 0 && $card==1)
-                                        {
-                                            if($ordertype != '' && $ordertype == 'Pickup Type'){
-                                                $status="success";
-                                                $msg="Coupon code applied";
-                                            }
-                                            elseif($ordertype != '' && $ordertype == 'Any Type'){
-                                                $status="success";
-                                                $msg="Coupon code applied";
-                                            }
-                                        }
-                                }
-                                else{
-                                    $status='error';
-                                    $msg="Cart amount must be less then $minimumorder";
-                                }
-                            }
-                        }
-                    }
-                    else{
-                        $status="error";
-                        // session()->flash('Prmotion Function Not Found');
-                    }
-                }
-                elseif($availability == 'Restricted')
-                {
-                    $restricted_days=$result->restricted_days;
-                    $currentdate=date('Y-m-d  h:i:s a', time());
-                    if($restricted_days > $currentdate)
-                    {
+        if ($request->ajax()) {
+            $itemPrice = 0;
+            $uid = Auth::user()->uid;
+            $restaurant = getRestaurantId();
+            $discount=0;
+            $item=0;
+            $status='';
+            $msg='';
+            if($restaurant != '' && $restaurant != '0')
+            {
+                $result = Promotion::select("*",DB::raw("CONCAT(promotions.restricted_days,' ',promotions.restricted_hours) AS publish_date_time"))->where('promotion_code', $request->coupon_code)->where('restaurant_id', getRestaurantId())->first();
+            
+                $availability=$result->availability;
+                $couponcode=$request->coupon_code;
+                if($result->status=='ACTIVE'){
+                    if($availability == 'Always Available')
+                    { 
                         $promotionfunction=$result->promotion_function;
                         if($promotionfunction!='' && $promotionfunction=='Open')
                         {
@@ -179,8 +51,8 @@ class NewPromotionContoller extends Controller
                                         if($cash != 0 && $cash== 1)
                                         {
                                             if($ordertype != '' && $ordertype == 'Pickup Type'){
-                                                $status="success";
-                                                $msg="Coupon code applied";
+                                                    $status="success";
+                                                    $msg="Coupon code applied";
                                             }
                                             elseif($ordertype != '' && $ordertype == 'Any Type'){
                                                 $status="success";
@@ -226,7 +98,6 @@ class NewPromotionContoller extends Controller
                                         }
                                         elseif($card != 0 && $card==1)
                                         {
-
                                             if($ordertype != '' && $ordertype == 'Pickup Type'){
                                                 $status="success";
                                                 $msg="Coupon code applied";
@@ -249,11 +120,10 @@ class NewPromotionContoller extends Controller
                                     $grand_total=$request->grand_total;
                                     if($minimumorder<$grand_total){
                                         $ordertype=$result->order_type;
-                                         $cash=$result->only_selected_cash;
-                                         $card=$result->only_selected_cash_delivery_person;
+                                        $cash=$result->only_selected_cash;
+                                        $card=$result->only_selected_cash_delivery_person;
                                             if($cash != 0 && $cash== 1)
                                             {
-
                                                 if($ordertype != '' && $ordertype == 'Pickup Type'){
                                                     $status="success";
                                                     $msg="Coupon code applied";
@@ -265,7 +135,6 @@ class NewPromotionContoller extends Controller
                                             }
                                             elseif($card != 0 && $card==1)
                                             {
-
                                                 if($ordertype != '' && $ordertype == 'Pickup Type'){
                                                     $status="success";
                                                     $msg="Coupon code applied";
@@ -288,26 +157,158 @@ class NewPromotionContoller extends Controller
                             // session()->flash('Prmotion Function Not Found');
                         }
                     }
-                    else
+                    elseif($availability == 'Restricted')
                     {
-                        $status="error";
-                        $msg="Coupen is Expired";
+                        $restricted_days=$result->restricted_days;
+                        $currentdate=date('Y-m-d  h:i:s a', time());
+                        if($restricted_days > $currentdate)
+                        {
+                            $promotionfunction=$result->promotion_function;
+                            if($promotionfunction!='' && $promotionfunction=='Open')
+                            {
+                                    $customertype=$result->client_type;
+                                if($customertype!= '' && $customertype=='Any Customer,New or Returning')
+                                {
+                                        $minimumorder = $result->set_minimum_order_amount;
+                                    if($minimumorder>0){
+                                        $grand_total=$request->grand_total;
+                                        if($minimumorder<$grand_total){
+                                            $ordertype=$result->order_type;
+                                            $cash=$result->only_selected_cash;
+                                            $card=$result->only_selected_cash_delivery_person;
+                                            if($cash != 0 && $cash== 1)
+                                            {
+                                                if($ordertype != '' && $ordertype == 'Pickup Type'){
+                                                    $status="success";
+                                                    $msg="Coupon code applied";
+                                                }
+                                                elseif($ordertype != '' && $ordertype == 'Any Type'){
+                                                    $status="success";
+                                                    $msg="Coupon code applied";
+                                                }
+                                            }
+                                            elseif($card != 0 && $card==1)
+                                            {
+                                                if($ordertype != '' && $ordertype == 'Pickup Type'){
+                                                    $status="success";
+                                                    $msg="Coupon code applied";
+                                                }
+                                                elseif($ordertype != '' && $ordertype == 'Any Type'){
+                                                    $status="success";
+                                                    $msg="Coupon code applied";
+                                                }
+                                            }
+                                        }
+                                        else{
+                                            $status='error';
+                                            $msg="Cart amount must be less then $minimumorder";
+                                        }
+                                    }
+                                }
+                                elseif($customertype!= '' && $customertype =='Only New Customer'){
+                                    $minimumorder = $result->set_minimum_order_amount;
+                                    if($minimumorder>0){
+                                        $grand_total=$request->grand_total;
+                                        if($minimumorder<$grand_total){
+                                            $ordertype=$result->order_type;
+                                            $cash=$result->only_selected_cash;
+                                            $card=$result->only_selected_cash_delivery_person;
+                                            if($cash != 0 && $cash== 1)
+                                            {
+                                                if($ordertype != '' && $ordertype == 'Pickup Type'){
+                                                    $status="success";
+                                                    $msg="Coupon code applied";
+                                                }
+                                                elseif($ordertype != '' && $ordertype == 'Any Type'){
+                                                    $status="success";
+                                                    $msg="Coupon code applied";
+                                                }
+                                            }
+                                            elseif($card != 0 && $card==1)
+                                            {
 
+                                                if($ordertype != '' && $ordertype == 'Pickup Type'){
+                                                    $status="success";
+                                                    $msg="Coupon code applied";
+                                                }
+                                                elseif($ordertype != '' && $ordertype == 'Any Type'){
+                                                    $status="success";
+                                                    $msg="Coupon code applied";
+                                                }
+                                            }
+                                        }
+                                        else{
+                                            $status='error';
+                                            $msg="Cart amount must be less then $minimumorder";
+                                        }
+                                    }
+                                }
+                                elseif($customertype!= '' && $customertype =='Only Returning Customer'){
+                                    $minimumorder = $result->set_minimum_order_amount;
+                                    if($minimumorder>0){
+                                        $grand_total=$request->grand_total;
+                                        if($minimumorder<$grand_total){
+                                            $ordertype=$result->order_type;
+                                            $cash=$result->only_selected_cash;
+                                            $card=$result->only_selected_cash_delivery_person;
+                                                if($cash != 0 && $cash== 1)
+                                                {
+
+                                                    if($ordertype != '' && $ordertype == 'Pickup Type'){
+                                                        $status="success";
+                                                        $msg="Coupon code applied";
+                                                    }
+                                                    elseif($ordertype != '' && $ordertype == 'Any Type'){
+                                                        $status="success";
+                                                        $msg="Coupon code applied";
+                                                    }
+                                                }
+                                                elseif($card != 0 && $card==1)
+                                                {
+
+                                                    if($ordertype != '' && $ordertype == 'Pickup Type'){
+                                                        $status="success";
+                                                        $msg="Coupon code applied";
+                                                    }
+                                                    elseif($ordertype != '' && $ordertype == 'Any Type'){
+                                                        $status="success";
+                                                        $msg="Coupon code applied";
+                                                    }
+                                                }
+                                        }
+                                        else{
+                                            $status='error';
+                                            $msg="Cart amount must be less then $minimumorder";
+                                        }
+                                    }
+                                }
+                            }
+                            else{
+                                $status="error";
+                                // session()->flash('Prmotion Function Not Found');
+                            }
+                        }
+                        else
+                        {
+                            $status="error";
+                            $msg="Coupen is Expired";
+
+                    }
+                }
+                
+                if($status=='success'){
+                    $discount=$result->discount;
+                    $discount_type=$result->discount_type;
+                    if ($discount_type == 'USD') {
+                        $item=$result->discount;
+                        $itemPrice = $grand_total - $discount;
+                    }else {
+                        $item = ($grand_total* $discount) / 100;
+                        $itemPrice=$grand_total-$item;
+                    }
                 }
             }
-             
-            if($status=='success'){
-                $discount=$result->discount;
-                $discount_type=$result->discount_type;
-                if ($discount_type == 'USD') {
-                    $item=$result->discount;
-                    $itemPrice = $grand_total - $discount;
-                }else {
-                    $item = ($grand_total* $discount) / 100;
-                    $itemPrice=$grand_total-$item;
-                }
-            }
-         }
+        }
  
      }
      return response()->json(['msg'=>$msg,'status'=>$status,'couponcode'=> $couponcode,'discount'=>$item,'itemPrice'=>$itemPrice]); 
