@@ -55,7 +55,7 @@ class RestaurantHoursController extends Controller
         }
         
         if (!in_array(true,$testResult)) {
-            return response()->json(['success' => false, 'message' => 'You can not place order in this time please check restaurant time !']);
+            return response()->json(['success' => false, 'message' => 'Oops! Betty Burger is not open for orders at the time selected. Please select another time']);
         }
         
         $restaurant = Restaurant::where('restaurant_id', $request->restaurant_id)->first();

@@ -34,6 +34,7 @@ class CartController extends Controller
             ]); 
             $uid = auth('api')->user()->uid;
             $restaurantId = $request->post('restaurant_id');
+            $restaurant = Restaurant::where('restaurant_id',$request->post('restaurant_id'))->first();
 
             $cartItem = Cart::with(['cartMenuItems' => function($cartItems){
                 $cartItems->select(['cart_menu_item_id','cart_id','menu_id','menu_name','menu_qty','menu_price','menu_total','modifier_total','is_loyalty'])->with(['cartMenuGroups' => function($cartMenuGroups){
@@ -42,21 +43,28 @@ class CartController extends Controller
             }])->where('restaurant_id',$restaurantId)->where('uid',$uid)->select('cart_id','restaurant_id','promotion_id','uid','sub_total','discount_charge','tax_charge','total_due','is_payment')->first();
 
             if($cartItem){
- 
+                
                 $promotion_id = $cartItem->promotion_id;
+
+                //Sales Tax
+                $subTotal=$cartItem->sub_total;
+                $taxCharge = number_format(($subTotal * $restaurant->sales_tax) / 100,2);
+                $totalPayableAmount = number_format($subTotal + $taxCharge,2);
+                Cart::where('cart_id',$cartItem->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($subTotal,2),'tax_charge' => number_format($taxCharge,2), 'total_due' => number_format($totalPayableAmount,2)]);
+
                 DB::beginTransaction();
                 // if((empty($cartItem->promotion_id) || $cartItem->promotion_id == null) && (empty($cartItem->discount_charge) || floatval($cartItem->discount_charge) == 0)){
                     //  if(!$cartItem->promotion_id){
                     //     Cart::where('cart_id',$cartItem->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['discount_charge' =>  0,'tax_charge' => 0,'total_due' => $cartItem->sub_total]);
                     // }
                     $promotionTypes = PromotionType::all();
-                    foreach($promotionTypes as $promotion_type){
-                        /* Promotions Helper logic function */
-                        $test[] = [$promotion_type->id];
-                        if(apply_promotion($promotion_type->promotion_name,$uid,$restaurantId,$cartItem) == true){
-                           break;
-                        }
-                    }
+                    // foreach($promotionTypes as $promotion_type){
+                    //     /* Promotions Helper logic function */
+                    //     $test[] = [$promotion_type->id];
+                    //     if(apply_promotion($promotion_type->promotion_name,$uid,$restaurantId,$cartItem) == true){
+                    //        break;
+                    //     }
+                    // }   
                 // }
                 DB::commit();
 
