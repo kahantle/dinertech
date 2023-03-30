@@ -420,8 +420,9 @@ class CartController extends Controller
                         $modifier_total  = $cartItem->modifier_total;
                         $menuprice=$cartItem->menu_price;
                         $menuNewQuantity = $menuOldQuantity + 1;
+                        $modifiertotal=$cartItem->modifier_total * $menuNewQuantity ;
                         $cartItem->menu_qty = $menuNewQuantity;
-                        $cartItem->menu_total = number_format($menuprice * $menuNewQuantity + $modifier_total,2);
+                        $cartItem->menu_total = number_format($menuprice * $menuNewQuantity + $modifiertotal,2);
                         $cartItem->save();
 
                         $subtotal = CartItem::where('cart_id',$check_cart->cart_id)->sum('menu_total');
@@ -469,9 +470,11 @@ class CartController extends Controller
                         $modifier_total=$cartItem->modifier_total;
                         $menu_price  = $cartItem->menu_price;
                         $menuNewQuantity = $menuOldQuantity - 1;
+                        $modifiertotal=$cartItem->modifier_total * $menuNewQuantity ;
+                        $cartItem->menu_qty = $menuNewQuantity;
                         if($menuNewQuantity != 0){
                             $cartItem->menu_qty = $menuNewQuantity;
-                            $cartItem->menu_total = number_format($menu_price * $menuNewQuantity + $modifier_total,2);
+                            $cartItem->menu_total = number_format($menu_price * $menuNewQuantity + $modifiertotal,2);
                             $cartItem->save();
 
                             $subtotal = CartItem::where('cart_id',$check_cart->cart_id)->sum('menu_total');
