@@ -537,22 +537,31 @@ class CartController extends Controller
             if (!$promotion) {
                 return response()->json(['message' => "Invalid promotion code !", 'success' => false]) ;
             }
-
             $promotion_category_items = PromotionCategoryItem::where('promotion_id',$promotion->promotion_id)->with('category_item')->get();
 
             $eligible_item_ids = [];
-
             foreach ($promotion_category_items as $promotion_category_item) {
                 $eligible_item_ids[] = $promotion_category_item->category_item[0]->menu_id;
             };
 
-            $cart = Cart::find($request->post('cart_id'));
-
+            $cart = Cart::find($request->post('cart_id'));            
+            
             $cartItemIds = [];
-
             foreach($cart->cartMenuItems as $item) {
-                $cartItemIds[] = $item->menu_id;
+                $cartItemIds[] = $item->menu_id; 
             }
+            // $uid = auth('api')->user()->uid;
+            // $restaurantId = $request->post('restaurant_id');
+
+            // $promotionTypes = PromotionType::all();
+            // foreach($promotionTypes as $promotion_type){
+            //         /* Promotions Helper logic function */
+            //         $test[] = [$promotion_type->id];
+            //         if(apply_promotion($promotion_type->promotion_name,$promotion,$uid,$restaurantId,$cart) == true){
+            //             break;
+            //         }
+            // }   
+
 
             if (count(array_intersect($eligible_item_ids,$cartItemIds)) > 0) {
                 $cart->promotion_id = $promotion->promotion_id;
@@ -564,7 +573,7 @@ class CartController extends Controller
                             'promotion_name' => $promotion->promotion_name,
                             'promotion_details' => $promotion->promotion_details
                         ],
-                        'success' => true]);
+                        'success' => true],200);
                 }
             } else {
                 return response()->json(['message' => "Promotion is not elegible for any item of the Cart !", 'success' => false]);

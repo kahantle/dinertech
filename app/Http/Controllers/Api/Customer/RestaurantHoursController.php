@@ -45,7 +45,7 @@ class RestaurantHoursController extends Controller
         $data  = RestaurantHours::with('allTimes')->where('restaurant_id', $request->restaurant_id)->where('day', 'like', '%' . $request->day . '%')->first();
         
         if (empty($data)) {
-            return response()->json(['success' => false, 'message' => 'You can not place order in this time please check restaurant time !']);
+            return response()->json(['success' => false, 'message' => 'Oops! Betty Burger is not open for orders at the time selected. Please select another time']);
         }
         
         $testResult  = [];
