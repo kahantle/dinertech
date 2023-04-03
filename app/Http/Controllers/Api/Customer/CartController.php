@@ -512,8 +512,42 @@ class CartController extends Controller
                 'cart_id' => $request->post('cart_id')
             ])->first();
 
-            $cart->promotion_id = NULL;
-            return $cart->save() ? response()->json(['message' => "Promotion removed successfully !", 'success' => true]) : "" ;
+            $uid=auth('api')->user()->uid;
+
+            //Remove Prmotion
+            $cartItem = CartItem::where('cart_id',$request->post('cart_id'))->get();
+            $restaurant = Restaurant::where('restaurant_id',$request->post('restaurant_id'))->first();
+
+
+            $totalPrice=0;
+            $totalmodifier=0;
+            foreach($cartItem as $list){
+                 $totalPrice=$totalPrice+($list->menu_qty*$list->menu_price)+($list->menu_qty*$list->modifier_total);
+            }
+
+            //Sales Tax
+            $taxCharge = number_format(($totalPrice * $restaurant->sales_tax) / 100,2);
+            $totalPayableAmount = number_format($totalPrice + $taxCharge,2);
+
+            $prmotionid=$cart->promotion_id = 0;
+            $dicountcharge=$cart->discount_charge=0.00;
+            Cart::where('cart_id',$request->post('cart_id'))->where('uid',$uid)->where('restaurant_id',$request->post('restaurant_id'))->update(['sub_total' => number_format($totalPrice,2),'tax_charge' => number_format($taxCharge,2),'discount_charge' => number_format($dicountcharge,2), 'total_due' => number_format($totalPayableAmount,2),'promotion_id' => $prmotionid]);
+            $cartItem = Cart::where('restaurant_id',$request->post('restaurant_id'))->where('uid',$uid)->first();
+            $cartItem->save();
+
+
+            // return $cart->save() ? response()->json(['message' => "Promotion removed successfully !", 'success' => true]) : "" ;
+            if ($cart->save()) {
+                return response()->json([
+                    'message' => "Promotion removed successfully !",
+                    'data' => [
+                        'cartItem' => $cartItem,
+                    ],
+                    'success' => true],200);
+            }
+            else {
+            return response()->json(['message' => "Promotion is not elegible for any item of the Cart !", 'success' => false]);
+            }
 
         } catch (\Throwable $th) {
             $errors['success'] = false;
