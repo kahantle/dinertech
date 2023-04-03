@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\customer;
 
 use App\Http\Controllers\Controller;
+use App\Models\CartItem;
 use App\Models\MenuItem;
 use App\Models\Promotion;
 use App\Models\Restaurant;
@@ -22,6 +23,13 @@ class NewPromotionContoller extends Controller
             $itemPrice = 0;
             $uid = Auth::user()->uid;
             $restaurant = getRestaurantId();
+
+            $cartItem = CartItem::where('cart_id',$request->cart_id)->get();
+            $totalPrice=0;
+            foreach($cartItem as $list){
+                $totalPrice=$totalPrice+($list->menu_qty*$list->menu_price)+($list->menu_qty*$list->modifier_total);
+            }
+
             $discount=0;
             $item=0;
             $status='';

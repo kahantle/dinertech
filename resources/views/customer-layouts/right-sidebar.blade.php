@@ -7,7 +7,7 @@
                     <div class="card-inner-body">
                         <div class="d-flex align-items-center w-100 justify-content-between mb-4">
                             <h5 class="card-title m-0">My Order</h5>
-                        </div>
+                        </div> 
 
                         <div class="d-flex align-items-center wd-dr-now">
                             <div class="input-group w-auto mr-3">
@@ -82,6 +82,7 @@
                         $menuItem[] = ['menu_id' => $item['menu_id'], 'menu_name' => $item['menu_name'], 'menu_total' =>
                         0, 'menu_qty' => $item['menu_qty'], 'modifier_total' => 0];
                         @endphp
+
                         <div class="d-flex rounded wp-border-size-blog @if ($key != 0) mt-2 @endif">
                             <div class="wb-inner-system">
                                 <img src="{{ $item['item_img'] }}" class="img-fluid">
@@ -104,6 +105,7 @@
                                 <div class="product-quantity product-quantity-{{ $item->menu_id }} d-inline-flex mt-2">
                                     <span class="product-quantity-minus"
                                         data-cart-menu-item-id="{{ $item->cart_menu_item_id }}"></span>
+                                    <input type="hidden" value="{{$cart->cart_id}}" name="cartid" id="cartid" class="" />
                                     <input type="number"
                                         value="{{ $cart->cartMenuItems->where('cart_menu_item_id',$item->cart_menu_item_id)->first()->menu_qty }}"
                                         class="quantity-{{ $item->cart_menu_item_id }}" readonly />

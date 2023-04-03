@@ -50,8 +50,12 @@ class CartController extends Controller
                 $subTotal=$cartItem->sub_total;
                 $taxCharge = number_format(($subTotal * $restaurant->sales_tax) / 100,2);
                 $totalPayableAmount = number_format($subTotal + $taxCharge,2);
-                Cart::where('cart_id',$cartItem->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($subTotal,2),'tax_charge' => number_format($taxCharge,2), 'total_due' => number_format($totalPayableAmount,2)]);
-
+                
+                if($cartItem->promotion_id == 0)
+                {
+                    Cart::where('cart_id',$cartItem->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($subTotal,2),'tax_charge' => number_format($taxCharge,2), 'total_due' => number_format($totalPayableAmount,2)]);
+                }
+               
                 DB::beginTransaction();
                 // if((empty($cartItem->promotion_id) || $cartItem->promotion_id == null) && (empty($cartItem->discount_charge) || floatval($cartItem->discount_charge) == 0)){
                     //  if(!$cartItem->promotion_id){

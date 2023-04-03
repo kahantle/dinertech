@@ -15,12 +15,12 @@
 <script src="{{ asset('assets/customer/js/jquery.lazy.min.js') }}"></script>
 <script>
 $(".coupenremove").hide();
-function applyCoupenCode() {
+function applyCoupenCode() { 
     var coupon_code = $('#coupon_code').val();
-    var grand_total = $('#grand_total').val();
+    var cart_id = $('#cartid').val();
     var itemFormData = {
         'coupon_code': coupon_code, 
-        'grand_total': grand_total,
+        'cart_id':cart_id
     };
     if (coupon_code != '') {
         $.ajax({
