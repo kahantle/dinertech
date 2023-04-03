@@ -551,7 +551,6 @@ if(!function_exists('apply_promotion'))
                     if(promotion_filter($promotion,$promotions,$uid,$restaurantId,$cart) == true){
                         return true;
                     }
-                    return false;
                 }else{
                     return false;
                 }
@@ -602,6 +601,9 @@ if(!function_exists('promotion_filter')){
                         $promotions = $promotion->where('only_selected_cash',"1");
                     }
                 }
+                if($promotions->count() != 0) {
+                    promotion_discount_get($promotion, $cart, $uid, $restaurantId);
+                }
                 else{
                     return false;
                 }
@@ -612,6 +614,39 @@ if(!function_exists('promotion_filter')){
         }
         else{
             return false;
+        }
+    }
+}
+
+if(!function_exists('promotion_discount_get')) {
+    function promotion_discount_get($promotion, $cart, $uid, $restaurantId) {
+        if(floatval($cart->sub_total) > floatval($promotion->set_minimum_order_amount)) {
+            if($promotion->discount_type == Config::get('constants.DISCOUNT_TYPE.USD')) {
+                $totalAmount = $cart->sub_total;
+                $newdiscount = $promotion->discount;
+                $totalPayableAmount = $totalAmount - $newdiscount;
+            }else{
+                $totalAmount = $cart->sub_total;
+                $newdiscount = $totalAmount * $promotion->discount / 100;
+                $totalPayableAmount = $totalAmount - $newdiscount;
+            }
+            return discount_charge($cart->cart_id, $uid, $totalAmount, $totalPayableAmount, $newdiscount, $restaurantId, $promotion->promotion_id);
+        }
+
+    }
+}
+
+if(!function_exists('discount_charge')){
+    function discount_charge($cartId, $uid, $subTotal, $totalPayableAmount, $newdiscount, $restaurantId, $promotionId = NULL){
+        try {
+            $restaurant = Restaurant::where('restaurant_id',$restaurantId)->first();
+            $taxCharge = number_format(($totalPayableAmount * $restaurant->sales_tax) / 100,2);
+            $totalPayableAmount = number_format($totalPayableAmount + $taxCharge,2);
+            Cart::where('cart_id',$cartId)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($subTotal,2),'tax_charge' => number_format($taxCharge,2),'discount_charge' => number_format($newdiscount,2), 'total_due' => number_format($totalPayableAmount,2),'promotion_id' => $promotionId]);
+            return true;
+
+        } catch (\Throwable $th) {
+            return $th->getMessage();
         }
     }
 }

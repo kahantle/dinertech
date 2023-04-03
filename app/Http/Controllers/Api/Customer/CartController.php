@@ -550,34 +550,41 @@ class CartController extends Controller
             foreach($cart->cartMenuItems as $item) {
                 $cartItemIds[] = $item->menu_id; 
             }
-            // $uid = auth('api')->user()->uid;
-            // $restaurantId = $request->post('restaurant_id');
 
-            // $promotionTypes = PromotionType::all();
-            // foreach($promotionTypes as $promotion_type){
-            //         /* Promotions Helper logic function */
-            //         $test[] = [$promotion_type->id];
-            //         if(apply_promotion($promotion_type->promotion_name,$promotion,$uid,$restaurantId,$cart) == true){
-            //             break;
-            //         }
-            // }   
+            //Apply Prmotion 
+            $uid = auth('api')->user()->uid;
+            $restaurantId = $request->post('restaurant_id');
+
+            $promotionTypes = PromotionType::all();
+            foreach($promotionTypes as $promotion_type){
+                    /* Promotions Helper logic function */
+                    $test[] = [$promotion_type->id];
+                    if(apply_promotion($promotion_type->promotion_name,$promotion,$uid,$restaurantId,$cart) == true){
+                        break;
+                    }
+            }  
+            
+            $cartItem = Cart::where('restaurant_id',$restaurantId)->where('uid',$uid)->first();
+            $cartItem->save();
+            //==========================************
 
 
-            if (count(array_intersect($eligible_item_ids,$cartItemIds)) > 0) {
+           
                 $cart->promotion_id = $promotion->promotion_id;
                 if ($cart->save()) {
                     return response()->json([
                         'message' => "Promotion appllied !",
                         'data' => [
+                            'cart_list' => $cartItem,
                             'promotion_code' => $promotion->promotion_code,
                             'promotion_name' => $promotion->promotion_name,
                             'promotion_details' => $promotion->promotion_details
                         ],
                         'success' => true],200);
                 }
-            } else {
+                else {
                 return response()->json(['message' => "Promotion is not elegible for any item of the Cart !", 'success' => false]);
-            }
+                }
 
         }catch (\Throwable $th) {
             $errors['success'] = false;
