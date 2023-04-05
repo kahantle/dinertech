@@ -56,7 +56,9 @@ class CartController extends Controller
         $uid = auth()->id();
         $cart = Cart::where('uid',$uid)->first();
         $menuItem = MenuItem::where('menu_id',$request->menuId)->first();
-        $finalTotal = 0;
+        $restaurantId = session()->get('restaurantId');
+
+
         $isloyalty = 0;
         $loyaltyPoints = 0;
 
@@ -80,7 +82,22 @@ class CartController extends Controller
             $cart->is_payment = Config::get('constants.ORDER_PAYMENT_TYPE.CARD_PAYMENT');
             $cart->save();
         }
-
+        $check_cart = Cart::where('uid',$uid)->where('restaurant_id', $restaurantId)->first();
+        //Modifier id and Total
+        $modifierItems=$request->modifierItems;
+        $modifiertotal=0;
+        if (is_null($modifierItems))
+        {
+            $modifiertotal=0;
+        }
+        else
+        {
+            foreach($modifierItems as $modifier_group_id)
+            {
+                $modifierPrice = ModifierGroupItem::where('modifier_item_id',$modifier_group_id)->first();
+                $modifiertotal+= $modifierPrice->modifier_group_item_price;
+            }
+        }
         $cart_sub_total = $cart->sub_total;
         $cartMenuItemData = new CartItem;
         $cartMenuItemData->cart_id = $cart->cart_id;
@@ -89,10 +106,12 @@ class CartController extends Controller
         $cartMenuItemData->menu_name = $menuItem->item_name;
         $cartMenuItemData->menu_qty = 1;
         $cartMenuItemData->menu_price = $menuItem->item_price;
-        $cartMenuItemData->menu_price = $menuItem->item_price;
         $cartMenuItemData->item_img = $menuItem->getMenuImgAttribute();
         $cart_sub_total = $menuItem->item_price;
-        $cartMenuItemData->modifier_total = $menuItem->item_price;
+        $cartMenuItemData->modifier_total =$modifiertotal;
+        $menutotal=$menuItem->item_price * 1 + $modifiertotal;
+        $cartMenuItemData->menu_total=$menutotal;
+        // $cartMenuItemData->modifier_total = $menuItem->item_price;
         $cartMenuItemData->is_loyalty = $isloyalty;
         $cartMenuItemData->loyalty_point = $loyaltyPoints;
         $cartMenuItemData->save();
@@ -124,19 +143,89 @@ class CartController extends Controller
 
             }
         }
+        //Total
+        $subtotal = CartItem::where('cart_id',$check_cart->cart_id)->sum('menu_total');
+        Cart::where('uid',$uid)->where('restaurant_id',$restaurantId)->where('cart_id',$check_cart->cart_id)->update(['sub_total' => number_format($subtotal,2),  'total_due' => number_format($subtotal,2)]);
         return response()->json(['status' => true,'menu_id' => $cartMenuItemData->menu_id], 200);
     }
 
+    // public function quantityChange(Request $request)
+    // {
+    //     $cart = Cart::where('uid', auth()->id())->first();
+    //     $cartMenuItem = $cart->cartMenuItems->where('cart_menu_item_id', $request->cartMenuItemId)->first();
+
+    //     $request->action == 'increament' ? $cartMenuItem->menu_qty = $cartMenuItem->menu_qty + 1 :  $cartMenuItem->menu_qty = $cartMenuItem->menu_qty - 1 ;
+
+    //     if ($cartMenuItem->save()) {
+    //         return response()->json(['success' => true, 'new_qty' => $cartMenuItem->menu_qty], 200);
+    //     } else {
+    //         return response()->json(['success' => false], 200);
+    //     }
+    // }
+
     public function quantityChange(Request $request)
-    { 
-        $cart = Cart::where('uid', auth()->id())->first();
-        $cartMenuItem = $cart->cartMenuItems->where('cart_menu_item_id', $request->cartMenuItemId)->first();
-        $request->action == 'increament' ? $cartMenuItem->menu_qty = $cartMenuItem->menu_qty + 1 :  $cartMenuItem->menu_qty = $cartMenuItem->menu_qty - 1 ;
-        if ($cartMenuItem->save()) {
-            return response()->json(['success' => true, 'new_qty' => $cartMenuItem->menu_qty], 200);
-        } else {
-            return response()->json(['success' => false], 200);
+    {
+        $uid = auth()->id();
+        $restaurantId = session()->get('restaurantId');
+        $check_cart = Cart::where('uid',$uid)->where('restaurant_id', $restaurantId)->first();
+        if($request->action == 'increament'){
+            if($check_cart){
+                //   $cartItem = CartItem::where('cart_id',$check_cart->cart_id)->first();
+                  $cartItem = CartItem::where('cart_menu_item_id',$request->cartMenuItemId)->first();
+                if($cartItem){
+                    $menuOldQuantity = $cartItem->menu_qty;
+                    $menuprice=$cartItem->menu_price;
+                    $menuNewQuantity = $menuOldQuantity + 1;
+                    $modifiertotal=$cartItem->modifier_total * $menuNewQuantity ;
+                    $cartItem->menu_qty = $menuNewQuantity;
+                    $cartItem->menu_total = number_format($menuprice * $menuNewQuantity + $modifiertotal,2);
+                    $cartItem->save();
+
+                    $subtotal = CartItem::where('cart_id',$check_cart->cart_id)->sum('menu_total');
+                    // $restaurant = Restaurant::where('restaurant_id',$request->post('restaurant_id'))->first();
+                    // $salesTax = $restaurant->sales_tax;
+                    // $taxCharge = ($subtotal * $salesTax) / 100;
+                    // $finalTotal = $subtotal + $taxCharge;
+                    Cart::where('uid',$uid)->where('restaurant_id',$restaurantId)->where('cart_id',$check_cart->cart_id)->update(['sub_total' => number_format($subtotal,2),  'total_due' => number_format($subtotal,2)]);
+                    if ($cartItem->save()) {
+                        return response()->json(['success' => true, 'new_qty' => $cartItem->menu_qty], 200);
+                    } else {
+                        return response()->json(['success' => false], 200);
+                    }
+                }
+            }
         }
+        else{
+             if($check_cart){
+                    $cartItem = CartItem::where('cart_menu_item_id',$request->cartMenuItemId)->first();
+                    if($cartItem){
+                        $menuOldQuantity = $cartItem->menu_qty;
+                        $modifier_total=$cartItem->modifier_total;
+                        $menu_price  = $cartItem->menu_price;
+                        $menuNewQuantity = $menuOldQuantity - 1;
+                        $modifiertotal=$cartItem->modifier_total * $menuNewQuantity ;
+                        $cartItem->menu_qty = $menuNewQuantity;
+                        if($menuNewQuantity != 0){
+                            $cartItem->menu_qty = $menuNewQuantity;
+                            $cartItem->menu_total = number_format($menu_price * $menuNewQuantity + $modifiertotal,2);
+                            $cartItem->save();
+
+                            $subtotal = CartItem::where('cart_id',$check_cart->cart_id)->sum('menu_total');
+                            // $restaurant = Restaurant::where('restaurant_id',$request->post('restaurant_id'))->first();
+                            // $salesTax = $restaurant->sales_tax;
+                            // $taxCharge = ($subtotal * $salesTax) / 100;
+                            // $finalTotal = $subtotal + $taxCharge;
+                            Cart::where('uid',$uid)->where('restaurant_id',$restaurantId)->where('cart_id',$check_cart->cart_id)->update(['sub_total' => number_format($subtotal,2),  'total_due' => number_format($subtotal,2)]);
+                            if ($cartItem->save()) {
+                                return response()->json(['success' => true, 'new_qty' => $cartItem->menu_qty], 200);
+                            } else {
+                                return response()->json(['success' => false], 200);
+                            }
+                         }
+                    }
+                }
+        }
+
     }
 
     public function removeItem(Request $request)

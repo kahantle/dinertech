@@ -26,7 +26,7 @@ function applyCoupenCode() {
         $.ajax({
             type: "post",
             url: 'customer/newpromotion',
-            data: itemFormData,
+            data: itemFormData, 
             dataType: "json",
             cache: true,
             headers: {

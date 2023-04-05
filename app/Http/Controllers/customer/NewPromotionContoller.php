@@ -27,8 +27,9 @@ class NewPromotionContoller extends Controller
             $cartItem = CartItem::where('cart_id',$request->cart_id)->get();
             $totalPrice=0;
             foreach($cartItem as $list){
-                $totalPrice=$totalPrice+($list->menu_qty*$list->menu_price)+($list->menu_qty*$list->modifier_total);
+                $totalPrice=$totalPrice+($list->menu_qty*$list->menu_price);
             }
+
 
             $discount=0;
             $item=0;

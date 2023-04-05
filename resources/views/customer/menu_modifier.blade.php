@@ -37,7 +37,7 @@
                         </div>
                     </div>
                     <button class="btn btn-submit-inner my-3 with-modifier-add" type="button"
-                        data-menu-id="{{ $item->menu_id }}">Add to order</button>
+                        data-menu-id="{{ $item->menu_id }}"> Add to order</button>
                 </div>
             </div>
         </div>
