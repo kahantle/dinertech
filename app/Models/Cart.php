@@ -17,11 +17,17 @@ class Cart extends Model
      */
     public function cartMenuItems()
     {
-        return $this->hasMany(CartItem::class,  'cart_id'); 
+        return $this->hasMany(CartItem::class,  'cart_id');
     }
 
     public function cartMenuModifierItems(){
         return $this->hasMany(CartMenuGroupItem::class,  'cart_id');
+    }
+
+    public function cartResturant()
+    {
+        return $this->hasOne(Restaurant::class ,'restaurant_id');
+        // return $this->belongsTo(Restaurant::class ,'restaurant_id');
     }
 
     public function promotion()

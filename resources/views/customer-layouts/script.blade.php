@@ -15,18 +15,18 @@
 <script src="{{ asset('assets/customer/js/jquery.lazy.min.js') }}"></script>
 <script>
 $(".coupenremove").hide();
-function applyCoupenCode() { 
+function applyCoupenCode() {
     var coupon_code = $('#coupon_code').val();
     var cart_id = $('#cartid').val();
     var itemFormData = {
-        'coupon_code': coupon_code, 
+        'coupon_code': coupon_code,
         'cart_id':cart_id
     };
     if (coupon_code != '') {
         $.ajax({
             type: "post",
             url: 'customer/newpromotion',
-            data: itemFormData, 
+            data: itemFormData,
             dataType: "json",
             cache: true,
             headers: {
@@ -45,8 +45,8 @@ function applyCoupenCode() {
                 }else{
                     $('#grand_total').val();
                     $(".apply-content").css("display", "none");
-                    $(".Promotion-content").css("display", "block"); 
-                } 
+                    $(".Promotion-content").css("display", "block");
+                }
                 $('#coupon_code_msgs').html(result.msg);
             }
         });

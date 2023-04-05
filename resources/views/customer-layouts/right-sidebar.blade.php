@@ -79,6 +79,11 @@
                         @forelse ($cart->cartMenuItems as $key => $item)
                         @php
                         $cartTotal += $item['menu_price']*$item['menu_qty']+ $item['modifier_total'] * $item['menu_qty'];
+
+                        $salestax=0.00;
+                        $salestax= $cartTotal * $cart->cartResturant['sales_tax']/100;
+                        $newfinaltotal=$cartTotal + $salestax;
+
                         $menuItem[] = ['menu_id' => $item['menu_id'], 'menu_name' => $item['menu_name'], 'menu_total' =>
                         0, 'menu_qty' => $item['menu_qty'], 'modifier_total' => 0];
                         @endphp
@@ -268,7 +273,7 @@
                             </div>
                             <div class="d-flex align-items-center justify-content-between w-100 wd-wrapper-total-first">
                                 <span>Sales Tax</span>
-                                <span>$0.00</span>
+                                <span id="sales_tax">${{ number_format($salestax, '2') }}</span>
                                 <input type="hidden" name="sales_tax" value="{{ number_format(0, '2') }}">
                             </div>
                             <div
@@ -278,7 +283,7 @@
                             </div>
                             <div class="d-flex align-items-center justify-content-between w-100 wd-wrapper-total">
                                 <span>Total</span>
-                                 <span id="total_price">${{ number_format($finalTotal, '2') }}</span>
+                                 <span id="total_price">${{ number_format($newfinaltotal, '2') }}</span>
                                 <input type="hidden" name="grand_total" id="grand_total"
                                     value="{{ $finalTotal + $modifierTotal }}">
                             </div>
