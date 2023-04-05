@@ -12,6 +12,7 @@ use App\Models\CartMenuGroupItem;
 use App\Models\ModifierGroup;
 use Illuminate\Http\Request;
 use App\Models\LoyaltyRule;
+use App\Models\Restaurant;
 use Config;
 
 class CartController extends Controller
@@ -57,6 +58,7 @@ class CartController extends Controller
         $cart = Cart::where('uid',$uid)->first();
         $menuItem = MenuItem::where('menu_id',$request->menuId)->first();
         $restaurantId = session()->get('restaurantId');
+        $restaurantid = Restaurant::where('restaurant_id',$restaurantId)->first();
 
 
         $isloyalty = 0;
@@ -145,7 +147,11 @@ class CartController extends Controller
         }
         //Total
         $subtotal = CartItem::where('cart_id',$check_cart->cart_id)->sum('menu_total');
-        Cart::where('uid',$uid)->where('restaurant_id',$restaurantId)->where('cart_id',$check_cart->cart_id)->update(['sub_total' => number_format($subtotal,2),  'total_due' => number_format($subtotal,2)]);
+        //Salestax
+        $taxCharge = number_format(($subtotal * $restaurantid->sales_tax) / 100,2);
+        $totalPayableAmount = number_format($subtotal + $taxCharge,2);
+
+        Cart::where('uid',$uid)->where('restaurant_id',$restaurantId)->where('cart_id',$check_cart->cart_id)->update(['sub_total' => number_format($subtotal,2),  'tax_charge' => number_format($taxCharge,2), 'total_due' => number_format($totalPayableAmount,2)]);
         return response()->json(['status' => true,'menu_id' => $cartMenuItemData->menu_id], 200);
     }
 
@@ -168,6 +174,7 @@ class CartController extends Controller
         $uid = auth()->id();
         $restaurantId = session()->get('restaurantId');
         $check_cart = Cart::where('uid',$uid)->where('restaurant_id', $restaurantId)->first();
+        $restaurantid = Restaurant::where('restaurant_id',$restaurantId)->first();
         if($request->action == 'increament'){
             if($check_cart){
                 //   $cartItem = CartItem::where('cart_id',$check_cart->cart_id)->first();
@@ -186,7 +193,10 @@ class CartController extends Controller
                     // $salesTax = $restaurant->sales_tax;
                     // $taxCharge = ($subtotal * $salesTax) / 100;
                     // $finalTotal = $subtotal + $taxCharge;
-                    Cart::where('uid',$uid)->where('restaurant_id',$restaurantId)->where('cart_id',$check_cart->cart_id)->update(['sub_total' => number_format($subtotal,2),  'total_due' => number_format($subtotal,2)]);
+                    $taxCharge = number_format(($subtotal * $restaurantid->sales_tax) / 100,2);
+                    $totalPayableAmount = number_format($subtotal + $taxCharge,2);
+
+                    Cart::where('uid',$uid)->where('restaurant_id',$restaurantId)->where('cart_id',$check_cart->cart_id)->update(['sub_total' => number_format($subtotal,2),  'tax_charge' => number_format($taxCharge,2), 'total_due' => number_format($totalPayableAmount,2)]);
                     if ($cartItem->save()) {
                         return response()->json(['success' => true, 'new_qty' => $cartItem->menu_qty], 200);
                     } else {
@@ -215,7 +225,10 @@ class CartController extends Controller
                             // $salesTax = $restaurant->sales_tax;
                             // $taxCharge = ($subtotal * $salesTax) / 100;
                             // $finalTotal = $subtotal + $taxCharge;
-                            Cart::where('uid',$uid)->where('restaurant_id',$restaurantId)->where('cart_id',$check_cart->cart_id)->update(['sub_total' => number_format($subtotal,2),  'total_due' => number_format($subtotal,2)]);
+                            $taxCharge = number_format(($subtotal * $restaurantid->sales_tax) / 100,2);
+                            $totalPayableAmount = number_format($subtotal + $taxCharge,2);
+
+                            Cart::where('uid',$uid)->where('restaurant_id',$restaurantId)->where('cart_id',$check_cart->cart_id)->update(['sub_total' => number_format($subtotal,2),  'tax_charge' => number_format($taxCharge,2), 'total_due' => number_format($totalPayableAmount,2)]);
                             if ($cartItem->save()) {
                                 return response()->json(['success' => true, 'new_qty' => $cartItem->menu_qty], 200);
                             } else {

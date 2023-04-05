@@ -18,6 +18,7 @@ $(".coupenremove").hide();
 function applyCoupenCode() {
     var coupon_code = $('#coupon_code').val();
     var cart_id = $('#cartid').val();
+    var promotion_id = $('#promotion_id').val();
     var itemFormData = {
         'coupon_code': coupon_code,
         'cart_id':cart_id

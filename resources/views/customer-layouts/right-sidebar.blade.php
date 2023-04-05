@@ -80,14 +80,9 @@
                         @php
                         $cartTotal += $item['menu_price']*$item['menu_qty']+ $item['modifier_total'] * $item['menu_qty'];
 
-                        $salestax=0.00;
-                        $salestax= $cartTotal * $cart->cartResturant['sales_tax']/100;
-                        $newfinaltotal=$cartTotal + $salestax;
-
                         $menuItem[] = ['menu_id' => $item['menu_id'], 'menu_name' => $item['menu_name'], 'menu_total' =>
                         0, 'menu_qty' => $item['menu_qty'], 'modifier_total' => 0];
                         @endphp
-
                         <div class="d-flex rounded wp-border-size-blog @if ($key != 0) mt-2 @endif">
                             <div class="wb-inner-system">
                                 <img src="{{ $item['item_img'] }}" class="img-fluid">
@@ -173,7 +168,10 @@
                                         <div id="coupon_code_msgs" style="color:red"></div>
                             </div>
                             <div>
-                                <h6 class="mb-0 text-dark couponcode coupenremove"></h6>
+                                @php
+                                $promotions = \App\Models\Promotion::where('restaurant_id', 1)->where('promotion_id',$cart['promotion_id'])->first();
+                                @endphp
+                                <h6 class="mb-0 text-dark couponcode">{{$promotions['promotion_code']}}</h6>
                                 <!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.
                                 </p> -->
                             </div>
@@ -262,18 +260,18 @@
                             <div class="d-flex align-items-center justify-content-between w-100 wd-wrapper-total-first">
                                 <span>Subtotal</span>
                                 <!-- <span>${{ number_format($cartTotal, '2') }}</span> -->
-                                <span>${{ number_format($finalTotal, '2') }}</span>
+                                <span>${{ number_format($cart['sub_total'], '2') }}</span>
                                 <input type="hidden" name="cart_charge" id="cart_charge"
                                     value="{{ number_format($cartTotal, '2') }}">
                             </div>
                             <div class="d-flex align-items-center justify-content-between w-100 wd-wrapper-total-first">
                                 <span>Discount</span>
-                                <span id="discount">$0.00</span>
+                                <span id="discount">${{ number_format($cart['discount_charge'], '2') }}</span>
                                 <input type="hidden" name="discount_charge" value="{{ number_format(0, '2') }}">
                             </div>
                             <div class="d-flex align-items-center justify-content-between w-100 wd-wrapper-total-first">
                                 <span>Sales Tax</span>
-                                <span id="sales_tax">${{ number_format($salestax, '2') }}</span>
+                                <span id="sales_tax">${{ number_format($cart['tax_charge'], '2') }}</span>
                                 <input type="hidden" name="sales_tax" value="{{ number_format(0, '2') }}">
                             </div>
                             <div
@@ -283,9 +281,7 @@
                             </div>
                             <div class="d-flex align-items-center justify-content-between w-100 wd-wrapper-total">
                                 <span>Total</span>
-                                 <span id="total_price">${{ number_format($newfinaltotal, '2') }}</span>
-                                <input type="hidden" name="grand_total" id="grand_total"
-                                    value="{{ $finalTotal + $modifierTotal }}">
+                                 <span id="total_price">${{ number_format($cart['total_due'], '2') }}</span>
                             </div>
                         </div>
                         <input type="hidden" name="order_status" id="order_status" value="0">
