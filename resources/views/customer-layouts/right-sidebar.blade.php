@@ -94,7 +94,7 @@
                                         <!-- <p>( ${{ $item['menu_price']}} × {{$item['menu_qty'] }} )</p> -->
                                     </div>
                                     <div class="d-flex">
-                                        <p class="m-0">${{ number_format($item['menu_price']*$item['menu_qty'], 2) + number_format($item['modifier_total'] * $item['menu_qty'], 2) }}
+                                        <p class="m-0">${{number_format($item['menu_price']*$item['menu_qty'] + $item['modifier_total'] * $item['menu_qty'], 2) }}
                                         </p>
                                         <a href="#" class="cart-remove"
                                             data-cart-menu-item-id="{{ $item['cart_menu_item_id'] }}"><span
@@ -272,7 +272,7 @@
                             <div class="d-flex align-items-center justify-content-between w-100 wd-wrapper-total-first">
                                 <span>Sales Tax</span>
                                 <span id="sales_tax">${{ number_format($cart['tax_charge'], '2') }}</span>
-                                <input type="hidden" name="sales_tax" value="{{ number_format(0, '2') }}">
+                                <input type="hidden" name="sales_tax" id="sales_tax" value="{{$cart['tax_charge'] }}">
                             </div>
                             <div
                                 class="align-items-center justify-content-between w-100 wd-wrapper-total d-none wd-wrapper-total-first">
@@ -282,6 +282,8 @@
                             <div class="d-flex align-items-center justify-content-between w-100 wd-wrapper-total">
                                 <span>Total</span>
                                  <span id="total_price">${{ number_format($cart['total_due'], '2') }}</span>
+                                 <input type="hidden" name="grand_total" id="grand_total"
+                                 value="{{$cart['total_due']}}">
                             </div>
                         </div>
                         <input type="hidden" name="order_status" id="order_status" value="0">
