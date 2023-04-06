@@ -31,7 +31,7 @@ class CartController extends Controller
             $request_data = $request->json()->all();
             $validator = Validator::make($request_data,[
                 'restaurant_id'  => 'required'
-            ]); 
+            ]);
             $uid = auth('api')->user()->uid;
             $restaurantId = $request->post('restaurant_id');
             $restaurant = Restaurant::where('restaurant_id',$request->post('restaurant_id'))->first();
@@ -43,19 +43,19 @@ class CartController extends Controller
             }])->where('restaurant_id',$restaurantId)->where('uid',$uid)->select('cart_id','restaurant_id','promotion_id','uid','sub_total','discount_charge','tax_charge','total_due','is_payment')->first();
 
             if($cartItem){
-                
+
                 $promotion_id = $cartItem->promotion_id;
 
                 //Sales Tax
                 $subTotal=$cartItem->sub_total;
-                $taxCharge = number_format(($subTotal * $restaurant->sales_tax) / 100,2);
-                $totalPayableAmount = number_format($subTotal + $taxCharge,2);
-                
+                $taxCharge = ($subTotal * $restaurant->sales_tax) / 100;
+                $totalPayableAmount = $subTotal + $taxCharge;
+
                 if($cartItem->promotion_id == 0)
                 {
-                    Cart::where('cart_id',$cartItem->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => number_format($subTotal,2),'tax_charge' => number_format($taxCharge,2), 'total_due' => number_format($totalPayableAmount,2)]);
+                    Cart::where('cart_id',$cartItem->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => (float)$subTotal,'tax_charge' => (float)$taxCharge, 'total_due' => (float)$totalPayableAmount]);
                 }
-               
+
                 DB::beginTransaction();
                 // if((empty($cartItem->promotion_id) || $cartItem->promotion_id == null) && (empty($cartItem->discount_charge) || floatval($cartItem->discount_charge) == 0)){
                     //  if(!$cartItem->promotion_id){
@@ -68,7 +68,7 @@ class CartController extends Controller
                     //     if(apply_promotion($promotion_type->promotion_name,$uid,$restaurantId,$cartItem) == true){
                     //        break;
                     //     }
-                    // }   
+                    // }
                 // }
                 DB::commit();
 
@@ -111,7 +111,7 @@ class CartController extends Controller
                 'menu_item'    => 'required',
                 // 'is_loyalty'  =>  'required',
             ]);
- 
+
             $user = Auth::user();
             foreach ($request->post('menu_item') as $menu_item) {
                 if ($menu_item['is_loyalty'] == true) {
@@ -426,7 +426,7 @@ class CartController extends Controller
                         $menuNewQuantity = $menuOldQuantity + 1;
                         $modifiertotal=$cartItem->modifier_total * $menuNewQuantity ;
                         $cartItem->menu_qty = $menuNewQuantity;
-                        $cartItem->menu_total = number_format($menuprice * $menuNewQuantity + $modifiertotal,2);
+                        $cartItem->menu_total = (float)$menuprice * (float)$menuNewQuantity + (float)$modifiertotal;
                         $cartItem->save();
 
                         $subtotal = CartItem::where('cart_id',$check_cart->cart_id)->sum('menu_total');
@@ -434,7 +434,7 @@ class CartController extends Controller
                         // $salesTax = $restaurant->sales_tax;
                         // $taxCharge = ($subtotal * $salesTax) / 100;
                         // $finalTotal = $subtotal + $taxCharge;
-                        Cart::where('uid',$uid)->where('restaurant_id',$request->post('restaurant_id'))->where('cart_id',$check_cart->cart_id)->update(['sub_total' => number_format($subtotal,2),'total_due' => number_format($subtotal,2)]);
+                        Cart::where('uid',$uid)->where('restaurant_id',$request->post('restaurant_id'))->where('cart_id',$check_cart->cart_id)->update(['sub_total' => (float)$subtotal,'total_due' => (float)$subtotal]);
                         return response()->json(['message' => "Cart quantity increment successfully.", 'success' => true], 200);
                     }else{
                         return response()->json(['message' => "Cart item not found.", 'success' => false], 400);
@@ -478,7 +478,7 @@ class CartController extends Controller
                         $cartItem->menu_qty = $menuNewQuantity;
                         if($menuNewQuantity != 0){
                             $cartItem->menu_qty = $menuNewQuantity;
-                            $cartItem->menu_total = number_format($menu_price * $menuNewQuantity + $modifiertotal,2);
+                            $cartItem->menu_total = (float)$menu_price * (float)$menuNewQuantity + (float)$modifiertotal;
                             $cartItem->save();
 
                             $subtotal = CartItem::where('cart_id',$check_cart->cart_id)->sum('menu_total');
@@ -486,7 +486,7 @@ class CartController extends Controller
                             // $salesTax = $restaurant->sales_tax;
                             // $taxCharge = ($subtotal * $salesTax) / 100;
                             // $finalTotal = $subtotal + $taxCharge;
-                            Cart::where('uid',$uid)->where('restaurant_id',$request->post('restaurant_id'))->where('cart_id',$check_cart->cart_id)->update(['sub_total' => number_format($subtotal,2),  'total_due' => number_format($subtotal,2)]);
+                            Cart::where('uid',$uid)->where('restaurant_id',$request->post('restaurant_id'))->where('cart_id',$check_cart->cart_id)->update(['sub_total' => (float)$subtotal,  'total_due' => (float)$subtotal]);
                             return response()->json(['message' => "Cart quantity decrement successfully.", 'success' => true], 200);
                         }else{
                             return response()->json(['message' => "Do not set quantity to less than one.", 'success' => true], 400);
@@ -582,14 +582,14 @@ class CartController extends Controller
                 $eligible_item_ids[] = $promotion_category_item->category_item[0]->menu_id;
             };
 
-            $cart = Cart::find($request->post('cart_id'));            
-            
+            $cart = Cart::find($request->post('cart_id'));
+
             $cartItemIds = [];
             foreach($cart->cartMenuItems as $item) {
-                $cartItemIds[] = $item->menu_id; 
+                $cartItemIds[] = $item->menu_id;
             }
 
-            //Apply Prmotion 
+            //Apply Prmotion
             $uid = auth('api')->user()->uid;
             $restaurantId = $request->post('restaurant_id');
 
@@ -600,14 +600,14 @@ class CartController extends Controller
                     if(apply_promotion($promotion_type->promotion_name,$promotion,$uid,$restaurantId,$cart) == true){
                         break;
                     }
-            }  
-            
+            }
+
             $cartItem = Cart::where('restaurant_id',$restaurantId)->where('uid',$uid)->first();
             $cartItem->save();
             //==========================************
 
 
-           
+
                 $cart->promotion_id = $promotion->promotion_id;
                 if ($cart->save()) {
                     return response()->json([
