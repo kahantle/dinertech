@@ -111,8 +111,11 @@ class CartController extends Controller
         $cartMenuItemData->item_img = $menuItem->getMenuImgAttribute();
         $cart_sub_total = $menuItem->item_price;
         $cartMenuItemData->modifier_total =$modifiertotal;
-        $menutotal=$menuItem->item_price * 1 + $modifiertotal;
-        $cartMenuItemData->menu_total=$menutotal;
+
+        $menutotal=(float)($menuItem->item_price) * 1 + (float)$modifiertotal;
+        $cartMenuItemData->menu_total=(float)$menutotal;
+
+
         // $cartMenuItemData->modifier_total = $menuItem->item_price;
         $cartMenuItemData->is_loyalty = $isloyalty;
         $cartMenuItemData->loyalty_point = $loyaltyPoints;
@@ -185,18 +188,19 @@ class CartController extends Controller
                     $menuNewQuantity = $menuOldQuantity + 1;
                     $modifiertotal=$cartItem->modifier_total * $menuNewQuantity ;
                     $cartItem->menu_qty = $menuNewQuantity;
-                    $cartItem->menu_total = number_format($menuprice * $menuNewQuantity + $modifiertotal,2);
+                    $cartItem->menu_total =(float)$menuprice * (float)$menuNewQuantity + (float)$modifiertotal;
                     $cartItem->save();
 
                     $subtotal = CartItem::where('cart_id',$check_cart->cart_id)->sum('menu_total');
+
                     // $restaurant = Restaurant::where('restaurant_id',$request->post('restaurant_id'))->first();
                     // $salesTax = $restaurant->sales_tax;
                     // $taxCharge = ($subtotal * $salesTax) / 100;
                     // $finalTotal = $subtotal + $taxCharge;
-                    $taxCharge = number_format(($subtotal * $restaurantid->sales_tax) / 100,2);
-                    $totalPayableAmount = number_format($subtotal + $taxCharge,2);
+                    $taxCharge = ($subtotal * $restaurantid->sales_tax) / 100;
+                    $totalPayableAmount = $subtotal + $taxCharge;
 
-                    Cart::where('uid',$uid)->where('restaurant_id',$restaurantId)->where('cart_id',$check_cart->cart_id)->update(['sub_total' => number_format($subtotal,2),  'tax_charge' => number_format($taxCharge,2), 'total_due' => number_format($totalPayableAmount,2)]);
+                    Cart::where('uid',$uid)->where('restaurant_id',$restaurantId)->where('cart_id',$check_cart->cart_id)->update(['sub_total' => (float)$subtotal,  'tax_charge' => (float)$taxCharge, 'total_due' =>(float)$totalPayableAmount]);
                     if ($cartItem->save()) {
                         return response()->json(['success' => true, 'new_qty' => $cartItem->menu_qty], 200);
                     } else {
@@ -217,7 +221,8 @@ class CartController extends Controller
                         $cartItem->menu_qty = $menuNewQuantity;
                         if($menuNewQuantity != 0){
                             $cartItem->menu_qty = $menuNewQuantity;
-                            $cartItem->menu_total = number_format($menu_price * $menuNewQuantity + $modifiertotal,2);
+                            $cartItem->menu_total = (float)$menu_price * (float)$menuNewQuantity + (float)$modifiertotal;
+
                             $cartItem->save();
 
                             $subtotal = CartItem::where('cart_id',$check_cart->cart_id)->sum('menu_total');
@@ -225,10 +230,11 @@ class CartController extends Controller
                             // $salesTax = $restaurant->sales_tax;
                             // $taxCharge = ($subtotal * $salesTax) / 100;
                             // $finalTotal = $subtotal + $taxCharge;
-                            $taxCharge = number_format(($subtotal * $restaurantid->sales_tax) / 100,2);
-                            $totalPayableAmount = number_format($subtotal + $taxCharge,2);
 
-                            Cart::where('uid',$uid)->where('restaurant_id',$restaurantId)->where('cart_id',$check_cart->cart_id)->update(['sub_total' => number_format($subtotal,2),  'tax_charge' => number_format($taxCharge,2), 'total_due' => number_format($totalPayableAmount,2)]);
+                            $taxCharge = ($subtotal * $restaurantid->sales_tax) / 100;
+                            $totalPayableAmount = $subtotal + $taxCharge;
+
+                            Cart::where('uid',$uid)->where('restaurant_id',$restaurantId)->where('cart_id',$check_cart->cart_id)->update(['sub_total' => (float)$subtotal,  'tax_charge' => (float)$taxCharge, 'total_due' => (float)$totalPayableAmount]);
                             if ($cartItem->save()) {
                                 return response()->json(['success' => true, 'new_qty' => $cartItem->menu_qty], 200);
                             } else {

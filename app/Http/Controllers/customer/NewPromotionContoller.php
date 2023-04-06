@@ -352,7 +352,7 @@ class NewPromotionContoller extends Controller
             $prmotionid=$cart->promotion_id = 0;
             $dicountcharge=$cart->discount_charge=0.00;
 
-            Cart::where('cart_id',$request->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurant)->update(['sub_total' => number_format($totalPrice,2),'tax_charge' => number_format($taxCharge,2),'discount_charge' => number_format($dicountcharge,2), 'total_due' => number_format($totalPayableAmount,2),'promotion_id' => $prmotionid]);
+        Cart::where('cart_id',$request->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurant)->update(['sub_total' => number_format($totalPrice,2),'tax_charge' => number_format($taxCharge,2),'discount_charge' => number_format($dicountcharge,2), 'total_due' => number_format($totalPayableAmount,2),'promotion_id' => $prmotionid]);
             $cartItem = Cart::where('restaurant_id',$restaurant)->where('uid',$uid)->first();
             $cartItem->save();
         }
