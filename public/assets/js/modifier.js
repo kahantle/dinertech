@@ -132,7 +132,7 @@ $(document).ready(function(e) {
         },
         complete: function(){
           $("body").preloader('remove');
-        }, 
+        },
         success: function (res) {
           toastr.success(res.alert);
           window.location.href = res.route;

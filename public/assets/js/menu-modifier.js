@@ -66,7 +66,7 @@ $(document).ready(function(e) {
       $(".groupBtn").html('Update');
       $(".groupHeading").html('Edit modifier group');
     }
-    
+
     if(url){
       $.ajax({
         headers: {
@@ -178,7 +178,7 @@ $(document).ready(function(e) {
         },
         complete: function(){
           $("body").preloader('remove');
-        }, 
+        },
         success: function (res) {
           toastr.success(res.alert);
           $("#accordion").html(res.html);

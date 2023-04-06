@@ -25,6 +25,11 @@ class MenuController extends Controller
      */
     public function __construct()
     {
+        // $this->middleware('auth:web');
+        // $this->middleware(function ($request, $next) {
+        //     $this->id = Auth::user()->uid;
+        //     $this->global = "some value";
+        // });
     }
 
     /**
@@ -45,7 +50,7 @@ class MenuController extends Controller
         return view('menu.index',compact('menu','params'));
     }
 
-    public function add(){   
+    public function add(){
         $uid = Auth::user()->uid;
         $restaurant = Restaurant::where('uid', $uid)->first();
         $categories = Category::where('restaurant_id', $restaurant->restaurant_id)->get();
@@ -65,7 +70,7 @@ class MenuController extends Controller
 
 
     public function store(MenuItemRequest $request)
-    {      
+    {
         try {
             $uid = Auth::user()->uid;
             $restaurant = Restaurant::where('uid', $uid)->first();

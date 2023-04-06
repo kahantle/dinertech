@@ -45,7 +45,7 @@ Route::namespace ('Auth')->group(function () {
     Route::post('/updatePassword', 'ForgotPasswordController@updatePassword')->name('updatePassword.post');
     Route::view('/status', 'auth.login')->name('status');
     Route::get('/active-request', 'VerificationController@accountActiveRequest')->name('account.active.request');
-}); 
+});
 Route::group(['middleware' => ['auth:web']], function () {
     Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
     Route::get('/menu', 'MenuController@index')->name('menu');
@@ -94,6 +94,15 @@ Route::group(['middleware' => ['auth:web']], function () {
         Route::get('edit-item/{id}', 'ModifiersController@editModifierItem')->name('edit.modifier.item.post');
         Route::get('delete/{id}', 'ModifiersController@deleteGroup')->name('delete.modifier.post');
         Route::get('delete-item/{id}', 'ModifiersController@deleteItem')->name('delete.modifier.item.post');
+
+        /* New Added */
+        Route::post('/store', 'ModifiersController@storeModifierGroup')->name('store.modifier.post');
+        Route::post('/edit', 'ModifiersController@editModifierGroupNew')->name('edit.modifier.post.new');
+        Route::post('item', 'ModifiersController@addModifierGroupItemNew')->name('add.modifier.item.post.new');
+        Route::post('item', 'ModifiersController@addModifierGroupItemNew')->name('add.modifier.item.post.new');
+        Route::get('delete', 'ModifiersController@deleteGroup')->name('delete.modifier.post.new');
+        Route::post('edit-item', 'ModifiersController@editModifierItemNew')->name('edit.modifier.item.post.new');
+        Route::get('delete-item', 'ModifiersController@deleteItemNew')->name('delete.modifier.item.post.new');
     });
 
     Route::prefix('menu')->group(function () {
@@ -120,7 +129,7 @@ Route::group(['middleware' => ['auth:web']], function () {
         Route::post('/action/{id}/{action}', 'OrderController@OrderAction')->name('action.order');
         Route::get('/pdf/{id}', 'OrderController@generate_invoice')->name('order.pdf');
         Route::post('/status/due','OrderController@orderDueStatus')->name('order.status.due');
-    }); 
+    });
     Route::prefix('promotion')->group(function () {
         Route::get('/', 'PromotionController@index')->name('promotion');
         Route::get('/type', 'PromotionController@type')->name('promotion.type.list');
@@ -271,19 +280,19 @@ Route::prefix('customer')->group(function () {
         Route::post('/getMenumodifier', 'customer\HomeController@getMenumodifier');
         Route::post('/search/menuitem', 'customer\HomeController@searchMenu');
 
-        /* Add To Cart */ 
+        /* Add To Cart */
         Route::post('/add-to-cart', 'customer\CartController@addToCart')->name('customer.addToCart');
         Route::post('/modal-for-plus-with-modifiers', 'customer\CartController@modalForPlusWithModifiers');
         Route::post('/add-to-repeatLast', 'customer\CartController@addToRepeatLast');
         Route::post('/quantity-decrease', 'customer\CartController@quantityDecrease');
         Route::post('/quantity-change', 'customer\CartController@quantityChange');
 
-        /* Promotion */ 
+        /* Promotion */
         Route::get('/promotion', 'customer\PromotionController@show')->name('customer.show.promotions');
         Route::get('/promotion/get/eligible-items/{promotionId}', 'customer\PromotionController@getEligibleItems')->name('customer.promotions.getEligibleItems');
         Route::get('/promotion/apply/{promotionId}', 'customer\PromotionController@applyPromotion')->name('customer.apply.promotion');
 
-      
+
 
         /* Hours */
         Route::get('/restaurant/information', 'customer\HoursController@index')->name('customer.restaurant.information');
@@ -350,7 +359,7 @@ Route::prefix('customer')->group(function () {
 
     });
 });
- 
+
 //-------------------------- Admin Route ---------------------------------------------- //
 
 Route::prefix('admin')->group(function () {

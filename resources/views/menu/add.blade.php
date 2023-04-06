@@ -17,7 +17,7 @@
                     </div>
                 </div>
             </nav>
-        </div> 
+        </div>
         <div class="add-category Promotion menu dashboard content-wrapper category category-insides-blog category_main">
             @include('common.flashMessage')
 
@@ -77,7 +77,7 @@
             </div>
             <div class="form-group form-btn-menu">
                 <div class="btn-custom">
-                    <a href="{{ route('add.menu') }}" class="btn-grey"><span>Cancel</span></a>
+                    <a href="{{ route('menu') }}" class="btn-grey"><span>Cancel</span></a>
                 </div>
                 <div class="btn-custom">
                     <button class="btn-blue"><span>Add Menu</span></button>
