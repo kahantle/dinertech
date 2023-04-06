@@ -326,9 +326,36 @@ class NewPromotionContoller extends Controller
     public function remove_coupon_code(Request $request)
     {
         if ($request->ajax()) {
+            $restaurant = getRestaurantId();
+            $uid=Auth::user()->uid;
+            $cart = Cart::where([
+                'uid' => $uid ,
+                'restaurant_id' => $restaurant,
+                'cart_id' => $request->cart_id
+            ])->first();
             $result = Promotion::select('promotions.*')->where('promotion_code', $request->coupon_code)->where('restaurant_id', getRestaurantId())->first();
-            $grand_total=$request->grand_total;
+            $restaurantid = Restaurant::where('restaurant_id',$restaurant)->first();
+            $cartItem = CartItem::where('cart_id',$request->cart_id)->get();
+
+
+            $totalPrice=0;
+            $totalmodifier=0;
+            foreach($cartItem as $list){
+                 $totalPrice=$totalPrice+($list->menu_qty*$list->menu_price)+($list->menu_qty*$list->modifier_total);
+            }
+
+            //Sales Tax
+            $taxCharge = number_format(($totalPrice * $restaurantid->sales_tax) / 100,2);
+            $totalPayableAmount = number_format($totalPrice + $taxCharge,2);
+
+
+            $prmotionid=$cart->promotion_id = 0;
+            $dicountcharge=$cart->discount_charge=0.00;
+
+            Cart::where('cart_id',$request->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurant)->update(['sub_total' => number_format($totalPrice,2),'tax_charge' => number_format($taxCharge,2),'discount_charge' => number_format($dicountcharge,2), 'total_due' => number_format($totalPayableAmount,2),'promotion_id' => $prmotionid]);
+            $cartItem = Cart::where('restaurant_id',$restaurant)->where('uid',$uid)->first();
+            $cartItem->save();
         }
-        return response()->json(['status'=>'success','msg'=>'Coupon code removed','grand_total'=>$grand_total]);
+        return response()->json(['status'=>'success','msg'=>'Coupon code removed','sales_tax'=> $taxCharge,'grand_total'=>$totalPayableAmount]);
     }
 }

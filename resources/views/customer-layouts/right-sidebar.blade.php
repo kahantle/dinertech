@@ -167,7 +167,7 @@
                                         data-feather="x-circle"></i></a>
                                         <div id="coupon_code_msgs" style="color:red"></div>
                             </div>
-                            <div>
+                            <div id="prmotioncode">
                                 @php
                                 $promotions = \App\Models\Promotion::where('restaurant_id', 1)->where('promotion_id',$cart['promotion_id'])->first();
                                 @endphp
