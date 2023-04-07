@@ -15,12 +15,14 @@
 <script src="{{ asset('assets/customer/js/jquery.lazy.min.js') }}"></script>
 <script>
 $(".coupenremove").hide();
+
 function applyCoupenCode() {
     var coupon_code = $('#coupon_code').val();
-    var grand_total = $('#grand_total').val();
+    var cart_id = $('#cartid').val();
+    var promotion_id = $('#promotion_id').val();
     var itemFormData = {
-        'coupon_code': coupon_code, 
-        'grand_total': grand_total,
+        'coupon_code': coupon_code,
+        'cart_id':cart_id
     };
     if (coupon_code != '') {
         $.ajax({
@@ -42,11 +44,12 @@ function applyCoupenCode() {
                     $('.couponcode').html(result.couponcode);
                     $(".apply-content").css("display", "none");
                     $(".Promotion-content").css("display", "block");
+                    $("#checkout").load(location.href + " #checkout");
                 }else{
                     $('#grand_total').val();
                     $(".apply-content").css("display", "none");
-                    $(".Promotion-content").css("display", "block"); 
-                } 
+                    $(".Promotion-content").css("display", "block");
+                }
                 $('#coupon_code_msgs').html(result.msg);
             }
         });
@@ -54,16 +57,17 @@ function applyCoupenCode() {
         $('#coupen_code_msg').html('Please enter coupen Code')
     }
 }
+
 var removecoupen = "{{ url('customer/remove_coupon_code') }}";
 
 function remove_coupon_code() {
     $('#coupon_code_msg').html('');
     var coupon_code = $('#coupon_code').val();
     $('#coupon_code').val('');
-    var grand_total = $('#grand_total').val();
+    var cart_id = $('#cartid').val();
     var removecoupendata = {
         'coupon_code': coupon_code,
-        'grand_total': grand_total,
+        'cart_id': cart_id,
     };
     if (coupon_code != '') {
         $.ajax({
@@ -77,9 +81,9 @@ function remove_coupon_code() {
             },
             success: function(result) {
                 if (result != '') {
-                    $('#discount').html('$0.00');
                     $('.coupenremove').hide();
-                    $('#total_price').html('$' + result.grand_total + '.00');
+                    $("#checkout").load(location.href + " #checkout");
+                    $("#prmotioncode").load(location.href + " #prmotioncode");
                 } else {
 
                 }

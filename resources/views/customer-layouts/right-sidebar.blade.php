@@ -67,9 +67,9 @@
                         </div>
                     </div>
                     @auth
-                    @php  
+                    @php
                     $cartTotal = 0;
-                    $modifierTotal = 0; 
+                    $modifierTotal = 0;
                     @endphp
                     <div class="scroll-inner-blog mt-4">
                         @php
@@ -78,7 +78,8 @@
                         @if (!empty($cart->cartMenuItems))
                         @forelse ($cart->cartMenuItems as $key => $item)
                         @php
-                        $cartTotal += $item['menu_price']*$item['menu_qty'];
+                        $cartTotal += $item['menu_price']*$item['menu_qty']+ $item['modifier_total'] * $item['menu_qty'];
+
                         $menuItem[] = ['menu_id' => $item['menu_id'], 'menu_name' => $item['menu_name'], 'menu_total' =>
                         0, 'menu_qty' => $item['menu_qty'], 'modifier_total' => 0];
                         @endphp
@@ -93,7 +94,7 @@
                                         <!-- <p>( ${{ $item['menu_price']}} × {{$item['menu_qty'] }} )</p> -->
                                     </div>
                                     <div class="d-flex">
-                                        <p class="m-0">${{ number_format($item['menu_price']*$item['menu_qty'], 2) }}
+                                        <p class="m-0">${{number_format($item['menu_price']*$item['menu_qty'] + $item['modifier_total'] * $item['menu_qty'], 2) }}
                                         </p>
                                         <a href="#" class="cart-remove"
                                             data-cart-menu-item-id="{{ $item['cart_menu_item_id'] }}"><span
@@ -104,6 +105,7 @@
                                 <div class="product-quantity product-quantity-{{ $item->menu_id }} d-inline-flex mt-2">
                                     <span class="product-quantity-minus"
                                         data-cart-menu-item-id="{{ $item->cart_menu_item_id }}"></span>
+                                    <input type="hidden" value="{{$cart->cart_id}}" name="cartid" id="cartid" class="" />
                                     <input type="number"
                                         value="{{ $cart->cartMenuItems->where('cart_menu_item_id',$item->cart_menu_item_id)->first()->menu_qty }}"
                                         class="quantity-{{ $item->cart_menu_item_id }}" readonly />
@@ -118,6 +120,7 @@
                                             : </span>
 
                                         @foreach ($modifier_group->CartMenuGroupItems as $modifier_item)
+
                                         <span
                                             class="font-weight-bold">{{ $modifier_item->modifier_group_item_name."( $".$modifier_item->modifier_group_item_price.")" }}</span>
                                         @php
@@ -162,10 +165,13 @@
                                 <a href="javascript:void(0)" onclick="remove_coupon_code()"
                                     class="remove_coupon_code_link coupenremove"> <i class="bg-danger b-redic-50 text-white"
                                         data-feather="x-circle"></i></a>
-                                        <div id="coupon_code_msgs" style="color:red"></div>   
+                                        <div id="coupon_code_msgs" style="color:red"></div>
                             </div>
-                            <div>
-                                <h6 class="mb-0 text-dark couponcode coupenremove"></h6>
+                            <div id="prmotioncode">
+                                @php
+                                $promotions = \App\Models\Promotion::where('restaurant_id', 1)->where('promotion_id',$cart['promotion_id'])->first();
+                                @endphp
+                                <h6 class="mb-0 text-dark couponcode">{{$promotions['promotion_code']}}</h6>
                                 <!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.
                                 </p> -->
                             </div>
@@ -254,36 +260,37 @@
                             <div class="d-flex align-items-center justify-content-between w-100 wd-wrapper-total-first">
                                 <span>Subtotal</span>
                                 <!-- <span>${{ number_format($cartTotal, '2') }}</span> -->
-                                <span>${{ number_format($finalTotal + $modifierTotal, '2') }}</span>
+                                <span>${{ number_format($cart['sub_total'], '2') }}</span>
                                 <input type="hidden" name="cart_charge" id="cart_charge"
                                     value="{{ number_format($cartTotal, '2') }}">
                             </div>
                             <div class="d-flex align-items-center justify-content-between w-100 wd-wrapper-total-first">
                                 <span>Discount</span>
-                                <span id="discount">$0.00</span>
+                                <span id="discount">${{ number_format($cart['discount_charge'], '2') }}</span>
                                 <input type="hidden" name="discount_charge" value="{{ number_format(0, '2') }}">
-                            </div> 
+                            </div>
                             <div class="d-flex align-items-center justify-content-between w-100 wd-wrapper-total-first">
                                 <span>Sales Tax</span>
-                                <span>$0.00</span>
-                                <input type="hidden" name="sales_tax" value="{{ number_format(0, '2') }}">
+                                <span id="sales_tax">${{ number_format($cart['tax_charge'], '2') }}</span>
+                                <input type="hidden" name="sales_tax" id="sales_tax" value="{{$cart['tax_charge'] }}">
                             </div>
-                            <div 
+                            <div
                                 class="align-items-center justify-content-between w-100 wd-wrapper-total d-none wd-wrapper-total-first">
                                 <span>Delivery Charge</span>
                                 <span>$0.00</span>
                             </div>
                             <div class="d-flex align-items-center justify-content-between w-100 wd-wrapper-total">
                                 <span>Total</span>
-                                 <span id="total_price">${{ number_format($finalTotal + $modifierTotal, '2') }}</span>
-                                <input type="hidden" name="grand_total" id="grand_total"
-                                    value="{{ $finalTotal + $modifierTotal }}">
+                                 <span id="total_price">${{ number_format($cart['total_due'], '2') }}</span>
+                                 <input type="hidden" name="grand_total" id="grand_total"
+                                 value="{{$cart['total_due']}}">
                             </div>
                         </div>
                         <input type="hidden" name="order_status" id="order_status" value="0">
                         <input type="hidden" name="card_id" id="card_id">
                         <input type="hidden" name="orderDate" id="setDate">
                         <input type="hidden" name="orderTime" id="setTime">
+
 
                         <div class="btn-inner-blog mt-2">
                             <button class="btn btn-submit-inner" type="submit">Checkout</button>

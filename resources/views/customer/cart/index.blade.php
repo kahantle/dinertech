@@ -139,7 +139,7 @@
 										</span>
 									</div>
 								</a>
-							@endif 
+							@endif
 							<div class="row apply-coupen-icon instruction">
 								<img src="{{asset('assets/customer/images/instruction.png')}}">
 								<input type="text" name="instruction" placeholder="Additional Order Instructions" class="apply-coupen-data form-control additional-instruction">

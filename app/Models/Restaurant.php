@@ -15,6 +15,12 @@ class Restaurant extends Model
         return $this->hasOne('App\Models\RestaurantUser', 'restaurant_id');
     }
 
+    public function cart()
+    {
+        return $this->hasOne('App\Models\Cart', 'restaurant_id');
+    }
+
+
     public function orders()
     {
         return $this->hasMany('App\Models\Order', 'restaurant_id');

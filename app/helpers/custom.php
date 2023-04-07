@@ -74,7 +74,7 @@ if (!function_exists('getCart')) {
             $query->select(['cart_menu_item_id','cart_id','menu_id','menu_name','menu_qty','menu_price','menu_total','modifier_total','is_loyalty','item_img'])->with(['cartMenuGroups' => function($query){
                 $query->select(['cart_modifier_group_id','cart_menu_item_id','menu_id','modifier_group_id','modifier_group_name'])->with('cartMenuGroupItems')->get();
             }])->get();
-        }])->where('restaurant_id',$restaurant_id)->where('uid',$uid)->select('cart_id','restaurant_id','promotion_id','uid','sub_total','discount_charge','tax_charge','total_due','is_payment')->first();
+        }])->with('cartResturant')->where('restaurant_id',$restaurant_id)->where('uid',$uid)->select('cart_id','restaurant_id','promotion_id','uid','sub_total','discount_charge','tax_charge','total_due','is_payment')->first();
     }
 }
 
@@ -574,29 +574,29 @@ if(!function_exists('promotion_filter')){
                     if($cart->is_payment == Config::get('constants.ORDER_PAYMENT_TYPE.CARD_PAYMENT')) {
                         $promotions = $promotion->where('only_selected_cash_delivery_person',"1");
                     }
-            
+
                     if($cart->is_payment == Config::get('constants.ORDER_PAYMENT_TYPE.CASH_PAYMENT')) {
                         $promotions = $promotion->where('only_selected_cash',"1");
                     }
-            
+
                 }
                 elseif($promotion->client_type == Config::get('constants.CLIENT_TYPE.2'))
                 {
                     if($cart->is_payment == Config::get('constants.ORDER_PAYMENT_TYPE.CARD_PAYMENT')) {
                         $promotions = $promotion->where('only_selected_cash_delivery_person',"1");
                     }
-            
+
                     if($cart->is_payment == Config::get('constants.ORDER_PAYMENT_TYPE.CASH_PAYMENT')) {
                         $promotions = $promotion->where('only_selected_cash',"1");
                     }
-            
+
                 }
                 elseif($promotion->client_type == Config::get('constants.CLIENT_TYPE.3'))
                 {
                     if($cart->is_payment == Config::get('constants.ORDER_PAYMENT_TYPE.CARD_PAYMENT')) {
                         $promotions = $promotion->where('only_selected_cash_delivery_person',"1");
                     }
-            
+
                     if($cart->is_payment == Config::get('constants.ORDER_PAYMENT_TYPE.CASH_PAYMENT')) {
                         $promotions = $promotion->where('only_selected_cash',"1");
                     }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\customer;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\LoyaltyRule;
+use App\Models\Restaurant;
 use Auth;
 
 class LoyaltyController extends Controller
@@ -20,4 +21,3 @@ class LoyaltyController extends Controller
         return view('customer.loyalty.index',$data);
     }
 }
- 
