@@ -125,7 +125,6 @@ class OrdersController extends Controller
             return redirect()->back()->with('error', 'Please Select Order Timing.');
         }
         $orderDetails = ['order_status' => $request->order_status, 'menu_item' => json_decode(base64_decode($request->menuItem)), 'instruction' => $request->instruction, 'cart_charge' => $request->cart_charge, 'sales_tax' => $request->sales_tax, 'discount_charge' => $request->discount_charge, 'orderDate' => $request->orderDate, 'orderTime' => $request->orderTime, 'grand_total' => $request->grand_total];
-
         $uid = Auth::user()->uid;
         $restaurantId = 1;
         $loyalty = Loyalty::where('status',Config::get('constants.STATUS.ACTIVE'))->first();
@@ -172,7 +171,6 @@ class OrdersController extends Controller
                 if (!isset($token['id'])) {
                     return redirect()->back()->with('error', 'Invalid card details please try again.');
                 }
-
                 $charge = $stripe->charges()->create([
                     'source' => $token['id'],
                     'currency' => 'USD',
@@ -191,7 +189,8 @@ class OrdersController extends Controller
                     $order->stripe_payment_id = $charge['created'];
                     $order->cart_charge = $orderDetails['cart_charge'];
                     $order->delivery_charge = '0.00';
-                    $order->discount_charge = $orderDetails['discount_charge'];
+                    $order->discount_charge =$request->discount_charge;
+                    $order->sales_tax=$request->sales_tax;
                     $order->is_feature = ($orderDetails['order_status'] == 1) ? 1 : 0;
                     $order->order_status = null;
                     $order->order_progress_status = Config::get('constants.ORDER_STATUS.INITIAL');

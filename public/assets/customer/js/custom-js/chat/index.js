@@ -6,7 +6,7 @@ $(function() {
     $(".sendMessage").on("click", function() {
         var orderId = $(this).attr('data-orderid');
         var message = '';
-        
+
 
         if ($(".chat-desktop").length == 1) {
             var message = $(".desktopMessage").val();
@@ -34,7 +34,7 @@ $(function() {
     });
 
     $(document).on('keyup', "#message-output", function(event) {
-       
+
         if (event.keyCode === 13) {
             var orderId = $(this).attr('data-orderid');
             alert(orderId);
@@ -94,19 +94,19 @@ $(function() {
         noteContent = '';
         console.log(".voice-message" + orderId);
         /*-----------------------------
-                Voice Recognition 
+                Voice Recognition
          ------------------------------*/
 
         // If false, the recording will stop after a few seconds of silence.
         // When true, the silence period is longer (about 15 seconds),
-        // allowing us to keep recording even when the user pauses. 
+        // allowing us to keep recording even when the user pauses.
         recognition.continuous = true;
 
-        // This block is called every time the Speech APi captures a line. 
+        // This block is called every time the Speech APi captures a line.
         recognition.onresult = function(event) {
 
             // event is a SpeechRecognitionEvent object.
-            // It holds all the lines we have captured so far. 
+            // It holds all the lines we have captured so far.
             // We only need the current one.
             var current = event.resultIndex;
 
@@ -145,7 +145,7 @@ $(function() {
 
 
     /*-----------------------------
-        App buttons and input 
+        App buttons and input
     ------------------------------*/
 
     $(".start").on('click', function() {
