@@ -19,13 +19,11 @@
                 </div>
             </nav>
         </div>
+
         <div class="dashboard category content-wrapper pt-1" id="recent-order">
             <div class="dash-second">
                 <div class="container-fluid">
-                    {{-- <div class="row">
-                        <div class="col-lg-12"> --}}
                     @if ($orders)
-                        {{-- <div class="orders order-blogs-inner"> --}}
                         @foreach ($orders as $key => $order)
                             <div class="recent-order-blog">
                                 <div class="row">
@@ -36,6 +34,7 @@
                                             <span>ORDER:#{{ $order->order_number }}</span>
                                         </div>
                                         <div class="order-recent-pickup">
+                                            {{-- Order Paid --}}
                                             @if ($order->stripe_payment_id)
                                                 <button class="disabled-order-print">
                                                     <img src="{{ asset('assets/images/cash-payment.png') }}"
@@ -43,6 +42,8 @@
                                                     <p>Order Paid</p>
                                                 </button>
                                             @endif
+
+                                            {{-- Order Status --}}
                                             @if ($order->order_status == '')
                                                 <a href="javaScript:void(0);"
                                                     data-route="{{ route('action.order', [$order->order_id, 'action' => 'ACCEPTED']) }}"
@@ -76,12 +77,16 @@
                                                 @endif
                                             @endif
 
-                                            <button class="disabled-order-print">
-                                                <img src="{{ asset('assets/images/food-delivery-hand.png') }}"
-                                                    class="img-fluid icon icon-print">
-                                                <p>Pickup</p>
-                                            </button>
+                                            {{-- Pickup --}}
+                                            <a href="{{ route('details', $order->order_id) }}">
+                                                <button class="disabled-order-print">
+                                                    <img src="{{ asset('assets/images/food-delivery-hand.png') }}"
+                                                        class="img-fluid icon icon-print">
+                                                    <p>Pickup</p>
+                                                </button>
+                                            </a>
 
+                                            {{-- Order Status --}}
                                             @if ($order->order_status == '')
                                                 <button class="disabled-order-print text-disabled">
                                                     <img src="{{ asset('assets/images/disable-food-delivery.png') }}">
@@ -94,6 +99,7 @@
                                                 </button>
                                             @endif
 
+                                            {{-- Message --}}
                                             @if ($order->order_status == '')
                                                 <button class="disabled-order-print text-disabled">
                                                     <img src="{{ asset('assets/images/disabl-order-msg-message.png') }}">
@@ -112,6 +118,7 @@
                                                 </a>
                                             @endif
 
+                                            {{-- Order Print --}}
                                             @if ($order->order_status == '')
                                                 <button class="disabled-order-print text-disabled">
                                                     <img src="{{ asset('assets/images/diasble-print.png') }}">
@@ -128,6 +135,7 @@
                                                 </a>
                                             @endif
 
+                                            {{-- Order Detail --}}
                                             <a href="{{ route('details', $order->order_id) }}">
                                                 <button data-toggle="tooltip" title="Order details!"
                                                     class="disabled-order-print">
@@ -143,10 +151,7 @@
                         <div class="w-100 pagination-links"> {{ $orders->links() }}</div>
                     @else
                         <p>No records found.</p>
-                        {{-- </div> --}}
                     @endif
-                    {{-- </div>
-                    </div> --}}
                 </div>
             </div>
         </div>
