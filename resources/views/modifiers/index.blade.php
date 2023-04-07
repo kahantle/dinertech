@@ -506,6 +506,7 @@
 <script>
 $(document).ready(function() {
 
+    /* Minimum Input Logic */
     $("#minimum").on("keyup change", function(e) {
         var modifierMinMaxCount = $('#modifierMinMaxCount').text();
         var getminimumvalue = $('#minimum').val();
@@ -522,6 +523,7 @@ $(document).ready(function() {
         }
     });
 
+    /* Maximum Input Logic */
     $("#maximum").on("keyup change", function(e) {
         var modifierMinMaxCount = $('#modifierMinMaxCount').text();
         var getminimumvalue = $('#minimum').val();

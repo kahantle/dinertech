@@ -32,47 +32,46 @@ class DashboardController extends Controller
     {
         $uid = Auth::user()->uid;
         $restaurant = Restaurant::where('uid', $uid)->first();
-        $orders = [];
+
 
         // -------------- due orders -----------------
+        // $orders = [];
+        // $due_orders = Order::where([
+        //         'restaurant_id' => $restaurant->restaurant_id,
+        //         'order_progress_status'=>'ORDER DUE'
+        // ])
+        // ->orderBy('pickup_time')->get();
+        // foreach ($due_orders as $key => $order) {
+        //     $orders[] = $order;
+        // }
 
-        $due_orders = Order::where([
-                'restaurant_id' => $restaurant->restaurant_id,
-                'order_progress_status'=>'ORDER DUE'
-        ])
-        ->orderBy('pickup_time')->get();
+        // // -------------- Accepted orders -----------------
+        // $accepted_orders = Order::where([
+        //     'restaurant_id' => $restaurant->restaurant_id,
+        //     'order_progress_status'=>'ACCEPTED'
+        // ])
+        // ->orderBy('pickup_time')->get();
+        // foreach ($accepted_orders as $key => $order) {
+        //     $orders[] = $order;
+        // }
 
-        foreach ($due_orders as $key => $order) {
-            $orders[] = $order;
-        }
+        // // -------------- Initial orders -----------------
+        // $initial_orders = Order::where([
+        //     'restaurant_id' => $restaurant->restaurant_id,
+        //     'order_progress_status'=>'INITIAL',
+        //     'order_status' => NULL
+        // ])->get();
+        // foreach ($initial_orders as $key => $order) {
+        //     $orders[] = $order;
+        // }
 
-
-        // -------------- Accepted orders -----------------
-
-        $accepted_orders = Order::where([
-            'restaurant_id' => $restaurant->restaurant_id,
-            'order_progress_status'=>'ACCEPTED'
-        ])
-        ->orderBy('pickup_time')->get();
-
-        foreach ($accepted_orders as $key => $order) {
-            $orders[] = $order;
-        }
-
-        // -------------- Initial orders -----------------
-
-        $initial_orders = Order::where([
-            'restaurant_id' => $restaurant->restaurant_id,
-            'order_progress_status'=>'INITIAL',
-            'order_status' => NULL
-        ])->get();
-
-        foreach ($initial_orders as $key => $order) {
-            $orders[] = $order;
-        }
+        $orders = Order::where('restaurant_id', $restaurant->restaurant_id)
+        ->where(function ($query) {
+            $query->whereIn('order_progress_status',['ORDER DUE','ACCEPTED','INITIAL'])
+            ->orWhereNull('order_status');
+        })->orderBy('created_at', 'DESC')->get();
 
         // ------------ manually paginating orders ----------
-
         $orders = $this->paginate($orders);
 
         $restaurantId = $restaurant->restaurant_id;
