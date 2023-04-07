@@ -250,6 +250,8 @@ class CartController extends Controller
     public function removeItem(Request $request)
     {
         $cart = Cart::where('uid', auth()->id())->first();
+        $restaurantId = session()->get('restaurantId');
+        $restaurantid = Restaurant::where('restaurant_id',$restaurantId)->first();
         $cartMenuItem = $cart->cartMenuItems->where('cart_menu_item_id', $request->cartMenuItemId)->first();
         $menuId = $cartMenuItem->menu_id;
         $user = auth()->user();
@@ -275,6 +277,14 @@ class CartController extends Controller
         $delete_item = $cartMenuItem->delete();
         $cart = Cart::where('uid', auth()->id())->first();
         count($cart->cartMenuItems) == 0 ? $cart->delete() : '';
+
+        //Cart Total Update
+        $subtotal = CartItem::where('cart_id',$cart->cart_id)->sum('menu_total');
+        $taxCharge = ($subtotal * $restaurantid->sales_tax) / 100;
+        $totalPayableAmount = $subtotal + $taxCharge;
+
+        Cart::where('uid',auth()->id())->where('restaurant_id',$restaurantId)->where('cart_id',$cart->cart_id)->update(['sub_total' => (float)$subtotal,  'tax_charge' => (float)$taxCharge, 'total_due' => (float)$totalPayableAmount]);
+
         $data = $delete_item ? ['success' => true, 'menu_id' => $menuId] : ['success' => false] ;
         return response()->json($data, 200);
     }

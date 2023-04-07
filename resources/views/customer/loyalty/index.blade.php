@@ -2,7 +2,6 @@
 
 @section('content')
     <link rel="stylesheet" type="text/css" href="{{asset('assets/customer/css/promotion_page.css')}}">
-
     <section class="dash-body-ar wd-dr-dash-inner">
         <div class="wrp-ar-nav-body">
             @include('customer-layouts.navbar')
@@ -25,7 +24,6 @@
                                     <div class="row">
 
                                         @foreach ($loyaltyRule->rulesItems as $item)
-
                                             @php
                                                 $menuItem = $item->menuItems->first();
                                                 $loyaltyPoints = $loyaltyRule->point;
