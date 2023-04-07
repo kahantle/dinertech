@@ -173,7 +173,8 @@
                                 @php
                                 $promotions = \App\Models\Promotion::where('restaurant_id', 1)->where('promotion_id',$cart['promotion_id'])->first();
                                 @endphp
-                                <h6 class="mb-0 text-dark couponcode">{{$promotions['promotion_code']}}</h6>
+                                {{-- <h6 class="mb-0 text-dark">{{$promotions['promotion_code']}}</h6> --}}
+                                <h6 class="mb-0 text-dark couponcode"></h6>
                                 <!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.
                                 </p> -->
                             </div>
