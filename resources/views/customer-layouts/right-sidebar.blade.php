@@ -74,6 +74,7 @@
                     <div class="scroll-inner-blog mt-4">
                         @php
                         $cart = getCart($restaurantId = 1);
+                        $menuItem=[];
                         @endphp
                         @if (!empty($cart->cartMenuItems))
                         @forelse ($cart->cartMenuItems as $key => $item)
@@ -82,6 +83,7 @@
 
                         $menuItem[] = ['menu_id' => $item['menu_id'], 'menu_name' => $item['menu_name'], 'menu_total' =>
                         0, 'menu_qty' => $item['menu_qty'], 'modifier_total' => 0];
+
                         @endphp
                         <div class="d-flex rounded wp-border-size-blog @if ($key != 0) mt-2 @endif">
                             <div class="wb-inner-system">

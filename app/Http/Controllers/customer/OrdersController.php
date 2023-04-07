@@ -125,7 +125,6 @@ class OrdersController extends Controller
             return redirect()->back()->with('error', 'Please Select Order Timing.');
         }
         $orderDetails = ['order_status' => $request->order_status, 'menu_item' => json_decode(base64_decode($request->menuItem)), 'instruction' => $request->instruction, 'cart_charge' => $request->cart_charge, 'sales_tax' => $request->sales_tax, 'discount_charge' => $request->discount_charge, 'orderDate' => $request->orderDate, 'orderTime' => $request->orderTime, 'grand_total' => $request->grand_total];
-
         $uid = Auth::user()->uid;
         $restaurantId = 1;
         $loyalty = Loyalty::where('status',Config::get('constants.STATUS.ACTIVE'))->first();
@@ -172,7 +171,6 @@ class OrdersController extends Controller
                 if (!isset($token['id'])) {
                     return redirect()->back()->with('error', 'Invalid card details please try again.');
                 }
-
                 $charge = $stripe->charges()->create([
                     'source' => $token['id'],
                     'currency' => 'USD',
