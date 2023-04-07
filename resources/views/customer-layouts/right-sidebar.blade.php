@@ -267,7 +267,7 @@
                             <div class="d-flex align-items-center justify-content-between w-100 wd-wrapper-total-first">
                                 <span>Discount</span>
                                 <span id="discount">${{ number_format($cart['discount_charge'], '2') }}</span>
-                                <input type="hidden" name="discount_charge" value="{{ number_format(0, '2') }}">
+                                <input type="hidden" name="discount_charge" value="${{ number_format($cart['discount_charge'], '2') }}">
                             </div>
                             <div class="d-flex align-items-center justify-content-between w-100 wd-wrapper-total-first">
                                 <span>Sales Tax</span>

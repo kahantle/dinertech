@@ -155,8 +155,8 @@
                                                             <div class="message-input">
                                                                 <div class="wrap">
                                                                 <input type="text" value="" placeholder="Input Message"
-                                                                        class="form-control desktopMessage voice-message{{ $orderId['order_id'] }}"
-                                                                        id="message-output">
+                                                                    class="form-control desktopMessage voice-message{{ $orderId['order_id'] }}"
+                                                                    id="message-output">
                                                                     <button class="submit  sendMessage" data-orderid="{{ $orderId['order_id'] }}" alt="Submit"><i
                                                                             class="fa fa-paper-plane"
                                                                             aria-hidden="true"></i></button>

@@ -191,7 +191,8 @@ class OrdersController extends Controller
                     $order->stripe_payment_id = $charge['created'];
                     $order->cart_charge = $orderDetails['cart_charge'];
                     $order->delivery_charge = '0.00';
-                    $order->discount_charge = $orderDetails['discount_charge'];
+                    $order->discount_charge =$request->discount_charge;
+                    $order->sales_tax=$request->sales_tax;
                     $order->is_feature = ($orderDetails['order_status'] == 1) ? 1 : 0;
                     $order->order_status = null;
                     $order->order_progress_status = Config::get('constants.ORDER_STATUS.INITIAL');
