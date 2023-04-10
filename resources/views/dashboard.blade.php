@@ -112,7 +112,10 @@
                                                         <span class="chat-count" id="chat-{{ $order->order_id }}"
                                                             data-orderNumber="{{ $order->order_number }}"
                                                             data-orderId="{{ $order->order_id }}"
-                                                            data-userId="{{ $order->uid }}">0</span>
+                                                            data-userId="{{ $order->uid }}">
+                                                            0
+                                                        </span>
+
                                                         <p>Chat</p>
                                                     </button>
                                                 </a>

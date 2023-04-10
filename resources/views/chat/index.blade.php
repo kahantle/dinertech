@@ -75,7 +75,7 @@
                   <input type="text" id="message" name="message" placeholder="Message">
                   <div class="cf-icon">
                     <input type="hidden" id="customerId">
-                    <a href="#0"><img src="{{ asset('assets/images/send.png') }}" class="send-icon  sendMessage"></a>
+                    <a href="#0"><img src="{{ asset('assets/images/send.png') }}" class="send-icon sendToken sendMessage"></a>
                     <a href="#0"><img src="{{ asset('assets/images/microphone.png') }}" class="microphone-icon "></a>
                   </div>
                 </div>
@@ -103,52 +103,53 @@ var resturant_id = {!! json_encode($resturant_id) !!};
 </script>
 <script>
 $('document').ready(function() {
-  $(document).on('click', '.searchTextBtn', function() {
-    var text = $(".searchText").val();
-    window.location.href = "http://" + window.location.host + window.location.pathname + '?order_id=' + text;
-  });
+    $(document).on('click', '.searchTextBtn', function() {
+        var text = $(".searchText").val();
+        window.location.href = "http://" + window.location.host + window.location.pathname + '?order_id=' + text;
+    });
 
-  $(document).on('change', '.searchText', function() {
-    var text = $(".searchText").val();
-    if(text){
-      window.location.href = "http://" + window.location.host + window.location.pathname + '?order_id=' + text;
-    }else{
-      window.location.href = "http://" + window.location.host + window.location.pathname ;
-    }
-  });
-  $(document).on("click",".sendMessage",function(){
-    var uid = $("#uid").val();
-      if(!$("#message").val()) return
-        $.ajax({
-            headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: sendMessage,
-            type: "POST",
-            dataType: "json",
-            data:{
-                uid :$("#uid").val(),
-                message:$("#message").val(),
-                // order_id:$(".active").data('order_id'),
-                order_id : $("#order_id").text(),
-                // customer_id:$(".active").data('customer_id')
-                customer_id : $("#customerId").val()
-            },
-            beforeSend: function() {
-              $("body").preloader();
-            },
-            complete: function(){
-              $("body").preloader('remove');
-            },
-            success: function (res) {
-              toastr.success(res.message);
-              $("#message").val('');
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-                swal.fire("Error deleting!", "Please try again", "error");
-            }
-        });
-  });
+    $(document).on('change', '.searchText', function() {
+        var text = $(".searchText").val();
+        if(text){
+        window.location.href = "http://" + window.location.host + window.location.pathname + '?order_id=' + text;
+        }else{
+        window.location.href = "http://" + window.location.host + window.location.pathname ;
+        }
+    });
+
+    $(document).on("click",".sendMessage",function(){
+        var uid = $("#uid").val();
+        if(!$("#message").val()) return
+            $.ajax({
+                headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: sendMessage,
+                type: "POST",
+                dataType: "json",
+                data:{
+                    uid :$("#uid").val(),
+                    message:$("#message").val(),
+                    // order_id:$(".active").data('order_id'),
+                    order_id : $("#order_id").text(),
+                    // customer_id:$(".active").data('customer_id')
+                    customer_id : $("#customerId").val()
+                },
+                beforeSend: function() {
+                $("body").preloader();
+                },
+                complete: function(){
+                $("body").preloader('remove');
+                },
+                success: function (res) {
+                toastr.success(res.message);
+                $("#message").val('');
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    swal.fire("Error deleting!", "Please try again", "error");
+                }
+            });
+    });
 
     $("#message").keyup(function(event) {
         if (event.keyCode === 13) {
@@ -177,6 +178,49 @@ $('document').ready(function() {
         measurementId : "{{config('services.firebase.measurementId')}}",
     };
     firebase.initializeApp(config);
+    const messaging = firebase.messaging();
+    //Push Notification
+
+  $(document).on("click",".sendToken",function(){
+      messaging
+          .requestPermission()
+          .then(function() {
+              return messaging.getToken()
+          })
+          .then(function(response) {
+              $.ajaxSetup({
+                  headers: {
+                      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                  }
+              });
+              $.ajax({
+                  url: '{{ route("store.token") }}',
+                  type: 'POST',
+                  data: {
+                      token: response
+                  },
+                  dataType: 'JSON',
+                  success: function(response) {
+                    console.log('Token stored.');
+                  },
+                  error: function(error) {
+                      console.log(error);
+                  },
+              });
+          }).catch(function(error) {
+              alert(error);
+          });
+  });
+
+    messaging.onMessage(function(payload) {
+        const noteTitle = payload.notification.title;
+        const noteOptions = {
+            body: payload.notification.body,
+            icon: payload.notification.icon,
+        };
+
+        new Notification(noteTitle, noteOptions);
+    });
 
     var order_id=$(".active").data('order_id');
     var customer_id = $(".active").data('customer_id');
