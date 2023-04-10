@@ -213,7 +213,6 @@
                                 </thead>
                             </table>
                             @foreach ($loyaltyRules as $rules)
-                                {{-- {{dd($rules)}} --}}
                                 <table class="table table-responsive">
                                     <tbody>
                                         <tr class="header-url header-desk-board">
@@ -390,6 +389,8 @@
             </div>
         </div>
     </div>
+
+    {{-- Select Items Pop Up --}}
     <div id="editMenuItemModal">
         <div class="modal second-part" style="display: none;" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-inner-system" role="document">
@@ -399,41 +400,48 @@
                         <div class="content">
                             <div class="table-scroll-y-blog table-active-blog">
                                 <table class="table-inner-sec">
-                                    @foreach ($categories as $item)
-                                        @if (count($item->category_item) != 0)
-                                            <tbody class="t-b-blog">
-                                                <tr class="odd">
-                                                    <td class="table-tag-blog add">
-                                                        <div>
-                                                            <input type="checkbox" class="selectall inner-checkin-blog"
-                                                                data-category-id="{{ $item->category_id }}"
-                                                                id="modifier-group-{{ $item->category_id }}">
-                                                        </div>
-                                                    </td>
-                                                    <td class="forum-topic-blog">{{ $item->category_name }}</td>
-                                                </tr>
-                                                @foreach ($item->category_item as $menuItem)
-                                                    <tr class="even">
-                                                        <td class="table-tag add">
-                                                            <div class="form-item form-type-checkbox form-item-node-types-forum subOption">
-                                                                <input type="checkbox" id="edit-node-types-forum"
-                                                                    name="modifier_item" value="forum"
-                                                                    class="form-checkbox individual inner-checkin-blog item-group-{{ $menuItem->category_id }}"
-                                                                    data-item-id={{ $menuItem->menu_id }}
-                                                                    data-category-id="{{ $menuItem->category_id }}">
+
+                                    @if (count($categories) > 1)
+                                        @foreach ($categories as $item)
+                                            @if (count($item->category_item) != 0)
+                                                <tbody class="t-b-blog">
+                                                    <tr class="odd">
+                                                        <td class="table-tag-blog add">
+                                                            <div>
+                                                                <input type="checkbox" class="selectall inner-checkin-blog"
+                                                                    data-category-id="{{ $item->category_id }}"
+                                                                    id="modifier-group-{{ $item->category_id }}">
                                                             </div>
                                                         </td>
-                                                        <td class="forum-topic-blog">
-                                                            {{ $menuItem->item_name }}
-                                                        </td>
-                                                        <td class="forum-blog">
-                                                            <small>${{ number_format($menuItem->item_price, 2) }}</small>
-                                                        </td>
+                                                        <td class="forum-topic-blog">{{ $item->category_name }}</td>
                                                     </tr>
-                                                @endforeach
-                                            </tbody>
-                                        @endif
-                                    @endforeach
+                                                    @foreach ($item->category_item as $menuItem)
+                                                        <tr class="even">
+                                                            <td class="table-tag add">
+                                                                <div class="form-item form-type-checkbox form-item-node-types-forum subOption">
+                                                                    <input type="checkbox" id="edit-node-types-forum"
+                                                                        name="modifier_item" value="forum"
+                                                                        class="form-checkbox individual inner-checkin-blog item-group-{{ $menuItem->category_id }}"
+                                                                        data-item-id={{ $menuItem->menu_id }}
+                                                                        data-category-id="{{ $menuItem->category_id }}">
+                                                                </div>
+                                                            </td>
+                                                            <td class="forum-topic-blog">
+                                                                {{ $menuItem->item_name }}
+                                                            </td>
+                                                            <td class="forum-blog">
+                                                                <small>${{ number_format($menuItem->item_price, 2) }}</small>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            @endif
+                                        @endforeach
+                                    @else
+                                        <div style="text-align: center;">
+                                            <span>Data Not Found</span>
+                                        </div>
+                                    @endif
                                 </table>
                             </div>
                         </div>
@@ -446,6 +454,7 @@
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="deleteModal" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-inner-system" role="document">
             <div class="modal-content">
