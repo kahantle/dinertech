@@ -22,7 +22,7 @@ class HoursController extends Controller
         $data['cards'] = getUserCards($restaurantId, $uid);
         $data['title'] = 'Information';
         return view('customer.hours.index', $data);
-    }
+    }  
 
     public function sendMail(Request $request)
     {

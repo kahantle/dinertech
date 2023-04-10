@@ -5,6 +5,7 @@ namespace App\Http\Controllers\customer;
 use App\Http\Controllers\Controller;
 use App\Models\Restaurant;
 use App\Models\Order;
+use App\Models\RestaurantUser;
 use Auth;
 use Config;
 use Illuminate\Http\Request;
@@ -71,10 +72,57 @@ class ChatController extends Controller
                 'sent_from' => Config::get('constants.ROLES.CUSTOMER'),
                 'user_id' => $userId,
             ];
-            
+
             $newPostKey = $database->getReference(Config::get('constants.FIREBASE_DB_NAME'))->push()->getKey();
             $url = Config::get('constants.FIREBASE_DB_NAME') . '/' . $restaurantId . '/' . $orderId . "/" . $userId . "/";
             $updates = [$url . $newPostKey => $messageData];
+
+
+
+            //Push Notification
+            $FcmTokenData = User::where('uid',$restaurantId)->first();
+            $FcmTokenArray = [];
+            $FcmTokenArray[] = $FcmTokenData->device_key;
+            $name = Auth::user()->first_name . ' ' . Auth::user()->last_name .' ['. $orderId .']';
+            $dynamicTitle =$name;
+
+               $url = 'https://fcm.googleapis.com/fcm/send';
+               $FcmToken = $FcmTokenArray;
+            //    $FcmToken = User::whereNotNull('device_key')->pluck('device_key')->all();
+
+               $serverKey = 'AAAAADRQWEU:APA91bEF_KhA3ZYH-yvdByEYV4EC0V1j0nY5gg_yWl3DC-vASs2scPEOBopdmqvqLZwGJt_aaq1HBMGYz1p2Oxo0B8v3X2zA-h7rWgduJXbSac_j6H7IvWtHv13MeMAXJGpsoFa9RfLR';
+               $data = [
+                   "registration_ids" => $FcmToken,
+                   "notification" => [
+                       "title" =>$dynamicTitle,
+                       "body" => $request->message,
+                   ]
+               ];
+               $encodedData = json_encode($data);
+
+               $headers = [
+                   'Authorization:key=' . $serverKey,
+                   'Content-Type: application/json',
+               ];
+               $ch = curl_init();
+
+               curl_setopt($ch, CURLOPT_URL, $url);
+               curl_setopt($ch, CURLOPT_POST, true);
+               curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+               curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+               curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+               curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+               curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+               curl_setopt($ch, CURLOPT_POSTFIELDS, $encodedData);
+
+                $result = curl_exec($ch);
+
+               if ($result === FALSE) {
+                   die('Curl failed: ' . curl_error($ch));
+               }
+               curl_close($ch);
+
+            //Push Notification Code Over
 
             $database->getReference()->update($updates);
             $restaurant = Restaurant::with(['order' => function ($order) use ($orderId, $restaurantId) {

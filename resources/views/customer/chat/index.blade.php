@@ -155,9 +155,9 @@
                                                             <div class="message-input">
                                                                 <div class="wrap">
                                                                 <input type="text" value="" placeholder="Input Message"
-                                                                    class="form-control desktopMessage voice-message{{ $orderId['order_id'] }}"
-                                                                    id="message-output">
-                                                                    <button class="submit  sendMessage" data-orderid="{{ $orderId['order_id'] }}" alt="Submit"><i
+                                                                        class="form-control desktopMessage voice-message{{ $orderId['order_id'] }}"
+                                                                        id="message-output">
+                                                                    <button class="submit sendToken sendMessage" data-orderid="{{ $orderId['order_id'] }}" alt="Submit"><i
                                                                             class="fa fa-paper-plane"
                                                                             aria-hidden="true"></i></button>
                                                                     <button class="submit micro start" alt="Micro"
@@ -214,6 +214,47 @@
         };
         firebase.initializeApp(config);
 
+        //Push Notification
+        const messaging = firebase.messaging();
+
+        $(document).on("click",".sendToken",function(){
+            messaging
+                .requestPermission()
+                .then(function() {
+                    return messaging.getToken()
+                })
+                .then(function(response) {
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+                    $.ajax({
+                        url: '{{ route("customer.store.token") }}',
+                        type: 'POST',
+                        data: {
+                            token: response
+                        },
+                        dataType: 'JSON',
+                        success: function(response) {
+                            console.log('Token stored.');
+                        },
+                        error: function(error) {
+                            console.log(error);
+                        },
+                    });
+                }).catch(function(error) {
+                    alert(error);
+                });
+        });
+        messaging.onMessage(function(payload) {
+            const noteTitle = payload.notification.title;
+            const noteOptions = {
+                body: payload.notification.body,
+                icon: payload.notification.icon,
+            };
+            new Notification(noteTitle, noteOptions);
+        });
 
 
         var order_id = $(".getChat").attr('data-orderid');
