@@ -9,10 +9,13 @@ use App\Models\CartMenuGroup;
 use App\Models\CustomerAddress;
 use App\Models\Order;
 use App\Models\Loyalty;
+use App\Models\LoyaltyCategory;
+use App\Models\MenuItem;
 use App\Models\OrderMenuGroup;
 use App\Models\OrderMenuGroupItem;
 use App\Models\OrderMenuItem;
 use App\Models\RestaurantUser;
+use App\Models\User;
 use Auth;
 use Cartalyst\Stripe\Stripe;
 use Config;
@@ -127,18 +130,46 @@ class OrdersController extends Controller
         $orderDetails = ['order_status' => $request->order_status, 'menu_item' => json_decode(base64_decode($request->menuItem)), 'instruction' => $request->instruction, 'cart_charge' => $request->cart_charge, 'sales_tax' => $request->sales_tax, 'discount_charge' => $request->discount_charge, 'orderDate' => $request->orderDate, 'orderTime' => $request->orderTime, 'grand_total' => $request->grand_total];
         $uid = Auth::user()->uid;
         $restaurantId = 1;
-        $loyalty = Loyalty::where('status',Config::get('constants.STATUS.ACTIVE'))->first();
+
+
+        $userPoint = auth()->user()->total_points;
+        $loyalty = Loyalty::where('status',Config::get('constants.STATUS.ACTIVE'))->where('restaurant_id',$restaurantId)->first();
         if($loyalty){
             if($loyalty->loyalty_type == Config::get('constants.LOYALTY_TYPE.NO_OF_ORDERS')){
-                $noOfOrders = Order::where('uid',$uid)->count();
+                $getOrderIds = Order::where('uid',$uid)->where('order_progress_status',Config::get('constants.ORDER_STATUS.COMPLETED'))->where('point_count',Config::get('constants.ORDER_POINT_COUNT.NO'))->limit($loyalty->no_of_orders)->get()->pluck('order_id');
+                if(count($getOrderIds) == $loyalty->no_of_orders){
+                    $totalPoint = $userPoint + $loyalty->point;
+                    User::where('uid',$uid)->update(['total_points' => $totalPoint]);
+                    Order::whereIn('order_id',$getOrderIds)->update(['point_count' => Config::get('constants.ORDER_POINT_COUNT.YES')]);
+                }
             }else if($loyalty->loyalty_type == Config::get('constants.LOYALTY_TYPE.AMOUNT_SPENT')){
+                $grandTotal =$request->cart_charge;
+                if($grandTotal > $loyalty->amount){
+                    $totalPoint = $userPoint + $loyalty->point;
+                    User::where('uid',$uid)->update(['total_points' => $totalPoint]);
+                }
 
             }else if($loyalty->loyalty_type == Config::get('constants.LOYALTY_TYPE.CATEGORY_BASED')){
+                $loyaltyCategories = LoyaltyCategory::where('loyalty_id',$loyalty->loyalty_id)->where('restaurant_id',$restaurantId)->get()->pluck('category_id')->toArray();
+                foreach ($orderDetails['menu_item'] as $key => $menuItem) {
+                    $category_menu = MenuItem::where('menu_id',$menuItem->menu_id)->first();
+                    $addPoint = false;
+                    if(in_array($category_menu->category_id,$loyaltyCategories)){
+                        $addPoint = true;
+                        break;
+                    }
+                }
+                if($addPoint == true){
+                    dd($loyalty->point);
+                    $totalPoint = $userPoint + $loyalty->point;
+                    User::where('uid',$uid)->update(['total_points' => $totalPoint]);
+                }
 
             }else{
 
             }
         }
+
         // dd($loyalty);
         $address = CustomerAddress::where('uid', $uid)->first();
         if ($address) {
