@@ -18,7 +18,7 @@
                         </div>
                     </div>
                 </div>
-            </nav> 
+            </nav>
         </div>
         <div class="dashboard category content-wrapper pt-1" id="recent-order">
             <div class="dash-second">
@@ -171,14 +171,14 @@
 @section('scripts')
     <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js') }}"></script>
     <script src="{{ asset('/assets/js/order.js') }}"></script>
-    <script src="{{asset('/assets/js/firebase.js')}}"></script>
+    <script src="{{ asset('/assets/js/firebase.js') }}"></script>
     {!! JsValidator::formRequest('App\Http\Requests\VerifyRequest', '#verifyForm') !!}
     {!! JsValidator::formRequest('App\Http\Requests\PickTimeRequest', '#orderTimePickup') !!}
     <script type="text/javascript">
         var db_name = "{{ Config::get('constants.FIREBASE_DB_NAME') }}";
         var restaurant_id = {!! json_encode($restaurantId) !!};
 
-        $('document').ready(function(){
+        $('document').ready(function() {
 
             setInterval(() => {
                 chatCount();
@@ -186,33 +186,38 @@
 
             // Initialize Firebase
             var config = {
-                apiKey: "{{config('services.firebase.api_key')}}",
-                authDomain: "{{config('services.firebase.auth_domain')}}",
-                databaseURL: "{{config('services.firebase.database_url')}}",
-                projectId: "{{config('services.firebase.project_id')}}",
-                storageBucket: "{{config('services.firebase.storage_bucket')}}",
-                messagingSenderId: "{{config('services.firebase.messaging_sender_id')}}"
+                apiKey: "{{config('services.firebase.apiKey')}}",
+                authDomain: "{{config('services.firebase.authDomain')}}",
+                databaseURL: "{{config('services.firebase.databaseURL')}}",
+                projectId: "{{config('services.firebase.projectId')}}",
+                storageBucket: "{{config('services.firebase.storageBucket')}}",
+                messagingSenderId: "{{config('services.firebase.messagingSenderId')}}",
+                appId : "{{config('services.firebase.appId')}}",
+                measurementId : "{{config('services.firebase.measurementId')}}",
             };
             firebase.initializeApp(config);
-            function chatCount()
-            {
-                $(".chat-count").each(function(){
+
+            function chatCount() {
+                $(".chat-count").each(function() {
                     var orderId = $(this).attr('data-orderId');
                     var orderNumber = $(this).attr('data-orderNumber');
                     var customer_id = $(this).attr('data-userId');
-                    var url = '/'+db_name+'/'+restaurant_id+'/'+orderNumber+'/'+customer_id;
+                    var url = '/' + db_name + '/' + restaurant_id + '/' + orderNumber + '/' + customer_id;
+
+
                     firebase.database().ref(url).on('value', function(snapshot) {
+                        console.log(snapshot.val());
                         var value = snapshot.val();
                         var count = 0;
-                        $.each(value, function(index, value){
-                            if(value.sent_from == 'CUSTOMER' && value.isseen == false){
+                        $.each(value, function(index, value) {
+                            if (value.sent_from == 'CUSTOMER' && value.isseen == false) {
                                 count++;
                             }
                         });
-                        $("#chat-"+orderId).html(count);
-                        if(count > 0){
-                            $("#chat-"+orderId).parent().css("background-color","#007bff");
-                            $("#chat-"+orderId).parent().css("color","#ffff");
+                        $("#chat-" + orderId).html(count);
+                        if (count > 0) {
+                            $("#chat-" + orderId).parent().css("background-color", "#007bff");
+                            $("#chat-" + orderId).parent().css("color", "#ffff");
                         }
                     });
                 });
@@ -220,5 +225,10 @@
 
 
         });
+
+        / Get Unread Count /
+
+
+
     </script>
 @endsection

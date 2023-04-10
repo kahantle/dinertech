@@ -5,9 +5,11 @@ namespace App\Http\Controllers\customer;
 use App\Http\Controllers\Controller;
 use App\Mail\CustomerContactMail;
 use App\Models\Restaurant;
+use App\Models\RestaurantHours;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use DB;
 
 class HoursController extends Controller
 {
@@ -18,11 +20,17 @@ class HoursController extends Controller
         $restaurant = Restaurant::where('restaurant_id', $restaurantId)->with('user')
             ->first();
         $data['address'] = $restaurant;
+        $data['hoursdata'] = RestaurantHours::select("restaurant_hour_id","hours_group_id","opening_time","closing_time")
+        ->with('allTimes')
+        ->groupBy('hours_group_id')
+        ->where('restaurant_id', $restaurant->restaurant_id)
+        ->get();
+
 
         $data['cards'] = getUserCards($restaurantId, $uid);
         $data['title'] = 'Information';
         return view('customer.hours.index', $data);
-    }  
+    }
 
     public function sendMail(Request $request)
     {
