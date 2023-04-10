@@ -71,6 +71,8 @@ class DashboardController extends Controller
             ->orWhereNull('order_status');
         })->orderBy('created_at', 'DESC')->get();
 
+
+
         // ------------ manually paginating orders ----------
         $orders = $this->paginate($orders);
 

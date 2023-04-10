@@ -82,12 +82,6 @@ class ChatController extends Controller
                 'user_id'=>$customer_id
             ];
             $restaurant = Restaurant::where('uid', $user_id)->first();
-            // $newPostKey = $database->getReference(Config::get('constants.FIREBASE_DB_NAME'))->push()->getKey();
-            // $url = Config::get('constants.FIREBASE_DB_NAME').'/'.$restaurant->restaurant_id.'/'.$order_id."/".$customer_id ;
-            // return $url.$newPostKey;
-            // $updates = [$url.$newPostKey  => $postData];
-            // $database->getReference()->update($updates);
-            // $database->getReference(Config::get('constants.FIREBASE_DB_NAME'))->update($updates);
             $url = Config::get('constants.FIREBASE_DB_NAME').'/'.$restaurant->restaurant_id.'/'.$order_id."/".$customer_id.'/';
 
             $database->getReference($url)->push($postData);
@@ -97,6 +91,7 @@ class ChatController extends Controller
             $FcmTokenData = User::where('uid', $request->uid)->first();
             $FcmTokenArray = [];
             $FcmTokenArray[] = $FcmTokenData->device_key;
+            $dynamicTitle = $restaurant->restaurant_name;
 
             //Push Notification
             $url = 'https://fcm.googleapis.com/fcm/send';
@@ -105,7 +100,7 @@ class ChatController extends Controller
             $data = [
                 "registration_ids" => $FcmToken,
                 "notification" => [
-                    "title" => $user->first_name." ".$user->last_name,
+                    "title" => $dynamicTitle,
                     "body" => $request->message,
                 ]
             ];

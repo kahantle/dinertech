@@ -207,12 +207,14 @@
 
             // Initialize Firebase
             var config = {
-                apiKey: "{{ config('services.firebase.api_key') }}",
-                authDomain: "{{ config('services.firebase.auth_domain') }}",
-                databaseURL: "{{ config('services.firebase.database_url') }}",
-                projectId: "{{ config('services.firebase.project_id') }}",
-                storageBucket: "{{ config('services.firebase.storage_bucket') }}",
-                messagingSenderId: "{{ config('services.firebase.messaging_sender_id') }}"
+                apiKey: "{{config('services.firebase.apiKey')}}",
+                authDomain: "{{config('services.firebase.authDomain')}}",
+                databaseURL: "{{config('services.firebase.databaseURL')}}",
+                projectId: "{{config('services.firebase.projectId')}}",
+                storageBucket: "{{config('services.firebase.storageBucket')}}",
+                messagingSenderId: "{{config('services.firebase.messagingSenderId')}}",
+                appId : "{{config('services.firebase.appId')}}",
+                measurementId : "{{config('services.firebase.measurementId')}}",
             };
             firebase.initializeApp(config);
 
@@ -222,6 +224,8 @@
                     var orderNumber = $(this).attr('data-orderNumber');
                     var customer_id = $(this).attr('data-userId');
                     var url = '/' + db_name + '/' + restaurant_id + '/' + orderNumber + '/' + customer_id;
+
+
                     firebase.database().ref(url).on('value', function(snapshot) {
                         var value = snapshot.val();
                         var count = 0;
@@ -241,5 +245,10 @@
 
 
         });
+
+        /* Get Unread Count */
+
+
+
     </script>
 @endsection
