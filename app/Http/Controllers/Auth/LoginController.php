@@ -57,7 +57,7 @@ class LoginController extends Controller
             Session::put('resturant_id', $user->restaurant->restaurant_id);
             $login_array = (['mobile_number' => str_replace('-','',$user->mobile_number), 'password' => $request->password]);
         }
-        
+
         if (Auth::attempt($login_array)) {
             return redirect()->route('dashboard')->with('success', 'Login Successfully.');
         } else {
@@ -67,6 +67,8 @@ class LoginController extends Controller
 
     public function logout()
     {
+        $uid = Auth::user()->uid;
+        User::where('uid',$uid)->update(['device_key' => NULL]);
         Auth::guard('web')->logout();
         Session::forget('is_pin_verify');
         return redirect()->route('login');

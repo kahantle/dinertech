@@ -25,8 +25,6 @@ class HoursController extends Controller
         ->groupBy('hours_group_id')
         ->where('restaurant_id', $restaurant->restaurant_id)
         ->get();
-
-
         $data['cards'] = getUserCards($restaurantId, $uid);
         $data['title'] = 'Information';
         return view('customer.hours.index', $data);
