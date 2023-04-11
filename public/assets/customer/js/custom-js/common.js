@@ -61,6 +61,7 @@ $(function() {
     $(document).on("click", ".add-to-order", function () {
         var menuId = $(this).attr("data-menu-id");
         $(this).hasClass("have-modifiers") ? showMenuModifiers(menuId) : addToCart({menuId : menuId});
+        $("#tips").load(location.href + " #tips");
     });
 
     $(document).on("change", ".radioModifierItem", function() {
@@ -82,6 +83,9 @@ $(function() {
         $(".primarycardnow").html(selectedModifier.join(','));
     });
 
+
+
+
     $(document).on("click", ".add-to-cart-again", function() {
         var menuId = $(this).data("menu-id");
         var cartMenuItemId = $(this).data("cart-menu-item-id");
@@ -92,6 +96,7 @@ $(function() {
     $(document).on("click", ".product-quantity-minus", function() {
         var cartMenuItemId = $(this).data("cart-menu-item-id");
         $(".quantity-" + cartMenuItemId).val() != 1 ? quantityChange(cartMenuItemId, "decreament") : removeItem(cartMenuItemId);
+        $("#tips").load(location.href + " #tips");
     });
 
     $(document).on("click", ".product-quantity-plus", function () {
@@ -99,6 +104,7 @@ $(function() {
         var cartMenuItemId = $(this).data("cart-menu-item-id");
         console.log(cartMenuItemId);
         $(this).hasClass("have-modifiers") ? modalForPlusWithModifiers(cartMenuItemId) : quantityChange(cartMenuItemId, "increament");
+        $("#tips").load(location.href + " #tips");
     });
 
     $(document).on("click", ".repeat-last-cart", function () {
@@ -106,6 +112,33 @@ $(function() {
         quantityChange(cartMenuItemId, "increament");
         $(".repeat-last-modal-" + cartMenuItemId).modal("hide");
     });
+    $(document).on("click", ".custom", function () {
+            $('#custommodel').modal('show');
+    });
+    $(document).on("click", ".tip", function () {
+        var text = $(this).val();
+        var total_price=$("#grand_total_ajax").val();
+        var textt=parseFloat(text).toFixed(2);
+        $("#tipsres").text(textt);
+        $("#newtips").val(textt);
+        var newtotal=parseFloat(total_price) + parseFloat(text);
+        $("#total_price").text("$"+newtotal);
+        $("#grand_total").val(newtotal);
+     });
+
+
+     $(document).on("click", "#custom_tip_ajax", function () {
+        var text=$("#customtips").val();
+        var total_price=$("#grand_total_ajax").val();
+        var textt=parseFloat(text).toFixed(2);
+        $("#cutomtip").text(textt);
+        $("#tipsres").text(textt);
+        $("#newtips").val(textt);
+        var newtotal=parseFloat(total_price) + parseFloat(textt);
+        $("#total_price").text("$"+newtotal);
+        $("#grand_total").val(newtotal);
+
+     });
 
     const addToCart = (data, menu_id = null) => {
         $.ajax({

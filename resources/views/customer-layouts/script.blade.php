@@ -91,5 +91,6 @@ function remove_coupon_code() {
         });
     }
 }
+
 </script>
 @yield('scripts')

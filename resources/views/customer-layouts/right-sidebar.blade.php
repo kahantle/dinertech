@@ -1,3 +1,38 @@
+<style>
+    .btn-area {
+        background-color: rgb(241, 241, 241);
+        border: none;
+        padding: 20px;
+        line-height: 20px;
+        border-radius: 10px;
+
+    }
+    .btn-big
+    {
+        background-color: rgb(241, 241, 241);
+        border: none;
+        padding: 20px 45px;
+        line-height: 20px;
+        border-radius: 10px;
+    }
+
+    .btn-area a {
+        text-decoration: none;
+    }
+
+    .btn-area span {
+        color: #000;
+        font-weight: 500;
+
+
+    }
+    .line-button-area ,.line-button
+    {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+</style>
 <div class="col-xl-4 col-lg-12 col-md-12 wd-dr-dashboart-inner">
     <div class="Promotion-content">
         <div class="card order-content">
@@ -256,6 +291,46 @@
                                 @endif
                             </div>
                         </div>
+
+                        <div class="text-center" id="tips">
+                                <h4 class="mb-2 promotion_text-cololr">Add Tip For</h4>
+                                @php
+                                $totalwithsalestax=$cart['sub_total'] + $cart['tax_charge'];
+                                @endphp
+                            <div class="line-button-area mb-2">
+                                <button type="button" value="{{($totalwithsalestax * 15)/100}}" class="btn-area tip"><span>15%</span><br><span>${{($totalwithsalestax * 15)/100}}</button>
+                                <button type="button" value="{{($totalwithsalestax * 18)/100}}" class="btn-area tip"><span>18% </span><br><span>${{($totalwithsalestax * 18)/100}}</span></button>
+                                <button type="button" value="{{($totalwithsalestax * 20)/100}}" class="btn-area tip"><span>20% </span><br><span>${{($totalwithsalestax * 20)/100}}</button>
+                            </div>
+                            <div class="line-button">
+                                <button type="button" class="btn-big custom"> <span> Custom</span><br><span id="cutomtip">$ 0.00</span></button>
+                                <button class="btn-big"><span> No Tip </span><br><span></span></button>
+                            </div>
+                        </div>
+
+                        <div class="modal fade" id="custommodel" role="dialog" tabindex="-1">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h2 class="modal-title">Add A Custom Tip</h2><button aria-label="Close"
+                                            class="close" data-dismiss="modal" type="button"><span
+                                                aria-hidden="true">&times;</span></button>
+                                    </div>
+                                    <div class="modal-body text-center">
+                                        <div class="accordion row" id="accordion">
+                                            <div class="form-group col-md-12">
+                                                <input type="text" name="customtip" placeholder="Add Tip" id="customtips" value="" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer justify-content-center">
+                                        <button class="btn btn-submit" data-dismiss="modal" id="custom_tip_ajax" type="button">Add</button>
+                                        {{-- <button class="btn btn-primary" type="button">Save changes</button> --}}
+                                    </div>
+                                </div><!-- /.modal-content -->
+                            </div><!-- /.modal-dialog -->
+                        </div><!-- /.modal -->
+
                         @php
                         $finalTotal = $cartTotal;
                         @endphp
@@ -277,6 +352,11 @@
                                 <span id="sales_tax">${{ number_format($cart['tax_charge'], '2') }}</span>
                                 <input type="hidden" name="sales_tax" id="sales_tax" value="{{$cart['tax_charge'] }}">
                             </div>
+                            <div class="d-flex align-items-center justify-content-between w-100 wd-wrapper-total-first">
+                                <span>Tips</span>
+                                <span>$<span id="tipsres">0.00</span></span>
+                                <input type="hidden" name="newtips" id="newtips" value="">
+                            </div>
                             <div
                                 class="align-items-center justify-content-between w-100 wd-wrapper-total d-none wd-wrapper-total-first">
                                 <span>Delivery Charge</span>
@@ -286,6 +366,8 @@
                                 <span>Total</span>
                                  <span id="total_price">${{ number_format($cart['total_due'], '2') }}</span>
                                  <input type="hidden" name="grand_total" id="grand_total"
+                                 value="{{$cart['total_due']}}">
+                                 <input type="hidden" name="grand_total_ajax" id="grand_total_ajax"
                                  value="{{$cart['total_due']}}">
                             </div>
                         </div>

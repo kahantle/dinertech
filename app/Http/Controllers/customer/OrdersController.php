@@ -160,7 +160,6 @@ class OrdersController extends Controller
                     }
                 }
                 if($addPoint == true){
-                    dd($loyalty->point);
                     $totalPoint = $userPoint + $loyalty->point;
                     User::where('uid',$uid)->update(['total_points' => $totalPoint]);
                 }
@@ -221,6 +220,7 @@ class OrdersController extends Controller
                     $order->cart_charge = $orderDetails['cart_charge'];
                     $order->delivery_charge = '0.00';
                     $order->discount_charge =$request->discount_charge;
+                    $order->tip_amount =$request->newtips;
                     $order->sales_tax=$request->sales_tax;
                     $order->is_feature = ($orderDetails['order_status'] == 1) ? 1 : 0;
                     $order->order_status = null;

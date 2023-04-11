@@ -332,5 +332,21 @@ class UserController extends Controller
         }
 
     }
+    public function store_pin(Request $request)
+    {
+        try {
+            $uid = auth('api')->user()->uid;
+            User::where('uid', $uid)->update(['pin' => $request->post('pin')]);
+
+            return response()->json(['message' => 'Pin set successfully.', 'success' => true], 200);
+        } catch (\Throwable $th) {
+            $errors['success'] = false;
+            $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
+            if ($request->debug_mode == 'ON') {
+                $errors['debug'] = $th->getMessage();
+            }
+            return response()->json($errors, 401);
+        }
+    }
 
 }
