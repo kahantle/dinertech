@@ -32,14 +32,18 @@
             </div>
         </div>
     </section>
-@endsection 
+@endsection
 
 @section('scripts')
 
 <script>
+
     $(function(){
         $('.data_feather_copy').click(function(){
-            var copyText = $('.promotion_code-'+$(this).data('promotion-code-id'));
+
+            var dynamicId = $(this).data('promotion-code-id');
+            var copyText = $('.promotion_code-'+dynamicId).html();
+            // var copyText = $('.promotion_code-'+$(this).data('promotion-code-id'));
             copyText.select();
             navigator.clipboard.writeText(copyText.value);
 

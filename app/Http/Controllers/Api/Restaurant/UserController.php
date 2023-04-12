@@ -58,7 +58,7 @@ class UserController extends Controller
                         ->get(['uid', 'first_name', 'last_name',
                             'email_id', 'mobile_number', 'profile_image',
                             'app_notifications', 'chat_notifications',
-                            'location_tracking', 'email_subscription','sales_tax','loyalty_subscription'])
+                            'location_tracking', 'email_subscription','sales_tax','pin','loyalty_subscription'])
                         ->first()
                         ->makeHidden('restaurant');
 
@@ -73,7 +73,7 @@ class UserController extends Controller
                     $user->restaurant_city = $user->restaurant->restaurant_city;
                     $user->restaurant_state = $user->restaurant->restaurant_state;
                     $user->is_pin_protected = ($user->restaurant->is_pinprotected) ? true : false;
-                    $user->pin = ($user->restaurant->pin) ?? NULL ;
+                    $user->pin = $user->pin ;
                     $user->sales_tax = $user->restaurant->sales_tax;
 
                     $fcmId = $request->post('fcm_id');

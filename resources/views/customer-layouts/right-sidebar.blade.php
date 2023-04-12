@@ -291,6 +291,7 @@
                         <div class="text-center" id="tips">
                                 <h4 class="mb-2 promotion_text-cololr">Add Tip For</h4>
                                 @php
+                                // $totalwithsalestax=$cart['sub_total'] + $cart['tax_charge'];
                                 $totalwithsalestax=$cart['sub_total'] + $cart['tax_charge'];
                                 @endphp
                             <div class="line-button-area mb-2">
@@ -299,8 +300,8 @@
                                 <button type="button" value="{{($totalwithsalestax * 20)/100}}" class="btn-area tip"><span>20% </span><br><span>${{($totalwithsalestax * 20)/100}}</button>
                             </div>
                             <div class="line-button">
-                                <button type="button" class="btn-big custom"> <span> Custom</span><br><span id="cutomtip">$ 0.00</span></button>
-                                <button class="btn-big"><span> No Tip </span><br><span></span></button>
+                                <button type="button" class="btn-big custom"> <span> Custom</span><br><span>$<span id="cutomtip">0.00</span></span></button>
+                                <button type="button" class="btn-big" disabled><span> No Tip </span><br><span></span></button>
                             </div>
                         </div>
 
