@@ -187,4 +187,48 @@ class MenuController extends Controller
             return response()->json(['error' => 'Photo does not remove successfully.']);
          }
     }
+
+    public function storeStockUntl(Request $request)
+    {
+        $selectedType = $request->selectedType;
+        $menuId = $request->menuId;
+        $start = $request->start;
+        $end = $request->end;
+
+        if($selectedType === 'rest_of_day'){
+            $out_of_stock_type = 'Rest Of Day';
+        } else if  ($selectedType === 'indefinitely') {
+            $out_of_stock_type = 'Indefinitely';    
+        } else if  ($selectedType === 'custom_date') {
+            $out_of_stock_type = 'Custom Date';
+        } else {
+            $out_of_stock_type = 'Available';
+        };
+
+        $menuData = MenuItem::where('menu_id', $menuId)->first();
+        if(!empty($menuData)){
+
+            if($out_of_stock_type === 'Custom Date'){
+                $data = array(
+                    'out_of_stock_type' => $out_of_stock_type,
+                    'start_date' => $start,
+                    'end_date' => $end,
+                );
+
+                $modalclose = 'customDateModal';
+            } else {
+                $data = array(
+                    'out_of_stock_type' => $out_of_stock_type,
+                    'start_date' => NULL,
+                    'end_date' => NULL,
+                );
+
+                $modalclose = 'outOfStockModal';
+            }
+
+            MenuItem::where('menu_id', $menuId)->update($data);
+            return response()->json(['type' => true, 'message' => 'Stock Update Successfulluy', 'modalclose' => $modalclose ]);
+        }
+
+    }
 }
