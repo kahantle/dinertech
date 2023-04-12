@@ -114,7 +114,7 @@ Route::namespace ('Api')->group(function () {
     //API FOR restaurant
     Route::prefix('restaurant')->namespace('Restaurant')->group(function () {
         Route::post('/login', 'UserController@login')->name('restaurant.login');
-        Route::post('/store_pin', 'usercontroller@store_pin')->name('restaurant.store.pin');
+        Route::post('/store_pin', 'UserController@store_pin')->name('restaurant.store.pin');
         Route::post('/signup', 'UserController@signup')->name('restaurant.signup');
         Route::post('/verify-otp', 'UserController@verifyOtp')->name('restaurant.verify-otp');
         Route::post('/forgot-password', 'UserController@forgotPassword')->name('restaurant.forgot');
