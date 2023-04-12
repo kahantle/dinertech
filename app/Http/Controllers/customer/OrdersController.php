@@ -143,8 +143,9 @@ class OrdersController extends Controller
                     Order::whereIn('order_id',$getOrderIds)->update(['point_count' => Config::get('constants.ORDER_POINT_COUNT.YES')]);
                 }
             }else if($loyalty->loyalty_type == Config::get('constants.LOYALTY_TYPE.AMOUNT_SPENT')){
-                $grandTotal =$request->cart_charge;
-                if($grandTotal > $loyalty->amount){
+                $grandTotal =(float)$request->cart_charge;
+                $loyaltypoint=(float)$loyalty->amount;
+                if($grandTotal > $loyaltypoint){
                     $totalPoint = $userPoint + $loyalty->point;
                     User::where('uid',$uid)->update(['total_points' => $totalPoint]);
                 }

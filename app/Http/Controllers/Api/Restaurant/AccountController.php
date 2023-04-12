@@ -18,7 +18,7 @@ class AccountController extends Controller
         try {
             $restaurant = Restaurant::where('restaurant_id', $request->post('restaurant_id'))->first();
             $restaurant_settings = Restaurant::select('sales_tax','is_pinprotected','auto_print_receipts')->where('restaurant_id', $request->post('restaurant_id'))->first();
-            $user_settings = User::select('chat_notifications','location_tracking')->where('uid',$restaurant->uid)->first()->toArray();
+            $user_settings = User::select('chat_notifications','location_tracking','pin_notifications')->where('uid',$restaurant->uid)->first()->toArray();
             unset($user_settings['full_name'],$user_settings['image_path']);
             return response()->json([ 'settings' => array_merge($restaurant_settings->toArray(), $user_settings) , 'message' => "All Settings fetched Successfully.", 'success' => true], 200);
         } catch (\Throwable $th) {
@@ -52,6 +52,7 @@ class AccountController extends Controller
             $user = User::where('uid',$restaurant->uid)->first();
             if($user){
                 $user->chat_notifications = ($request->post('chat_notifications') == "true") ? 1 : 0;
+                $user->pin_notifications = $request->post('pin_enable');
                 $user->location_tracking  = ($request->post('location_tracking') == "true") ? 1 : 0;
                 $user->save();
             }

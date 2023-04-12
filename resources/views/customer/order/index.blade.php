@@ -23,7 +23,7 @@
                                 </h3>
                             </div>
                             <!-- Tab links -->
-                            <!-- Tab content --> 
+                            <!-- Tab content -->
                             <div id="Current" class="tabcontent">
                                 @foreach ($currentOrders as $currentOrder)
                                     <div class="row order-border" style="top:-16px !important;">
