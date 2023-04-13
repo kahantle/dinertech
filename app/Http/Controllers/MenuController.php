@@ -10,11 +10,13 @@ use App\Models\Category;
 use App\Models\ModifierGroup;
 use App\Models\MenuModifierItem;
 use App\Models\PromotionCategoryItem;
+use App\Models\User;
 use Config;
 use Toastr;
 use DB;
 use Auth;
 use Storage;
+use Session;
 
 class MenuController extends Controller
 {
@@ -55,6 +57,19 @@ class MenuController extends Controller
         $restaurant = Restaurant::where('uid', $uid)->first();
         $categories = Category::where('restaurant_id', $restaurant->restaurant_id)->get();
         $modifiers = ModifierGroup::where('restaurant_id', $restaurant->restaurant_id)->get();
+
+        $user = User::where('uid', $uid)->first();
+        $pinscreen = $user->pin_notifications === 'true';
+        if ($pinscreen) {
+            $is_verified = Session::get('is_menu_pin_verify');
+            if ($is_verified) {
+                Session::put('is_menu_pin_verify', '');
+                return view('menu.add',compact('categories','modifiers'));
+            }
+
+            $redirect_url = route('add.menu');
+            return view('account.menu_verify',compact('redirect_url'));
+        }
         return view('menu.add',compact('categories','modifiers'));
     }
 
@@ -65,9 +80,21 @@ class MenuController extends Controller
         $categories = Category::where('restaurant_id', $restaurant->restaurant_id)->get();
         $menuItem = MenuItem::where('menu_id', $request->id)->with('modifiers')->first();
         $modifiers = ModifierGroup::where('restaurant_id', $restaurant->restaurant_id)->get();
+
+        $user = User::where('uid', $uid)->first();
+        $pinscreen = $user->pin_notifications === 'true';
+        if ($pinscreen) {
+            $is_verified = Session::get('is_menu_pin_verify');
+            if ($is_verified) {
+                Session::put('is_menu_pin_verify', '');
+                return view('menu.edit',compact('menuItem','categories','modifiers'));
+            }
+
+            $redirect_url = route('edit.menu',$request->id);
+            return view('account.menu_verify',compact('redirect_url'));
+        }
         return view('menu.edit',compact('menuItem','categories','modifiers'));
     }
-
 
     public function store(MenuItemRequest $request)
     {

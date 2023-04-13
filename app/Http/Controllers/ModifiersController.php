@@ -8,9 +8,11 @@ use App\Http\Requests\ModifierItemPriceRequest;
 use App\Models\ModifierGroup;
 use App\Models\Restaurant;
 use App\Models\ModifierGroupItem;
+use App\Models\User;
 use Config;
 use Auth;
 use Toastr;
+use Session;
 
 class ModifiersController extends Controller
 {
@@ -35,6 +37,20 @@ class ModifiersController extends Controller
         $modifiers = ModifierGroup::where('restaurant_id', $restaurant->restaurant_id)
         ->with('modifier_item')
         ->paginate(Config::get('constants.PAGINATION_PER_PAGE'));
+
+        $user = User::where('uid', $uid)->first();
+        $pinscreen = $user->pin_notifications === 'true';
+        if ($pinscreen) {
+            $is_verified = Session::get('is_menu_pin_verify');
+            if ($is_verified) {
+                Session::put('is_menu_pin_verify', '');
+                return view('modifiers.index',compact('modifiers'));
+            }
+
+            $redirect_url = route('modifier');
+            return view('account.menu_verify',compact('redirect_url'));
+        }
+
         return view('modifiers.index',compact('modifiers'));
     }
 
@@ -106,7 +122,6 @@ class ModifiersController extends Controller
     public function editModifierItem(Request $request)
     {
         try {
-            dd($request->all());
             $modifierItem = ModifierGroupItem::where('modifier_item_id', $request->id)->first();
             return response()->json(['data' => $modifierItem, 'success' => true], 200);
         } catch (\Throwable $th) {
@@ -145,6 +160,7 @@ class ModifiersController extends Controller
             $alert =['Group delete successfully','', Config::get('constants.toster')];
             ModifierGroupItem::where('modifier_group_id', $request->id)->delete();
             ModifierGroup::where('modifier_group_id', $request->id)->delete();
+            Session::put('is_menu_pin_verify', 1);
             return response()->json(['route'=>route('modifier'),'alert'=>$alert,'success' => true], 200);
         } catch (\Throwable $th) {
             $errors['success'] = false;
@@ -205,6 +221,7 @@ class ModifiersController extends Controller
             return response()->json(['type'=>'fail', 'message' => 'Record Not Found']);
         }
         $checkModifierGroup['ModifierGroupItemCount'] = $ModifierGroupItem;
+        Session::put('is_menu_pin_verify', 1);
         return response()->json(['type'=>'success', 'message' => 'Record Found Successfully', 'data' => $checkModifierGroup]);
     }
 
@@ -229,6 +246,8 @@ class ModifiersController extends Controller
             $modifierItem->modifier_group_item_name = $request->post('modifier_group_item_name');
             $modifierItem->modifier_group_item_price = $request->post('modifier_group_item_price');
             $modifierItem->save();
+
+            Session::put('is_menu_pin_verify', 1);
             return response()->json(['type' =>'success', 'message' => $message, 'btnType' => $btnType, 'modifier_group_id' => $request->post('modifier_item_group_id')]);
         } catch (\Throwable $th) {
             dd($th);
@@ -252,6 +271,7 @@ class ModifiersController extends Controller
         try {
             ModifierGroupItem::where('modifier_item_id', $request->id)->delete();
             $alert =['Group delete successfully','', Config::get('constants.toster')];
+            Session::put('is_menu_pin_verify', 1);
             return response()->json(['route'=>route('modifier'),'alert'=>$alert,'success' => true], 200);
         } catch (\Throwable $th) {
             $errors['success'] = false;

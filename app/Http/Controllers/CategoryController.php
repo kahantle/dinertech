@@ -7,9 +7,11 @@ use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 use App\Models\Restaurant;
 use Illuminate\Http\Request;
+use App\Models\User;
 use Config;
 use Auth;
 use Toastr;
+use Session;
 
 class CategoryController extends Controller
 {
@@ -24,6 +26,18 @@ class CategoryController extends Controller
             $categories = $categories->orWhere('category_details', 'like', '%' . $params . '%');
         }
         $categories = $categories->paginate(Config::get('constants.PAGINATION_PER_PAGE'));
+
+        $user = User::where('uid', $uid)->first();
+        $pinscreen = $user->pin_notifications === 'true';
+        if ($pinscreen) {
+            $is_verified = Session::get('is_menu_pin_verify');
+            if ($is_verified) {
+                Session::put('is_menu_pin_verify', '');
+                return view('category.index', compact('categories','params'));
+            }
+            $redirect_url = route('category');
+            return view('account.menu_verify',compact('redirect_url'));
+        }
         return view('category.index', compact('categories','params'));
     }
 
@@ -55,6 +69,7 @@ class CategoryController extends Controller
                 return redirect()->route('category');
             }
             Toastr::error('Category does not added successfully.','', Config::get('constants.toster'));
+            Session::put('is_menu_pin_verify', 1);
             return redirect()->route('category');
         } catch (\Throwable $th) {
             return redirect()->route('category')->with('error', $th->getMessage());
@@ -64,6 +79,7 @@ class CategoryController extends Controller
     public function edit($id)
     {
         $category = Category::where('category_id', $id)->first();
+        Session::put('is_menu_pin_verify', 1);
         return view('category.edit', compact('category'));
     }
 
@@ -87,9 +103,11 @@ class CategoryController extends Controller
             }
         if ($category->save()) {
             Toastr::success('Category update successfully.','', Config::get('constants.toster'));
-            return redirect()->route('category');      
+            Session::put('is_menu_pin_verify', 1);
+            return redirect()->route('category');
           } else {
             Toastr::success('Category does not update successfully.','', Config::get('constants.toster'));
+            Session::put('is_menu_pin_verify', 1);
             return redirect()->route('category');
         }
     }
@@ -97,7 +115,6 @@ class CategoryController extends Controller
 
     public function delete($id)
     {
-
         try {
             $alert =['Category does not delete successfully','', Config::get('constants.toster')];
             $category = Category::where('category_id', $id)->first();
@@ -105,6 +122,7 @@ class CategoryController extends Controller
                 $category->delete();
                 $alert =['Category delete successfully','', Config::get('constants.toster')];
             }
+            Session::put('is_menu_pin_verify', 1);
             return response()->json(['route'=>route('category'),'alert'=>$alert,'success' => true], 200);
         } catch (\Throwable $th) {
             $errors['success'] = false;

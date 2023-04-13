@@ -63,6 +63,11 @@ Route::group(['middleware' => ['auth:web']], function () {
     });
     Route::prefix('account')->group(function () {
         Route::get('/', 'AccountController@index')->name('account');
+        Route::get('/menu_pin', 'AccountController@menuPin')->name('menu.pin');
+        Route::post('/set_menu_pin', 'AccountController@setMenuPin')->name('set.menu.pin');
+        Route::post('/remove_menu_pin', 'AccountController@removeMenuPin')->name('remove.menu.pin');
+        Route::post('/verify_menu_pin', 'AccountController@verifyMenuPin')->name('verify.menu.pin');
+
         Route::post('/update-account-settings', 'AccountController@update')->name('update-account-settings');
         Route::get('/active-subscriptions','AccountController@showActiveSubscription')->name('account.active.subscription');
         Route::post('/delete','AccountController@deleteAccount')->name('account.delete');

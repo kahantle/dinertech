@@ -26,6 +26,7 @@ class AccountController extends Controller
             }
             return view('account.verify', compact('user', 'restaurant'));
         }
+        /* Main Setting screen */
         return view('account.index', compact('user', 'restaurant'));
     }
 
@@ -144,4 +145,70 @@ class AccountController extends Controller
         }
     }
 
+    public function menuPin()
+    {
+        return view('account.menu_pin');
+    }
+
+    public function setMenuPin(Request $request)
+    {
+        try {
+            $uid = Auth::user()->uid;
+
+            $user = User::where('uid', $uid)->first();
+            $user->pin_notifications = 'true';
+            $user->pin = $request->pin;
+            if ($user->save()) {
+                $returns['success'] = true;
+                $returns['message'] = "Pin set successfully!";
+            }else{
+                $returns['success'] = false;
+                $returns['message'] = "Pin does not set successfully!";
+            }
+            return response()->json($returns);
+        }
+        catch (\Throwable $th) {
+            $returns['success'] = false;
+            $returns['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
+            return response()->json($returns);
+        }
+    }
+
+    public function removeMenuPin()
+    {
+        $uid = Auth::user()->uid;
+        $user = User::where('uid', $uid)->first();
+        $user->pin_notifications = NULL;
+        $user->pin = NULL;
+        if ($user->save()) {
+            $returns['success'] = true;
+            $returns['message'] = "Pin Remove successfully!";
+        }else{
+            $returns['success'] = false;
+            $returns['message'] = "Pin does not remove successfully!";
+        }
+        return response()->json($returns);
+    }
+
+    public function verifyMenuPin(Request $request)
+    {
+        try {
+            $uid = Auth::user()->uid;
+            $user = User::where('uid', $uid)->where('pin',$request->pin)->first();
+            if ($user) {
+                Session::put('is_menu_pin_verify', 1);
+                $returns['success'] = true;
+                $returns['message'] = "Pin verify successfully!";
+            }else{
+                $returns['success'] = false;
+                $returns['message'] = "Pin enter valid pin.";
+            }
+            return response()->json($returns);
+        }
+        catch (\Throwable $th) {
+            $returns['success'] = false;
+            $returns['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
+            return response()->json($returns);
+        }
+    }
 }
