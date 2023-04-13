@@ -72,10 +72,10 @@ class UserController extends Controller
                     $user->restaurant_address = $user->restaurant->restaurant_address;
                     $user->restaurant_city = $user->restaurant->restaurant_city;
                     $user->restaurant_state = $user->restaurant->restaurant_state;
+                    $user['menu_pin'] = $user->pin;
                     $user->is_pin_protected = ($user->restaurant->is_pinprotected) ? true : false;
                     $user->pin = ($user->restaurant->pin) ?? NULL;
                     $user->sales_tax = $user->restaurant->sales_tax;
-                    $user['menu_pin'] = $user->pin;
 
                     $fcmId = $request->post('fcm_id');
                     $device = $request->post('device');
