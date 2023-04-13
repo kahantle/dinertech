@@ -63,6 +63,11 @@ Route::group(['middleware' => ['auth:web']], function () {
     });
     Route::prefix('account')->group(function () {
         Route::get('/', 'AccountController@index')->name('account');
+        Route::get('/menu_pin', 'AccountController@menuPin')->name('menu.pin');
+        Route::post('/set_menu_pin', 'AccountController@setMenuPin')->name('set.menu.pin');
+        Route::post('/remove_menu_pin', 'AccountController@removeMenuPin')->name('remove.menu.pin');
+        Route::post('/verify_menu_pin', 'AccountController@verifyMenuPin')->name('verify.menu.pin');
+
         Route::post('/update-account-settings', 'AccountController@update')->name('update-account-settings');
         Route::get('/active-subscriptions','AccountController@showActiveSubscription')->name('account.active.subscription');
         Route::post('/delete','AccountController@deleteAccount')->name('account.delete');
@@ -113,7 +118,7 @@ Route::group(['middleware' => ['auth:web']], function () {
         Route::post('update', 'MenuController@update')->name('update.menu.post');
         Route::get('delete/{id}', 'MenuController@delete')->name('delete.menu.post');
         Route::post('remove/image/', 'MenuController@removeMenuImage')->name('remove.menu.image');
-        Route::post('store_stock_until', 'MenuController@storeStockUntl')->name('store.stock.until');
+        Route::post('store_stock_until', 'MenuController@storeStockUntil')->name('store.stock.until');
 
         Route::prefix('modifier')->group(function () {
             Route::post('/', 'MenuModifierController@addMenuModifierGroup')->name('add.menu.modifier.post');
