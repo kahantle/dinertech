@@ -113,7 +113,7 @@ Route::group(['middleware' => ['auth:web']], function () {
         Route::post('update', 'MenuController@update')->name('update.menu.post');
         Route::get('delete/{id}', 'MenuController@delete')->name('delete.menu.post');
         Route::post('remove/image/', 'MenuController@removeMenuImage')->name('remove.menu.image');
-        Route::post('store_stock_until', 'MenController@storeStockUntil')->name('store.stock.until');
+        Route::post('store_stock_until', 'MenuController@storeStockUntil')->name('store.stock.until');
 
         Route::prefix('modifier')->group(function () {
             Route::post('/', 'MenuModifierController@addMenuModifierGroup')->name('add.menu.modifier.post');
