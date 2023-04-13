@@ -20,7 +20,7 @@
                                     <span>{{$promotion->promotion_name}}</span>
                                 </div>
                                 <div class="card-footer bg-white promotion_b-redi">
-                                    <span>{{$promotion->promotion_details ?? "No datails"}}</span>
+                                    <span>{{$promotion->promotion_details ?? "No details"}}</span>
                                 </div>
                             </div>
                             @endforeach

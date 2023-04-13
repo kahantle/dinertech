@@ -46,7 +46,7 @@
                       <label for="{{$day}}">{{$day}}</label>
                   @endif
                 </div>
-              @endfor 
+              @endfor
           </div>
           <div class="time-buttons">
             <div class="row">
@@ -62,6 +62,18 @@
                       <span for="closing_hours" class="error"></span>
                   </div>
                 </div>
+                <div class="col-xl-2 col-md-3 col-sm-4 col-5 mt-3">
+                    <div class="form-group" style="display: inline-block">
+                    <select name="hour_type[]" id="hour_type" class="form-control">
+                        <option selected disabled>Select Type</option>
+                        <option value="Breakfast">Breakfast</option>
+                        <option value="Brunch">Brunch</option> 
+                        <option value="Lunch">Lunch</option>
+                        <option value="Dinner">Dinner</option>
+                        <option value="Late Night">Late Night</option>
+                    </select>
+                    </div>
+                </div>
                 <div class="col-xl-2 col-md-2 col-sm-3 mt-3">
                   <button class="btn btn-primary" id="add-more" type="button">Add More</button>
                 </div>
@@ -76,13 +88,13 @@
       </div>
     </div>
   </div>
-     
+
 </div>
 </div>
 </section>
 @endsection
 @section('scripts')
 <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js')}}"></script>
-{!! JsValidator::formRequest('App\Http\Requests\HourRequest','#hourForm'); !!} 
+{!! JsValidator::formRequest('App\Http\Requests\HourRequest','#hourForm'); !!}
 <script src="{{asset('/assets/js/add-hours.js')}}"></script>
 @endsection

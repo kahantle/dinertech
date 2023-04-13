@@ -19,12 +19,13 @@ class HoursController extends Controller
         $restaurantId = session()->get('restaurantId');
         $restaurant = Restaurant::where('restaurant_id', $restaurantId)->with('user')
             ->first();
+        // $data['hoursdata']=RestaurantHours::select('restaurant_hours.*','times.opening_time','times.closing_time','times.hour_type')
+        // ->join('restaurant_hours_times as times','restaurant_hours.restaurant_hour_id','times.restaurant_hour_id')
+        // ->where('restaurant_hours.restaurant_id', $restaurantId)
+        // ->get();
+
+        $data['hoursdata'] = RestaurantHours::where('restaurant_id', $restaurantId)->with('allTimes')->get();
         $data['address'] = $restaurant;
-        $data['hoursdata'] = RestaurantHours::select("restaurant_hour_id","hours_group_id","opening_time","closing_time")
-        ->with('allTimes')
-        ->groupBy('hours_group_id')
-        ->where('restaurant_id', $restaurant->restaurant_id)
-        ->get();
         $data['cards'] = getUserCards($restaurantId, $uid);
         $data['title'] = 'Information';
         return view('customer.hours.index', $data);

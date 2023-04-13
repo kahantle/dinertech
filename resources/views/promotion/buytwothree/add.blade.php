@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="{{asset('vendor/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}">
 @if ($webview == 1)
 <style>
-#wrapper {
+#wrapper { 
     padding-left: 0px
 }
 </style>

@@ -17,17 +17,24 @@
                         <div class="content ">
                             <div class="wd-hours-method">
                                 <h2 class="mb-3">Hours of Operation </h2>
+
                                 <div class="scroll-bar" id="style-4">
                                     <div class="btn-group" role="group" aria-label="Basic example">
                                         <div class="row">
+                                            @foreach ($hoursdata as $hourdata)
+
                                             <div class="col-xs-1 col-sm-3 col-lg-3 day-schedule">
-                                                <button type="button" class="btn btn-left-blog">sunday</button>
-                                                <div class="card card-inner-first card-second text-center">
-                                                    <h6 class="mb-1">Breakfast</h6>
-                                                    <p class="be-inner mb-1">8:00a</p>
-                                                    <p class="mt-1">11:00a</p>
-                                                </div>
-                                                <div class="card card-inner-second card-second text-center">
+                                                <button type="button" class="btn btn-left-blog">{{$hourdata->day}}</button>
+
+                                                @foreach ($hourdata->allTimes as $dysdata)
+
+                                                    <div class="card card-inner-first card-second text-center">
+                                                        <h6 class="mb-1">{{$dysdata->hour_type}}</h6>
+                                                        <p class="be-inner mb-1">{{$dysdata->opening_time}}</p>
+                                                        <p class="mt-1">{{$dysdata->closing_time}}</p>
+                                                    </div>
+                                                @endforeach
+                                                {{-- <div class="card card-inner-second card-second text-center">
                                                     <h6 class="mb-1">Brunch</h6>
                                                     <p class="be-inner mb-1">11:00a </p>
                                                     <p class="mt-1">2:00p</p>
@@ -41,84 +48,14 @@
                                                     <h6 class="mb-1">Dinner</h6>
                                                     <p class="be-inner mb-1">5:00p </p>
                                                     <p class="mt-1">11:00p</p>
-                                                </div>
+                                                </div> --}}
+
                                             </div>
-                                            <div class="col-xs-1 col-sm-3 col-lg-3 day-schedule">
-                                                <button type="button" class="btn btn-left-blog">monday</button>
-                                                <div class="card card-inner-third card-second text-center">
-                                                    <h6 class="mb-1">Lunch</h6>
-                                                    <p class="be-inner mb-1">11:00a </p>
-                                                    <p class="mt-1">4:00p</p>
-                                                </div>
-                                                <div class="card card-inner-fourth card-second text-center">
-                                                    <h6 class="mb-1">Dinner</h6>
-                                                    <p class="be-inner mb-1">5:00p </p>
-                                                    <p class="mt-1">11:00p</p>
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-1 col-sm-3 col-lg-3 day-schedule">
-                                                <button type="button" class="btn btn-left-blog">tuesday</button>
-                                                <div class="card card-inner-third card-second text-center">
-                                                    <h6 class="mb-1">Lunch</h6>
-                                                    <p class="be-inner mb-1">11:00a </p>
-                                                    <p class="mt-1">4:00p</p>
-                                                </div>
-                                                <div class="card card-inner-fourth card-second text-center">
-                                                    <h6 class="mb-1">Dinner</h6>
-                                                    <p class="be-inner mb-1">5:00p </p>
-                                                    <p class="mt-1">11:00p</p>
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-1 col-sm-3 col-lg-3 day-schedule">
-                                                <button type="button" class="btn btn-left-blog">wednesday </button>
-                                                <div class="card card-inner-third card-second text-center">
-                                                    <h6 class="mb-1">Lunch</h6>
-                                                    <p class="be-inner mb-1">11:00a </p>
-                                                    <p class="mt-1">4:00p</p>
-                                                </div>
-                                                <div class="card card-inner-fourth card-second text-center">
-                                                    <h6 class="mb-1">Dinner</h6>
-                                                    <p class="be-inner mb-1">5:00p </p>
-                                                    <p class="mt-1">11:00p</p>
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-1 col-sm-3 col-lg-3 day-schedule">
-                                                <button type="button" class="btn btn-left-blog">thursday</button>
-                                                <div class="card card-inner-third card-second text-center">
-                                                    <h6 class="mb-1">Lunch</h6>
-                                                    <p class="be-inner mb-1">11:00a </p>
-                                                    <p class="mt-1">4:00p</p>
-                                                </div>
-                                                <div class="card card-inner-fourth card-second text-center">
-                                                    <h6 class="mb-1">Dinner</h6>
-                                                    <p class="be-inner mb-1">5:00p </p>
-                                                    <p class="mt-1">11:00p</p>
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-1 col-sm-3 col-lg-3 day-schedule">
-                                                <button type="button" class="btn btn-left-blog">friday</button>
-                                                <div class="card card-inner-third card-second text-center">
-                                                    <h6 class="mb-1">Lunch</h6>
-                                                    <p class="be-inner mb-1">11:00a </p>
-                                                    <p class="mt-1">4:00p</p>
-                                                </div>
-                                                <div class="card card-inner-fourth card-second text-center">
-                                                    <h6 class="mb-1">Dinner</h6>
-                                                    <p class="be-inner mb-1">5:00p </p>
-                                                    <p class="mt-1">11:00p</p>
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-1 col-sm-3 col-lg-3 day-schedule">
-                                                <button type="button" class="btn btn-left-blog">saturday</button>
-                                                <div class="card card-inner-fourth card-second text-center">
-                                                    <h6 class="mb-1">Dinner</h6>
-                                                    <p class="be-inner mb-1">5:00p </p>
-                                                    <p class="mt-1">11:00p</p>
-                                                </div>
-                                            </div>
+                                            @endforeach
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="pickup-inst mt-5">
                                     <h2 class="mb-2">Order Pickup Instructions</h2>
                                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
