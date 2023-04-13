@@ -44,10 +44,24 @@
             var dynamicId = $(this).data('promotion-code-id');
             var copyText = $('.promotion_code-'+dynamicId).html();
             // var copyText = $('.promotion_code-'+$(this).data('promotion-code-id'));
-            copyText.select();
-            navigator.clipboard.writeText(copyText.value);
 
-            alert("Copied the text: " + copyText.value);
+            var temp = $("<input>");
+            $("body").append(temp);
+            temp.val(copyText).select();
+            document.execCommand("copy");
+            temp.remove();
+
+            // copyText.value = copyText.html();
+            // copyText.focus();
+            // copyText.select();
+
+            // try {
+            //     document.execCommand('copy');
+            // } catch (err) {
+            //     console.error('Unable to copy to clipboard', err);
+            // }
+
+            alert("Copied the text: " + copyText);
         });
     });
 </script>
