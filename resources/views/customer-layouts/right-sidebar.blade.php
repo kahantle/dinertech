@@ -210,6 +210,7 @@
                                     <div id="coupon_code_msgs" style="color:red"></div>
                                 </div>
                                 <div id="prmotioncode">
+                            
                                     <h6 class="mb-0 text-dark couponcode"></h6>
                                     <!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.
                                     </p> -->
@@ -294,7 +295,7 @@
                             <div class="text-center" id="tips">
                                 <h4 class="mb-2 promotion_text-cololr">Add Tip For</h4>
                                 @php
-                                    $totalwithsalestax = $cart['sub_total'] + $cart['tax_charge'];
+                                    $totalwithsalestax = ($cart['sub_total'] ?? 0.00) + ($cart['tax_charge'] ?? 0.00);
                                 @endphp
                                 <div class="line-button-area mb-2">
                                     <button type="button" value="{{ ($totalwithsalestax * 15) / 100 }}"
