@@ -121,11 +121,19 @@
                                                     </span>
                                                 </div>
                                                 <div class="d-flex align-items-center justify-content-between w-100 mb-2">
+                                                    <span class="cart-charges">
+                                                     Sales Tax
+                                                    </span>
+                                                    <span class="charges-price">
+                                                        +${{ $order->sales_tax }}
+                                                    </span>
+                                                </div>
+                                                <div class="d-flex align-items-center justify-content-between w-100 mb-2">
                                                     <span class="cart-charges total_disc">
                                                         Total Discount
                                                     </span>
                                                     <span class="charges-price total_disc">
-                                                        ${{ $order->discount_charge }}
+                                                        {{$order->discount_charge}}
                                                     </span>
                                                 </div>
                                                 <div class="d-flex align-items-center justify-content-between w-100 mb-2">

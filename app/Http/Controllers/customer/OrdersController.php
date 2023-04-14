@@ -128,6 +128,7 @@ class OrdersController extends Controller
             return redirect()->back()->with('error', 'Please Select Order Timing.');
         }
         $orderDetails = ['order_status' => $request->order_status, 'menu_item' => json_decode(base64_decode($request->menuItem)), 'instruction' => $request->instruction, 'cart_charge' => $request->cart_charge, 'sales_tax' => $request->sales_tax, 'discount_charge' => $request->discount_charge, 'orderDate' => $request->orderDate, 'orderTime' => $request->orderTime, 'grand_total' => $request->grand_total];
+
         $uid = Auth::user()->uid;
         $restaurantId = 1;
 
@@ -250,8 +251,8 @@ class OrdersController extends Controller
                             $menuItemData = new OrderMenuItem;
                             $menuItemData->menu_id = $menuItem->menu_id;
                             $menuItemData->menu_name = $menuItem->menu_name;
-                            $menuItemData->menu_total = $menuItem->menu_total;
                             $menuItemData->menu_qty = $menuItem->menu_qty;
+                            $menuItemData->menu_price = $menuItem->menu_price;
                             $menuItemData->menu_total = $menuItem->menu_total;
                             $menuItemData->modifier_total = $menuItem->modifier_total;
                             $menuItemData->order_id = $order->order_id;

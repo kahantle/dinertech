@@ -111,14 +111,14 @@
                         <div class="scroll-inner-blog mt-4">
                             @php
                                 $cart = getCart($restaurantId = 1);
-                                $menuItem = [];
+                                $menuItem= [];
                             @endphp
                             @if (!empty($cart->cartMenuItems))
                                 @forelse ($cart->cartMenuItems as $key => $item)
                                     @php
                                         $cartTotal += $item['menu_price'] * $item['menu_qty'] + $item['modifier_total'] * $item['menu_qty'];
 
-                                        $menuItem[] = ['menu_id' => $item['menu_id'], 'menu_name' => $item['menu_name'], 'menu_total' => 0, 'menu_qty' => $item['menu_qty'], 'modifier_total' => 0];
+                                        $menuItem[] = ['menu_id' => $item['menu_id'], 'menu_name' => $item['menu_name'],'menu_price' => $item['menu_price'],'menu_total' => $item['menu_total'], 'menu_qty' => $item['menu_qty'], 'modifier_total' => $item['modifier_total']];
 
                                     @endphp
                                     <div
@@ -210,7 +210,7 @@
                                     <div id="coupon_code_msgs" style="color:red"></div>
                                 </div>
                                 <div id="prmotioncode">
-                        
+                                 
                                     <h6 class="mb-0 text-dark couponcode"></h6>
                                     <!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.
                                     </p> -->
