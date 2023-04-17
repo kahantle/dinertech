@@ -67,7 +67,7 @@ Route::group(['middleware' => ['auth:web']], function () {
         Route::post('/set_menu_pin', 'AccountController@setMenuPin')->name('set.menu.pin');
         Route::post('/remove_menu_pin', 'AccountController@removeMenuPin')->name('remove.menu.pin');
         Route::post('/verify_menu_pin', 'AccountController@verifyMenuPin')->name('verify.menu.pin');
-
+        Route::post('/online_ordering', 'AccountController@onlineOrdering')->name('online.ordering');
         Route::post('/update-account-settings', 'AccountController@update')->name('update-account-settings');
         Route::get('/active-subscriptions','AccountController@showActiveSubscription')->name('account.active.subscription');
         Route::post('/delete','AccountController@deleteAccount')->name('account.delete');

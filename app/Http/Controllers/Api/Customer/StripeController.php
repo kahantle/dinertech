@@ -30,7 +30,6 @@ class StripeController extends Controller
     public function createCharge(Request $request)
     {
         try {
-
             $request_data = $request->json()->all();
 
             $validator = Validator::make($request_data, [
@@ -52,7 +51,6 @@ class StripeController extends Controller
                         'source' => $request->post('source'),
                         'description' => ($request->post('description')) ? $request->post('description') : null,
                         ]);
-
             // Check that it was paid:
 	        if ($charge->paid == true) {
                 return response()->json(['message' => 'Payment has been charged!!','stripe_payment_id' => $charge->created,'success' => true], 200);
