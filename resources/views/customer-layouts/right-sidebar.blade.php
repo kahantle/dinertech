@@ -210,7 +210,7 @@
                                     <div id="coupon_code_msgs" style="color:red"></div>
                                 </div>
                                 <div id="prmotioncode">
-                         
+
                                     <h6 class="mb-0 text-dark couponcode"></h6>
                                     <!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.
                                     </p> -->
@@ -349,7 +349,7 @@
                                     <span>Subtotal</span>
                                     <!-- <span>${{ number_format($cartTotal, '2') }}</span> -->
                                     <?php
-                                        $cardSubTotal = $cart['sub_total'] ?? "0.00";
+                                        $cardSubTotal = $cart['sub_total'] ?? "0";
                                     ?>
                                     <span>${{ number_format($cardSubTotal, '2') }}</span>
                                     <input type="hidden" name="cart_charge" id="cart_charge"
