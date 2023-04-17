@@ -38,37 +38,37 @@ class RestaurantHoursController extends Controller
                 $errors['debug'] = $th->getMessage();
             }
             return response()->json($errors, 500);
-        }
+        } 
     }
     public function checkAvailability(Request $request)
     {
         $data  = RestaurantHours::with('allTimes')->where('restaurant_id', $request->restaurant_id)->where('day', 'like', '%' . $request->day . '%')->first();
-        
+
         if (empty($data)) {
             return response()->json(['success' => false, 'message' => 'Oops! Betty Burger is not open for orders at the time selected. Please select another time']);
         }
-        
+
         $testResult  = [];
-        
+
         foreach($data->allTimes as $time) {
             $testResult[] = $time->opening_time <= $request->time && $request->time <= $time->closing_time;
         }
-        
+
         if (!in_array(true,$testResult)) {
             return response()->json(['success' => false, 'message' => 'Oops! Betty Burger is not open for orders at the time selected. Please select another time']);
         }
-        
+
         $restaurant = Restaurant::where('restaurant_id', $request->restaurant_id)->first();
-        
+
         if($restaurant->online_order_status == 0){
             return response()->json(['success' => false, 'message' => "Restaurant can't able to accept online order in this time !"]);
         }
-        
+
         // if($data->restaurant->online_order_status == 0)
         // {
         //     return response()->json(['success' => false, 'message' => "Restaurant can't able to accept online order in this time !"]);
         // }
-        
+
         return response()->json(['success' => true, 'message' => 'Restaurant founded successfully..']);
 
     }

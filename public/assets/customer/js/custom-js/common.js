@@ -122,8 +122,9 @@ $(function() {
         $("#tipsres").text(textt);
         $("#newtips").val(textt);
         var newtotal=parseFloat(total_price) + parseFloat(text);
-        $("#total_price").text("$"+newtotal);
-        $("#grand_total").val(newtotal);
+        var totalnew=newtotal.toFixed(2);
+        $("#total_price").text("$"+totalnew);
+        $("#grand_total").val(totalnew);
      });
 
 

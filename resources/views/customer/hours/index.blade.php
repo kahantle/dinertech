@@ -70,7 +70,7 @@
                                         eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse
                                         ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis. </p>
                                 </div>
-                                <div class="row mt-5 contact-form">
+                                {{-- <div class="row mt-5 contact-form">
                                     <div class="col-md-12">
                                         <h2 class="my-2">Contact Us</h2>
                                     </div>
@@ -182,7 +182,7 @@
                                             width="600" height="400" style="border:0;" allowfullscreen=""
                                             loading="lazy"></iframe>
                                     </div>
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
                     </div>

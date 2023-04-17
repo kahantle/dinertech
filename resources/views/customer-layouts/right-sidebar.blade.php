@@ -210,7 +210,7 @@
                                     <div id="coupon_code_msgs" style="color:red"></div>
                                 </div>
                                 <div id="prmotioncode">
-                                 
+                              
                                     <h6 class="mb-0 text-dark couponcode"></h6>
                                     <!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.
                                     </p> -->
@@ -299,13 +299,13 @@
                                 @endphp
                                 <div class="line-button-area mb-2">
                                     <button type="button" value="{{ ($totalwithsalestax * 15) / 100 }}"
-                                        class="btn-area tip"><span>15%</span><br><span>${{ ($totalwithsalestax * 15) / 100 }}</button>
+                                        class="btn-area tip"><span>15%</span><br><span>${{round($totalwithsalestax * 15) / 100 ,2}}</button>
                                     <button type="button" value="{{ ($totalwithsalestax * 18) / 100 }}"
                                         class="btn-area tip"><span>18%
-                                        </span><br><span>${{ ($totalwithsalestax * 18) / 100 }}</span></button>
+                                        </span><br><span>${{ round($totalwithsalestax * 18) / 100 ,2}}</span></button>
                                     <button type="button" value="{{ ($totalwithsalestax * 20) / 100 }}"
                                         class="btn-area tip"><span>20%
-                                        </span><br><span>${{ ($totalwithsalestax * 20) / 100 }}</button>
+                                        </span><br><span>${{ round ($totalwithsalestax * 20) / 100 ,2}}</button>
                                 </div>
                                 <div class="line-button">
                                     <button type="button" class="btn-big custom"> <span> Custom</span><br><span>$<span
@@ -332,7 +332,7 @@
                                             </div>
                                         </div>
                                         <div class="modal-footer justify-content-center">
-                                            <button class="btn btn-submit" data-dismiss="modal" id="custom_tip_ajax"
+                                            <button class="btn btn-submit btn-primary" data-dismiss="modal" id="custom_tip_ajax"
                                                 type="button">Add</button>
                                             {{-- <button class="btn btn-primary" type="button">Save changes</button> --}}
                                         </div>

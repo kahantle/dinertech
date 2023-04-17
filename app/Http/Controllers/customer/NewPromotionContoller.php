@@ -297,30 +297,32 @@ class NewPromotionContoller extends Controller
                         {
                             $status="error";
                             $msg="Coupen is Expired";
-
-                    }
-                }
-
-                if($status=='success'){
-                    $discount=$result->discount;
-                    $discount_type=$result->discount_type;
-                    if ($discount_type == 'USD') {
-                        $item=$result->discount;
-                        $itemPrice = $totalPrice - $discount;
-                    }else {
-                        $item = ($totalPrice* $discount) / 100;
-                        $itemPrice=$totalPrice-$item;
+                        }
                     }
 
-                $taxCharge = number_format(($itemPrice * $restaurantid->sales_tax) / 100,2);
-                $totalPayableAmount = number_format($itemPrice + $taxCharge,2);
-                Cart::where('uid',$uid)->where('restaurant_id',$restaurant)->where('cart_id',$request->cart_id)->update(['sub_total' => number_format($totalPrice,2),'discount_charge'=>number_format($item,2),'tax_charge' =>number_format($taxCharge,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id'=>$result->promotion_id]);
+
                 }
             }
+
         }
 
-     }
-     return response()->json(['msg'=>$msg,'status'=>$status,'couponcode'=> $couponcode,'discount'=>$item,'itemPrice'=>$itemPrice]);
+        if($status=='success'){
+            $discount=$result->discount;
+            $discount_type=$result->discount_type;
+            if ($discount_type == 'USD') {
+                $item=$result->discount;
+                $itemPrice = $totalPrice - $discount;
+            }else {
+                $item = ($totalPrice* $discount) / 100;
+                $itemPrice=$totalPrice-$item;
+            }
+
+            $taxCharge = number_format(($itemPrice * $restaurantid->sales_tax) / 100,2);
+            $totalPayableAmount = number_format($itemPrice + $taxCharge,2);
+            Cart::where('uid',$uid)->where('restaurant_id',$restaurant)->where('cart_id',$request->cart_id)->update(['sub_total' => number_format($totalPrice,2),'discount_charge'=>number_format($item,2),'tax_charge' =>number_format($taxCharge,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id'=>$result->promotion_id]);
+        }
+
+        return response()->json(['msg'=>$msg,'status'=>$status,'couponcode'=> $couponcode,'discount'=>$item,'itemPrice'=>$itemPrice]);
 
     }
     public function remove_coupon_code(Request $request)

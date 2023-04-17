@@ -24,7 +24,7 @@ class HoursController extends Controller
         // ->where('restaurant_hours.restaurant_id', $restaurantId)
         // ->get();
 
-        $data['hoursdata'] = RestaurantHours::where('restaurant_id', $restaurantId)->with('allTimes')->orderBy('restaurant_hour_id', 'DESC')->get();
+        $data['hoursdata'] = RestaurantHours::where('restaurant_id', $restaurantId)->with('allTimes')->orderBy('restaurant_hour_id', 'ASC')->get();
         $data['address'] = $restaurant;
         $data['cards'] = getUserCards($restaurantId, $uid);
         $data['title'] = 'Information';

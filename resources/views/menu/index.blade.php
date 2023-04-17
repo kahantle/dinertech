@@ -131,14 +131,14 @@
                                                 {{-- <a href="#0">Out Of Stock</a> --}}
 
                                                 {{-- Out Off Stock Button --}}
-                                                @if($item->out_of_stock_type === 'Available') 
+                                                @if($item->out_of_stock_type === 'Available')
                                                     <button type="button" class="btn btn-sm btn-white stockBtn stockBtnJs" onclick="OutOfStock({{ $item->menu_id }},'Available')">Out Of Stock ?</button>
                                                 @elseif( $item->out_of_stock_type === 'Rest Of Day')
                                                     <button type="button" class="btn btn-sm btn-white changeBtnc stockBtn stockBtnJs" onclick="OutOfStock({{ $item->menu_id }}, 'Rest Of Day')">Rest Of Day</button>
                                                 @elseif( $item->out_of_stock_type === 'Indefinitely')
                                                     <button type="button" class="btn btn-sm btn-white changeBtnc stockBtn stockBtnJs" onclick="OutOfStock({{ $item->menu_id }}, 'Indefinitely')">Indefinitely</button>
-                                                @else   
-                                                    <button type="button" class="btn btn-sm btn-white changeBtnc stockBtn stockBtnJs" onclick="OutOfStock({{ $item->menu_id }}, 'Custome',{{ json_encode($item->start_date.'+'.$item->end_date) }})">Custome Date</button>    
+                                                @else
+                                                    <button type="button" class="btn btn-sm btn-white changeBtnc stockBtn stockBtnJs" onclick="OutOfStock({{ $item->menu_id }}, 'Custome',{{ json_encode($item->start_date.'+'.$item->end_date) }})">Custome Date</button>
                                                 @endif
 
                                             </div>
@@ -242,7 +242,7 @@
     <script src="{{ asset('assets/js/menu.js') }}"></script>
 @endsection
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" type="text/javascript"></script>
 <script>
     $(document).ready(function() {
@@ -265,7 +265,7 @@
                 $('#errorMsg').html('Must be select out of stock until');
             }else {
                 $('#errorMsg').html('');
-                OutOfStockDynamic(selectedType,menuId);                
+                OutOfStockDynamic(selectedType,menuId);
             }
         });
 
@@ -275,7 +275,7 @@
             var stock_start_date = $('#stock_start_date').val();
             var stock_end_date = $('#stock_end_date').val();
 
-            OutOfStockDynamic(selectedType,menuId,stock_start_date,stock_end_date);            
+            OutOfStockDynamic(selectedType,menuId,stock_start_date,stock_end_date);
         });
     });
 
@@ -301,7 +301,7 @@
                 if (data.type) {
                     console.log(data.modalclose);
                     $('#'+data.modalclose).modal('hide');
-                    location.reload(); 
+                    location.reload();
                 }
             },
         });
@@ -312,7 +312,7 @@
     }
 
     function OutOfStock(id,type,data=null) {
-                
+
         $('#menuId').val(id);
         if(data) {
             var c_date = data.split('+');
