@@ -210,7 +210,7 @@
                                     <div id="coupon_code_msgs" style="color:red"></div>
                                 </div>
                                 <div id="prmotioncode">
-
+                                
                                     <h6 class="mb-0 text-dark couponcode"></h6>
                                     <!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.
                                     </p> -->
@@ -349,25 +349,31 @@
                                     <span>Subtotal</span>
                                     <!-- <span>${{ number_format($cartTotal, '2') }}</span> -->
                                     <?php
-                                        $cardSubTotal = $cart['sub_total'] ?? "0";
+                                        $cartSubTotal = $cart['sub_total'] ?? "0";
                                     ?>
-                                    <span>${{ number_format($cardSubTotal, '2') }}</span>
+                                    <span>${{ number_format($cartSubTotal, '2') }}</span>
                                     <input type="hidden" name="cart_charge" id="cart_charge"
                                         value="{{ number_format($cartTotal, '2') }}">
                                 </div>
                                 <div
                                     class="d-flex align-items-center justify-content-between w-100 wd-wrapper-total-first">
                                     <span>Discount</span>
-                                    <span id="discount">${{ number_format($cart['discount_charge'], '2') }}</span>
+                                    <?php
+                                    $cartdiscountcharge = $cart['discount_charge'] ?? "0";
+                                    ?>
+                                    <span id="discount">${{ number_format($cartdiscountcharge, '2') }}</span>
                                     <input type="hidden" name="discount_charge"
                                         value="${{ number_format($cart['discount_charge'], '2') }}">
                                 </div>
                                 <div
                                     class="d-flex align-items-center justify-content-between w-100 wd-wrapper-total-first">
                                     <span>Sales Tax</span>
-                                    <span id="sales_tax">${{ number_format($cart['tax_charge'], '2') }}</span>
+                                    <?php
+                                    $cartsalestaxcharge = $cart['tax_charge'] ?? "0";
+                                    ?>
+                                    <span id="sales_tax">${{ number_format($cartsalestaxcharge , '2') }}</span>
                                     <input type="hidden" name="sales_tax" id="sales_tax"
-                                        value="{{ $cart['tax_charge'] }}">
+                                        value="{{ number_format($cart['tax_charge'],'2')  }}">
                                 </div>
                                 <div
                                     class="d-flex align-items-center justify-content-between w-100 wd-wrapper-total-first">
@@ -382,7 +388,10 @@
                                 </div>
                                 <div class="d-flex align-items-center justify-content-between w-100 wd-wrapper-total">
                                     <span>Total</span>
-                                    <span id="total_price">${{ number_format($cart['total_due'], '2') }}</span>
+                                    <?php
+                                    $carttotaldue = $cart['total_due'] ?? "0";
+                                    ?>
+                                    <span id="total_price">${{ number_format($carttotaldue, '2') }}</span>
                                     <input type="hidden" name="grand_total" id="grand_total"
                                         value="{{ $cart['total_due'] }}">
                                     <input type="hidden" name="grand_total_ajax" id="grand_total_ajax"
