@@ -225,6 +225,7 @@ class OrdersController extends Controller
                     $order->discount_charge =$request->discount_charge;
                     $order->tip_amount =$request->newtips;
                     $order->sales_tax=$request->sales_tax;
+                    $order->platform='W';
                     $order->is_feature = ($orderDetails['order_status'] == 1) ? 1 : 0;
                     $order->order_status = null;
                     $order->order_progress_status = Config::get('constants.ORDER_STATUS.INITIAL');

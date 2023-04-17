@@ -90,6 +90,7 @@ class ChatController extends Controller
             // $database->getReference(Config::get('constants.FIREBASE_DB_NAME'))->update($updates);
             $url = Config::get('constants.FIREBASE_DB_NAME').'/'.$restaurant->restaurant_id.'/'.$order_id."/".$customer_id.'/';
 
+
             $database->getReference($url)->push($postData);
 
 

@@ -25,7 +25,7 @@ use App\Notifications\PlaceOrderCard;
 use App\Notifications\PlaceFutureOrderCash;
 use App\Notifications\PlaceFutureOrderCard;
 use DB;
- 
+
 class OrderController extends Controller
 {
     public function getOrderList(Request $request)
@@ -127,7 +127,7 @@ class OrderController extends Controller
             $order = new Order;
             $order->uid = $uid;
             $order->restaurant_id = $request->post('restaurant_id');
-            // $order->promotion_id = $check_cart->promotion_id; 
+            // $order->promotion_id = $check_cart->promotion_id;
             $order->order_number = random_int(1000,1000000000000000);
             $order->payment_card_id = ($request->post('isCash') == 1) ? $request->post('payment_card_id') : NULL;
             $order->isCash = $request->post('isCash');
@@ -148,6 +148,7 @@ class OrderController extends Controller
             $order->delivery_charge = $request->post('delivery_charge');
             $order->sales_tax = $request->post('sales_tax');
             $order->comments = $request->post('comments');
+            $order->platform = $request->post('platform');
             $order->grand_total = $request->post('grand_total');
             $order->order_progress_status = Config::get('constants.ORDER_STATUS.INITIAL');
             if($order->save()){
@@ -221,7 +222,7 @@ class OrderController extends Controller
                         case '0':
                             $restaurant->notify(new PlaceOrderCash($restaurant));
                             break;
- 
+
                         default:
                             $restaurant->notify(new PlaceOrderCard($restaurant));
                             break;
