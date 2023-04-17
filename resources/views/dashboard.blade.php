@@ -227,6 +227,7 @@
 
 
                     firebase.database().ref(url).on('value', function(snapshot) {
+                        $("#chat-" + orderId).addClass("d-none");
                         var value = snapshot.val();
                         var count = 0;
                         $.each(value, function(index, value) {
@@ -236,6 +237,7 @@
                         });
                         $("#chat-" + orderId).html(count);
                         if (count > 0) {
+                            $("#chat-" + orderId).removeClass("d-none");
                             $("#chat-" + orderId).parent().css("background-color", "#007bff");
                             $("#chat-" + orderId).parent().css("color", "#ffff");
                         }

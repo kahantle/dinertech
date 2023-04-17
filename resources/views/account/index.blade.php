@@ -125,7 +125,7 @@
                                     <h4 class="panel-title">
                                         <a role="button" href="{{ route('hours') }}" aria-expanded="false"
                                             aria-controls="collapseThree">
-                                            Hours of operations
+                                            Hours of Operation
                                             <i class="arrow-right-heavy-orange">Right</i>
                                         </a>
                                     </h4>
@@ -187,9 +187,13 @@
                                         <p>Online Orderning System (off/on)</p>
                                     </div>
                                     <div class="switch-btn">
-                                        <input type="checkbox" class="makeCallNotificationUpdate" id="is_online_order"
-                                            data-type="location" value="{{ $user->online_order_status }}"
-                                            @if ($user->online_order_status) ? checked @endif>
+                                        {{-- <input type="checkbox" class="makeCallNotificationUpdate" id="is_online_order"
+                                            data-type="location" value="{{ $user->location_tracking }}"
+                                            @if ($user->location_tracking) ? checked @endif>
+                                        <span><small></small></span> --}}
+                                        <input type="checkbox" class="" id="is_online_order"
+                                            data-type="location" value="{{ $user->location_tracking }}"
+                                            @if ($user->location_tracking) ? checked @endif>
                                         <span><small></small></span>
                                     </div>
                                 </label>
@@ -222,7 +226,7 @@
                             <div class="checkbox switcher">
                                 <label for="is_app_notification">
                                     <div class="title">
-                                        <p>Enable Account Pin</p>
+                                        <p>Enable Account Add/Update Pin</p>
                                     </div>
                                     <div class="switch-btn">
                                         <input type="checkbox" class="makeCallNotificationUpdate"
@@ -236,7 +240,7 @@
                                 {{-- Add New Section By Dev --}}
                                 <label for="is_app_pin">
                                     <div class="title">
-                                        <p>Enable Menu/Category/Modifier Pin</p>
+                                        <p>Enable Menu/Category/Modifier Add/Update Pin</p>
                                     </div>
                                     <div class="switch-btn">
                                         <input type="checkbox"
@@ -284,6 +288,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" type="text/javascript"></script>
 <script>
     $(document).ready(function() {
+
+        /* Menu Pin Setup */
         $('#is_app_pin').change(function() {
             if(this.checked) {
                 Swal.fire({
@@ -327,7 +333,63 @@
                 });
             }
         });
+
+        /* Online Ordering Swal */
+        $('#is_online_order').change(function() {
+            if(this.checked) {
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "You want to change Online Orderning setting?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes"
+                }).then(function(result) {
+                    if (result.value) {
+                        var type = 'ON';
+                        OnlineOrdering(type);
+                    } else if (result.dismiss === "cancel") {
+
+                    }
+                });
+            }else{
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "You want to change Online Orderning setting?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes"
+                }).then(function(result) {
+                    if (result.value) {
+                        var type = 'OFF';
+                        OnlineOrdering(type);
+                    } else if (result.dismiss === "cancel") {
+
+                    }
+                });
+            }
+        });
+
+        /* Online Ordering Ajax Call */
+        function OnlineOrdering(type) {
+            var url = '{{route('online.ordering')}}';
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: url,
+                type: "POST",
+                dataType: "json",
+                data: {
+                    type : type
+                },
+                success: function (res) {
+                    toastr.success('Done');
+                    location.reload();
+                },
+            });
+        }
     })
+
 </script>
 
 

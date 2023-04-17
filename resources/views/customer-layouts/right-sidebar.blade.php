@@ -263,7 +263,9 @@
                             <div class="d-flex align-items-center justify-content-between w-100 wd-wrapper-total-first">
                                 <span>Subtotal</span>
                                 <!-- <span>${{ number_format($cartTotal, '2') }}</span> -->
+
                                 <span>${{ number_format($cart['sub_total'], '2') }}</span>
+
                                 <input type="hidden" name="cart_charge" id="cart_charge"
                                     value="{{ number_format($cartTotal, '2') }}">
                             </div>

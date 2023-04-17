@@ -64,7 +64,7 @@ class AccountController extends Controller
 
                 if ($user->save()) {
                     $returns['success'] = true;
-                    $returns['message'] = ucfirst($request->post('type')) . " notification change successfully!";
+                    $returns['message'] = ucfirst($request->post('type')) . " Notifications updated successfully!";
                 } else {
                     $returns['success'] = false;
                     $returns['message'] = ucfirst($request->post('type')) . " notification does not change successfully!";
@@ -89,7 +89,7 @@ class AccountController extends Controller
 
                 if ($restaurant->save()) {
                     $returns['success'] = true;
-                    $returns['message'] = "Sales tax change successfully!";
+                    $returns['message'] = "Sales Tax successfully updated!";
                 } else {
                     $returns['success'] = false;
                     $returns['message'] = "Sales tax does not change successfully!";
@@ -210,5 +210,30 @@ class AccountController extends Controller
             $returns['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
             return response()->json($returns);
         }
+    }
+
+    public function onlineOrdering(Request $request)
+    {
+        try {
+            $type = $request->type;
+
+            $uid = Auth::user()->uid;
+            $user = User::where('uid', $uid)->first();
+            if ($type === 'ON') {
+                $user->update(['location_tracking' => 1]);
+            } else {
+                $user->update(['location_tracking' => 0]);
+            }
+
+            $returns['success'] = true;
+            $returns['message'] = "Online Ordering successfully!";
+            return response()->json($returns);
+        } catch (\Throwable $th) {
+            $returns['success'] = false;
+            $returns['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
+            return response()->json($returns);
+        }
+
+
     }
 }
