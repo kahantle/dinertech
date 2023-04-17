@@ -148,7 +148,7 @@ class OrderController extends Controller
             $order->delivery_charge = $request->post('delivery_charge');
             $order->sales_tax = $request->post('sales_tax');
             $order->comments = $request->post('comments');
-            $order->platform = $request->post('platform');
+            $order->platform = $request->post('platform') ? $request->post('platform') : NULL;
             $order->grand_total = $request->post('grand_total');
             $order->order_progress_status = Config::get('constants.ORDER_STATUS.INITIAL');
             if($order->save()){
