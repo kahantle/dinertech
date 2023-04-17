@@ -210,7 +210,7 @@
                                     <div id="coupon_code_msgs" style="color:red"></div>
                                 </div>
                                 <div id="prmotioncode">
-                              
+                           
                                     <h6 class="mb-0 text-dark couponcode"></h6>
                                     <!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.
                                     </p> -->
@@ -298,12 +298,12 @@
                                     $totalwithsalestax = ($cart['sub_total'] ?? 0.00) + ($cart['tax_charge'] ?? 0.00);
                                 @endphp
                                 <div class="line-button-area mb-2">
-                                    <button type="button" value="{{ ($totalwithsalestax * 15) / 100 }}"
+                                    <button type="button" value="{{ round($totalwithsalestax * 15) / 100 ,2}}"
                                         class="btn-area tip"><span>15%</span><br><span>${{round($totalwithsalestax * 15) / 100 ,2}}</button>
-                                    <button type="button" value="{{ ($totalwithsalestax * 18) / 100 }}"
+                                    <button type="button" value="{{ round($totalwithsalestax * 18) / 100 ,2}}"
                                         class="btn-area tip"><span>18%
                                         </span><br><span>${{ round($totalwithsalestax * 18) / 100 ,2}}</span></button>
-                                    <button type="button" value="{{ ($totalwithsalestax * 20) / 100 }}"
+                                    <button type="button" value="{{ round($totalwithsalestax * 20) / 100 ,2}}"
                                         class="btn-area tip"><span>20%
                                         </span><br><span>${{ round ($totalwithsalestax * 20) / 100 ,2}}</button>
                                 </div>
