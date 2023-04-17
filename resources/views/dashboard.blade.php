@@ -93,7 +93,7 @@
                                                     <p>Order Ready</p>
                                                 </button>
                                             @else
-                                                <button class="disabled-order-print">
+                                                <button class="disabled-order-print OrderReadyBtn" data-id="{{ $order->order_id }}">
                                                     <img src="{{ asset('assets/images/food-delivery.png') }}">
                                                     <p>Order Ready</p>
                                                 </button>
@@ -243,7 +243,10 @@
                 });
             }
 
-
+            $('.OrderReadyBtn').click(function() {
+                var orderId = $(this).attr("data-id");
+                alert(orderId);
+            })
         });
 
         /* Get Unread Count */

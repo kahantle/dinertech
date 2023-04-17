@@ -94,9 +94,13 @@
                                         @endif
 
                                         <li>
+                                            <p>Sales Tax</p>
+                                            <p>${{ number_format($order->sales_tax, 2) }}</p>
+                                        </li>
+                                        {{-- <li>
                                             <p>Tax</p>
                                             <p>${{ number_format($order->tax_charge, 2) }}</p>
-                                        </li>
+                                        </li> --}}
                                         <li class="total">
                                             <p><b>Grand Total</b></p>
                                             <p><b>${{ number_format($order->grand_total, 2) }}</b></p>
