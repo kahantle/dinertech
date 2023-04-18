@@ -129,6 +129,31 @@ class OrdersController extends Controller
             return redirect()->back()->with('error', 'Please Select Order Timing.');
         }
 
+        //Restaurant Open or Not
+        $restaurantdays  = RestaurantHours::where('restaurant_id',1)->get();
+
+        $testDay  = [];
+        foreach($restaurantdays as $day) {
+            $currentday=lcfirst(date('l'));
+            $testDay[]= $day->day == $currentday;
+        }
+
+        $restaurantday  = RestaurantHours::with('allTimes')->where('restaurant_id',1)->first();
+        $testResult  = [];
+        if (in_array(true,$testDay)) {
+            foreach($restaurantday->allTimes as $time){
+                $openingtime =date('h:i A', strtotime($time->opening_time));
+                $closingtime =date('h:i A', strtotime($time->closing_time));
+                $openTime =date('h:i A', time());
+                $testResult[] =$openingtime <= $openTime &&  $openTime <= $closingtime;
+            }
+        }
+        //testresult false to in if condiftion
+        if (!in_array(true,$testResult)) {
+            return redirect()->back()->with('error', 'Oops! Betty Burger is not open for orders at the time selected. Please select another time');
+        }
+        //Restaurant Open close code over
+
         $orderDetails = ['order_status' => $request->order_status, 'menu_item' => json_decode(base64_decode($request->menuItem)), 'instruction' => $request->instruction, 'cart_charge' => $request->cart_charge, 'sales_tax' => $request->sales_tax, 'discount_charge' => $request->discount_charge, 'orderDate' => $request->orderDate, 'orderTime' => $request->orderTime, 'grand_total' => $request->grand_total];
 
         $uid = Auth::user()->uid;
