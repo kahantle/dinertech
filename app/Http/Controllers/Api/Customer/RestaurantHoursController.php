@@ -8,6 +8,7 @@ use Validator;
 use App\Models\Restaurant;
 use App\Models\RestaurantHours;
 use Config;
+use DateTime;
 
 
 class RestaurantHoursController extends Controller
@@ -38,7 +39,7 @@ class RestaurantHoursController extends Controller
                 $errors['debug'] = $th->getMessage();
             }
             return response()->json($errors, 500);
-        } 
+        }
     }
     public function checkAvailability(Request $request)
     {
@@ -51,7 +52,10 @@ class RestaurantHoursController extends Controller
         $testResult  = [];
 
         foreach($data->allTimes as $time) {
-            $testResult[] = $time->opening_time <= $request->time && $request->time <= $time->closing_time;
+            $openingtime =date('h:i A', strtotime($time->opening_time));
+            $closingtime =date('h:i A', strtotime($time->closing_time));
+            $openTime =date('h:i A', strtotime($request->time));
+            $testResult[] =$openingtime <= $openTime &&  $openTime <= $closingtime;
         }
 
         if (!in_array(true,$testResult)) {

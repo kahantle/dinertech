@@ -14,6 +14,7 @@ use App\Models\MenuItem;
 use App\Models\OrderMenuGroup;
 use App\Models\OrderMenuGroupItem;
 use App\Models\OrderMenuItem;
+use App\Models\RestaurantHours;
 use App\Models\RestaurantUser;
 use App\Models\User;
 use Auth;
