@@ -210,7 +210,7 @@
                                     <div id="coupon_code_msgs" style="color:red"></div>
                                 </div>
                                 <div id="prmotioncode">
-                                
+                              
                                     <h6 class="mb-0 text-dark couponcode"></h6>
                                     <!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.
                                     </p> -->
@@ -363,7 +363,7 @@
                                     ?>
                                     <span id="discount">${{ number_format($cartdiscountcharge, '2') }}</span>
                                     <input type="hidden" name="discount_charge"
-                                        value="${{ number_format($cart['discount_charge'], '2') }}">
+                                        value="${{ number_format($cartdiscountcharge, '2') }}">
                                 </div>
                                 <div
                                     class="d-flex align-items-center justify-content-between w-100 wd-wrapper-total-first">
@@ -373,7 +373,7 @@
                                     ?>
                                     <span id="sales_tax">${{ number_format($cartsalestaxcharge , '2') }}</span>
                                     <input type="hidden" name="sales_tax" id="sales_tax"
-                                        value="{{ number_format($cart['tax_charge'],'2')  }}">
+                                        value="{{ number_format($cartsalestaxcharge,'2')  }}">
                                 </div>
                                 <div
                                     class="d-flex align-items-center justify-content-between w-100 wd-wrapper-total-first">
@@ -393,9 +393,9 @@
                                     ?>
                                     <span id="total_price">${{ number_format($carttotaldue, '2') }}</span>
                                     <input type="hidden" name="grand_total" id="grand_total"
-                                        value="{{ $cart['total_due'] }}">
+                                        value="{{$carttotaldue}}">
                                     <input type="hidden" name="grand_total_ajax" id="grand_total_ajax"
-                                        value="{{ $cart['total_due'] }}">
+                                        value="{{$carttotaldue}}">
                                 </div>
                             </div>
                             <input type="hidden" name="order_status" id="order_status" value="0">
