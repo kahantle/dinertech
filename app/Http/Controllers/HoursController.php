@@ -38,6 +38,10 @@ class HoursController extends Controller
 
     public function store(HourRequest $request)
     {
+        // foreach(json_decode($request->groupOfTime) as $timevalue){
+        //     dd($timevalue);
+        // }
+
       $uid = Auth::user()->uid;
       $restaurant = Restaurant::where('uid', $uid)->first();
         try {
@@ -53,15 +57,29 @@ class HoursController extends Controller
                   $hour->day            = strtolower($value);
                   $hour->save();
 
-                  foreach($request->post('opening_hours') as $timeKey => $timeValue){
-                      $hour_time = new RestaurantHoursTimes;
-                      $hour_time->restaurant_hour_id = $hour->restaurant_hour_id;
-                      $hour_time->hours_group_id = $groupId;
-                      $hour_time->restaurant_id = $restaurant->restaurant_id;
-                      $hour_time->opening_time = $timeValue;
-                      $hour_time->closing_time = $request->post('closing_hours')[$timeKey];
-                      $hour_time->save();
-                  }
+                    foreach(json_decode($request->groupOfTime) as $timevalue){
+                        
+                        $hour_time = new RestaurantHoursTimes;
+                        $hour_time->restaurant_hour_id = $hour->restaurant_hour_id;
+                        $hour_time->hours_group_id = $groupId;
+                        $hour_time->restaurant_id = $restaurant->restaurant_id;
+                        $hour_time->opening_time = $timevalue->start;
+                        $hour_time->closing_time = $timevalue->end;
+                        // $hour_time->hour_type = $timeValue->type;
+                        // $hour_time->opening_time = date("g:i A", strtotime($timeValue));
+                        // $hour_time->closing_time = date("g:i A", strtotime($request->post('closing_hours')[$timeKey]));
+                        $hour_time->save();
+                    }
+
+                    //   foreach($request->post('opening_hours') as $timeKey => $timeValue){
+                    //       $hour_time = new RestaurantHoursTimes;
+                    //       $hour_time->restaurant_hour_id = $hour->restaurant_hour_id;
+                    //       $hour_time->hours_group_id = $groupId;
+                    //       $hour_time->restaurant_id = $restaurant->restaurant_id;
+                    //       $hour_time->opening_time = date("g:i A", strtotime($timeValue));
+                    //       $hour_time->closing_time = date("g:i A", strtotime($request->post('closing_hours')[$timeKey]));
+                    //       $hour_time->save();
+                    //   }
                 }
 
                 Toastr::success('Hours added successfully.','', Config::get('constants.toster'));
@@ -96,7 +114,7 @@ class HoursController extends Controller
 
     $restaurantHours = RestaurantHours::where('hours_group_id','!=', $id)
     ->where('restaurant_id',$restaurant->restaurant_id)->pluck('day')->toArray();
-  
+
     return view('hours.edit',compact('days','hoursdata','restaurantHours','hours_group_id'));
   }
 
@@ -128,7 +146,7 @@ class HoursController extends Controller
         }
         Toastr::success('Hours updated successfully.','', Config::get('constants.toster'));
         return redirect()->route('hours');
-        
+
     } catch (\Throwable $th) {
         $errors['success'] = false;
         $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
@@ -137,7 +155,7 @@ class HoursController extends Controller
         }
         Toastr::error('Hours not updated successfully.','', Config::get('constants.toster'));
         return redirect()->route('hours');
-    }   
+    }
   }
 
   public function delete($id)
