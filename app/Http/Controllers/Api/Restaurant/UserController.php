@@ -337,7 +337,7 @@ class UserController extends Controller
     {
         try {
             $uid = auth('api')->user()->uid;
-            User::where('uid', $uid)->update(['pin' => $request->post('pin')]);
+            User::where('uid', $uid)->update(['pin' => $request->post('pin'), 'pin_notifications' => 'true']);
 
             return response()->json(['message' => 'Pin set successfully.', 'success' => true], 200);
         } catch (\Throwable $th) {
