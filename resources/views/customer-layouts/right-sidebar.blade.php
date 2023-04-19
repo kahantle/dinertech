@@ -210,7 +210,7 @@
                                     <div id="coupon_code_msgs" style="color:red"></div>
                                 </div>
                                 <div id="prmotioncode">
-                
+                         
                                     <h6 class="mb-0 text-dark couponcode"></h6>
                                     <!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.
                                     </p> -->
@@ -310,7 +310,7 @@
                                 <div class="line-button">
                                     <button type="button" class="btn-big custom"> <span> Custom</span><br><span>$<span
                                                 id="cutomtip">0.00</span></span></button>
-                                    <button type="button" class="btn-big" disabled><span> No Tip
+                                    <button type="button" value="0.00" class="btn-big notip" disabled><span> No Tip
                                         </span><br><span></span></button>
                                 </div>
                             </div>

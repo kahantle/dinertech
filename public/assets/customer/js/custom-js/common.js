@@ -141,6 +141,15 @@ $(function() {
 
      });
 
+     $(document).on("click", ".notip", function () {
+        var text = $(this).val();
+        var total_price=$("#grand_total_ajax").val();
+        $("#tipsres").text(text);
+        $("#newtips").val(text);
+        $("#total_price").text("$"+total_price);
+        $("#grand_total").val(total_price);
+     });
+
     const addToCart = (data, menu_id = null) => {
         $.ajax({
             type: "POST",
