@@ -94,7 +94,7 @@ Route::namespace ('Api')->group(function () {
                 Route::post('/create/connection/token', 'StripeController@getConnectionToken')->name('customer.stripe.createConnectionToken');
                 Route::post('/create/charge', 'StripeController@createCharge')->name('customer.stripe.createCharge');
             });
-            Route::prefix('loyalties')->group(function(){ 
+            Route::prefix('loyalties')->group(function(){
                 Route::post('/','LoyaltyRuleController@index')->name('customer.loyalties');
             });
             Route::prefix('cart')->group(function(){
@@ -108,7 +108,7 @@ Route::namespace ('Api')->group(function () {
                 Route::post('/remove-promotion','CartController@removePromotion');
                 Route::post('/apply-promotion','CartController@applyPromotion');
             });
-        }); 
+        });
     });
 
     //API FOR restaurant
@@ -165,7 +165,7 @@ Route::namespace ('Api')->group(function () {
             Route::post('/category-menu', 'MenuItemController@getMenuListByCategory')->name('customer.category.menu.list');
             Route::prefix('promotion-type')->group(function () {
                 Route::post('/', 'PromotionTypeController@getRecords')->name('restaurant.promotion.type.list');
-            }); 
+            });
             Route::prefix('promotion')->group(function () {
                 Route::post('/add', 'PromotionController@addRecord')->name('restaurant.promotion.add');
                 Route::post('/list', 'PromotionController@getRecords')->name('restaurant.promotion.get');

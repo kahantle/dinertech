@@ -24,6 +24,7 @@ class ChatController extends Controller
    public function index(Request $request){
 
         try{
+            $last_messages = "";
             $database = app('firebase.database');
             $user = Auth::user()->uid;
             $restaurant = Restaurant::where('uid', $user)->first();
