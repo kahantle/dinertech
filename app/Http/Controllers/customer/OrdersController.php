@@ -142,9 +142,9 @@ class OrdersController extends Controller
         $testResult  = [];
         if (in_array(true,$testDay)) {
             foreach($restaurantday->allTimes as $time){
-                $openingtime =date('h:i A', strtotime($time->opening_time));
-                $closingtime =date('h:i A', strtotime($time->closing_time));
-                $openTime =date('h:i A', time());
+                $openingtime =date('H:i A', strtotime($time->opening_time));
+                $closingtime =date('H:i A', strtotime($time->closing_time));
+                $openTime =date('H:i A', time());
                 $testResult[] =$openingtime <= $openTime &&  $openTime <= $closingtime;
             }
         }

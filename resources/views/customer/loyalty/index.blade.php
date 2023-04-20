@@ -30,6 +30,7 @@
                                                 $notEligable = $available_points < $loyaltyPoints;
                                             @endphp
 
+
                                             <div class="col-md-4">
                                                 <a class="card {{ $notEligable ? 'card-points-blog-inner' : '' }}">
                                                     <div class="card-body p-0">
