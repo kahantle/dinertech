@@ -58,14 +58,14 @@ class HoursController extends Controller
                   $hour->save();
 
                     foreach(json_decode($request->groupOfTime) as $timevalue){
-                        
+
                         $hour_time = new RestaurantHoursTimes;
                         $hour_time->restaurant_hour_id = $hour->restaurant_hour_id;
                         $hour_time->hours_group_id = $groupId;
                         $hour_time->restaurant_id = $restaurant->restaurant_id;
                         $hour_time->opening_time = $timevalue->start;
                         $hour_time->closing_time = $timevalue->end;
-                        // $hour_time->hour_type = $timeValue->type;
+                        $hour_time->hour_type = $timevalue->type;
                         // $hour_time->opening_time = date("g:i A", strtotime($timeValue));
                         // $hour_time->closing_time = date("g:i A", strtotime($request->post('closing_hours')[$timeKey]));
                         $hour_time->save();
