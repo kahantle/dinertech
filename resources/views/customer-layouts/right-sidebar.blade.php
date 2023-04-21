@@ -142,6 +142,7 @@
                                                     </a>
                                                 </div>
                                             </div>
+                                            @if($item->is_loyalty==0)
                                             <div
                                                 class="product-quantity product-quantity-{{ $item->menu_id }} d-inline-flex mt-2">
                                                 <span class="product-quantity-minus"
@@ -154,6 +155,7 @@
                                                 <span class="product-quantity-plus"
                                                     data-cart-menu-item-id="{{ $item->cart_menu_item_id }}"></span>
                                             </div>
+                                            @endif
                                             <div class="my-2">
                                                 @foreach ($item->CartMenuGroups as $modifier_group)
                                                     <div>
@@ -210,7 +212,6 @@
                                     <div id="coupon_code_msgs" style="color:red"></div>
                                 </div>
                                 <div id="prmotioncode">
-                               
                                     <h6 class="mb-0 text-dark couponcode"></h6>
                                     <!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.
                                     </p> -->

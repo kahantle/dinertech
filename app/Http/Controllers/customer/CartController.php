@@ -243,8 +243,7 @@ class CartController extends Controller
                          }
                     }
                 }
-        }
-
+            }
     }
 
     public function removeItem(Request $request)
