@@ -215,8 +215,8 @@
                                     @php
                                           $prmotion_id = $cart['promotion_id'] ?? "0";
                                     @endphp
-                                    <input type="text" name="promotion_id" id="promotion_id" value={{$prmotion_id}}>
-                                   
+                                    <input type="hidden" name="promotion_id" id="promotion_id" value={{$prmotion_id}}>
+                               
                                     <h6 class="mb-0 text-dark couponcode"></h6>
                                     <!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.
                                     </p> -->
@@ -227,14 +227,14 @@
                             <h5 class="md-payment-blog">Payment Methods</h5>
 
                             <div class="form-check w-100 align-items-center d-flex custom-radio">
-                                <input class="form-check-input" type="radio" name="paymentType" value="card"
+                                <input class="form-check-input" type="radio" name="paymentType" value="Credit Card"
                                     id="card_payment" checked>
                                 <label class="form-check-label payment-label" for="card_payment">
                                     Card
                                 </label>
                             </div>
                             <div class="form-check w-100 align-items-center d-flex">
-                                <input class="form-check-input" type="radio" name="paymentType" value="cash"
+                                <input class="form-check-input" type="radio" name="paymentType" value="Cash"
                                     id="cash_payment">
                                 <label class="form-check-label payment-label" for="cash_payment">
                                     Cash

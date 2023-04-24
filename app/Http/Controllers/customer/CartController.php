@@ -53,10 +53,9 @@ class CartController extends Controller
 
     public function addToCart(Request $request)
     {
-
         $uid = auth()->id();
         $cart = Cart::where('uid',$uid)->first();
-        $menuItem = MenuItem::where('menu_id',$request->menuId)->first();
+        $menuItem = MenuItem::where('menu_id',$request->data['menuId'])->first();
         $restaurantId = session()->get('restaurantId');
         $restaurantid = Restaurant::where('restaurant_id',$restaurantId)->first();
 
@@ -81,7 +80,7 @@ class CartController extends Controller
             $cart->restaurant_id = 1;
             $cart->uid = $uid;
             $cart->order_type = Config::get('constants.ORDER_TYPE.2');
-            $cart->is_payment = Config::get('constants.ORDER_PAYMENT_TYPE.CARD_PAYMENT');
+            $cart->is_payment =$request->data['paymentType'];
             $cart->save();
         }
         $check_cart = Cart::where('uid',$uid)->where('restaurant_id', $restaurantId)->first();

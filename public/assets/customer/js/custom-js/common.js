@@ -152,13 +152,16 @@ $(function() {
      });
 
     const addToCart = (data,paymentType, menu_id = null) => {
+        data['paymentType'] = paymentType;
         $.ajax({
             type: "POST",
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
             },
             url: "customer/add-to-cart",
-            data: data,
+            data:  {
+                data
+            },
             dataType: "html",
             success: function (response) {
                 let menuId = menu_id ? menu_id : data.menuId;
