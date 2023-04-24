@@ -53,9 +53,10 @@ class CartController extends Controller
 
     public function addToCart(Request $request)
     {
+
         $uid = auth()->id();
         $cart = Cart::where('uid',$uid)->first();
-        $menuItem = MenuItem::where('menu_id',$request->data['menuId'])->first();
+        $menuItem = MenuItem::where('menu_id',$request->menuId)->first();
         $restaurantId = session()->get('restaurantId');
         $restaurantid = Restaurant::where('restaurant_id',$restaurantId)->first();
 
@@ -80,7 +81,7 @@ class CartController extends Controller
             $cart->restaurant_id = 1;
             $cart->uid = $uid;
             $cart->order_type = Config::get('constants.ORDER_TYPE.2');
-            $cart->is_payment =$request->data['paymentType'];
+            $cart->is_payment =$request->paymentType ?? 'Credit Card';
             $cart->save();
         }
         $check_cart = Cart::where('uid',$uid)->where('restaurant_id', $restaurantId)->first();
@@ -173,6 +174,8 @@ class CartController extends Controller
 
     public function quantityChange(Request $request)
     {
+        dd($request->all());
+
         $uid = auth()->id();
         $restaurantId = session()->get('restaurantId');
         $check_cart = Cart::where('uid',$uid)->where('restaurant_id', $restaurantId)->first();
@@ -207,6 +210,7 @@ class CartController extends Controller
                         return response()->json(['success' => false], 200);
                     }
                 }
+                
             }
         }
         else{
