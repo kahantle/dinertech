@@ -8,5 +8,5 @@ class PromotionType extends Model
 {
     protected $primaryKey = 'promotion_type_id';
 
-  
+
 }

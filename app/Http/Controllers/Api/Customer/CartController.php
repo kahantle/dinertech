@@ -582,6 +582,7 @@ class CartController extends Controller
                 'promotion_code' => $request->post('promotion_code')
             ])->first();
 
+
             if (!$promotion) {
                 return response()->json(['message' => "Invalid promotion code !", 'success' => false]) ;
             }
@@ -603,6 +604,14 @@ class CartController extends Controller
             $uid = auth('api')->user()->uid;
             $restaurantId = $request->post('restaurant_id');
 
+            // $promotionTypes = PromotionType::where('promotion_type_id',$promotion->promotion_type_id)->first();
+
+            // /* Promotions Helper logic function */
+            // $test[] = [$promotionTypes->promotion_type_id];
+            // // apply_promotion($promotionTypes->promotion_name,$promotion,$uid,$restaurantId,$cart);
+            // if(apply_promotion($promotionTypes->promotion_name,$promotion,$uid,$restaurantId,$cart) == true){
+            // }
+
             $promotionTypes = PromotionType::all();
             foreach($promotionTypes as $promotion_type){
                     /* Promotions Helper logic function */
@@ -611,6 +620,7 @@ class CartController extends Controller
                         break;
                     }
             }
+
 
             $cartItem = Cart::where('restaurant_id',$restaurantId)->where('uid',$uid)->first();
             $cartItem->save();
