@@ -322,7 +322,7 @@ class NewPromotionContoller extends Controller
             Cart::where('uid',$uid)->where('restaurant_id',$restaurant)->where('cart_id',$request->cart_id)->update(['sub_total' => number_format($totalPrice,2),'discount_charge'=>number_format($item,2),'tax_charge' =>number_format($taxCharge,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id'=>$result->promotion_id]);
         }
 
-        return response()->json(['msg'=>$msg,'status'=>$status,'couponcode'=> $couponcode,'discount'=>$item,'itemPrice'=>$itemPrice]);
+        return response()->json(['msg'=>$msg,'status'=>$status,'couponcode'=> $couponcode,'discount'=>$item,'itemPrice'=>$itemPrice,'promotion_id'=>$result->promotion_id]);
 
     }
     public function remove_coupon_code(Request $request)

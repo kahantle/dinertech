@@ -37,10 +37,12 @@ function applyCoupenCode() {
             success: function(result) {
                 var discount=parseFloat(result.discount);
                 if(result.status=='success'){
+                    console.log(promotion_id);
                     $('.coupenremove').show();
                     $('#coupon_code_msgs').hide();
                     $('#discount').html('$' + discount.toFixed(2));
                     $('#total_price').html('$' + result.itemPrice.toFixed(2));
+                    $('#promotion_id').val(result.promotion_id);
                     $('.couponcode').html(result.couponcode);
                     $(".apply-content").css("display", "none");
                     $(".Promotion-content").css("display", "block");

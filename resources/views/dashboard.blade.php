@@ -245,10 +245,11 @@
                 });
             }
 
-            $('.OrderReadyBtn').click(function() {
-                var orderId = $(this).attr("data-id");
-                alert(orderId);
-            })
+            // //Order Ready
+            // $('.OrderReadyBtn').click(function() {
+            //     var orderId = $(this).attr("data-id");
+            //     // alert(orderId);
+            // })
         });
 
         /* Get Unread Count */

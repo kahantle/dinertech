@@ -182,6 +182,7 @@ class CartController extends Controller
             if($check_cart){
                 //   $cartItem = CartItem::where('cart_id',$check_cart->cart_id)->first();
                   $cartItem = CartItem::where('cart_menu_item_id',$request->cartMenuItemId)->first();
+                  $menuItem=MenuItem::where('menu_id',$request->post('menu_id'))->first();
                 if($cartItem){
                     $menuOldQuantity = $cartItem->menu_qty;
                     $menuprice=$cartItem->menu_price;
@@ -242,8 +243,8 @@ class CartController extends Controller
                             }
                          }
                     }
-                }
             }
+        }
     }
 
     public function removeItem(Request $request)

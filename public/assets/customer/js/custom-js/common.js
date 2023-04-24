@@ -60,7 +60,8 @@ $(function() {
 
     $(document).on("click", ".add-to-order", function () {
         var menuId = $(this).attr("data-menu-id");
-        $(this).hasClass("have-modifiers") ? showMenuModifiers(menuId) : addToCart({menuId : menuId});
+        var paymentType = $("input[name='paymentType']:checked").val();;
+        $(this).hasClass("have-modifiers") ? showMenuModifiers(menuId) : addToCart({menuId : menuId},paymentType);
         $("#tips").load(location.href + " #tips");
     });
 
@@ -103,7 +104,7 @@ $(function() {
         var menuId = $(this).data("menu-id");
         var cartMenuItemId = $(this).data("cart-menu-item-id");
         console.log(cartMenuItemId);
-        $(this).hasClass("have-modifiers") ? modalForPlusWithModifiers(cartMenuItemId) : quantityChange(cartMenuItemId, "increament");
+        $(this).hasClass("have-modifiers") ? modalForPlusWithModifiers(cartMenuItemId) : quantityChange(cartMenuItemId, "increament",menuId);
         $("#tips").load(location.href + " #tips");
     });
 
@@ -150,7 +151,7 @@ $(function() {
         $("#grand_total").val(total_price);
      });
 
-    const addToCart = (data, menu_id = null) => {
+    const addToCart = (data,paymentType, menu_id = null) => {
         $.ajax({
             type: "POST",
             headers: {
@@ -221,7 +222,7 @@ $(function() {
         });
     }
 
-    const quantityChange = (cartMenuItemId, action) => {
+    const quantityChange = (cartMenuItemId, action,menuId) => {
         $.ajax({
             type: "POST",
             headers: {
@@ -230,7 +231,8 @@ $(function() {
             url: baseUrl + "/quantity-change",
             data: {
                 cartMenuItemId: cartMenuItemId,
-                action: action
+                action: action,
+                menu_id:menuId
             },
             success: response => {
                 if (response) {

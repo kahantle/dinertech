@@ -246,6 +246,7 @@ class OrdersController extends Controller
                     $order->payment_card_id = $cardId;
                     $order->isCash = Config::get('constants.ORDER_PAYMENT_TYPE.CARD_PAYMENT');
                     $order->stripe_payment_id = $charge['created'];
+                    $order->promotion_id = $request->promotion_id;
                     $order->cart_charge = $orderDetails['cart_charge'];
                     $order->delivery_charge = '0.00';
                     $order->discount_charge =$request->discount_charge;

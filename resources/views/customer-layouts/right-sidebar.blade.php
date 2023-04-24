@@ -108,7 +108,7 @@
                             $cartTotal = 0;
                             $modifierTotal = 0;
                         @endphp
-                        <div class="scroll-inner-blog mt-4">
+                        <div class="scroll-inner-blog mt-4" id="cart_items">
                             @php
                                 $cart = getCart($restaurantId = 1);
                                 $menuItem= [];
@@ -152,7 +152,7 @@
                                                 <input type="number"
                                                     value="{{ $cart->cartMenuItems->where('cart_menu_item_id', $item->cart_menu_item_id)->first()->menu_qty }}"
                                                     class="quantity-{{ $item->cart_menu_item_id }}" readonly />
-                                                <span class="product-quantity-plus"
+                                                <span class="product-quantity-plus" data-menu-id="{{$item->menu_id}}"
                                                     data-cart-menu-item-id="{{ $item->cart_menu_item_id }}"></span>
                                             </div>
                                             @endif
@@ -212,7 +212,11 @@
                                     <div id="coupon_code_msgs" style="color:red"></div>
                                 </div>
                                 <div id="prmotioncode">
-                                
+                                    @php
+                                          $prmotion_id = $cart['promotion_id'] ?? "0";
+                                    @endphp
+                                    <input type="text" name="promotion_id" id="promotion_id" value={{$prmotion_id}}>
+                                   
                                     <h6 class="mb-0 text-dark couponcode"></h6>
                                     <!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.
                                     </p> -->
