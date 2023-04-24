@@ -174,8 +174,6 @@ class CartController extends Controller
 
     public function quantityChange(Request $request)
     {
-        dd($request->all());
-
         $uid = auth()->id();
         $restaurantId = session()->get('restaurantId');
         $check_cart = Cart::where('uid',$uid)->where('restaurant_id', $restaurantId)->first();
@@ -210,7 +208,6 @@ class CartController extends Controller
                         return response()->json(['success' => false], 200);
                     }
                 }
-                
             }
         }
         else{
