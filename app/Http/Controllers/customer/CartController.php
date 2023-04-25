@@ -81,7 +81,7 @@ class CartController extends Controller
             $cart->restaurant_id = 1;
             $cart->uid = $uid;
             $cart->order_type = Config::get('constants.ORDER_TYPE.2');
-            $cart->is_payment =$request->paymentType ?? 'Credit Card';
+            $cart->is_payment = Config::get('constants.ORDER_PAYMENT_TYPE.CARD_PAYMENT');
             $cart->save();
         }
         $check_cart = Cart::where('uid',$uid)->where('restaurant_id', $restaurantId)->first();

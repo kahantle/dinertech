@@ -54,13 +54,14 @@ $(function() {
 
     $(document).on("click", ".with-modifier-add", function() {
         var menuId = $(this).data("menu-id");
+        var paymentType = $("input[name='paymentType']:checked").val();
         $(".modifier-modal-" + menuId).modal("hide");
-        addToCart($("#addToCart").serialize(),menuId);
+        addToCart($("#addToCart").serialize(),paymentType,menuId);
     });
 
     $(document).on("click", ".add-to-order", function () {
         var menuId = $(this).attr("data-menu-id");
-        var paymentType = $("input[name='paymentType']:checked").val();;
+        var paymentType = $("input[name='paymentType']:checked").val();
         $(this).hasClass("have-modifiers") ? showMenuModifiers(menuId) : addToCart({menuId : menuId},paymentType);
         $("#tips").load(location.href + " #tips");
     });
@@ -152,7 +153,6 @@ $(function() {
      });
 
     const addToCart = (data,paymentType, menu_id = null) => {
-        data['paymentType'] = paymentType;
         $.ajax({
             type: "POST",
             headers: {
