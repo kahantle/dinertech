@@ -70,25 +70,25 @@
                   <div class="charges-text">
                     <ul>
                       <li>
-                        <p>Subtotal</p>  
+                        <p>Subtotal</p>
                         <p>${{$order->cart_charge}}</p>
                       </li>
                       @if ($order->isPickUp != 0)
                         <li>
-                          <p>Delivery Charges</p>  
+                          <p>Delivery Charges</p>
                           <p>${{$order->delivery_charge}}</p>
                         </li>
                       @endif
 
                       @if (floatval($order->discount_charge) != 0.00)
                         <li>
-                          <p>Total Discount</p>  
+                          <p>Total Discount</p>
                           <p>${{$order->discount_charge}}</p>
                         </li>
                       @endif
 
                       <li>
-                        <p>Tax</p>  
+                        <p>Tax</p>
                         <p>${{number_format($order->tax_charge,2)}}</p>
                       </li>
                       <li class="total">
@@ -109,7 +109,7 @@
                   </div>
                   <div class="text">
                     <h6>{{$items->menu_name}}</h6>
-                    <p><span>${{$items->menu_total}} </span> X {{$items->menu_qty}}</p>
+                    <p><span>${{$items->menu_price}} </span> X {{$items->menu_qty}}</p>
                      @foreach($items->orderModifierItems as $modifier)
                     <ul>
                       <li>
@@ -125,18 +125,18 @@
                 @if($order->order_progress_status == 'INITIAL')
                 <div class="three-btn">
                   <div class="btn-custom">
-                    <a class="btn-green action"  href="javaScript:void(0);" 
+                    <a class="btn-green action"  href="javaScript:void(0);"
                     data-route="{{route('action.order',[$order->order_id,'action'=>'ACCEPTED'])}}" data-value="Accept"><span>accept order</span></a>
                   </div>
                   <div class="btn-custom">
-                    <a class="btn-red action"  href="javaScript:void(0);" 
+                    <a class="btn-red action"  href="javaScript:void(0);"
                     data-route="{{route('action.order',[$order->order_id,'action'=>'CANCEL'])}}" data-value="Decline"><span>decline order</span></a>
                   </div>
                 </div>
                 @elseif($order->order_progress_status == 'ACCEPTED' || $order->order_progress_status == Config::get('constants.ORDER_STATUS.ORDER_DUE'))
                 <div class="three-btn">
                   <div class="btn-custom">
-                    <a class="btn-orange action"  href="javaScript:void(0);" 
+                    <a class="btn-orange action"  href="javaScript:void(0);"
                     data-route="{{route('action.order',[$order->order_id,'action'=>'PREPARED'])}}" data-value="Prepare"><span>prepared order</span></a>
                   </div>
                 </div>
@@ -144,9 +144,9 @@
                  @elseif($order->order_progress_status == 'PREPARED')
                 <div class="three-btn">
                   <div class="btn-custom">
-                    <a class="btn-orange action"   data-toggle="tooltip" title="Pick-up order"  
-                    data-route="{{route('action.order',[$order->order_id,'action'=>'COMPLETED'])}}" 
-                    class="grey-border action" 
+                    <a class="btn-orange action"   data-toggle="tooltip" title="Pick-up order"
+                    data-route="{{route('action.order',[$order->order_id,'action'=>'COMPLETED'])}}"
+                    class="grey-border action"
                     data-value="pickup"><span>Pick up</span></a>
                   </div>
                 </div>
@@ -164,7 +164,7 @@
     <div class="content">
       <h5 class="groupHeading">Pickup Time</h5>
       <div class="row m-0">
-        <div class="form-group  col-lg-6">                
+        <div class="form-group  col-lg-6">
           <select class="form-control sltDuration " id="sltDuration" name="sltDuration" >
             <option value="">Duration</option>
             @for ($i=1; $i<=60; $i++)
@@ -172,7 +172,7 @@
              @endfor
           </select>
         </div>
-        <div class="form-group  col-lg-6"> 
+        <div class="form-group  col-lg-6">
           <select class="form-control sltMinutes " id="sltMinutes" name="sltMinutes">
             <option value="">Type</option>
             <option value="minutes">Mintues</option>
@@ -191,6 +191,6 @@
 @endsection
 @section('scripts')
 <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js')}}"></script>
-<script src="{{asset('/assets/js/order.js')}}"></script>   
+<script src="{{asset('/assets/js/order.js')}}"></script>
 {!! JsValidator::formRequest('App\Http\Requests\PickTimeRequest','#orderTimePickup'); !!}
 @endsection

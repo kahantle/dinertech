@@ -90,7 +90,7 @@
                                                         </div>
                                                         <div class="media-footer">
                                                             <div class="price_count">
-                                                                <h3>${{ $item->menu_total }}<span
+                                                                <h3>${{ $item->menu_price }}<span
                                                                         class="item-count">&nbsp; X
                                                                         &nbsp;{{ $item->menu_qty }}</span>
                                                                 </h3>
