@@ -60,7 +60,7 @@ class OrderController extends Controller
                 $postData =(object) [
                     'full_name' => $user->first_name." ".$user->last_name,
                     'message' => 'How may I help you',
-                    'message_date'=>date("Y-m-d h:i:A"),
+                    'message_date'=>date("Y-m-d H:i A"),
                     'isseen'=>true,
                     'order_number'=>$order->order_number,
                     'receiver'=>$customer_id,

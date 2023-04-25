@@ -73,7 +73,7 @@ class ChatController extends Controller
             $postData =(object) [
                 'full_name' => $user->first_name." ".$user->last_name,
                 'message' => $request->message,
-                'message_date'=>date("Y-m-d H:i:s"),
+                'message_date'=>date("Y-m-d H:i A"),
                 'isseen'=>false,
                 'order_number'=>$order_id,
                 'receiver'=>$customer_id,
