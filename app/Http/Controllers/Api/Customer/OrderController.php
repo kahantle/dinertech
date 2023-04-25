@@ -123,11 +123,12 @@ class OrderController extends Controller
             $cartId = $request->post('cart_id');
             $check_cart = Cart::where('uid',$uid)->where('restaurant_id',$request->post('restaurant_id'))->where('cart_id',$cartId)->first();
 
+
             DB::beginTransaction();
             $order = new Order;
             $order->uid = $uid;
             $order->restaurant_id = $request->post('restaurant_id');
-            $order->promotion_id = $check_cart->promotion_id ?? "0";
+            $order->promotion_id = $check_cart->promotion_id ?? 0;
             $order->order_number = random_int(1000,1000000000000000);
             $order->payment_card_id = ($request->post('isCash') == 1) ? $request->post('payment_card_id') : NULL;
             $order->isCash = $request->post('isCash');
