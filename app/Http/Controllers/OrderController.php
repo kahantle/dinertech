@@ -36,7 +36,6 @@ class OrderController extends Controller
 
 	public function OrderAction(Request $request,$id,$action){
         try {
-
             $message = strtolower($action);
             $message = "Order $message successfully.";
 
@@ -63,7 +62,7 @@ class OrderController extends Controller
                     'message' => 'How may I help you',
                     'message_date'=>date("Y-m-d h:i:A"),
                     'isseen'=>true,
-                    'order_number'=>$order_id,
+                    'order_number'=>$order->order_number,
                     'receiver'=>$customer_id,
                     'sender'=>$user_id,
                     'sent_from'=> Config::get('constants.ROLES.RESTAURANT'),

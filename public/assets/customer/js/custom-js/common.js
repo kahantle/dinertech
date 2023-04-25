@@ -152,6 +152,7 @@ $(function() {
         $("#grand_total").val(total_price);
      });
 
+    // data['paymentType'] = paymentType ?? '';
     const addToCart = (data,paymentType, menu_id = null) => {
         $.ajax({
             type: "POST",
