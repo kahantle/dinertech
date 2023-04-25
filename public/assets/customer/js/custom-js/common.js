@@ -238,6 +238,7 @@ $(function() {
             success: response => {
                 if (response) {
                     $(".quantity-" + cartMenuItemId).val(response.new_qty);
+                    // $("#cart_items").load(location.href + "#cart_items");
                     $("#checkout").load(window.location.href + " #checkout");
                     $(".scroll-inner-blog").load(
                         window.location.href + " .scroll-inner-blog"

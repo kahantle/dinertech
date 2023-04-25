@@ -127,7 +127,7 @@ class OrderController extends Controller
             $order = new Order;
             $order->uid = $uid;
             $order->restaurant_id = $request->post('restaurant_id');
-            // $order->promotion_id = $check_cart->promotion_id;
+            $order->promotion_id = $check_cart->promotion_id;
             $order->order_number = random_int(1000,1000000000000000);
             $order->payment_card_id = ($request->post('isCash') == 1) ? $request->post('payment_card_id') : NULL;
             $order->isCash = $request->post('isCash');
