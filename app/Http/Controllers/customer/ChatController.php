@@ -20,12 +20,16 @@ class ChatController extends Controller
         $restaurantId = session()->get('restaurantId');
         $getChats = $database->getReference('chats/' . $restaurantId)->getValue();
         $orderArray = array();
-        foreach ($getChats as $orderId => $chat) {
-            if (isset($chat[$userId])) {
-                $messageDate = array_column($chat[$userId], 'message_date');
-                $orderArray[] = ['order_id' => $orderId, 'message_date' => date('F d, h:i A', strtotime(end($messageDate)))];
+        if($getChats!=null)
+        {
+            foreach ($getChats as $orderId => $chat) {
+                if (isset($chat[$userId])) {
+                    $messageDate = array_column($chat[$userId], 'message_date');
+                    $orderArray[] = ['order_id' => $orderId, 'message_date' => date('F d, h:i A', strtotime(end($messageDate)))];
+                }
             }
         }
+
 
         $data['orderIds'] = $orderArray;
         $data['getChats'] = $getChats;
