@@ -21,7 +21,7 @@ trait PromotionLogicTrait {
 
         $uid = Auth::user()->uid;
         $userInfo = User::where('uid', $uid)->first();
-
+        
         $availabilityType = $PromotionInfo->availability;
         $clientType = $PromotionInfo->client_type;
         $cash = $PromotionInfo->only_selected_cash;
@@ -31,13 +31,13 @@ trait PromotionLogicTrait {
         /* Get Old Order Info */
         $firstUser = Order::where('uid', $uid)->exists();
         $returnCustomer = Order::where('uid', $uid)->count();
-
+        
         /* Get Cart Info */
         $cartInfo = Cart::where('cart_id', $cartId)->first();
         $customerPayment = $cartInfo->is_payment;
         $customerOrderType = $cartInfo->order_type;
         $checkOrder = Order::where('uid', $uid)->where('promotion_id', $PromotionInfo->promotion_id)->first();
-
+        
         if (!$checkOrder) {
             /* Promotion Availability */
             if ($availabilityType === PromotionEnum::ALWAYSAVAILABLE) {
@@ -72,13 +72,13 @@ trait PromotionLogicTrait {
                         if ($ordertype ===  PromotionEnum::PICKUP && $customerOrderType === PromotionEnum::PICKUPTIME){
                             $data = [
                                 'type' => true,
-                                'message' => 'Coupan Matched'
+                                'msg' => 'Coupan Matched'
                             ];
                             return $data;
                         } elseif ($ordertype ===  PromotionEnum::ANY && $customerOrderType === PromotionEnum::ANY){
                             $data = [
                                 'type' => true,
-                                'message' => 'Coupan Matched'
+                                'msg' => 'Coupan Matched'
                             ];
                             return $data;
                         } else {
@@ -91,7 +91,7 @@ trait PromotionLogicTrait {
                     } else {
                         $data = [
                             'type' => false,
-                            'message' => 'Invalid Payment Method'
+                            'msg' => 'Invalid Payment Method'
                         ];
                         return $data;
                     }
@@ -399,12 +399,12 @@ trait PromotionLogicTrait {
         } else {
             $data = [
                 'type' => false,
-                'message' => 'Coupon has already been used'
+                'msg' => 'Coupon has already been used'
             ];
             return $data;
         }
     }
 
-    
+
 
 }

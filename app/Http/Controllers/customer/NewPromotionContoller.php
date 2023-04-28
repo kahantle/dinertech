@@ -366,15 +366,16 @@ class NewPromotionContoller extends Controller
                             dd( Config::get('constants.PROMOTION_TYPES.THREE') );
                             break;
                         case Config::get('constants.PROMOTION_TYPES.FOUR'):
+                            /* Done */
                             $data =  $this->PaymentMethodReward($PromotionInfo,$cartId,$restaurantInfo);
-
                             return $data;
                             break;
                         case Config::get('constants.PROMOTION_TYPES.FIVE'):
-                            $this->GetFreeItem($PromotionInfo,$cartId);
+                            $data = $this->GetFreeItem($PromotionInfo,$cartId,$restaurantInfo);
+                            dd($data);
                             break;
                         case Config::get('constants.PROMOTION_TYPES.SIX'):
-                            $this->BuyOneGetOneFree($PromotionInfo,$cartId);
+                            $this->BuyOneGetOneFree($PromotionInfo,$cartId,$restaurantInfo);
                             break;
                         case Config::get('constants.PROMOTION_TYPES.SEVEN'):
                             $this->MealBundle($PromotionInfo,$cartId);
