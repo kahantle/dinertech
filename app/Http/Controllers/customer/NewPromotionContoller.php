@@ -330,6 +330,14 @@ class NewPromotionContoller extends Controller
             $couponCode = $request->coupon_code;
             $cartId = $request->cart_id;
 
+            if (!$cartId) {
+                $data = [
+                    'type' => false,
+                    'msg' => 'Cart was empty.'
+                ];
+                return $data;
+            }
+
             /* Get User & Restaurant Data */
             $uid = Auth::user()->uid;
             $restaurantId = 1;
@@ -371,14 +379,18 @@ class NewPromotionContoller extends Controller
                             return $data;
                             break;
                         case Config::get('constants.PROMOTION_TYPES.FIVE'):
+                            /* Done */
                             $data = $this->GetFreeItem($PromotionInfo,$cartId,$restaurantInfo);
-                            dd($data);
+                            return $data;
                             break;
                         case Config::get('constants.PROMOTION_TYPES.SIX'):
-                            $this->BuyOneGetOneFree($PromotionInfo,$cartId,$restaurantInfo);
+                            /* Done */
+                            $data = $this->BuyOneGetOneFree($PromotionInfo,$cartId,$restaurantInfo);
+                            return $data;
                             break;
                         case Config::get('constants.PROMOTION_TYPES.SEVEN'):
-                            $this->MealBundle($PromotionInfo,$cartId);
+                            $data = $this->MealBundle($PromotionInfo,$cartId,$restaurantInfo);
+
                             break;
                         case Config::get('constants.PROMOTION_TYPES.EIGHT'):
                             $this->BuyTwoThreeGetOneFree($PromotionInfo,$cartId);
