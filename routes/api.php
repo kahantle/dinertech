@@ -156,6 +156,7 @@ Route::namespace ('Api')->group(function () {
             Route::post('/modifier-edit-item', 'ModifierController@editModifierGroupItem')->name('customer.modifier.edit');
             Route::post('/modifier/delete', 'ModifierController@delete')->name('modifier.delete');
             Route::post('/modifier-item/delete', 'ModifierController@deleteItem')->name('modifier.item.delete');
+            Route::post('/modifier_sequence', 'ModifierController@storeModifierSequence')->name('store.modifier.sequence');
 
             Route::post('/menu', 'MenuItemController@getMenuList')->name('restaurant.menu.list');
             Route::post('/menu/add', 'MenuItemController@addMenuItem')->name('restaurant.menu.add');

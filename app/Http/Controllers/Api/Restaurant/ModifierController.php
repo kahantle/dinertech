@@ -164,8 +164,9 @@ class ModifierController extends Controller
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
             }
             $categoryList = ModifierGroup::where('restaurant_id', $request->post('restaurant_id'))
-                ->with('modifier_item')
+                ->with('modifier_item_custome')
                 ->get(['modifier_group_id','restaurant_id','modifier_group_name','required','type','minimum','maximum']);
+
             return response()->json(['modifier_list' => $categoryList, 'success' => true], 200);
         } catch (\Throwable $th) {
             $errors['success'] = false;
@@ -264,4 +265,40 @@ class ModifierController extends Controller
             return response()->json($errors, 500);
         }
     }
+
+    public function storeModifierSequence(Request $request)
+    {
+        try {
+            $request_data = $request->json()->all();
+            $validator = Validator::make($request_data, [
+                'restaurant_id' => 'required',
+                'modifier_group_id' => 'required',
+                'data' => 'required',
+            ]);
+            if ($validator->fails()) {
+                return response()->json(['success' => false, 'message' => $validator->errors()], 400);
+            }
+
+            $modifier_group_id = $request->post('modifier_group_id');
+            $data = $request->post('data');
+
+            foreach ($data as $key => $items) {
+                ModifierGroupItem::where('modifier_group_id',$modifier_group_id)
+                    ->where('modifier_item_id',$items['modifier_item_id'])
+                    ->update(['sequence' => $items['pos']]);
+            }
+
+            return response()->json(['message'=> "Modifier Item Update successfully.",'success' => true], 200);
+
+        } catch (\Throwable $th) {
+            $errors['success'] = false;
+            $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
+            if ($request->debug_mode == 'ON') {
+                $errors['debug'] = $th->getMessage();
+            }
+            return response()->json($errors, 500);
+        }
+    }
+
+
 }
