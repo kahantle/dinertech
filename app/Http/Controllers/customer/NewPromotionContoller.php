@@ -394,7 +394,8 @@ class NewPromotionContoller extends Controller
                             return $data;
                             break;
                         case Config::get('constants.PROMOTION_TYPES.EIGHT'):
-                            $data = $this->BuyTwoThreeGetOneFree($PromotionInfo,$cartId);
+                            $data = $this->BuyTwoThreeGetOneFree($PromotionInfo,$cartId,$restaurantInfo);
+                            dd($data);
                             break;
                         case Config::get('constants.PROMOTION_TYPES.NINE'):
                             $this->FixedDiscountAmountCombo($PromotionInfo,$cartId);

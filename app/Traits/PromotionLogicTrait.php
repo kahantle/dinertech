@@ -38,7 +38,7 @@ trait PromotionLogicTrait {
         $customerOrderType = $cartInfo->order_type;
         $checkOrder = Order::where('uid', $uid)->where('promotion_id', $PromotionInfo->promotion_id)->first();
 
-
+        /* Check Coupon Availability */
         if (!$checkOrder) {
             /* Promotion Availability */
             if ($availabilityType === PromotionEnum::ALWAYSAVAILABLE) {
@@ -406,6 +406,10 @@ trait PromotionLogicTrait {
         }
     }
 
-
+    public function PromotionCommanLogicTwo(Type $var = null)
+    {
+        /* Logic Two Using with Promaotion 1,2,3 */
+        dd('Logic Two Under Development');
+    }
 
 }
