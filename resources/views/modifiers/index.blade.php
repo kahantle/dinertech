@@ -276,35 +276,37 @@
                                     </div>
                                 </div>
 
-                                <div id="collapseOne{{ $item->modifier_group_name }}" class="collapse c-order"
+                                <div id="collapseOne{{ $item->modifier_group_name }}" class="collapse c-order_{{ $item->modifier_group_id }}"
                                     data-parent="#accordion">
-                                    @foreach ($item->modifier_item as $item)
-                                        <div class="child">
-                                            <div class="order-name">
-                                                <div class="circle"></div>
-                                                <h4>{{ $item->modifier_group_item_name }}</h4>
-                                            </div>
-                                            <div class="order-detail">
-                                                <div class="number">
-                                                    <p>${{ number_format($item->modifier_group_item_price, 2) }}</p>
-                                                </div>
-                                                <div class="order-icons">
-                                                    {{-- <a data-route="{{ route('edit.modifier.item.post', $item->modifier_item_id) }}"
-                                                        href="javaScript:void(0);"
-                                                        class="openModifierItemForm action-edit"><i class="fa fa-pencil"
-                                                            aria-hidden="true"></i></a> --}}
 
-                                                    <a href="javaScript:void(0);" class="action-edit editModifierItemModal" data-id="{{ $item->modifier_item_id }}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-
-                                                    {{-- <a data-route="{{ route('delete.modifier.item.post', [$item->modifier_item_id]) }}"
-                                                        href="javaScript:void(0);" class="delete action-delete"><i
-                                                            class="fa fa-trash" aria-hidden="true"></i></a> --}}
-
-                                                    <a href="javaScript:void(0);" class="deleteModifierItem action-delete" data-id="{{ $item->modifier_item_id }}"><i class="fa fa-trash" aria-hidden="true"></i></a>
-                                                </div>
-                                            </div>
+                                    <div class="d-flex justify-content-between mb-1" style="width: 85%;">
+                                        <div>
+                                            <button class="btn btn-link dropdown-toggle filterName" id-filterd="{{ $item->modifier_group_id }}">Item Name</button>
                                         </div>
-                                    @endforeach
+                                        <div>
+                                            <button class="btn btn-link dropdown-toggle filterPrice" id-filterd="{{ $item->modifier_group_id }}">Price</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="rolleplay">
+                                        @foreach ($item->modifier_item as $item)
+                                            <div class="child" item_name ={{ $item->modifier_group_item_name }} item_price ={{ $item->modifier_group_item_price }}>
+                                                <div class="order-name">
+                                                    <div class="circle"></div>
+                                                    <h4>{{ $item->modifier_group_item_name }}</h4>
+                                                </div>
+                                                <div class="order-detail">
+                                                    <div class="number">
+                                                        <p>${{ number_format($item->modifier_group_item_price, 2) }}</p>
+                                                    </div>
+                                                    <div class="order-icons">
+                                                        <a href="javaScript:void(0);" class="action-edit editModifierItemModal" data-id="{{ $item->modifier_item_id }}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                                        <a href="javaScript:void(0);" class="deleteModifierItem action-delete" data-id="{{ $item->modifier_item_id }}"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
                                 </div>
                             </div>
                         @endforeach
@@ -505,6 +507,27 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" type="text/javascript"></script>
 <script>
 $(document).ready(function() {
+
+    $(".filterName").click(function() {
+        var corderid = $(this).attr("id-filterd");
+        var datas = $(".c-order_"+corderid+" div.child");
+        var temp = datas.sort(function(a,b){
+            // return parseInt($(b).attr("item_name")) - parseInt($(a).attr("item_name"));
+
+            return $(b).attr("item_name").localeCompare($(a).attr("item_name"));
+            // return parseInt($(b).attr("item_name")) - parseInt($(a).attr("item_name"));
+        });
+        $(".c-order_"+corderid+" .rolleplay").html(temp);
+    });
+
+    $(".filterPrice").click(function() {
+        var corderid = $(this).attr("id-filterd");
+        var datas = $(".c-order_"+corderid+" div.child");
+        var temp = datas.sort(function(a,b){
+            return parseInt($(b).attr("item_price")) - parseInt($(a).attr("item_price"));
+        });
+        $(".c-order_"+corderid+" .rolleplay").html(temp);
+    });
 
     /* Minimum Input Logic */
     $("#minimum").on("keyup change", function(e) {

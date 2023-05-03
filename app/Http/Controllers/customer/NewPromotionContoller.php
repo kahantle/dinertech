@@ -379,21 +379,22 @@ class NewPromotionContoller extends Controller
                             return $data;
                             break;
                         case Config::get('constants.PROMOTION_TYPES.FIVE'):
-                            /* Done */
+                            /* Done Expected mark promo,extra charge */
                             $data = $this->GetFreeItem($PromotionInfo,$cartId,$restaurantInfo);
                             return $data;
                             break;
                         case Config::get('constants.PROMOTION_TYPES.SIX'):
-                            /* Done */
+                            /* Done Expected mark promo,extra charge */
                             $data = $this->BuyOneGetOneFree($PromotionInfo,$cartId,$restaurantInfo);
                             return $data;
                             break;
                         case Config::get('constants.PROMOTION_TYPES.SEVEN'):
+                            /* Done Expected mark promo,extra charge */
                             $data = $this->MealBundle($PromotionInfo,$cartId,$restaurantInfo);
-
+                            return $data;
                             break;
                         case Config::get('constants.PROMOTION_TYPES.EIGHT'):
-                            $this->BuyTwoThreeGetOneFree($PromotionInfo,$cartId);
+                            $data = $this->BuyTwoThreeGetOneFree($PromotionInfo,$cartId);
                             break;
                         case Config::get('constants.PROMOTION_TYPES.NINE'):
                             $this->FixedDiscountAmountCombo($PromotionInfo,$cartId);
