@@ -279,18 +279,20 @@
                                 <div id="collapseOne{{ $item->modifier_group_name }}" class="collapse c-order_{{ $item->modifier_group_id }}"
                                     data-parent="#accordion">
 
-                                    <div class="d-flex justify-content-between mb-1" style="width: 85%;">
+                                    <div class="d-flex justify-content-between my-2" style="width: 93%;">
                                         <div>
                                             <button class="btn btn-link dropdown-toggle filterName" id-filterd="{{ $item->modifier_group_id }}">Item Name</button>
                                         </div>
                                         <div>
                                             <button class="btn btn-link dropdown-toggle filterPrice" id-filterd="{{ $item->modifier_group_id }}">Price</button>
+                                            <button class="btn btn-success saveModifierItems" id-filterd="{{ $item->modifier_group_id }}">Save</button>
                                         </div>
+
                                     </div>
 
-                                    <div class="rolleplay">
-                                        @foreach ($item->modifier_item as $item)
-                                            <div class="child" item_name ={{ $item->modifier_group_item_name }} item_price ={{ $item->modifier_group_item_price }}>
+                                    <div class="rolleplay sortable sortable_{{ $item->modifier_group_id }}">
+                                        @foreach ($item->modifier_item_custome as $item)
+                                            {{-- <div class="child" item_name ={{ $item->modifier_group_item_name }} item_price ={{ $item->modifier_group_item_price }}>
                                                 <div class="order-name">
                                                     <div class="circle"></div>
                                                     <h4>{{ $item->modifier_group_item_name }}</h4>
@@ -304,7 +306,25 @@
                                                         <a href="javaScript:void(0);" class="deleteModifierItem action-delete" data-id="{{ $item->modifier_item_id }}"><i class="fa fa-trash" aria-hidden="true"></i></a>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> --}}
+
+                                            <li class="ui-state-default" style=" list-style-type: none;" >
+                                                <div class="child" item_name ={{ $item->modifier_group_item_name }} item_price ={{ $item->modifier_group_item_price }}>
+                                                    <div class="order-name" id-modId="{{ $item->modifier_item_id }}">
+                                                        <div class="circle"></div>
+                                                        <h4>{{ $item->modifier_group_item_name }}</h4>
+                                                    </div>
+                                                    <div class="order-detail">
+                                                        <div class="number">
+                                                            <p>${{ number_format($item->modifier_group_item_price, 2) }}</p>
+                                                        </div>
+                                                        <div class="order-icons">
+                                                            <a href="javaScript:void(0);" class="action-edit editModifierItemModal" data-id="{{ $item->modifier_item_id }}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                                            <a href="javaScript:void(0);" class="deleteModifierItem action-delete" data-id="{{ $item->modifier_item_id }}"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
                                         @endforeach
                                     </div>
                                 </div>
@@ -505,15 +525,60 @@
 @endsection
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" type="text/javascript"></script>
+
 <script>
 $(document).ready(function() {
+    $(function () {
+        $(".sortable").sortable({
+            placeholder: "ui-state-highlight"
+        });
+        $(".sortable").disableSelection();
+    });
+
+    $(".saveModifierItems").click(function() {
+        var corderid = $(this).attr("id-filterd");
+
+        var globleSequence = [];
+        $.each($('.sortable_'+corderid).find('li .order-name'), function(key) {
+            var sequence = key+1;
+            var modifier_item_id = $(this).attr("id-modId");
+
+            var array = {
+                'sequence':sequence,
+                'modifier_item_id':modifier_item_id
+            };
+
+            globleSequence.push(array);
+        });
+
+        var url = '{{route('store.modifier.sequence')}}';
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.ajax({
+            url : url,
+            type : 'POST',
+            data : {
+                'data' : globleSequence,
+            },
+            dataType:'json',
+            success : function(data) {
+                if (data.type) {
+                    location.reload();
+                }
+            },
+
+        });
+
+    });
 
     $(".filterName").click(function() {
         var corderid = $(this).attr("id-filterd");
         var datas = $(".c-order_"+corderid+" div.child");
         var temp = datas.sort(function(a,b){
-            // return parseInt($(b).attr("item_name")) - parseInt($(a).attr("item_name"));
-
             return $(b).attr("item_name").localeCompare($(a).attr("item_name"));
             // return parseInt($(b).attr("item_name")) - parseInt($(a).attr("item_name"));
         });
