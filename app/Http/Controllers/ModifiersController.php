@@ -35,7 +35,7 @@ class ModifiersController extends Controller
         $uid = Auth::user()->uid;
         $restaurant = Restaurant::where('uid', $uid)->first();
         $modifiers = ModifierGroup::where('restaurant_id', $restaurant->restaurant_id)
-        ->with('modifier_item')
+        ->with('modifier_item_custome')
         ->paginate(Config::get('constants.PAGINATION_PER_PAGE'));
 
         $user = User::where('uid', $uid)->first();
@@ -278,5 +278,16 @@ class ModifiersController extends Controller
             $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
             return response()->json($errors, 500);
         }
+    }
+
+    public function storeModifierSequence(Request $request)
+    {
+        foreach ($request->data as $key => $value) {
+            $modifier_item_id = $value['modifier_item_id'];
+            $sequence = $value['sequence'];
+            ModifierGroupItem::where('modifier_item_id', $modifier_item_id)->update(['sequence'=>$sequence]);
+        }
+
+        return response()->json(['type' => true, 'success' => 'modifier update successfully'], 200);
     }
 }
