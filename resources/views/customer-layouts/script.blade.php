@@ -14,6 +14,41 @@
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{{ asset('assets/customer/js/jquery.lazy.min.js') }}"></script>
 <script>
+$('#btnSave').click(function(e) {
+    $('#yourModal').modal('toggle'); //or  $('#IDModal').modal('hide');
+});
+
+//Model All Hide and Show
+$(".within-first-modal").on("click", function() {
+    $("#second-modal").modal("show");
+    $("#yourModal").modal("hide");
+});
+
+$(".btn-second-modal-close").on("click", function() {
+    $("#second-modal").modal("hide");
+    $("#yourModal").modal("show");
+});
+
+$(".within-third-modal").on("click", function() {
+    $("#third-modal").modal("show");
+    $("#yourModal").modal("hide");
+});
+$('.btn-party-modal-close').on('click', function() {
+    $('#third-modal').modal('hide');
+    $('#yourModal').modal('show');
+});
+
+//Button Hide if login
+$( document ).ready(function() {
+    @auth
+       $('#loginbutton').hide();
+    @else
+        // Not authorised.
+    @endauth
+});
+</script>
+
+<script>
 $(".coupenremove").hide();
 
 function applyCoupenCode() {

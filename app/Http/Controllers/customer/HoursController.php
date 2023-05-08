@@ -15,7 +15,7 @@ class HoursController extends Controller
 {
     public function index()
     {
-        $uid = Auth::user()->uid;
+        $uid = Auth::user()->uid ?? 0;
         $restaurantId = session()->get('restaurantId');
         $restaurant = Restaurant::where('restaurant_id', $restaurantId)->with('user')
             ->first();

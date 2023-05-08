@@ -69,9 +69,11 @@
                 </div>
             </div>
     </section>
-    @guest
         @include('customer.guest')
-    @endguest
+    {{-- @guest
+        @include('customer.guest')
+    @endguest --}}
+
 @endsection
 
 @section('scripts')
@@ -82,4 +84,3 @@
     <script src="{{ asset('assets/customer/js/rateYo/2.3.2/jquery.rateyo.min.js') }}"></script>
     <script src="{{ asset('assets/customer/js/custom-js/home/index.js') }}"></script>
 @endsection
- 

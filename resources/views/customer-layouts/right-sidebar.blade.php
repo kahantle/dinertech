@@ -44,7 +44,6 @@
                         <div class="d-flex align-items-center w-100 justify-content-between mb-4">
                             <h5 class="card-title m-0">My Order</h5>
                         </div>
-
                         <div class="d-flex align-items-center wd-dr-now">
                             <div class="input-group w-auto mr-3">
                                 <div class="input-group-prepend">
@@ -101,6 +100,9 @@
                                         name="instruction">
                                 </div>
                             </div>
+                        </div>
+                        <div class="text-center" id="loginbutton">
+                                <button type="button" class="btn btn-primary btn-lg" title="Login" data-toggle="modal" data-target="#yourModal">Login</button>
                         </div>
                     </div>
                     @auth
@@ -216,57 +218,11 @@
                                           $prmotion_id = $cart['promotion_id'] ?? "0";
                                     @endphp
                                     <input type="hidden" name="promotion_id" id="promotion_id" value={{$prmotion_id}}>
-                        
+                            
                                     <h6 class="mb-0 text-dark couponcode"></h6>
                                     <!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.
                                     </p> -->
 
-                                        {
-                                            $cartItem = CartItem::where('menu_id',$request->post('menu_id'))->where('cart_id',$check_cart->cart_id)->where('is_loyalty',0)->first();
-                                            if($cartItem)
-                                            {
-                                                $menuOldQuantity = $cartItem->menu_qty;
-                                                $menuprice=$cartItem->menu_price;
-                                                $menuNewQuantity = $menuOldQuantity + 1;
-                                                $modifiertotal=$cartItem->modifier_total * $menuNewQuantity ;
-                                                $cartItem->menu_qty = $menuNewQuantity;
-                                                $cartItem->menu_total =(float)$menuprice * (float)$menuNewQuantity + (float)$modifiertotal;
-                                                $cartItem->save();
-
-                                                $subtotal = CartItem::where('cart_id',$check_cart->cart_id)->sum('menu_total');
-
-                                                // $restaurant = Restaurant::where('restaurant_id',$request->post('restaurant_id'))->first();
-                                                // $salesTax = $restaurant->sales_tax;
-                                                // $taxCharge = ($subtotal * $salesTax) / 100;
-                                                // $finalTotal = $subtotal + $taxCharge;
-                                                $taxCharge = ($subtotal * $restaurantid->sales_tax) / 100;
-                                                $totalPayableAmount = $subtotal + $taxCharge;
-
-                                                Cart::where('uid',$uid)->where('restaurant_id',$restaurantId)->where('cart_id',$check_cart->cart_id)->update(['sub_total' => (float)$subtotal,  'tax_charge' => (float)$taxCharge, 'total_due' =>(float)$totalPayableAmount]);
-                                            }
-                                            else{
-                                                $cartMenuItemData = new CartItem;
-                                                $cartMenuItemData->cart_id = $check_cart->cart_id;
-                                                $cartMenuItemData->category_id = $menuItem->category_id;
-                                                $cartMenuItemData->menu_id = $menuItem->menu_id;
-                                                $cartMenuItemData->menu_name = $menuItem->item_name;
-                                                $cartMenuItemData->menu_qty = 1;
-                                                $cartMenuItemData->menu_price = $menuItem->item_price;
-                                                $cartMenuItemData->item_img = $menuItem->getMenuImgAttribute();
-                                                $cart_sub_total = $menuItem->item_price;
-
-                                                $menutotal=(float)($menuItem->item_price) * 1 ;
-                                                $cartMenuItemData->menu_total=(float)$menutotal;
-
-
-                                                // $cartMenuItemData->modifier_total = $menuItem->item_price;
-                                                $cartMenuItemData->is_loyalty = 0;
-                                                $cartMenuItemData->loyalty_point = 0;
-                                                $cartMenuItemData->save();
-                                                $data= $cartMenuItemData;
-                                                return $data;
-                                            }
-                                        } --}}
                                 </div>
                             </div>
                         </div>
@@ -533,3 +489,10 @@
             </div>
         </div>
     </div>
+</div>
+
+
+
+
+
+

@@ -279,14 +279,19 @@ Route::prefix('customer')->group(function () {
     Route::get('auth/google', 'customer\GoogleController@redirectToGoogle')->name('customer.google.login');
     Route::get('auth/google/callback', 'customer\GoogleController@handleGoogleCallback')->name('customer.google.redirectUrl');
 
+     /* Menu Items */
+     Route::post('/menu-items', 'customer\HomeController@getMenuItems');
+     Route::post('/getMenumodifier', 'customer\HomeController@getMenumodifier');
+     Route::post('/search/menuitem', 'customer\HomeController@searchMenu');
+
+     //information
+     Route::get('/restaurant/information', 'customer\HoursController@index')->name('customer.restaurant.information');
+
     Route::group(['middleware' => ['web', 'is_customer']], function () {
         // Route::get('/home','customer\IndexController@homepage')->name('customer.home');
         Route::get('set-system-time', 'customer\HomeController@setSystemTime')->name('customer.system.time');
 
-        /* Menu Items */
-        Route::post('/menu-items', 'customer\HomeController@getMenuItems');
-        Route::post('/getMenumodifier', 'customer\HomeController@getMenumodifier');
-        Route::post('/search/menuitem', 'customer\HomeController@searchMenu');
+
 
         /* Add To Cart */
         Route::post('/add-to-cart', 'customer\CartController@addToCart')->name('customer.addToCart');
@@ -303,7 +308,7 @@ Route::prefix('customer')->group(function () {
 
 
         /* Hours */
-        Route::get('/restaurant/information', 'customer\HoursController@index')->name('customer.restaurant.information');
+        // Route::get('/restaurant/information', 'customer\HoursController@index')->name('customer.restaurant.information');
         Route::post('contact/restaurant/send-mail', 'customer\HoursController@sendMail')->name('customer.restaurant.sendmail');
         // Route::get('/restaurant/information', 'customer\HoursController@index')->name('customer.restaurant.hours');
 
