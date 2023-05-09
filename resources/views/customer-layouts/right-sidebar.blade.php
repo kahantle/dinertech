@@ -218,10 +218,11 @@
                                           $prmotion_id = $cart['promotion_id'] ?? "0";
                                     @endphp
                                     <input type="hidden" name="promotion_id" id="promotion_id" value={{$prmotion_id}}>
-                            
+                                
                                     <h6 class="mb-0 text-dark couponcode"></h6>
                                     <!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.
                                     </p> -->
+
 
                                 </div>
                             </div>

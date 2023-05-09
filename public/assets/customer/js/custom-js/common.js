@@ -45,7 +45,7 @@ $(function() {
     });
 
     $('[name=paymentType]').on('change', function() {
-        if ($(this).val() == 'card') {
+        if ($(this).val() == 'Credit Card') {
             $(".cards").show();
         } else {
             $(".cards").hide();
