@@ -18,7 +18,8 @@
                             <input type="number" value="{{ in_array($item->menu_id, $cartMenuItemIds) ? $cart->cartMenuItems->where('menu_id',$item->menu_id)->first()->menu_qty : 1 }}" class="quantity-{{ in_array($item->menu_id, $cartMenuItemIds) ? array_keys($cartMenuItemIds, $item->menu_id)[0] : "" }}" readonly />
                             <span class="product-quantity-plus {{ $item->modifierList->count() > 0 ? 'have-modifiers' : '' }}" data-menu-id="{{$item->menu_id}}" data-cart-menu-item-id="{{ in_array($item->menu_id, $cartMenuItemIds) ? array_keys($cartMenuItemIds, $item->menu_id)[0] : ""    }}"></span>
                         </div>
-                        @if(auth()->check() == true)
+                        {{-- @if(auth()->check() == true) --}}
+                        @auth
                         <button type="button"
                             class="btn btn-dark add-to-order add-order-{{ $item->menu_id }} {{ $item->modifierList->count() > 0 ? 'have-modifiers' : '' }} {{ in_array($item->menu_id, $cartMenuItemIds) ? 'd-none' : '' }}"
                             data-menu-id="{{ $item->menu_id  }}">
@@ -28,7 +29,8 @@
                         <div class="text-center" id="loginbutton">
                             <button type="button" class="btn btn-dark" title="Login" data-toggle="modal" data-target="#yourModal"> Add To Order</button>
                         </div>
-                        @endif
+                        @endauth
+                        {{-- @endif --}}
                         <div class="repeat-last-add-modal-{{ in_array($item->menu_id, $cartMenuItemIds) ? array_keys($cartMenuItemIds, $item->menu_id)[0] : "" }}"></div>
                     </div>
                     <div class="modifiers-{{ $item->menu_id }}"></div>
