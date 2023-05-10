@@ -12,6 +12,7 @@ use App\Models\Order;
 use App\Models\OrderMenuItem;
 use App\Models\OrderMenuGroup;
 use App\Models\OrderMenuGroupItem;
+use App\Models\RestaurantHours;
 use App\Models\User;
 use App\Notifications\AcceptOrder;
 use App\Notifications\DeclineOrder;
@@ -196,9 +197,9 @@ class OrderController extends Controller
                 'restaurant_id' => 'required',
                 'order_id' => 'required',
                 'pickup_time' => 'required',
-                'pickup_minutes' => 'required', 
+                'pickup_minutes' => 'required',
             ]);
-            if ($validator->fails()) { 
+            if ($validator->fails()) {
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
             }
             DB::beginTransaction();
@@ -393,10 +394,40 @@ class OrderController extends Controller
     {
         try {
             $request_data = $request->json()->all();
+
+
             $validator = Validator::make($request_data,['restaurant_id' => 'required']);
             if ($validator->fails()) {
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
             }
+                //Time check
+            $data  = RestaurantHours::with('allTimes')->where('restaurant_id', $request->restaurant_id)->where('day', 'like', '%' . $request->day . '%')->first();
+            if (empty($data)) {
+                return response()->json(['success' => false, 'message' => 'Oops! Betty Burger is not open for orders at the time selected. Please select another time']);
+            }
+
+            $testResult  = [];
+
+            foreach($data->allTimes as $time) {
+                $openingtime =date('H:i A', strtotime($time->opening_time));
+                $closingtime =date('H:i A', strtotime($time->closing_time));
+                $openTime =date('H:i A', strtotime($request->time));
+                $testResult[] =$openingtime <= $openTime &&  $openTime <= $closingtime;
+            }
+            
+            if (is_array($testResult)){
+                foreach ($testResult as $k => &$value) {
+                    if($value == true)
+                    {
+                        $restaurant=true;
+                    }
+                    else
+                    {
+                        $restaurant=false;
+                    }
+                }
+            }
+
             $order = Order::where('restaurant_id', $request->post('restaurant_id'))
                 //->whereNull('order_status')
                 ->where(function($q){
@@ -412,6 +443,7 @@ class OrderController extends Controller
                 ->latest()
                 ->get();
             return response()->json([
+                'resturantopen'=>$restaurant,
                 'order' => $order,
                 'auto_print_receipts' => Restaurant::select('auto_print_receipts')->where('restaurant_id', $request->post('restaurant_id'))->first()->auto_print_receipts,
                 'success' => true
