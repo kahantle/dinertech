@@ -24,7 +24,7 @@
     <div class="container-fluid">
       @include('common.flashMessage')
       {{ Form::open(array('route' => array('update.category.post'),'id'=>'categoryForm','method'=>'POST','class'=>'','files'=>'true')) }}
-      <div class="form-group">
+      {{-- <div class="form-group">
         <span class="slt-img">
           @if($category->image)
             <img width="170" height="170" class="itemImage"  src="{{ $category->getImagePathAttribute() }}" />
@@ -35,7 +35,7 @@
         <input id="image" type="file" name="profile_photo" placeholder="Photo" required="" capture=""
           style="display: none;">
         <label class="label-a"><i class="fa fa-camera" aria-hidden="true"></i>Select Picture</label>
-      </div>
+      </div> --}}
 
       <div class="form-group">
         <label class="label_cat">Category Name</label>

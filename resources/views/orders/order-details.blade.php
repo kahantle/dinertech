@@ -12,11 +12,15 @@
               </div>
               @if($order->order_progress_status != "CANCEL")
               <div class="right-side-nav">
-                @if($order->pickup_minutes)
+                @if($order->pickup_time)
                 <div>
                 <p>Pickup Time</p>
                 <div class="time">
-                  <a href="#popup-menu">{{$order->pickup_minutes}} Mintues</a>
+                    @php
+                        $pickuptime = $order->pickup_time;
+                        $pickup_datetime = date('d-m-Y h:i A', strtotime($pickuptime));
+                    @endphp
+                  <a href="#popup-menu">{{$pickup_datetime}}</a>
                 </div>
               </div>
                 @endif
