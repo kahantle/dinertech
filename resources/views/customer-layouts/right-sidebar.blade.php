@@ -220,7 +220,6 @@
                                     <input type="hidden" name="promotion_id" id="promotion_id" value={{$prmotion_id}}>
 
                                     <h6 class="mb-0 text-dark couponcode"></h6>
-                                 
                                 </div>
                             </div>
                         </div>
@@ -412,7 +411,7 @@
 
 
                             <div class="btn-inner-blog mt-2">
-                                <button class="btn btn-submit-inner" type="submit">Checkout</button>
+                                <button class="btn btn-submit-inner sendToken" type="submit">Checkout</button>
                             </div>
                         </div>
 

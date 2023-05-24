@@ -8,6 +8,7 @@ use App\Models\Restaurant;
 use App\Models\User;
 use App\Models\CustomerAddress;
 use App\Models\OrderMenuItem;
+use App\Notifications\AcceptOrder;
 use Kreait\Firebase\Database;
 use Auth;
 use DB;
@@ -38,7 +39,6 @@ class OrderController extends Controller
         try {
             $message = strtolower($action);
             $message = "Order $message successfully.";
-
             $order = Order::where('order_id',$id)->first();
             $uid = Auth::user()->uid;
             $orderPickupTime = null;
@@ -79,6 +79,43 @@ class OrderController extends Controller
             }
             $order->order_status = ($action==Config::get('constants.ORDER_STATUS.CANCEL'))?0:1;
             $order->save();
+
+            //Fcm Token push Notification
+            $FcmTokenData = User::where('uid',$order->uid)->first();
+            $FcmTokenArray = [];
+            $FcmTokenArray[] = $FcmTokenData->device_key;
+
+            //Push Notification
+            $url = 'https://fcm.googleapis.com/fcm/send';
+            $FcmToken = $FcmTokenArray;
+            $serverKey = 'AAAAADRQWEU:APA91bEF_KhA3ZYH-yvdByEYV4EC0V1j0nY5gg_yWl3DC-vASs2scPEOBopdmqvqLZwGJt_aaq1HBMGYz1p2Oxo0B8v3X2zA-h7rWgduJXbSac_j6H7IvWtHv13MeMAXJGpsoFa9RfLR';
+            $data = [
+                "registration_ids" => $FcmToken,
+                "notification" => [
+                    "title" => $user->first_name." ".$user->last_name,
+                    "body" => "Order Accepeted Successfully",
+                ]
+            ];
+            $encodedData = json_encode($data);
+
+            $headers = [
+                'Authorization:key=' . $serverKey,
+                'Content-Type: application/json',
+            ];
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $encodedData);
+
+            $result = curl_exec($ch);
+            curl_close($ch);
+
             //removed if order completed
             if($action==Config::get('constants.ORDER_STATUS.COMPLETED')){
                 $database = app('firebase.database');
