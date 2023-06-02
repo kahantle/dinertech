@@ -395,7 +395,7 @@
                                 <div class="d-flex align-items-center justify-content-between w-100 wd-wrapper-total">
                                     <span>Total</span>
                                     <?php
-                                    $carttotaldue = $cart['total_due'] ?? "0";
+                                        $carttotaldue = $cart['total_due'] ?? "0";
                                     ?>
                                     <span id="total_price">${{ number_format($carttotaldue, '2') }}</span>
                                     <input type="hidden" name="grand_total" id="grand_total"

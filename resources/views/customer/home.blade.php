@@ -48,9 +48,9 @@
                                             @foreach ($categories as $key => $category)
                                                 <div class="item category" data-category-id="{{ $category->category_id }}">
                                                     <div class="card">
-                                                        <img class="card-img-top lazy"
+                                                        {{-- <img class="card-img-top lazy"
                                                             data-src="{{ $category->getImagePathAttribute() ? $category->getImagePathAttribute() : $category->getDefaultImage() }}"
-                                                            alt="Card image cap">
+                                                            alt="Card image cap"> --}}
                                                         <div class="card-body category">
                                                             <h5 class="card-title">{{ $category->category_name }}</h5>
                                                             <p class="card-text">{{ $category->category_details }}</p>
