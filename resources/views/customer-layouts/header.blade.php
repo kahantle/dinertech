@@ -93,7 +93,7 @@
                     </a>
                     @endif
                 </li>
-                <li class="{{ Request::is('customer/contact-us/*') ? 'active' : '' }}">
+                {{-- <li class="{{ Request::is('customer/contact-us/*') ? 'active' : '' }}">
                     @if(auth()->check() == true)
                     <a href="{{ route('customer.contact-us') }}">
                         <i data-feather="phone"></i>
@@ -105,7 +105,7 @@
                         <span>Contact Us</span>
                     </a>
                     @endif
-                </li>
+                </li> --}}
                 <li class="{{ Request::is('customer/setting/*') ? 'active' : '' }}">
                     @if(auth()->check() == true)
                     <a href="{{ route('customer.settings') }}">

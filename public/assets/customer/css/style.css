@@ -1092,7 +1092,7 @@ margin-right: 0;
     text-align: right;
     font-family: 'Avenir-Medium';
     width: 100%;
-    border-top: 2px solid #eeeeee;
+    /* border-top: 2px solid #eeeeee; */
     margin: 0;
     padding: 20px 0 0 0;
 }

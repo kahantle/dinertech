@@ -33,11 +33,34 @@
         align-items: center;
         justify-content: space-between;
     }
+
+    .tipbutton{
+        border-radius: 4px 3 0px 1px;
+        margin-right: 6px;
+    }
+
+    .custombutton
+    {
+        border-radius: 4px 3 0px 1px;
+        margin-right: 6px;
+        width: 105px;
+    }
+
+    .customtip
+    {
+        height: 37px;
+    }
+
+    .stafftip{
+        width: 40px;
+        height: 37px;
+        padding: 0px;
+    }
 </style>
 <div class="col-xl-4 col-lg-12 col-md-12 wd-dr-dashboart-inner">
     <div class="Promotion-content">
         <div class="card order-content">
-            <div class="card-body">
+            <div class="card-body p-2">
                 <form action="{{ route('customer.cart.submit.order') }}" method="post">
                     @csrf
                     <div class="card-inner-body">
@@ -80,6 +103,7 @@
                                 </div>
                             </div>
                         </div>
+                        <hr>
                         <input type="hidden" name="promotion_id" class="promotion_id_field">
                         <p id="output" class="set-order-msg">Current Timing Is set in Your Order</p>
                         <div class="align-items-center wd-dr-now my-4 d-none">
@@ -186,6 +210,7 @@
                                 @endforelse
                             @endif
                         </div>
+                        <hr>
                         <input type="hidden" name="menuItem"
                             value="{{ isset($menuItem) ? base64_encode(json_encode($menuItem)) : '' }}">
                         <div class="promotion-iner-blog mt-3 Promotion-btn-click ">
@@ -223,6 +248,38 @@
                                 </div>
                             </div>
                         </div>
+                        <hr>
+                        <div class="text-center" id="tips">
+                            <h4 class="mb-2 promotion_text-cololr mb-4">Add Tip For</h4>
+                            @php
+                                $totalwithsalestax = ($cart['sub_total'] ?? 0.00) + ($cart['tax_charge'] ?? 0.00);
+                            @endphp
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text bg-primary text-white stafftip" >15%</span>
+                                </div>
+                                <button type="button" style="padding: 6px" value="{{ round($totalwithsalestax * 15) / 100 ,2}}"
+                                    class="btn btn-light tip tipbutton text-left">${{round($totalwithsalestax * 15) / 100 ,2}}</button>
+                                {{-- <button type="button" style="boarder-radius:20px" class="btn btn-light tipbutton">Light</button> --}}
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text bg-primary text-white stafftip">18%</span>
+                                </div>
+                                <button type="button" style="padding: 6px" value="{{ round($totalwithsalestax * 18) / 100 ,2}}" class="btn btn-light tip tipbutton">${{round($totalwithsalestax * 18) / 100 ,2}}</button>
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text bg-primary text-white stafftip">20%</span>
+                                </div>
+                                <button type="button" style="padding: 6px" value="{{ round($totalwithsalestax * 20) / 100 ,2}}" class="btn btn-light tip tipbutton">${{ round ($totalwithsalestax * 20) / 100 ,2}}</button>
+                            </div>
+                            <br>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text bg-primary text-white customtip">CUSTOM</span>
+                                </div>
+                                <button type="button" style="boarder-radius:20px" class="btn btn-light custom custombutton" id="cutomtip">0.00</button>
+                                <button type="button" style="width: 140px" class="btn btn-light">No Tip</button>
+                            </div>
+                        </div>
+                        <hr>
                         <div class="card-inner-body">
                             <h5 class="md-payment-blog">Payment Methods</h5>
 
@@ -240,7 +297,6 @@
                                     Cash
                                 </label>
                             </div>
-
                             <div class="cards">
                                 <div id="testinomial" class="pt-1 pb-3">
                                     @if ($cards->count() != 0)
@@ -298,11 +354,12 @@
                                 </div>
                             </div>
 
-                            <div class="text-center" id="tips">
+                            {{-- <div class="text-center" id="tips">
                                 <h4 class="mb-2 promotion_text-cololr">Add Tip For</h4>
                                 @php
                                     $totalwithsalestax = ($cart['sub_total'] ?? 0.00) + ($cart['tax_charge'] ?? 0.00);
                                 @endphp
+
                                 <div class="line-button-area mb-2">
                                     <button type="button" value="{{ round($totalwithsalestax * 15) / 100 ,2}}"
                                         class="btn-area tip"><span>15%</span><br><span>${{round($totalwithsalestax * 15) / 100 ,2}}</button>
@@ -319,7 +376,7 @@
                                     <button type="button" value="0.00" class="btn-big notip" disabled><span> No Tip
                                         </span><br><span></span></button>
                                 </div>
-                            </div>
+                            </div> --}}
 
                             <div class="modal fade" id="custommodel" role="dialog" tabindex="-1">
                                 <div class="modal-dialog" role="document">
@@ -349,6 +406,7 @@
                             @php
                                 $finalTotal = $cartTotal;
                             @endphp
+                            <hr>
                             <div id="checkout">
                                 <div
                                     class="d-flex align-items-center justify-content-between w-100 wd-wrapper-total-first">
@@ -397,7 +455,7 @@
                                     <?php
                                         $carttotaldue = $cart['total_due'] ?? "0";
                                     ?>
-                                    <span id="total_price">${{ number_format($carttotaldue, '2') }}</span>
+                                    <span id="total_price">${{ number_format($carttotaldue, '2')}}</span>
                                     <input type="hidden" name="grand_total" id="grand_total"
                                         value="{{$carttotaldue}}">
                                     <input type="hidden" name="grand_total_ajax" id="grand_total_ajax"
@@ -422,7 +480,7 @@
     </div>
     <div class="apply-content">
         <div class="card ">
-            <div class="card-body">
+            <div class="card-body p-0.60">
                 <!-- header Apply Coupons -->
                 <div class="d-flex align-items-center promotion_text-cololr">
                     <i class="fas fa-arrow-left btn-back-Promotion cursor-pointer"></i>
