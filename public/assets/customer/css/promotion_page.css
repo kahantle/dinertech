@@ -660,10 +660,12 @@
  }
 
  .owl-first-blog button.owl-prev {
-     left: -3%;
+     left: -2%;
      position: absolute;
      top: 0;
      bottom: 0;
+     border: none;
+     background: transparent;
  }
 
  .owl-first-blog button.owl-next {
@@ -671,6 +673,8 @@
      position: absolute;
      top: 0;
      bottom: 0;
+     border: none;
+     background: transparent;
  }
 
  .search-form .input-group-text svg {

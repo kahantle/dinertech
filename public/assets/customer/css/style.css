@@ -482,11 +482,17 @@ button:focus {
 .owl-theme button.owl-prev {
     position: relative;
     left: -2%;
+    top: -68px;
+    border: none;
+    background: transparent;
 }
 
 .owl-theme button.owl-next {
     position: relative;
-    right: -1%;
+    right: -97%;
+    top: -68px;
+    border: none;
+    background: transparent;
 }
 
 .scrollbar .card {

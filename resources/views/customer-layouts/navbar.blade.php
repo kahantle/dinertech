@@ -18,7 +18,7 @@
         <div class="col-md-6 col-sm-7 col-lg-7 col-xs-6">
             <div class="inncol-ar-list">
                 <ul>
-                    <li class="wd-svg-position">
+                    {{-- <li class="wd-svg-position">
                         <a href="#">
                             <svg width="27" height="31" viewBox="0 0 27 31" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path
@@ -30,7 +30,7 @@
                             </svg>
                         </a>
                         <span class="cart-count badge-circle">4</span>
-                    </li>
+                    </li> --}}
                     <li>
                         <a href="{{ route('customer.settings') }}">
                             <svg width="30" height="31" viewBox="0 0 30 31" fill="none" xmlns="http://www.w3.org/2000/svg">
