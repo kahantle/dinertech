@@ -9,6 +9,22 @@
     <meta charset="utf-8" content="{{route('customer.index')}}" id="base-url">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="shortcut icon" type="image/x-icon" href="{{asset('assets/customer/images/favicon.ico')}}" />
+    <style>
+        button.owl-prev{
+            border: none;
+            background: transparent;
+            position: absolute;
+            left: -19px;
+            top: 30%;
+        }
+        button.owl-next {
+            border: none;
+            background: transparent;
+            position: absolute;
+            right: -19px;
+            top: 30%;
+        }
+    </style>
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     @include('customer-layouts.head')
 </head>
