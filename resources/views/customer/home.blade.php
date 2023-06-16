@@ -3,7 +3,7 @@
 @section('css')
     <!-- Rating bar css -->
     <link rel="stylesheet" href="{{ asset('assets/customer/css/rateYo/2.3.2/jquery.rateyo.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{asset('assets/customer/css/promotion_page.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/customer/css/promotion_page.css') }}">
 @endsection
 
 @section('content')
@@ -19,10 +19,15 @@
                         <div id="menuItems">
                             <div class="content">
                                 <div id="testinomial" class="banner-container">
-                                    <div class="owl-carousel owl-first-blog  owl-theme">
+                                    <div class="owl-carousel owl-carousell owl-first-blog  owl-theme">
                                         @foreach ($promotionLists as $promotion)
                                             <div class="item">
-                                                <div class="card-main-blog @if ($promotion->promotion_type_id == 1 || $promotion->promotion_type_id == 3 || $promotion->promotion_type_id == 4 || $promotion->promotion_type_id == 5) card-v-inner-sys-five @elseif($promotion->promotion_type_id == 2) card-v-inner-sys-first @elseif($promotion->promotion_type_id == 6) card-v-inner-sys-seven @elseif($promotion->promotion_type_id == 7) card-v-inner-sys-six @elseif ($promotion->promotion_type_id == 8) card-v-inner-sys-four @elseif ($promotion->promotion_type_id == 9) card-v-inner-sys-third @elseif ($promotion->promotion_type_id == 10) card-v-inner-sys-second @endif">
+                                                <div
+                                                    class="card-main-blog @if (
+                                                        $promotion->promotion_type_id == 1 ||
+                                                            $promotion->promotion_type_id == 3 ||
+                                                            $promotion->promotion_type_id == 4 ||
+                                                            $promotion->promotion_type_id == 5) card-v-inner-sys-five @elseif($promotion->promotion_type_id == 2) card-v-inner-sys-first @elseif($promotion->promotion_type_id == 6) card-v-inner-sys-seven @elseif($promotion->promotion_type_id == 7) card-v-inner-sys-six @elseif ($promotion->promotion_type_id == 8) card-v-inner-sys-four @elseif ($promotion->promotion_type_id == 9) card-v-inner-sys-third @elseif ($promotion->promotion_type_id == 10) card-v-inner-sys-second @endif">
                                                     <div class="wp-inner-st">
                                                         <h5 class="card-title">{{ $promotion->promotion_name }}</h5>
                                                         <p class="card-text">{{ $promotion->promotion_details }}</p>
@@ -33,7 +38,8 @@
                                                             data-promotion-type="{{ $promotion->promotion_type_id }}"><button
                                                                 class="cancel-btn">Learn More</button></a>
                                                         <span class="get-border"></span>
-                                                        <a href="{{ route('customer.promotions.getEligibleItems', $promotion->promotion_id) }}"><button
+                                                        <a
+                                                            href="{{ route('customer.promotions.getEligibleItems', $promotion->promotion_id) }}"><button
                                                                 class="cancel-btn">Get it Now</button></a>
                                                     </div>
                                                 </div>
@@ -68,8 +74,9 @@
                     @include('customer-layouts.right-sidebar')
                 </div>
             </div>
+        </div>
     </section>
-        @include('customer.guest')
+    @include('customer.guest')
     {{-- @guest
         @include('customer.guest')
     @endguest --}}
@@ -83,4 +90,5 @@
     <!-- Rating bar js -->
     <script src="{{ asset('assets/customer/js/rateYo/2.3.2/jquery.rateyo.min.js') }}"></script>
     <script src="{{ asset('assets/customer/js/custom-js/home/index.js') }}"></script>
+
 @endsection

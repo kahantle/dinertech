@@ -39,6 +39,7 @@ class OrderController extends Controller
             {
                 $list = $list->whereDate('order_date','=',$today->format('Y-m-d'));
             }
+            $list->orderBy('orders.order_id', 'DESC');
             $list = $list->get();
             $result = [];
             foreach($list as $key => $order)
@@ -414,7 +415,7 @@ class OrderController extends Controller
                 $openTime =date('H:i A', strtotime($request->time));
                 $testResult[] =$openingtime <= $openTime &&  $openTime <= $closingtime;
             }
-            
+
             if (is_array($testResult)){
                 foreach ($testResult as $k => &$value) {
                     if($value == true)
