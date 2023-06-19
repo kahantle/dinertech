@@ -188,7 +188,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="profile-inner-blog">
-                                    <h2 class="m-0">Loyalty Rules List </h2>
+                                    <h2 class="m-0">Loyalty Redemption Rules </h2>
                                 </div>
                             </div>
                             <div class="col-md-6 text-right">
