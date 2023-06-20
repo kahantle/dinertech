@@ -79,6 +79,7 @@ function applyCoupenCode() {
                     $('#total_price').html('$' + result.itemPrice.toFixed(2));
                     $('#promotion_id').val(result.promotion_id);
                     $('.couponcode').html(result.couponcode);
+                    $(".bgcolorchange").css("background-color","#54ba72");
                     $(".apply-content").css("display", "none");
                     $(".Promotion-content").css("display", "block");
                     $("#checkout").load(location.href + " #checkout");
@@ -121,6 +122,7 @@ function remove_coupon_code() {
                     $('.coupenremove').hide();
                     $("#checkout").load(location.href + " #checkout");
                     $("#prmotioncode").load(location.href + " #prmotioncode");
+                    $(".bgcolorchange").css("background-color", "");
                 } else {
 
                 }

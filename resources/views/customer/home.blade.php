@@ -38,8 +38,7 @@
                                                             data-promotion-type="{{ $promotion->promotion_type_id }}"><button
                                                                 class="cancel-btn">Learn More</button></a>
                                                         <span class="get-border"></span>
-                                                        <a
-                                                            href="{{ route('customer.promotions.getEligibleItems', $promotion->promotion_id) }}"><button
+                                                        <a href="{{ route('customer.promotions.getEligibleItems', $promotion->promotion_id) }}"><button
                                                                 class="cancel-btn">Get it Now</button></a>
                                                     </div>
                                                 </div>
@@ -90,5 +89,4 @@
     <!-- Rating bar js -->
     <script src="{{ asset('assets/customer/js/rateYo/2.3.2/jquery.rateyo.min.js') }}"></script>
     <script src="{{ asset('assets/customer/js/custom-js/home/index.js') }}"></script>
-
 @endsection

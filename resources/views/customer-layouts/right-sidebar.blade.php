@@ -67,16 +67,23 @@
                         <div class="d-flex align-items-center w-100 justify-content-between mb-4">
                             <h5 class="card-title m-0">My Order</h5>
                         </div>
+                        <div class="text-center pb-2" style="font-weight: bold;">
+                            <span> When Would You Like Your Order?</span>
+                        </div>
+
                         <div class="d-flex align-items-center wd-dr-now">
-                            <div class="input-group w-auto mr-3">
+                            {{-- <div class="input-group w-auto mr-3">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="basic-addon1"><i class="fas fa-clock"></i></span>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="d-flex">
-                                <button type="button" class="btn btn-later btn-innr selected set-now">Now</button>
+                                {{-- <button type="button" class="btn btn-later btn-innr selected set-now">Now</button>
                                 <button type="button" class="btn btn-later btn-innr set-later" data-toggle="modal"
-                                    data-target="#exampleModalCenter1">Later</button>
+                                    data-target="#exampleModalCenter1">Later</button> --}}
+                                <button type="button" class="btn btn-primary btn-later selected set-now">Now <br> <span style="font-size: 10px;">Get Your Order Made Now </span></button>
+                                <button type="button" class="btn btn-primary btn-later set-later" data-toggle="modal"
+                                    data-target="#exampleModalCenter1">Later <br> <span style="font-size: 10px;">Scedule For a Future Time </span></button>
                                 <!-- Modal -->
                                 <div class="modal fade modal-inner-first selectTime" id="exampleModalCenter1"
                                     tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
@@ -213,7 +220,7 @@
                         <hr>
                         <input type="hidden" name="menuItem"
                             value="{{ isset($menuItem) ? base64_encode(json_encode($menuItem)) : '' }}">
-                        <div class="promotion-iner-blog mt-3 Promotion-btn-click ">
+                        <div class="promotion-iner-blog mt-3 Promotion-btn-click  bgcolorchange">
                             <div class="d-flex align-items-center justify-content-between">
                                 <div class="d-flex align-items-center">
                                     <img width="35px" src="{{ asset('assets/images/divition-icon.png') }}"
@@ -230,7 +237,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="promotion-iner-blog-close">
+                        <div class="promotion-iner-blog-close bgcolorchange">
                             <div class="d-flex align-items-center">
                                 <div class="mx-2">
                                     <a href="javascript:void(0)" onclick="remove_coupon_code()"
