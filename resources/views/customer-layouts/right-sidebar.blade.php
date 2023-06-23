@@ -56,6 +56,14 @@
         height: 37px;
         padding: 0px;
     }
+
+    .iconbutton {
+        margin-top: 5px;
+        border: 1px solid red;
+        padding: 3px 12px;
+        border-radius: 50px;
+        color: red;
+    }
 </style>
 <div class="col-xl-4 col-lg-12 col-md-12 wd-dr-dashboart-inner">
     <div class="Promotion-content">
@@ -164,6 +172,12 @@
                                                 <div class="no-photos-blog">
                                                     <p class="m-0"> {{ $item['menu_name'] }} </p>
                                                     <!-- <p>( ${{ $item['menu_price'] }} × {{ $item['menu_qty'] }} )</p> -->
+                                                    @if($item->is_loyalty==1)
+                                                        <div class="iconbutton d-flex  align-items-center">
+                                                            <i class="fa fa-gift pr-3" aria-hidden="true"></i>
+                                                            <p class="mb-0">{{ $item->loyalty_point }} pts</p>
+                                                        </div>
+                                                    @endif
                                                 </div>
                                                 <div class="d-flex">
                                                     <p class="m-0">

@@ -71,7 +71,7 @@ if (!function_exists('getCart')) {
     {
         $uid = auth()->user()->uid ?? 0;
         return $cartItems = Cart::with(['cartMenuItems' => function($query){
-            $query->select(['cart_menu_item_id','cart_id','menu_id','menu_name','menu_qty','menu_price','menu_total','modifier_total','is_loyalty','item_img'])->with(['cartMenuGroups' => function($query){
+            $query->select(['cart_menu_item_id','cart_id','menu_id','menu_name','menu_qty','menu_price','menu_total','modifier_total','is_loyalty','item_img','loyalty_point'])->with(['cartMenuGroups' => function($query){
                 $query->select(['cart_modifier_group_id','cart_menu_item_id','menu_id','modifier_group_id','modifier_group_name'])->with('cartMenuGroupItems')->get();
             }])->get();
         }])->with('cartResturant')->where('restaurant_id',$restaurant_id)->where('uid',$uid)->select('cart_id','restaurant_id','promotion_id','uid','sub_total','discount_charge','tax_charge','total_due','is_payment')->first();
