@@ -158,7 +158,7 @@
                                                 <div class="form-group col-md-12 d-block">
                                                     <input type="email" class="form-control" aria-describedby="emailHelp"
                                                         placeholder="Enter Email Addres" name="email"
-                                                        value="{{ auth()->user()->email_id }}" readonly>
+                                                        value=@if(auth()->user()){{ auth()->user()->email_id }} @else {{'test@gmail.com'}}  @endif readonly>
                                                     @error('email')
                                                         {{ $message }}
                                                     @enderror

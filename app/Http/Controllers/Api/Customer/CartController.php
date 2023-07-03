@@ -46,7 +46,6 @@ class CartController extends Controller
             if($cartItem){
 
                 $promotion_id = $cartItem->promotion_id;
-
                 //Sales Tax
                 $subTotal=$cartItem->sub_total;
                 $taxCharge = ($subTotal * $restaurant->sales_tax) / 100;
@@ -56,7 +55,6 @@ class CartController extends Controller
                 {
                     Cart::where('cart_id',$cartItem->cart_id)->where('uid',$uid)->where('restaurant_id',$restaurantId)->update(['sub_total' => (float)$subTotal,'tax_charge' => (float)$taxCharge, 'total_due' => (float)$totalPayableAmount]);
                 }
-
                 DB::beginTransaction();
                 // if((empty($cartItem->promotion_id) || $cartItem->promotion_id == null) && (empty($cartItem->discount_charge) || floatval($cartItem->discount_charge) == 0)){
                     //  if(!$cartItem->promotion_id){
@@ -78,7 +76,7 @@ class CartController extends Controller
                 $cartItem->save();
 
                 $cartItem = Cart::with(['cartMenuItems' => function($cartItems){
-                    $cartItems->select(['cart_menu_item_id','cart_id','menu_id','menu_name','menu_qty','menu_price','menu_total','modifier_total','is_loyalty'])->with(['cartMenuGroups' => function($cartMenuGroups){
+                    $cartItems->select(['cart_menu_item_id','cart_id','menu_id','menu_name','menu_qty','menu_price','menu_total','modifier_total','is_loyalty','redeem_status'])->with(['cartMenuGroups' => function($cartMenuGroups){
                         $cartMenuGroups->select(['cart_modifier_group_id','cart_menu_item_id','menu_id','modifier_group_id','modifier_group_name'])->with('cartMenuGroupItems')->get();
                     }])->get();
                 }])->where('restaurant_id',$restaurantId)->where('uid',$uid)->select('cart_id','restaurant_id','promotion_id','uid','sub_total','discount_charge','tax_charge','total_due','is_payment')->with('promotion')->first();
@@ -139,8 +137,8 @@ class CartController extends Controller
                     foreach($request->post('menu_item') as $key => $menuItem){
                         $cartMenuItemData = new CartItem;
                         $cartMenuItemData->cart_id = $cart->cart_id;
-                        $cartMenuItemData->category_id = $menuItem['category_id'];
-                        $cartMenuItemData->menu_id = $menuItem['menu_id'];
+                        $cartMenuItemData->category_id = (int)$menuItem['category_id'];
+                        $cartMenuItemData->menu_id = (int)$menuItem['menu_id'];
                         $cartMenuItemData->menu_name = $menuItem['item_name'];
                         $cartMenuItemData->menu_qty = $menuItem['item_qty'];
                         $cartMenuItemData->menu_price = $menuItem['item_price'];
@@ -184,55 +182,213 @@ class CartController extends Controller
                 }
             }else{
                 $cart_sub_total = $check_cart->sub_total;
-                foreach($request->post('menu_item') as $key => $menuItem){
-                    $cartMenuItemData = new CartItem;
-                    $cartMenuItemData->cart_id = $check_cart->cart_id;
-                    $cartMenuItemData->category_id = $menuItem['category_id'];
-                    $cartMenuItemData->menu_id = $menuItem['menu_id'];
-                    $cartMenuItemData->menu_name = $menuItem['item_name'];
-                    $cartMenuItemData->menu_qty = $menuItem['item_qty'];
-                    $cartMenuItemData->menu_price = $menuItem['item_price'];
-                    $cartMenuItemData->modifier_total = $menuItem['modifier_total'];
-                    $cartMenuItemData->menu_total = $menuItem['menu_total'];
-                    $cart_sub_total += $menuItem['menu_total'];
-                    $cartMenuItemData->is_loyalty = ($menuItem['is_loyalty'] == true) ? 1:0;
-                    $cartMenuItemData->loyalty_point = $menuItem['loyalty_point'];
-                    $cartMenuItemData->save();
-                    if(isset($menuItem['modifier_list'])){
-                        foreach($menuItem['modifier_list'] as $modifierKey => $modifier){
-                            $cartModifierGroup = new CartMenuGroup;
-                            $cartModifierGroup->cart_id = $check_cart->cart_id;
-                            $cartModifierGroup->cart_menu_item_id = $cartMenuItemData->cart_menu_item_id;
-                            $cartModifierGroup->menu_id = $menuItem['menu_id'];
-                            $cartModifierGroup->modifier_group_id = $modifier['modifier_group_id'];
-                            $cartModifierGroup->modifier_group_name = $modifier['modifier_group_name'];
-                            if($cartModifierGroup->save()){
-                                if(isset($modifier['modifier_items'])){
-                                    foreach($modifier['modifier_items'] as $modifierItemKey => $modifierItem){
-                                        $cartModifierItem = new CartMenuGroupItem;
-                                        $cartModifierItem->cart_id = $check_cart->cart_id;
-                                        $cartModifierItem->cart_menu_item_id = $cartMenuItemData->cart_menu_item_id;
-                                        $cartModifierItem->menu_id = $menuItem['menu_id'];
-                                        $cartModifierItem->cart_modifier_group_id = $cartModifierGroup->cart_modifier_group_id;
-                                        $cartModifierItem->modifier_item_id = $modifierItem['modifier_item_id'];
-                                        $cartModifierItem->modifier_group_id = $modifier['modifier_group_id'];
-                                        $cartModifierItem->modifier_group_item_name = $modifierItem['modifier_group_item_name'];
-                                        $cartModifierItem->modifier_group_item_price = $modifierItem['modifier_group_item_price'];
-                                        $cartModifierItem->save();
+
+                if(!$request_data['cartmenuitemid']){
+                    foreach($request->post('menu_item') as $key => $menuItem){
+                        $cartMenuItemData = new CartItem;
+                        $cartMenuItemData->cart_id = $check_cart->cart_id;
+                        $cartMenuItemData->category_id = (int)$menuItem['category_id'];
+                        $cartMenuItemData->menu_id = (int)$menuItem['menu_id'];
+                        $cartMenuItemData->menu_name = $menuItem['item_name'];
+                        $cartMenuItemData->menu_qty = $menuItem['item_qty'];
+                        $cartMenuItemData->menu_price = $menuItem['item_price'];
+                        $cartMenuItemData->modifier_total = $menuItem['modifier_total'];
+                        $cartMenuItemData->menu_total = $menuItem['menu_total'];
+                        $cart_sub_total += $menuItem['menu_total'];
+                        $cartMenuItemData->is_loyalty = ($menuItem['is_loyalty'] == true) ? 1:0;
+                        $cartMenuItemData->loyalty_point = $menuItem['loyalty_point'];
+                        $cartMenuItemData->save();
+                        if(isset($menuItem['modifier_list'])){
+                            foreach($menuItem['modifier_list'] as $modifierKey => $modifier){
+                                $cartModifierGroup = new CartMenuGroup;
+                                $cartModifierGroup->cart_id = $check_cart->cart_id;
+                                $cartModifierGroup->cart_menu_item_id = $cartMenuItemData->cart_menu_item_id;
+                                $cartModifierGroup->menu_id = $menuItem['menu_id'];
+                                $cartModifierGroup->modifier_group_id = $modifier['modifier_group_id'];
+                                $cartModifierGroup->modifier_group_name = $modifier['modifier_group_name'];
+                                if($cartModifierGroup->save()){
+                                    if(isset($modifier['modifier_items'])){
+                                        foreach($modifier['modifier_items'] as $modifierItemKey => $modifierItem){
+                                            $cartModifierItem = new CartMenuGroupItem;
+                                            $cartModifierItem->cart_id = $check_cart->cart_id;
+                                            $cartModifierItem->cart_menu_item_id = $cartMenuItemData->cart_menu_item_id;
+                                            $cartModifierItem->menu_id = $menuItem['menu_id'];
+                                            $cartModifierItem->cart_modifier_group_id = $cartModifierGroup->cart_modifier_group_id;
+                                            $cartModifierItem->modifier_item_id = $modifierItem['modifier_item_id'];
+                                            $cartModifierItem->modifier_group_id = $modifier['modifier_group_id'];
+                                            $cartModifierItem->modifier_group_item_name = $modifierItem['modifier_group_item_name'];
+                                            $cartModifierItem->modifier_group_item_price = $modifierItem['modifier_group_item_price'];
+                                            $cartModifierItem->save();
+                                        }
                                     }
                                 }
                             }
                         }
+                        $finalTotal += $cart_sub_total;
                     }
-                    $finalTotal += $cart_sub_total;
                 }
+                $cart_item=CartItem::where('cart_menu_item_id',$request_data['cartmenuitemid'])->first();
+                if($request_data['cartmenuitemid'])
+                {
+                    if($cart_item->menu_qty == "1")
+                    {
+                       $cartitemdelete=$cart_item->delete();
+                       if($cartitemdelete==true)
+                       {
+                            foreach($request->post('menu_item') as $key => $menuItem){
+                                $cartMenuItemData = new CartItem;
+                                $cartMenuItemData->cart_id = $check_cart->cart_id;
+                                $cartMenuItemData->category_id = (int)$menuItem['category_id'];
+                                $cartMenuItemData->menu_id = (int)$menuItem['menu_id'];
+                                $cartMenuItemData->rule_id = (int)$menuItem['rule_id'];
+                                $cartMenuItemData->menu_name = $menuItem['item_name'];
+                                $cartMenuItemData->menu_qty = 1;
+                                $cartMenuItemData->menu_price =0.00;
+                                $cartMenuItemData->price = $menuItem['item_price'];
+                                $cartMenuItemData->modifier_total = $menuItem['modifier_total'];
+                                $cartMenuItemData->menu_total = $menuItem['menu_total'];
+                                $cart_sub_total += $menuItem['menu_total'];
+                                $cartMenuItemData->is_loyalty = ($menuItem['is_loyalty'] == true) ? 1:0;
+                                $cartMenuItemData->loyalty_point = $menuItem['loyalty_point'];
+                                $cartMenuItemData->save();
+                                if(isset($menuItem['modifier_list'])){
+                                    foreach($menuItem['modifier_list'] as $modifierKey => $modifier){
+                                        $cartModifierGroup = new CartMenuGroup;
+                                        $cartModifierGroup->cart_id = $check_cart->cart_id;
+                                        $cartModifierGroup->cart_menu_item_id = $cartMenuItemData->cart_menu_item_id;
+                                        $cartModifierGroup->menu_id = $menuItem['menu_id'];
+                                        $cartModifierGroup->modifier_group_id = $modifier['modifier_group_id'];
+                                        $cartModifierGroup->modifier_group_name = $modifier['modifier_group_name'];
+                                        if($cartModifierGroup->save()){
+                                            if(isset($modifier['modifier_items'])){
+                                                foreach($modifier['modifier_items'] as $modifierItemKey => $modifierItem){
+                                                    $cartModifierItem = new CartMenuGroupItem;
+                                                    $cartModifierItem->cart_id = $check_cart->cart_id;
+                                                    $cartModifierItem->cart_menu_item_id = $cartMenuItemData->cart_menu_item_id;
+                                                    $cartModifierItem->menu_id = $menuItem['menu_id'];
+                                                    $cartModifierItem->cart_modifier_group_id = $cartModifierGroup->cart_modifier_group_id;
+                                                    $cartModifierItem->modifier_item_id = $modifierItem['modifier_item_id'];
+                                                    $cartModifierItem->modifier_group_id = $modifier['modifier_group_id'];
+                                                    $cartModifierItem->modifier_group_item_name = $modifierItem['modifier_group_item_name'];
+                                                    $cartModifierItem->modifier_group_item_price = $modifierItem['modifier_group_item_price'];
+                                                    $cartModifierItem->save();
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                $finalTotal += 0.00;
+                            }
+                       }
+                    }
+                    elseif($cart_item){
+                        $qty=$cart_item->menu_qty;
+                        $newqty=$qty-"1";
+                        $cart_item->menu_qty=(string)$newqty;
+                        $cart_item->save();
+                        $menutotal=$cart_item->menu_qty * $cart_item->menu_price + $cart_item->modifier_total;
+                        CartItem::where('cart_menu_item_id',$cart_item->cart_menu_item_id)->update(['menu_total'=>$menutotal]);
+                        Cart::where('restaurant_id',$request->post('restaurant_id'))->update(['sub_total'=>$menutotal,'total_due' => number_format($menutotal,2)]);
+                        $check_carts = Cart::where('uid',$uid)->where('restaurant_id',$request->post('restaurant_id'))->first();
+                        $cartsubtotal=$check_carts->sub_total;
+                        foreach($request->post('menu_item') as $key => $menuItem){
+                            $cartMenuItemData = new CartItem;
+                            $cartMenuItemData->cart_id = $check_cart->cart_id;
+                            $cartMenuItemData->category_id = (int)$menuItem['category_id'];
+                            $cartMenuItemData->menu_id = (int)$menuItem['menu_id'];
+                            $cartMenuItemData->rule_id = (int)$menuItem['rule_id'];
+                            $cartMenuItemData->menu_name = $menuItem['item_name'];
+                            $cartMenuItemData->menu_qty = 1;
+                            $cartMenuItemData->menu_price = "0.00";
+                            $cartMenuItemData->price = $menuItem['price'];
+                            $cartMenuItemData->modifier_total = $menuItem['modifier_total'];
+                            $cartMenuItemData->menu_total = $menuItem['menu_total'];
+                            $cartsubtotal += $menuItem['menu_total'];
+                            $cartMenuItemData->is_loyalty = ($menuItem['is_loyalty'] == true) ? 1:0;
+                            $cartMenuItemData->loyalty_point = $menuItem['loyalty_point'];
+                            $cartMenuItemData->save();
+                            if(isset($menuItem['modifier_list'])){
+                                foreach($menuItem['modifier_list'] as $modifierKey => $modifier){
+                                    $cartModifierGroup = new CartMenuGroup;
+                                    $cartModifierGroup->cart_id = $check_cart->cart_id;
+                                    $cartModifierGroup->cart_menu_item_id = $cartMenuItemData->cart_menu_item_id;
+                                    $cartModifierGroup->menu_id = $menuItem['menu_id'];
+                                    $cartModifierGroup->modifier_group_id = $modifier['modifier_group_id'];
+                                    $cartModifierGroup->modifier_group_name = $modifier['modifier_group_name'];
+                                    if($cartModifierGroup->save()){
+                                        if(isset($modifier['modifier_items'])){
+                                            foreach($modifier['modifier_items'] as $modifierItemKey => $modifierItem){
+                                                $cartModifierItem = new CartMenuGroupItem;
+                                                $cartModifierItem->cart_id = $check_cart->cart_id;
+                                                $cartModifierItem->cart_menu_item_id = $cartMenuItemData->cart_menu_item_id;
+                                                $cartModifierItem->menu_id = $menuItem['menu_id'];
+                                                $cartModifierItem->cart_modifier_group_id = $cartModifierGroup->cart_modifier_group_id;
+                                                $cartModifierItem->modifier_item_id = $modifierItem['modifier_item_id'];
+                                                $cartModifierItem->modifier_group_id = $modifier['modifier_group_id'];
+                                                $cartModifierItem->modifier_group_item_name = $modifierItem['modifier_group_item_name'];
+                                                $cartModifierItem->modifier_group_item_price = $modifierItem['modifier_group_item_price'];
+                                                $cartModifierItem->save();
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            CartItem::where('cart_menu_item_id',$cart_item->cart_menu_item_id)->update(['redeem_status' => 1]);
+                        }
+                        $finalTotal+= $cartsubtotal;
+                    }
+                }
+                // else{
+                //     foreach($request->post('menu_item') as $key => $menuItem){
+                //         $cartMenuItemData = new CartItem;
+                //         $cartMenuItemData->cart_id = $check_cart->cart_id;
+                //         $cartMenuItemData->category_id = (int)$menuItem['category_id'];
+                //         $cartMenuItemData->menu_id = (int)$menuItem['menu_id'];
+                //         $cartMenuItemData->menu_name = $menuItem['item_name'];
+                //         $cartMenuItemData->menu_qty = $menuItem['item_qty'];
+                //         $cartMenuItemData->menu_price = $menuItem['item_price'];
+                //         $cartMenuItemData->modifier_total = $menuItem['modifier_total'];
+                //         $cartMenuItemData->menu_total = $menuItem['menu_total'];
+                //         $cart_sub_total += $menuItem['menu_total'];
+                //         $cartMenuItemData->is_loyalty = ($menuItem['is_loyalty'] == true) ? 1:0;
+                //         $cartMenuItemData->loyalty_point = $menuItem['loyalty_point'];
+                //         $cartMenuItemData->save();
+                //         if(isset($menuItem['modifier_list'])){
+                //             foreach($menuItem['modifier_list'] as $modifierKey => $modifier){
+                //                 $cartModifierGroup = new CartMenuGroup;
+                //                 $cartModifierGroup->cart_id = $check_cart->cart_id;
+                //                 $cartModifierGroup->cart_menu_item_id = $cartMenuItemData->cart_menu_item_id;
+                //                 $cartModifierGroup->menu_id = $menuItem['menu_id'];
+                //                 $cartModifierGroup->modifier_group_id = $modifier['modifier_group_id'];
+                //                 $cartModifierGroup->modifier_group_name = $modifier['modifier_group_name'];
+                //                 if($cartModifierGroup->save()){
+                //                     if(isset($modifier['modifier_items'])){
+                //                         foreach($modifier['modifier_items'] as $modifierItemKey => $modifierItem){
+                //                             $cartModifierItem = new CartMenuGroupItem;
+                //                             $cartModifierItem->cart_id = $check_cart->cart_id;
+                //                             $cartModifierItem->cart_menu_item_id = $cartMenuItemData->cart_menu_item_id;
+                //                             $cartModifierItem->menu_id = $menuItem['menu_id'];
+                //                             $cartModifierItem->cart_modifier_group_id = $cartModifierGroup->cart_modifier_group_id;
+                //                             $cartModifierItem->modifier_item_id = $modifierItem['modifier_item_id'];
+                //                             $cartModifierItem->modifier_group_id = $modifier['modifier_group_id'];
+                //                             $cartModifierItem->modifier_group_item_name = $modifierItem['modifier_group_item_name'];
+                //                             $cartModifierItem->modifier_group_item_price = $modifierItem['modifier_group_item_price'];
+                //                             $cartModifierItem->save();
+                //                         }
+                //                     }
+                //                 }
+                //             }
+                //         }
+                //         $finalTotal += $cart_sub_total;
+                //     }
+                // }
+
                 // $taxCharge = ($finalTotal * $salesTax) / 100;
                 // $finalTotal = $finalTotal + $taxCharge;
                 $orderType = ($request->post('order_type') == Config::get('constants.ORDER_TYPE.1')) ? Config::get('constants.ORDER_TYPE.1') : Config::get('constants.ORDER_TYPE.2');
                 // Cart::where('uid',$uid)->where('restaurant_id',$request->post('restaurant_id'))->where('cart_id',$check_cart->cart_id)->update(['order_type' => $orderType,'sub_total' => number_format($cart_sub_total,2), 'tax_charge' => number_format($taxCharge,2), 'total_due' => number_format($finalTotal,2)]);
                 Cart::where('uid',$uid)->where('restaurant_id',$request->post('restaurant_id'))->where('cart_id',$check_cart->cart_id)->update(['order_type' => $orderType, 'sub_total' => number_format($finalTotal,2), 'total_due' => number_format($finalTotal,2)]);
             }
-
            return response()->json(['success' => true, 'message' => "Item added to the cart successfully."], 200);
         } catch (\Throwable $th) {
             $errors['success'] = false;
@@ -240,7 +396,7 @@ class CartController extends Controller
             if($request->post('debug_mode') == 'ON'){
                 $errors['debug'] = $th->getMessage();
             }
-            return response()->json($errors,500);
+            return response()->json($errors, 500);
         }
     }
 
@@ -303,13 +459,9 @@ class CartController extends Controller
             if($validator->fails()){
                 return response()->json(['success' => false,'message' => $validator->errors()], 400);
             }
-
+            $updatemodifireprice=0;
             $cartItem = CartItem::where('cart_menu_item_id',$request->post('cart_menu_item_id'))->first();
             if($cartItem){
-                $cartItem->modifier_total = $request->post('modifier_total');
-                $menuTotal = ($request->post('modifier_total') + $cartItem->menu_price) * $cartItem->menu_qty;
-                $cartItem->menu_total = number_format($menuTotal,2);
-                if($cartItem->save()){
                     CartMenuGroup::where('cart_menu_item_id',$request->post('cart_menu_item_id'))->where('menu_id',$request->post('menu_id'))->delete();
                     CartMenuGroupItem::where('cart_menu_item_id',$request->post('cart_menu_item_id'))->where('menu_id',$request->post('menu_id'))->delete();
                     foreach($request->post('modifier_list') as $modifierKey => $modifier){
@@ -331,15 +483,53 @@ class CartController extends Controller
                                     $cartModifierItem->modifier_group_id = $modifier['modifier_group_id'];
                                     $cartModifierItem->modifier_group_item_name = $modifierItem['modifier_group_item_name'];
                                     $cartModifierItem->modifier_group_item_price = $modifierItem['modifier_group_item_price'];
+                                    $updatemodifireprice+=$modifierItem['modifier_group_item_price'];
                                     $cartModifierItem->save();
                                 }
                             }
                         }
                     }
-                    return response()->json(['message' => 'Modifiers update successfully.','success' => true], 200);
-                }else{
-                    return response()->json(['message' => 'Modifiers does not update successfully.','success' => false], 200);
-                }
+                    $finalTotal=$updatemodifireprice;
+
+
+
+                $cartItem->modifier_total = $finalTotal;
+                $menuTotal = ( $finalTotal + $cartItem->menu_price) * $cartItem->menu_qty;
+                $cartItem->menu_total = number_format($menuTotal,2);
+                $cartItem->save();
+                return response()->json(['message' => 'Modifiers update successfully.','success' => true], 200);
+
+                // if($cartItem->save()){
+                //     CartMenuGroup::where('cart_menu_item_id',$request->post('cart_menu_item_id'))->where('menu_id',$request->post('menu_id'))->delete();
+                //     CartMenuGroupItem::where('cart_menu_item_id',$request->post('cart_menu_item_id'))->where('menu_id',$request->post('menu_id'))->delete();
+                //     foreach($request->post('modifier_list') as $modifierKey => $modifier){
+                //         $cartModifierGroup = new CartMenuGroup;
+                //         $cartModifierGroup->cart_id = $cartItem->cart_id;
+                //         $cartModifierGroup->cart_menu_item_id = $request->post('cart_menu_item_id');
+                //         $cartModifierGroup->menu_id = $request->post('menu_id');
+                //         $cartModifierGroup->modifier_group_id = $modifier['modifier_group_id'];
+                //         $cartModifierGroup->modifier_group_name = $modifier['modifier_group_name'];
+                //         if($cartModifierGroup->save()){
+                //             if($modifier['modifier_items']){
+                //                 foreach($modifier['modifier_items'] as $modifierItemKey => $modifierItem){
+                //                     $cartModifierItem = new CartMenuGroupItem;
+                //                     $cartModifierItem->cart_id = $cartItem->cart_id;
+                //                     $cartModifierItem->cart_menu_item_id = $request->post('cart_menu_item_id');
+                //                     $cartModifierItem->menu_id = $request->post('menu_id');
+                //                     $cartModifierItem->cart_modifier_group_id = $cartModifierGroup->cart_modifier_group_id;
+                //                     $cartModifierItem->modifier_item_id = $modifierItem['modifier_item_id'];
+                //                     $cartModifierItem->modifier_group_id = $modifier['modifier_group_id'];
+                //                     $cartModifierItem->modifier_group_item_name = $modifierItem['modifier_group_item_name'];
+                //                     $cartModifierItem->modifier_group_item_price = $modifierItem['modifier_group_item_price'];
+                //                     $cartModifierItem->save();
+                //                 }
+                //             }
+                //         }
+                //     }
+                //     return response()->json(['message' => 'Modifiers update successfully.','success' => true], 200);
+                // }else{
+                //     return response()->json(['message' => 'Modifiers does not update successfully.','success' => false], 200);
+                // }
             }else{
                 return response()->json(['message' => 'Item not found in cart.','success' => false], 400);
             }
@@ -381,8 +571,6 @@ class CartController extends Controller
             $uid = auth('api')->user()->uid;
             $check_cart = Cart::where('uid',$uid)->where('restaurant_id',$request->post('restaurant_id'))->first();
             $cartMenuItems = CartItem::where('cart_id',$check_cart->cart_id);
-
-
 
 
             if($cartMenuItems->get()->count() > 1){
