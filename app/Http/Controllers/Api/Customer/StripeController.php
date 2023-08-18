@@ -53,7 +53,7 @@ class StripeController extends Controller
                         ]);
             // Check that it was paid:
 	        if ($charge->paid == true) {
-                return response()->json(['message' => 'Payment has been charged!!','stripe_payment_id' => $charge->created,'success' => true], 200);
+                return response()->json(['message' => 'Payment has been charged!!','stripe_payment_id' => $charge->created,'stripe_payment_object' => $charge,'success' => true], 200);
             }
             else {
                 return response()->json(['message' => 'Your payment could NOT be processed because the payment system rejected the transaction. You can try again or use another card.','success' => false], 200);
