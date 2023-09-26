@@ -64,7 +64,7 @@ class StripeController extends Controller
                                 'payment_method_types' => ['card'],
                                 ]);
             // Check that it was paid:
-	        if ($charge->paid == true && isset($payment_intent->id])) {
+	        if ($charge->paid == true && isset($payment_intent->id)) {
                 return response()->json(['message' => 'Payment has been charged!!','stripe_payment_id' => $charge->created,'stripe_payment_object' => $charge,'payment_intent_object' => $payment_intent,'payment_intent_id' => $payment_intent->id,'success' => true], 200);
             }
             else {
