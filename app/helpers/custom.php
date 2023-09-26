@@ -555,31 +555,31 @@ if(!function_exists('apply_promotion'))
                     return false;
                 }
                 break;
-            // case Config::get('constants.PROMOTION_TYPES.TWO'):
-            //     dd( Config::get('constants.PROMOTION_TYPES.TWO') );
-            //         break;
-            // case Config::get('constants.PROMOTION_TYPES.THREE'):
-            //     dd( Config::get('constants.PROMOTION_TYPES.THREE') );
-            //         break;
-            // case Config::get('constants.PROMOTION_TYPES.FOUR'):
-            //     dd( Config::get('constants.PROMOTION_TYPES.FOUR'));
-            //         break;
-            // case Config::get('constants.PROMOTION_TYPES.FIVE'):
-            //     dd( Config::get('constants.PROMOTION_TYPES.FIVE'));
-            //         break;
-            // case Config::get('constants.PROMOTION_TYPES.SIX'):
-            //     dd( Config::get('constants.PROMOTION_TYPES.SIX'));
-            //         break;
-            // case Config::get('constants.PROMOTION_TYPES.SEVEN'):
-            //     dd( Config::get('constants.PROMOTION_TYPES.SEVEN'));
-            //         break;
-            // case Config::get('constants.PROMOTION_TYPES.EIGHT'):
-            //     dd( Config::get('constants.PROMOTION_TYPES.EIGHT'));
-            //         break;
-            // case Config::get('constants.PROMOTION_TYPES.NINE'):
-            //     dd( Config::get('constants.PROMOTION_TYPES.NINE'));
-            //         break;
-            // case Config::get('constants.PROMOTION_TYPES.TEN'):
+            case Config::get('constants.PROMOTION_TYPES.TWO'):
+                dd( Config::get('constants.PROMOTION_TYPES.TWO') );
+                    break;
+            case Config::get('constants.PROMOTION_TYPES.THREE'):
+                dd( Config::get('constants.PROMOTION_TYPES.THREE') );
+                    break;
+            case Config::get('constants.PROMOTION_TYPES.FOUR'):
+                dd( Config::get('constants.PROMOTION_TYPES.FOUR'));
+                    break;
+            case Config::get('constants.PROMOTION_TYPES.FIVE'):
+                dd( Config::get('constants.PROMOTION_TYPES.FIVE'));
+                    break;
+            case Config::get('constants.PROMOTION_TYPES.SIX'):
+                dd( Config::get('constants.PROMOTION_TYPES.SIX'));
+                    break;
+            case Config::get('constants.PROMOTION_TYPES.SEVEN'):
+                dd( Config::get('constants.PROMOTION_TYPES.SEVEN'));
+                    break;
+            case Config::get('constants.PROMOTION_TYPES.EIGHT'):
+                dd( Config::get('constants.PROMOTION_TYPES.EIGHT'));
+                    break;
+            case Config::get('constants.PROMOTION_TYPES.NINE'):
+                dd( Config::get('constants.PROMOTION_TYPES.NINE'));
+                    break;
+            case Config::get('constants.PROMOTION_TYPES.TEN'):
                 dd( Config::get('constants.PROMOTION_TYPES.TEN'));
                     break;
             default:
