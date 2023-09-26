@@ -51,9 +51,21 @@ class StripeController extends Controller
                         'source' => $request->post('source'),
                         'description' => ($request->post('description')) ? $request->post('description') : null,
                         ]);
+
+            $payment_intent = $stripe->paymentIntents->create([
+                                'amount' => $request->post('amount'),
+                                'currency' => $request->post('currency'),
+                                'description' => ($request->post('description')) ? $request->post('description') : null,
+                                'automatic_payment_methods' => [
+                                    'enabled' => true,
+                                    ],
+                                'confirm' => 'true',
+                                'capture_method' => 'automatic',
+                                'payment_method_types' => ['card'],
+                                ]);
             // Check that it was paid:
-	        if ($charge->paid == true) {
-                return response()->json(['message' => 'Payment has been charged!!','stripe_payment_id' => $charge->created,'stripe_payment_object' => $charge,'success' => true], 200);
+	        if ($charge->paid == true && isset($payment_intent->id])) {
+                return response()->json(['message' => 'Payment has been charged!!','stripe_payment_id' => $charge->created,'stripe_payment_object' => $charge,'payment_intent_object' => $payment_intent,'payment_intent_id' => $payment_intent->id,'success' => true], 200);
             }
             else {
                 return response()->json(['message' => 'Your payment could NOT be processed because the payment system rejected the transaction. You can try again or use another card.','success' => false], 200);
