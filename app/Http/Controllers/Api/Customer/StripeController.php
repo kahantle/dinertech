@@ -58,6 +58,7 @@ class StripeController extends Controller
                                 'description' => ($request->post('description')) ? $request->post('description') : null,
                                 'automatic_payment_methods' => [
                                     'enabled' => true,
+                                    'allow_redirects' => 'never',
                                     ],
                                 'confirm' => 'true',
                                 'capture_method' => 'automatic',
