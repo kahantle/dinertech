@@ -59,13 +59,21 @@ class StripeController extends Controller
                 //             'description' => ($request->post('description')) ? $request->post('description') : null,
                 //             ]);
 
+                // for remove whitespace in card_number
+                $card_number = str_replace(' ', '', $get_card->card_number);
+
+                // for split card expiry month and year and convert into integer datatype
+                $expiry_month_year = explode('/', $get_card->card_expire_date);
+                $expiry_month = (int)$expiry_month_year[0];
+                $expiry_year = (int)$expiry_month_year[1];
+
                 // Create a PaymentMethod using the payment method details received from the client
                 $payment_method = $stripe->paymentMethods->create([
                                     'type' => 'card',
                                     'card' => [
-                                        'number' => $get_card->card_number,
-                                        'exp_month' => $get_card->exp_month,
-                                        'exp_year' => $get_card->exp_year,
+                                        'number' => $card_number,
+                                        'exp_month' => $expiry_month,
+                                        'exp_year' => $expiry_year,
                                         'cvc' => $get_card->card_cvv,
                                     ],
                                     'metadata' => [
