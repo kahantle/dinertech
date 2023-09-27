@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\customer;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Card;
 use Config;
 use Validator;
 
@@ -33,43 +34,72 @@ class StripeController extends Controller
             $request_data = $request->json()->all();
 
             $validator = Validator::make($request_data, [
-               "amount" => "required",
-               "currency" => "required",
-               "source"  => "required",
+                "amount" => "required",
+                "currency" => "required",
+                "source"  => "required",
+                "card_id" => "required",
             ]);
             if ($validator->fails()) {
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
             }
 
-            $stripe = new \Stripe\StripeClient(
-                env('STRIPE_SECRET')
-            );
+            $uid = auth('api')->user()->uid;
 
-            $charge = $stripe->charges->create([
-                        'amount' => $request->post('amount'),
-                        'currency' => $request->post('currency'),
-                        'source' => $request->post('source'),
-                        'description' => ($request->post('description')) ? $request->post('description') : null,
-                        ]);
+            $get_card = Card::where('card_id', $request->post('card_id'))->where('uid', $uid)->first();
 
-            $payment_intent = $stripe->paymentIntents->create([
-                                'amount' => $request->post('amount'),
-                                'currency' => $request->post('currency'),
-                                'description' => ($request->post('description')) ? $request->post('description') : null,
-                                'automatic_payment_methods' => [
-                                    'enabled' => true,
-                                    'allow_redirects' => 'never',
+            if(!empty($get_card)) {
+
+                $stripe = new \Stripe\StripeClient(
+                    env('STRIPE_SECRET')
+                );
+                // $charge = $stripe->charges->create([
+                //             'amount' => $request->post('amount'),
+                //             'currency' => $request->post('currency'),
+                //             'source' => $request->post('source'),
+                //             'description' => ($request->post('description')) ? $request->post('description') : null,
+                //             ]);
+
+                // Create a PaymentMethod using the payment method details received from the client
+                $payment_method = $stripe->paymentMethods->create([
+                                    'type' => 'card',
+                                    'card' => [
+                                        'number' => $get_card->card_number,
+                                        'exp_month' => $get_card->exp_month,
+                                        'exp_year' => $get_card->exp_year,
+                                        'cvc' => $get_card->card_cvv,
                                     ],
-                                'confirm' => 'true',
-                                'capture_method' => 'automatic',
-                                ]);//'payment_method_types' => ['card'],
-            // Check that it was paid:
-	        if ($charge->paid == true) {// && isset($payment_intent->id)
-                return response()->json(['message' => 'Payment has been charged!!','stripe_payment_id' => $charge->created,'stripe_payment_object' => $charge,'payment_intent_object' => $payment_intent,'success' => true], 200);//,'payment_intent_id' => $payment_intent->id
+                                    'metadata' => [
+                                        'uid' => ($get_card->uid) ? $get_card->uid : null,
+                                        'card_id' => ($get_card->card_id) ? $get_card->card_id : null,,
+                                    ],
+                                ]);
+                if (isset($payment_method->id)) {
+                    $payment_intent = $stripe->paymentIntents->create([
+                                        'amount' => $request->post('amount'),
+                                        'currency' => $request->post('currency'),
+                                        'description' => ($request->post('description')) ? $request->post('description') : null,
+                                        'automatic_payment_methods' => [
+                                            'enabled' => true,
+                                            'allow_redirects' => 'never',
+                                            ],
+                                        'confirm' => true,
+                                        'capture_method' => 'automatic',
+                                        'payment_method' => $payment_method->id,
+                                    ]);//'payment_method_types' => ['card'],
+                    // Check that it was paid:
+                    if (isset($payment_intent->id)) {//$charge->paid == true && isset($payment_intent->id)
+                        return response()->json(['message' => 'Payment has been charged!!','payment_method_object' => $payment_method_object,'payment_intent_object' => $payment_intent,'success' => true], 200);//'stripe_payment_id' => $charge->created,'stripe_payment_object' => $charge,'payment_intent_id' => $payment_intent->id
+                    } else {
+                        return response()->json(['message' => 'Your payment could NOT be processed because the payment system rejected the transaction. You can try again or use another card.','success' => false], 200);//,'stripe_payment_id' => $charge->created,'stripe_payment_object' => $charge,'payment_intent_object' => $payment_intent
+                    }
+                } else {
+                    return response()->json(['message' => 'Your payment could not be processed because there was some incorrect card details. You can try again or use another card.','success' => false], 200);
+                }
+            } else {
+
+                return response()->json(['message' => 'User card details not found','success' => false], 200);
             }
-            else {
-                return response()->json(['message' => 'Your payment could NOT be processed because the payment system rejected the transaction. You can try again or use another card.','stripe_payment_id' => $charge->created,'stripe_payment_object' => $charge,'payment_intent_object' => $payment_intent,'success' => false], 200);
-            }
+
         } catch (\Throwable $th) {
             $errors['success'] = false;
             $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
