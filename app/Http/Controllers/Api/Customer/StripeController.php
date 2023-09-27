@@ -70,7 +70,7 @@ class StripeController extends Controller
                                     ],
                                     'metadata' => [
                                         'uid' => ($get_card->uid) ? $get_card->uid : null,
-                                        'card_id' => ($get_card->card_id) ? $get_card->card_id : null,,
+                                        'card_id' => ($get_card->card_id) ? $get_card->card_id : null,
                                     ],
                                 ]);
                 if (isset($payment_method->id)) {
