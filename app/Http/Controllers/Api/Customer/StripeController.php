@@ -96,7 +96,7 @@ class StripeController extends Controller
                                     ]);//'payment_method_types' => ['card'],
                     // Check that it was paid:
                     if (isset($payment_intent->id)) {//$charge->paid == true && isset($payment_intent->id)
-                        return response()->json(['message' => 'Payment has been charged!!','payment_method_object' => $payment_method_object,'payment_intent_object' => $payment_intent,'success' => true], 200);//'stripe_payment_id' => $charge->created,'stripe_payment_object' => $charge,'payment_intent_id' => $payment_intent->id
+                        return response()->json(['message' => 'Payment has been charged!!','payment_method_object' => $payment_method,'payment_intent_object' => $payment_intent,'success' => true], 200);//'stripe_payment_id' => $charge->created,'stripe_payment_object' => $charge,'payment_intent_id' => $payment_intent->id
                     } else {
                         return response()->json(['message' => 'Your payment could NOT be processed because the payment system rejected the transaction. You can try again or use another card.','success' => false], 200);//,'stripe_payment_id' => $charge->created,'stripe_payment_object' => $charge,'payment_intent_object' => $payment_intent
                     }
