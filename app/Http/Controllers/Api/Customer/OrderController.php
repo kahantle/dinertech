@@ -133,6 +133,10 @@ class OrderController extends Controller
             $order->payment_card_id = ($request->post('isCash') == 1) ? $request->post('payment_card_id') : NULL;
             $order->isCash = $request->post('isCash');
             $order->stripe_payment_id = ($request->post('isCash') == 1) ? $request->post('stripe_payment_id') : null;
+            $order->stripe_charge_id = ($request->post('isCash') == 1) ? $request->post('stripe_charge_id') : null;
+            $order->payment_method_id = ($request->post('isCash') == 1) ? $request->post('payment_method_id') : null;
+            $order->payment_intent_id = ($request->post('isCash') == 1) ? $request->post('payment_intent_id') : null;
+            $order->payment_intent_client_secret = ($request->post('isCash') == 1) ? $request->post('payment_intent_client_secret') : null;
             $order->cart_charge = $request->post('cart_charge');
             $order->delivery_charge = $request->post('delivery_charge');
             $order->discount_charge = $request->post('discount_charge');
