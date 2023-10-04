@@ -107,21 +107,9 @@ class StripeController extends Controller
                         // for get payment charge id
                         $payment_charge_id = null;
 
-                        // Decode the JSON response of payment intent
-                        $response = json_decode($payment_intent, true);
+                        if (isset($payment_intent->latest_charge) && !empty($payment_intent->latest_charge)) {
 
-                        // Check if 'charges' object and 'data' array exist
-                        if (isset($response['charges']['data']) && is_array($response['charges']['data']) && count($response['charges']['data']) > 0) {
-
-                            // Get the first object in the 'data' array
-                            $firstCharge = $response['charges']['data'][0];
-
-                            // Check if 'id' field of the first object is not empty or null
-                            if (isset($firstCharge['id']) && !empty($firstCharge['id'])) {
-
-                                // Store the 'id' in payment_charge_id variable
-                                $payment_charge_id = $firstCharge['id'];
-                            }
+                            $payment_charge_id = $payment_intent->latest_charge;
                         }
 
                         return response()->json(['message' => 'Payment has been charged!!','stripe_payment_id' => $payment_intent->created,'payment_method_id' => $payment_intent->payment_method,'payment_intent_id' => $payment_intent->id,'payment_intent_client_secret' => $payment_intent->client_secret,'stripe_charge_id'=> $payment_charge_id,'payment_card_id'=> $request->post('card_id'),'success' => true], 200);
