@@ -52,6 +52,8 @@ class StripeController extends Controller
                 $stripe = new \Stripe\StripeClient(
                     env('STRIPE_SECRET')
                 );
+
+                //////////////// OLD PAYMENT LOGIC \\\\\\\\\\\\\\\\\\
                 // $charge = $stripe->charges->create([
                 //             'amount' => $request->post('amount'),
                 //             'currency' => $request->post('currency'),
@@ -93,12 +95,41 @@ class StripeController extends Controller
                                         'confirm' => true,
                                         'capture_method' => 'automatic',
                                         'payment_method' => $payment_method->id,
+                                        'metadata' => [
+                                            'uid' => ($get_card->uid) ? $get_card->uid : null,
+                                            'card_id' => ($get_card->card_id) ? $get_card->card_id : null,
+                                        ],
                                     ]);//'payment_method_types' => ['card'],
-                    // Check that it was paid:
-                    if (isset($payment_intent->id)) {//$charge->paid == true && isset($payment_intent->id)
-                        return response()->json(['message' => 'Payment has been charged!!','payment_method_object' => $payment_method,'payment_intent_object' => $payment_intent,'success' => true], 200);//'stripe_payment_id' => $charge->created,'stripe_payment_object' => $charge,'payment_intent_id' => $payment_intent->id
+
+                    // Check for payment success or not:
+                    if (isset($payment_intent->id) && $payment_intent->status == 'succeeded') {
+
+                        // for get payment charge id
+                        $payment_charge_id = null;
+
+                        // Decode the JSON response of payment intent
+                        $response = json_decode($payment_intent, true);
+
+                        // Check if 'charges' object and 'data' array exist
+                        if (isset($response['charges']['data']) && is_array($response['charges']['data']) && count($response['charges']['data']) > 0) {
+
+                            // Get the first object in the 'data' array
+                            $firstCharge = $response['charges']['data'][0];
+
+                            // Check if 'id' field of the first object is not empty or null
+                            if (isset($firstCharge['id']) && !empty($firstCharge['id'])) {
+
+                                // Store the 'id' in payment_charge_id variable
+                                $payment_charge_id = $firstCharge['id'];
+                            }
+                        }
+
+                        return response()->json(['message' => 'Payment has been charged!!','stripe_payment_id' => $payment_intent->created,'payment_method_id' => $payment_intent->payment_method,'payment_intent_id' => $payment_intent->id,'payment_intent_client_secret' => $payment_intent->client_secret,'stripe_charge_id'=> $payment_charge_id,'payment_card_id'=> $request->post('card_id'),'success' => true], 200);
+
+                        //////////////// OLD RESPONSE \\\\\\\\\\\\\\\\\\
+                        // return response()->json(['message' => 'Payment has been charged!!','stripe_payment_id' => $charge->created,'success' => true], 200);
                     } else {
-                        return response()->json(['message' => 'Your payment could NOT be processed because the payment system rejected the transaction. You can try again or use another card.','success' => false], 200);//,'stripe_payment_id' => $charge->created,'stripe_payment_object' => $charge,'payment_intent_object' => $payment_intent
+                        return response()->json(['message' => 'Your payment could NOT be processed because the payment system rejected the transaction. You can try again or use another card.','success' => false], 200);
                     }
                 } else {
                     return response()->json(['message' => 'Your payment could not be processed because there was some incorrect card details. You can try again or use another card.','success' => false], 200);
