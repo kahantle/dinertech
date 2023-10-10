@@ -311,6 +311,81 @@ class OrderController extends Controller
         }
     }
 
+    public function refundOrder(Request $request)
+    {
+        try {
+            $request_data = $request->json()->all();
+            $validator = Validator::make($request_data,[
+                'payment_intent_id' => 'required',
+                'stripe_refund_amount' => 'required',
+                // 'restaurant_id' => 'required',
+                // 'order_id' => 'required',
+            ]);
+            if ($validator->fails()) {
+                return response()->json(['success' => false, 'message' => $validator->errors()], 400);
+            }
+
+            $stripe = new \Stripe\StripeClient(
+                    env('STRIPE_SECRET')
+                );
+
+            $refund = $stripe->refunds->create([
+
+                            'payment_intent' => $request->post('payment_intent_id'),
+                            'amount' => $request->post('stripe_refund_amount'),
+                        ]);
+                            // 'metadata' => [
+                            //     'uid' => ($get_card->uid) ? $get_card->uid : null,
+                            //     'card_id' => ($get_card->card_id) ? $get_card->card_id : null,
+                            // ],
+            // Check for refund success or not:
+            if (isset($refund->id) && $refund->status == 'succeeded') {
+
+                return response()->json(['message' => 'Your refund has been processed & refund amount will reflected in you account within 3 business days!!','stripe_refund_object' => $refund,'success' => true], 200);
+                // ,'payment_method_id' => $payment_intent->payment_method,'payment_intent_id' => $payment_intent->id,'payment_intent_client_secret' => $payment_intent->client_secret,'stripe_charge_id'=> $payment_charge_id
+
+            } else {
+                return response()->json(['message' => 'Your refund could not be processed because the payment system found some problems with your request. You can try again or contact our support team.','success' => false], 200);
+            }
+
+            // DB::beginTransaction();
+            // $restaurant = Restaurant::where('restaurant_id',$request->post('restaurant_id'))->first();
+            // // $order =  Order::where('restaurant_id', $request->post('restaurant_id'))
+            // // ->where('order_id',$request->post('order_id'))
+            // // ->whereNull('order_status')
+            // // ->first();
+            // $order = Order::select('orders.order_id','orders.uid','orders.restaurant_id',
+            // 'orders.stripe_payment_id','orders.order_number','restaurants.restaurant_name')
+            // ->join('restaurants','restaurants.restaurant_id','orders.restaurant_id')
+            // ->where('orders.restaurant_id', $request->post('restaurant_id'))
+            // ->first();
+
+            // if(!$order){
+            //     return response()->json(['message' => "Invalid Order or already procceed.", 'success' => true], 401);
+            // }
+            // $order->isPickUp = true;
+            // $order->order_status = 0;
+            // $order->order_progress_status = Config::get('constants.ORDER_STATUS.CANCEL');
+            // if($order->save()){
+            //     DB::commit();
+            //     $user = User::find($order->uid);
+            //     $user->notify(new DeclineOrder($order));
+            //     return response()->json(['message' => "Order declined successfully.", 'success' => true], 200);
+            // }else{
+            //     DB::rollBack();
+            //     return response()->json(['message' => "Order does not cancel successfully.", 'success' => true], 401);
+            // }
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $errors['success'] = false;
+            $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
+            if ($request->debug_mode == 'ON') {
+                $errors['debug'] = $th->getMessage();
+            }
+            return response()->json($errors, 500);
+        }
+    }
+
 
     public function preparedOrder(Request $request)
     {
