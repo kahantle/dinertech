@@ -14,7 +14,7 @@ use App\Models\OrderMenuGroup;
 use App\Models\OrderMenuGroupItem;
 use App\Models\RestaurantHours;
 use App\Models\User;
-use App\Models\RefundHistory
+use App\Models\RefundHistory;
 use App\Notifications\AcceptOrder;
 use App\Notifications\DeclineOrder;
 use App\Notifications\PreparedOrder;
