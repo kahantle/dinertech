@@ -14,6 +14,7 @@ use App\Models\OrderMenuGroup;
 use App\Models\OrderMenuGroupItem;
 use App\Models\RestaurantHours;
 use App\Models\User;
+use App\Models\RefundHistory
 use App\Notifications\AcceptOrder;
 use App\Notifications\DeclineOrder;
 use App\Notifications\PreparedOrder;
@@ -316,65 +317,103 @@ class OrderController extends Controller
         try {
             $request_data = $request->json()->all();
             $validator = Validator::make($request_data,[
-                'payment_intent_id' => 'required',
+                'restaurant_id' => 'required',
+                'order_id' => 'required',
+                'is_partial_refund' => 'required',
                 'stripe_refund_amount' => 'required',
-                // 'restaurant_id' => 'required',
-                // 'order_id' => 'required',
+                'refund_amount' => 'required',
+                'new_grand_total' => 'required',
+                // 'payment_intent_id' => 'required',
             ]);
             if ($validator->fails()) {
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
             }
 
-            $stripe = new \Stripe\StripeClient(
-                    env('STRIPE_SECRET')
-                );
+            $order = Order::select('orders.order_id','orders.uid','orders.restaurant_id',
+            'orders.stripe_payment_id','orders.payment_intent_id','orders.stripe_refund_id','orders.is_refund','orders.is_partial_refund','orders.cart_charge','orders.delivery_charge','orders.discount_charge','orders.sales_tax','orders.tip_amount','orders.refund_amount','orders.grand_total','orders.order_status','orders.order_progress_status','orders.order_number','restaurants.restaurant_name')
+            ->join('restaurants','restaurants.restaurant_id','orders.restaurant_id')
+            ->where('orders.order_id', $request->post('order_id'))
+            ->where('orders.restaurant_id', $request->post('restaurant_id'))
+            ->first();
 
-            $refund = $stripe->refunds->create([
-
-                            'payment_intent' => $request->post('payment_intent_id'),
-                            'amount' => $request->post('stripe_refund_amount'),
-                        ]);
-                            // 'metadata' => [
-                            //     'uid' => ($get_card->uid) ? $get_card->uid : null,
-                            //     'card_id' => ($get_card->card_id) ? $get_card->card_id : null,
-                            // ],
-            // Check for refund success or not:
-            if (isset($refund->id) && $refund->status == 'succeeded') {
-
-                return response()->json(['message' => 'Your refund has been processed & refund amount will reflected in you account within 3 business days!!','stripe_refund_object' => $refund,'success' => true], 200);
-                // ,'payment_method_id' => $payment_intent->payment_method,'payment_intent_id' => $payment_intent->id,'payment_intent_client_secret' => $payment_intent->client_secret,'stripe_charge_id'=> $payment_charge_id
-
+            if(!$order){
+                return response()->json(['message' => "Invalid Order or Order Not Founds.", 'success' => true], 401);
             } else {
-                return response()->json(['message' => 'Your refund could not be processed because the payment system found some problems with your request. You can try again or contact our support team.','success' => false], 200);
+
+                if($order->is_refund == 1) {
+
+                    return response()->json(['message' => "Your refund already processed, check your account for refund amount is reflected or not!!.", 'success' => true], 401);
+                } else {
+
+                    if(isset($order->payment_intent_id)) {
+
+                        $stripe = new \Stripe\StripeClient(
+                            env('STRIPE_SECRET')
+                        );
+
+                        $refund = $stripe->refunds->create([
+                                        'payment_intent' => $order->payment_intent_id,
+                                        'amount' => $request->post('stripe_refund_amount'),
+                                        'metadata' => [
+                                            'restaurant_id' => $order->restaurant_id,
+                                            'order_id' => $order->order_id,
+                                        ],
+                                    ]);
+                        // $refund = $stripe->refunds->create([
+                        //                 'payment_intent' => $request->post('payment_intent_id'),
+                        //                 'amount' => $request->post('stripe_refund_amount'),
+                        //             ]);
+                        //                 // 'metadata' => [
+                        //                 //     'restaurant_id' => $order->restaurant_id,
+                        //                 //     'order_id' => $order->order_id,
+                        //                 // ],
+                        // Check for refund success or not:
+                        if (isset($refund->id) && $refund->status == 'succeeded') {
+
+                            DB::beginTransaction();
+                            $order->stripe_refund_id = $refund->id;
+                            $order->is_refund = 1;
+                            $order->is_partial_refund = $request->post('is_partial_refund');
+                            $order->refund_amount = $request->post('refund_amount');
+                            $order->grand_total = $request->post('new_grand_total');
+                            // $order->order_progress_status = Config::get('constants.ORDER_STATUS.CANCEL');
+
+                            if($order->save()){
+
+                                $refund_history = new RefundHistory;
+                                $refund_history->restaurant_id = $request->post('restaurant_id');
+                                $refund_history->order_id = $order->order_id;
+                                $refund_history->stripe_refund_id = $refund->id;
+                                $refund_history->is_partial_refund   = $request->post('is_partial_refund');
+                                $refund_history->stripe_refund_amount = $request->post('stripe_refund_amount');
+                                $refund_history->refund_amount = $request->post('refund_amount');
+                                $refund_history->refund_details_object = $request->post('refund_details_object');
+                                // $refund_history->refund_object = ($request->post('refund_object')) ? $request->post('refund_object') : null;
+
+                                if($refund_history->save()){
+
+                                    DB::commit();
+                                    // $user = User::find($order->uid);
+                                    // $user->notify(new DeclineOrder($order));
+                                    return response()->json(['message' => 'Your refund has been processed & refund amount will reflected in you account within 3 business days!!','success' => true], 200);
+
+                                } else {
+                                    DB::rollBack();
+                                    return response()->json(['message' => "Your refund could not be processed successfully.", 'success' => true], 401);
+                                }
+                            } else {
+                                DB::rollBack();
+                                return response()->json(['message' => "Your refund could not be processed successfully.", 'success' => true], 401);
+                            }
+                        } else {
+                            return response()->json(['message' => 'Your refund could not be processed because the payment system found some problems with your request. You can try again or contact our support team.','success' => false], 200);
+                        }
+                    } else {
+
+                        return response()->json(['message' => "Payment details not found for processing your refund.", 'success' => true], 401);
+                    }
+                }
             }
-
-            // DB::beginTransaction();
-            // $restaurant = Restaurant::where('restaurant_id',$request->post('restaurant_id'))->first();
-            // // $order =  Order::where('restaurant_id', $request->post('restaurant_id'))
-            // // ->where('order_id',$request->post('order_id'))
-            // // ->whereNull('order_status')
-            // // ->first();
-            // $order = Order::select('orders.order_id','orders.uid','orders.restaurant_id',
-            // 'orders.stripe_payment_id','orders.order_number','restaurants.restaurant_name')
-            // ->join('restaurants','restaurants.restaurant_id','orders.restaurant_id')
-            // ->where('orders.restaurant_id', $request->post('restaurant_id'))
-            // ->first();
-
-            // if(!$order){
-            //     return response()->json(['message' => "Invalid Order or already procceed.", 'success' => true], 401);
-            // }
-            // $order->isPickUp = true;
-            // $order->order_status = 0;
-            // $order->order_progress_status = Config::get('constants.ORDER_STATUS.CANCEL');
-            // if($order->save()){
-            //     DB::commit();
-            //     $user = User::find($order->uid);
-            //     $user->notify(new DeclineOrder($order));
-            //     return response()->json(['message' => "Order declined successfully.", 'success' => true], 200);
-            // }else{
-            //     DB::rollBack();
-            //     return response()->json(['message' => "Order does not cancel successfully.", 'success' => true], 401);
-            // }
         } catch (\Throwable $th) {
             DB::rollBack();
             $errors['success'] = false;

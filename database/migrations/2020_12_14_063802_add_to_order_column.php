@@ -23,6 +23,7 @@ class AddToOrderColumn extends Migration
             $table->string('payment_method_id', 255)->nullable()->after('stripe_charge_id');
             $table->string('payment_intent_id', 255)->nullable()->after('payment_method_id');
             $table->string('payment_intent_client_secret', 255)->nullable()->after('payment_intent_id');
+            $table->string('stripe_refund_id', 255)->nullable()->after('payment_intent_client_secret');
         });
     }
 
