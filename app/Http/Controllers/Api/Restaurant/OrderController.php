@@ -323,7 +323,7 @@ class OrderController extends Controller
                 'stripe_refund_amount' => 'required',
                 'refund_amount' => 'required',
                 'new_grand_total' => 'required',
-                // 'payment_intent_id' => 'required',
+                'refund_details_object' => 'required',
             ]);
             if ($validator->fails()) {
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
@@ -380,6 +380,9 @@ class OrderController extends Controller
 
                             if($order->save()){
 
+                                // convert refund object to string
+                                $refund_string_object = (string)$refund;
+
                                 $refund_history = new RefundHistory;
                                 $refund_history->restaurant_id = $request->post('restaurant_id');
                                 $refund_history->order_id = $order->order_id;
@@ -388,7 +391,7 @@ class OrderController extends Controller
                                 $refund_history->stripe_refund_amount = $request->post('stripe_refund_amount');
                                 $refund_history->refund_amount = $request->post('refund_amount');
                                 $refund_history->refund_details_object = $request->post('refund_details_object');
-                                // $refund_history->refund_object = ($request->post('refund_object')) ? $request->post('refund_object') : null;
+                                $refund_history->refund_object = $refund_string_object;
 
                                 if($refund_history->save()){
 
