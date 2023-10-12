@@ -79,7 +79,7 @@ class OrderController extends Controller
             }
             $order = Order::where('restaurant_id', $request->post('restaurant_id'))
                 ->where('order_id',$request->post('order_id'))
-                ->with('orderItems','orderItems.orderModifierItems','user','address')
+                ->with('orderItems','orderItems.orderModifierItems','user','address', 'refundHistory')
                 ->first();
             return response()->json(['order' => $order, 'success' => true], 200);
         } catch (\Throwable $th) {

@@ -16,6 +16,10 @@ class Order extends Model
         return $this->hasMany('App\Models\OrderMenuItem', 'order_id');
     }
 
+    public function refundHistory()
+    {
+        return $this->belongsTo('App\Models\RefundHistory', 'order_id');
+    }
  
     public function user()
     {
