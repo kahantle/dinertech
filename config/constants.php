@@ -169,8 +169,8 @@ return [
     'ORDER_PAYMENT_TYPE' => [
         'CASH' => 1,
         'CARD' => 0,
-        'CARD_PAYMENT' => 'Credit Card',
-        'CASH_PAYMENT' => 'Cash'
+        'CARD_PAYMENT' => 0,//'Credit Card'
+        'CASH_PAYMENT' => 1//'Cash'
     ],
     'CAMPAIGN_MONITOR' => [
         'EMAIL' => 'kevin@sohosushi.com',
