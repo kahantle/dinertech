@@ -72,7 +72,7 @@
                                         </tr>
                                     </thead>
                                 </table>
-                                
+
                                 @if (count($draftCampaigns) != 0 || count($sentCampaigns) != 0)
                                     @foreach ($draftCampaigns as $campaign)
                                         <table class="table table-responsive">

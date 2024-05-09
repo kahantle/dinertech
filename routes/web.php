@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\customer\PromotionController;
 
 //-------------------------- Restaurant Route ---------------------------------------------- //
 
@@ -304,7 +305,7 @@ Route::prefix('customer')->group(function () {
         Route::get('/promotion', 'customer\PromotionController@show')->name('customer.show.promotions');
         Route::get('/promotion/get/eligible-items/{promotionId}', 'customer\PromotionController@getEligibleItems')->name('customer.promotions.getEligibleItems');
         Route::get('/promotion/apply/{promotionId}', 'customer\PromotionController@applyPromotion')->name('customer.apply.promotion');
-
+//       Route::get('/promotion/apply/{promotionId}',[PromotionController::class,'applyPromotion'])->name('customer.apply.promotion');
 
 
         /* Hours */

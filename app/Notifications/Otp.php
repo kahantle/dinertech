@@ -36,8 +36,8 @@ class Otp extends Notification
 
     public function sendOTP($user)
     {
+        // Send OTP to mobile number
         $url = 'https://us.sms.api.sinch.com/xms/v1/' . Config::get('constants.SNICH_KEY.PLAN_ID') . '/batches';
-
         $messages = Config::get('constants.SNICH_KEY.MESSAGE') . " : " . $user->otp;
         Http::withHeaders([
             'Authorization' => Config::get('constants.SNICH_KEY.TOKEN'),
@@ -47,12 +47,17 @@ class Otp extends Notification
             'to' => ['+1'.$user->mobile_number],
             'body' => $messages,
         ]);
-        
-        $data['user'] = $user;
-        $data['messages'] = "Your Activate Account OTP is: ". $user->otp;
-        Mail::to($user->email_id)->send(new SendOtp($data));       
-        return true;
+
+        // Send OTP to email address if provided
+        if ($user->email_id) {
+            $data['user'] = $user;
+            $data['messages'] = "Your Activate Account OTP is: ". $user->otp;
+            Mail::to($user->email_id)->send(new SendOtp($data));
+            return true;
+        }
+        return false;
     }
+
 
     /**
      * Get the array representation of the notification.

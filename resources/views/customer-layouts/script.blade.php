@@ -96,6 +96,23 @@ function applyCoupenCode() {
     }
 }
 
+    // Function to apply promotion code to the coupon code input field
+    function applyPromotion(promotionCode) {
+    // Set the promotion code in the coupon code input field
+    $('#coupon_code').val(promotionCode);
+}
+
+    // Adding click event listener to the "Apply" buttons in promotions
+    $(document).ready(function() {
+    $('.aa-browse-btn').click(function() {
+        // Extract the promotion code from the clicked promotion
+        var promotionCode = $(this).closest('.card-body').find('.promotion_text-cololr').text().trim();
+
+        // Call the applyPromotion function with the extracted promotion code
+        applyPromotion(promotionCode);
+    });
+});
+
 var removecoupen = "{{ url('customer/remove_coupon_code') }}";
 
 function remove_coupon_code() {
@@ -130,6 +147,8 @@ function remove_coupon_code() {
         });
     }
 }
+
+
 
 </script>
 @yield('scripts')

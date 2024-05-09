@@ -32,10 +32,11 @@ class DashboardController extends Controller
     {
         $uid = Auth::user()->uid;
         $restaurant = Restaurant::where('uid', $uid)->first();
+//        dd($uid);
         $orders = [];
 
         // -------------- due orders -----------------
- 
+
         $due_orders = Order::where([
                 'restaurant_id' => $restaurant->restaurant_id,
                 'order_progress_status'=>'ORDER DUE'
@@ -46,7 +47,7 @@ class DashboardController extends Controller
             $orders[] = $order;
         }
 
- 
+
         // -------------- Accepted orders -----------------
 
         $accepted_orders = Order::where([

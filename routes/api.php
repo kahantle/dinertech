@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Api\Customer\CartController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -28,7 +28,7 @@ Route::prefix('customer')->namespace('Api\Customer')->group(function () {
     Route::post('/delete-account', 'UserController@deleteAccount')->name('customer.delete-account');
 });
 
-Route::namespace ('Api')->group(function () {
+  Route::namespace ('Api')->group(function () {
 
     //API FOR CUSTOMER
     Route::prefix('customer')->namespace('Customer')->group(function () {
@@ -47,8 +47,9 @@ Route::namespace ('Api')->group(function () {
         Route::post('/logout', 'UserController@logout')->name('customer.logout');
 
         //Role Customer
-        Route::middleware(['auth:api', 'role-customer'])->group(function () {
-            Route::get('check-cart-points','LoyaltyRuleController@checkCartPoints');
+        Route::middleware(['auth:api'])->group(function () {
+
+                Route::get('check-cart-points','LoyaltyRuleController@checkCartPoints');
             Route::post('/category', 'CategoryController@getCategoryList')->name('customer.category.list');
             Route::post('/profile', 'UserController@profile')->name('customer.profile');
             Route::post('/category-menu', 'MenuItemController@getMenuList')->name('customer.category.menu.list');
@@ -97,21 +98,26 @@ Route::namespace ('Api')->group(function () {
             Route::prefix('loyalties')->group(function(){
                 Route::post('/','LoyaltyRuleController@index')->name('customer.loyalties');
             });
+
+
             Route::prefix('cart')->group(function(){
-                Route::post('/','CartController@index')->name('customer.carts');
-                Route::post('/add','CartController@store')->name('customer.carts.add');
-                Route::post('/quantity/increment','CartController@quantityIncrement')->name('customer.cart.quantityIncrement');
+                Route::post('/',[CartController::class,'index'])->name('customer.carts');
+                Route::post('/apply-promotion', [CartController::class, 'applyPromotion']);
+                Route::post('/remove-promotion', [CartController::class, 'removePromotion']);
+                Route::post('/add',[CartController::class,'store'])->name('customer.carts.add');
                 Route::post('/quantity/decrement','CartController@quantityDecrement')->name('customer.cart.quantityDecrement');
                 Route::post('/getMenu/modifier','CartController@getCartMenuModifier')->name('customer.cart.getMenu.modifier');
                 Route::post('/customize/modifier','CartController@customizeModifier')->name('customer.cart.customize.modifier');
-                Route::post('/delete','CartController@destroy')->name('customer.cart.delete');
-                Route::post('/remove-promotion','CartController@removePromotion');
-                Route::post('/apply-promotion','CartController@applyPromotion');
+                Route::post('/delete',[CartController::class,'destroy'])->name('customer.cart.delete');
+                Route::post('/quantity/increment','CartController@quantityIncrement')->name('customer.cart.quantityIncrement');
+
             });
         });
+
     });
 
     //API FOR restaurant
+
     Route::prefix('restaurant')->namespace('Restaurant')->group(function () {
         Route::post('/login', 'UserController@login')->name('restaurant.login');
         Route::post('/store_pin', 'UserController@store_pin')->name('restaurant.store.pin');
@@ -129,7 +135,7 @@ Route::namespace ('Api')->group(function () {
             Route::get('/{uid?}', 'EmailSubscriptionController@index')->name('restaurant.email.subscriptions.list');
             Route::post('/payment/modal', 'EmailSubscriptionController@paymentModal')->name('restaurant.email.subscriptions.payment');
             Route::post('pay', 'EmailSubscriptionController@subscriptionPayment')->name('restaurant.email.subscription.pay');
-            Route::get('/cancel/subscription/{subscription_id}/{uid}', 'EmailSubscriptionController@cancel_subscription')->name('restaurant.email.subscription.cancel');
+            Route::get('/cancel/subscription/{subscription_id}/{uid}', 'EmailSubscriptionController@cancel_subscription')->name   ('restaurant.email.subscription.cancel');
             Route::get('/upgrade/subscription/{uid?}', 'EmailSubscriptionController@upgradeSubscription')->name('restaurant.email.subscription.upgrade');
         });
 

@@ -52,11 +52,15 @@
                             <input type="text" class="form-control" id="mobile_number" name="mobile_number"
                                 value="{{ old('mobile_number') }}" placeholder="Mobile Number">
                         </div>
+
                         <div class="form-group">
                             <i class="fa fa-envelope"></i>
                             <input type="email" class="form-control" id="email_id" name="email_id"
-                                value="{{ old('email_id') }}" placeholder="Email">
+                                   value="{{ old('email_id') }}" placeholder="Email">
+                            <span id="emailMessage" class="text" style="display:none;">Please enter a valid or real email address.</span>
                         </div>
+
+
                         <div class="form-group">
                             <i class="fa fa-lock"></i>
                             <input type="password" class="form-control" id="password" name="password"
@@ -100,4 +104,18 @@
             // $('#setTimeZone').val(new Date().toTimeString().match(/([A-Z]+[\+-][0-9]+)/)[1]);
         });
     </script>
+    @section('scripts')
+        <script>
+            $(document).ready(function() {
+                $('#email_id').on('focus', function() {
+                    $('#emailMessage').show();
+                });
+
+                $('#email_id').on('blur', function() {
+                    $('#emailMessage').hide();
+                });
+            });
+        </script>
+    @endsection
+
 @endsection

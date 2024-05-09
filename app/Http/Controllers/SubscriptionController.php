@@ -82,9 +82,14 @@ class SubscriptionController extends Controller
         $subscription_payment = RestaurantPayment::where('id', $res_subscription->restaurant_payment_id)->first();
 
         /* Registration Subscription */
-        $restaurantSubscription = json_decode($subscription_payment->response);
-        $registrationStartDate = new Carbon($restaurantSubscription->current_period_start);
-        $startDate = $registrationStartDate->format('Y-m-d');
+            $restaurantSubscription = json_decode($subscription_payment->response);
+        if (isset($restaurantSubscription->current_period_start)) {
+            $registrationStartDate = new Carbon($restaurantSubscription->current_period_start);
+            $startDate = $registrationStartDate->format('Y-m-d');
+        }
+        else {
+            $startDate = Carbon::now()->format('Y-m-d'); // Default to current date if property is missing
+        }
 
         $today = Carbon::now()->format('Y-m-d');
 
@@ -315,14 +320,18 @@ class SubscriptionController extends Controller
 
     public function cancel_subscription($subscriptionId)
     {
+//        dd($subscriptionId);
+
         try {
             DB::beginTransaction();
 
             $uid = Auth::user()->uid;
             $restaurant = Restaurant::where('uid', $uid)->first();
             $stripe = Stripe::make(env('STRIPE_SECRET'));
+//            dd($stripe);
 
             $subscription = $stripe->subscriptions()->cancel($restaurant->stripe_customer_id, $subscriptionId);
+
             if ($subscription['status'] == 'canceled') {
                 $subscription_update = RestaurantSubscription::where('stripe_subscription_id', $subscriptionId)->first();
                 $subscription_update->status = Config::get('constants.STATUS.INACTIVE');
@@ -334,7 +343,8 @@ class SubscriptionController extends Controller
 
             Toastr::success('Subscription cancel successfully.', '', Config::get('constants.toster'));
             return redirect()->route('subscriptions');
-        } catch (\Throwable $th) {
+        }
+        catch (\Throwable $th) {
             DB::rollBack();
             return redirect()->back()->with('error', $th->getMessage());
         }

@@ -62,7 +62,7 @@
                                                         {{ Str::lower(Config::get('constants.SUBSCRIPTION_TYPE.MONTH')) }}
                                                     </p>
                                                 @elseif (Config::get('constants.SUBSCRIPTION_TYPE.YEAR') == $subscription->subscription_type)
-                                                    <p class="card-text">/
+                                                    <p class="card-text">
                                                         {{ Str::lower(Config::get('constants.SUBSCRIPTION_TYPE.YEAR')) }}
                                                     </p>
                                                 @endif
@@ -73,6 +73,7 @@
                                                 <button type="button" class="btn-subscriber subscription"
                                                     data-subscriptionid="{{ $subscription->subscription_id }}">Subscribe</button>
                                             </div>
+
                                         </div>
                                     </div>
                                 </div>

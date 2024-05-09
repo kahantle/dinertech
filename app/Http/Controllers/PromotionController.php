@@ -18,9 +18,9 @@ use App\Models\PromotionEligibleItem;
 use App\Models\PromotionCategoryItem;
 use App\Models\PromotionCategory;
 use App\Models\Category;
-use Config;
-use Auth;
-use Toastr;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Auth;
+use Brian2694\Toastr\Facades\Toastr;
 use Carbon\Carbon;
 use DateTime;
 
@@ -127,7 +127,6 @@ class PromotionController extends Controller
                 $promotion = new  Promotion;
                 $message = 'Promotion added successfully.';
             }
-
             $promotion->restaurant_id = $restaurant->restaurant_id;
             $promotion->promotion_type_id = 1 ;
             $promotion->promotion_code = ($request->post('promotion_code')) ? $request->post('promotion_code') : null;
@@ -595,6 +594,7 @@ class PromotionController extends Controller
             if(!empty( $request->post('restricted_hours')) &&  $request->post('restricted_hours') != '') {
                 $promotion->restricted_hours = $request->post('restricted_hours') ? $request->post('restricted_hours') : null;
             }
+
             $promotion->auto_manually_discount = $request->post('auto_manually_discount');
             if($request->post('auto_manually_discount') == Config::get('constants.AUTO_DISCOUNT.1')){
                 $promotion->discount_cheapest = $request->post('discount_cheapest');
@@ -716,7 +716,6 @@ class PromotionController extends Controller
 
     public function storeMealBundleItems(Request $request){
         try {
-
             if($request->post('restaurant_user_id')){
                 $uid = $request->post('restaurant_user_id');
             } else  {
@@ -737,7 +736,7 @@ class PromotionController extends Controller
                 $message = 'Promotion added successfully.';
             }
 
-            $restricted_days = Carbon::createFromFormat('m-d-Y', $request->post('restricted_days'))->format('Y-m-d');
+//            $restricted_days = Carbon::createFromFormat('m-d-Y', $request->post('restricted_days'))->format('Y-m-d');
 
             $promotion->restaurant_id = $restaurant->restaurant_id;
             $promotion->promotion_type_id = 7;

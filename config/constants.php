@@ -173,6 +173,7 @@ return [
         'CASH_PAYMENT' => 1//'Cash'
     ],
     'CAMPAIGN_MONITOR' => [
+//        'EMAIL' => 'krayjada@dinertech.io',
         'EMAIL' => 'kevin@sohosushi.com',
         'CHROME' => 'None',
     ],

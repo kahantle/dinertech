@@ -527,41 +527,41 @@
                     </div>
                 </form>
                 <h3 class="my-4">Best Offers</h3>
-                <div style="max-height: 700px;overflow-y: auto;">
-                    @php
-                        $promotions = \App\Models\Promotion::where('restaurant_id', 1)
-                            ->with('promotion_item')
-                            ->get();
-                    @endphp
-                    @foreach ($promotions as $promotion)
-                        <div class="card mt-2 a-card-all-css">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <input type="hidden" id="id" value="{{ $promotion->promotion_id }}"
-                                            name="id">
-                                        <h5 class="text-uppercase mb-0 promotion_text-cololr">
-                                            {{ $promotion->promotion_code }}
-                                        </h5>
-                                        <p class="text-capitalize mb-0">{{ $promotion->promotion_name }}</p>
-                                    </div>
-                                    <div>
-                                        <!-- <h5 class="text-capitalize cursor-pointer" onclick="applyPromotion({{ $promotion->promotion_id }})">apply</h5> -->
-                                        <input type="button" value="Apply" class="aa-browse-btn"
-                                            onclick="applyPromotion()">
+                    <div style="max-height: 700px;overflow-y: auto;">
+                        @php
+                            $promotions = \App\Models\Promotion::where('restaurant_id', 1)
+                                ->with('promotion_item')
+                                ->get();
+                        @endphp
+                        @foreach ($promotions as $promotion)
+                            <div class="card mt-2 a-card-all-css">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <input type="hidden" id="id" value="{{ $promotion->promotion_id }}"
+                                                name="id">
+                                            <h5 class="text-uppercase mb-0 promotion_text-cololr">
+                                                {{ $promotion->promotion_code }}
+                                            </h5>
+                                            <p class="text-capitalize mb-0">{{ $promotion->promotion_name }}</p>
+                                        </div>
+                                        <div>
+                                            <!-- <h5 class="text-capitalize cursor-pointer" onclick="applyPromotion({{ $promotion->promotion_id }})">apply</h5> -->
+                                            <input type="button" value="Apply" class="aa-browse-btn"
+                                                onclick="applyPromotion()">
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="card-footer bg-white border-top a-card-footer">
-                                <p class="text-capitalize text-capitalize">Lorem, ipsum dolor
-                                    sit
-                                    amet consectetur adipisicing elit.</p>
-                                <div id="coupen_code_msg"></div>
+                                <div class="card-footer bg-white border-top a-card-footer">
+                                    <p class="text-capitalize text-capitalize">Lorem, ipsum dolor
+                                        sit
+                                        amet consectetur adipisicing elit.</p>
+                                    <div id="coupen_code_msg"></div>
 
+                                </div>
                             </div>
-                        </div>
-                    @endforeach
-                </div>
+                        @endforeach
+                    </div>
             </div>
         </div>
     </div>

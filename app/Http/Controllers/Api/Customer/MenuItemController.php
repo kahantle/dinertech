@@ -16,18 +16,26 @@ class MenuItemController extends Controller
 {
     public function getMenuList(Request $request)
     {
+
+
         try {
             $request_data = $request->json()->all();
             $validator = Validator::make($request_data, ['restaurant_id' => 'required', 'category_id' => 'required']);
             if ($validator->fails()) {
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
             }
+
             $categoryList = MenuItem::where('restaurant_id', $request->post('restaurant_id'))
                 ->where('category_id', $request->post('category_id'))
                 ->with('modifierList')
                 ->get(['menu_id',  'restaurant_id', 'category_id','item_name', 'item_details', 'item_price', 'item_img']);
-                return response()->json(['menu_list' => $categoryList, 'success' => true], 200);
-        } catch (\Throwable $th) {
+
+            return response()->json(['menu_list' => $categoryList, 'success' => true], 200);
+
+        }
+
+
+        catch (\Throwable $th) {
             $errors['success'] = false;
             $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
             if ($request->debug_mode == 'ON') {
@@ -35,6 +43,7 @@ class MenuItemController extends Controller
             }
             return response()->json($errors, 500);
         }
+
     }
 
     public function searchMenu(Request $request)
@@ -57,9 +66,9 @@ class MenuItemController extends Controller
                 ->with(['modifierList'])
                 ->select('menu_items.menu_id',  'menu_items.restaurant_id', 'menu_items.category_id','menu_items.item_name', 'menu_items.item_details', 'menu_items.item_price', 'menu_items.item_img')
                 ->get();
-                
+
             }
-           
+
             return response()->json(['menu_list' => $categoryList, 'success' => true], 200);
         } catch (\Throwable $th) {
             $errors['success'] = false;

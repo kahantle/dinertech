@@ -29,6 +29,7 @@ class VerificationController extends Controller
     public function index(Request $request)
     {
         $username = $request->get('username');
+//        dd($username);
         return view('auth.verify', compact('username'));
     }
 
@@ -37,6 +38,7 @@ class VerificationController extends Controller
     {
         try {
             $username = $request->post('username');
+//            dd($username);
             $user = User::where('role', Config::get('constants.ROLES.RESTAURANT'))
                 ->where('otp', implode("", $request->post('digit')))
                 ->where(function ($query) use ($username) {
@@ -44,6 +46,7 @@ class VerificationController extends Controller
                     $query->orWhere('mobile_number', $username);
                 })
                 ->first();
+//            dd($user);
             if ($user) {
                 DB::beginTransaction();
                 $user->is_verified_at = Carbon::now();

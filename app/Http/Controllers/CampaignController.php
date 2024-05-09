@@ -6,8 +6,11 @@ use App\Models\Restaurant;
 use App\Models\RestaurantSubscription;
 use App\Models\User;
 use Auth;
+//use Bashy\CampaignMonitor\Facades\CampaignMonitor;
+use CampaignMonitor;
 use Config;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Toastr;
 
 class CampaignController extends Controller
@@ -39,19 +42,19 @@ class CampaignController extends Controller
                    $data['sentCampaigns'] = array();
                    $data['draftCampaigns'] = array();
                    if ($restaurant->cm_client_id != null) {
-                       $draftCampaigns = \CampaignMonitor::clients($restaurant->cm_client_id)->get_drafts();
-                       
+                       $draftCampaigns = CampaignMonitor::clients($restaurant->cm_client_id)->get_drafts();
+
                        if (!$draftCampaigns->response->Code) {
                             $data['draftCampaigns'] = $draftCampaigns->response;
                        }
 
-                       $sentCampaigns = \CampaignMonitor::clients($restaurant->cm_client_id)->get_campaigns();
+                       $sentCampaigns = CampaignMonitor::clients($restaurant->cm_client_id)->get_campaigns();
                        if (!$sentCampaigns->response->Code) {
                            $data['sentCampaigns'] = $sentCampaigns->response;
                        }
                    }
                    return view('campaign.index', $data);
-                    
+
                 // } catch (\Throwable $th) {
                 //     return redirect()->back()->with('error',$th->getMessage());
                 // }
@@ -68,7 +71,9 @@ class CampaignController extends Controller
     {
         try {
             $uid = auth()->user()->uid;
+//            dd($uid);
             $restaurant = Restaurant::where('uid', $uid)->first();
+//            dd($restaurant);
             $data = array(
                 'Email' => Config::get('constants.CAMPAIGN_MONITOR.EMAIL'),
                 'Chrome' => Config::get('constants.CAMPAIGN_MONITOR.CHROME'),
@@ -76,11 +81,26 @@ class CampaignController extends Controller
                 'IntegratorID' => env('CAMPAIGNMONITOR_INTEGRATOR_ID'),
                 'ClientID' => $restaurant->cm_client_id,
             );
-            $clientCreate = \CampaignMonitor::getExternalSession($data);
+
+//            dd($restaurant->cm_client_id);
+//               dd($data);
+//            Log::info('Campaign creation data:', $data);
+//
+//            // Make sure CampaignMonitor facade or class is correctly instantiated
+//            if (class_exists('CampaignMonitor')) {
+//                $clientCreate = CampaignMonitor::getExternalSession($data);
+//                return redirect($clientCreate->response->SessionUrl);
+//            } else {
+//                throw new \Exception('CampaignMonitor class not found.');
+//            }
+
+
+            $clientCreate = CampaignMonitor::getExternalSession($data);
             return redirect($clientCreate->response->SessionUrl);
+
         } catch (\Throwable $th) {
-            $message = "Some Error in add campaign.";
-            Toastr::error($message, '', Config::get('constants.toster'));
+            Log::error("Error in add campaign: " . $th->getMessage());
+            Toastr::error("Some Error in add campaign.", '', Config::get('constants.toster'));
             return back();
         }
 
@@ -107,7 +127,7 @@ class CampaignController extends Controller
     {
         $campaignId = $request->post('campaignId');
         try {
-            $summary = \CampaignMonitor::campaigns($campaignId)->get_summary();
+            $summary = CampaignMonitor::campaigns($campaignId)->get_summary();
             $data['summary'] = $summary->response;
             $view = view('campaign.report', $data)->render();
             return response()->json(['success' => true, 'view' => $view], 200);
@@ -149,7 +169,7 @@ class CampaignController extends Controller
     {
         $campaignId = $request->post('campaignId');
         try {
-            $delete = \CampaignMonitor::campaigns($campaignId)->delete();
+            $delete = CampaignMonitor::campaigns($campaignId)->delete();
             if ($delete->was_successful()) {
                 $alert = ['Campaign delete successfully', '', Config::get('constants.toster')];
             }
