@@ -811,35 +811,34 @@ class CartController extends Controller
                 return response()->json(['message' => "Invalid promotion code !", 'success' => false]);
             }
 
-
             //FOR AVAILABILITY
-//            if ($promotion->availability === 'Hidden') {
-//                return response()->json(['message' => "Promotion is hidden!", 'success' => false]);
-//            }
-//            elseif ($promotion->availability === 'Always Available') {
-//                return response()->json(['message' => "Promotion is Always Available!", 'success' => false]);
-//            }
-//            elseif ($promotion->availability === 'Restricted') {
-//                // If promotion is restricted, check if it is currently applicable based on restricted_days and restricted_hours
-//                $now = now();
-//                $restrictedDays = explode(',', $promotion->restricted_days);
-//                $restrictedHours = explode('-', $promotion->restricted_hours);
-//
-//                // Check if today is a restricted day
-//                if (in_array(strtolower($now->format('l')), $restrictedDays)) {
-//                    // Check if the current time is within the restricted hours
-//                    $startHour = (int) trim($restrictedHours[0]);
-//                    $endHour = (int) trim($restrictedHours[1]);
-//
-//                    if ($now->hour >= $startHour && $now->hour < $endHour) {
-//                        // Promotion is applicable during the restricted time
-//                    } else {
-//                        return response()->json(['message' => "Promotion is restricted at this time!", 'success' => false]);
-//                    }
-//                } else {
-//                    return response()->json(['message' => "Promotion is restricted on this day!", 'success' => false]);
-//                }
-//            }
+            if ($promotion->availability === 'Hidden') {
+                return response()->json(['message' => "Promotion is hidden!", 'success' => false]);
+            }
+            elseif ($promotion->availability === 'Always Available') {
+                return response()->json(['message' => "Promotion is Always Available!", 'success' => false]);
+            }
+            elseif ($promotion->availability === 'Restricted') {
+                // If promotion is restricted, check if it is currently applicable based on restricted_days and restricted_hours
+                $now = now();
+                $restrictedDays = explode(',', $promotion->restricted_days);
+                $restrictedHours = explode('-', $promotion->restricted_hours);
+
+                // Check if today is a restricted day
+                if (in_array(strtolower($now->format('l')), $restrictedDays)) {
+                    // Check if the current time is within the restricted hours
+                    $startHour = (int) trim($restrictedHours[0]);
+                    $endHour = (int) trim($restrictedHours[1]);
+
+                    if ($now->hour >= $startHour && $now->hour < $endHour) {
+                        // Promotion is applicable during the restricted time
+                    } else {
+                        return response()->json(['message' => "Promotion is restricted at this time!", 'success' => false]);
+                    }
+                } else {
+                    return response()->json(['message' => "Promotion is restricted on this day!", 'success' => false]);
+                }
+            }
 
 
             $promotion_category_items = PromotionCategoryItem::where('promotion_id', $promotion->promotion_id)->with('category_item')->get();
@@ -915,17 +914,14 @@ class CartController extends Controller
             //for minimum order amount
             $cart = Cart::find($request->post('cart_id'));
             $cartTotal = $cart->total_due;
-//            dd($cart);
 
             // Check if the cart total is less than the minimum order amount required by the promotion
-//            if ($promotion->set_minimum_order_amount && $cartTotal < $promotion->set_minimum_order_amount) {
-//                return response()->json([
-//                    'message' => "Promotion can not applied!",
-//                    'success' => false
-//                ]);
-//            }
-
-//            dd($cart);
+            if ($promotion->set_minimum_order_amount && $cartTotal < $promotion->set_minimum_order_amount) {
+                return response()->json([
+                    'message' => "Promotion can not applied!",
+                    'success' => false
+                ]);
+            }
 
 
             $promotionTypes = PromotionType::all();
@@ -1026,7 +1022,7 @@ class CartController extends Controller
                 return response()->json(['message' => "Promotion is not elegible for any item of the Cart !", 'success' => false]);
             }
 
-        } catch (\Throwable $th) {
+        } catch (\Throwable $th) { 
             $errors['success'] = false;
             $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
             if ($request->post('debug_mode') == 'ON') {
