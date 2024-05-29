@@ -786,199 +786,12 @@ class CartController extends Controller
         }
     }
 
-//    public function applyPromotion(Request $request)
-//    {
-//
-//        try {
-//
-//            //adding a new line in code for different cart id and promotions.
-//            $cartId = $request->post('cart_id');
-//            $existingPromotion = Cart::where('cart_id', $cartId)->pluck('promotion_id')->first();
-//
-//            // Check if a different promotion is already applied to the cart
-//            if ($existingPromotion && $existingPromotion !== $request->post('promotion_code')) {
-//                return response()->json(['message' => "Another promotion is already applied to this cart!", 'success' => false]);
-//            }
-//
-//            $promotion = Promotion::with('eligible_items')->where([
-//                'restaurant_id' => $request->post('restaurant_id'),
-//                'promotion_code' => $request->post('promotion_code'),
-//
-//            ])->first();
-////            dd($promotion);
-//
-//            if (!$promotion) {
-//                return response()->json(['message' => "Invalid promotion code !", 'success' => false]);
-//            }
-//
-//            //FOR AVAILABILITY
-////            if ($promotion->availability === 'Hidden') {
-////                return response()->json(['message' => "Promotion is hidden!", 'success' => false]);
-////            }
-////            elseif ($promotion->availability === 'Always Available') {
-////                return response()->json(['message' => "Promotion is Always Available!", 'success' => false]);
-////            }
-////            elseif ($promotion->availability === 'Restricted') {
-////                // If promotion is restricted, check if it is currently applicable based on restricted_days and restricted_hours
-////                $now = now();
-////                $restrictedDays = explode(',', $promotion->restricted_days);
-////                $restrictedHours = explode('-', $promotion->restricted_hours);
-////
-////                // Check if today is a restricted day
-////                if (in_array(strtolower($now->format('l')), $restrictedDays)) {
-////                    // Check if the current time is within the restricted hours
-////                    $startHour = (int) trim($restrictedHours[0]);
-////                    $endHour = (int) trim($restrictedHours[1]);
-////
-////                    if ($now->hour >= $startHour && $now->hour < $endHour) {
-////                        // Promotion is applicable during the restricted time
-////                    } else {
-////                        return response()->json(['message' => "Promotion is restricted at this time!", 'success' => false]);
-////                    }
-////                } else {
-////                    return response()->json(['message' => "Promotion is restricted on this day!", 'success' => false]);
-////                }
-////            }
-//
-//
-//            $promotion_category_items = PromotionCategoryItem::where('promotion_id', $promotion->promotion_id)->with('category_item')->get();
-//
-//            $eligible_item_ids = [];
-//            foreach ($promotion_category_items as $promotion_category_item) {
-//                $eligible_item_ids[] = $promotion_category_item->category_item[0]->menu_id;
-//            }
-//
-//            $cart = Cart::find($request->post('cart_id'));
-//            $cartItemIds = [];
-//            foreach ($cart->cartMenuItems as $item) {
-//                $cartItemIds[] = $item->menu_id;
-//            }
-////            dd($promotion);
-//
-//
-//            // FOR ADDONS
-//            // Check if modifier_total is available in any cart menu item
-//            $hasModifierTotal = $cart->cartMenuItems()->whereNotNull('modifier_total')->exists();
-//
-//            // Apply Promotion
-//            if ($hasModifierTotal) {
-//                $modifierTotal = $cart->cartMenuItems()->sum('modifier_total');
-//                $cart->cartMenuItems()->update(['menu_total' => DB::raw('menu_total - modifier_total')]);
-//
-//                // Check the no_extra_charge_type from the promotions table
-//                if ($promotion->no_extra_charge_type == 'No extra charges') {
-//
-//                    // Add the promotion discount to the cart's sub_total
-//                    $cart->sub_total -= $promotion->discount;
-//                    $newTaxRate = 0.1; // Adjust this based on your actual tax rate
-//                    $cart->tax_charge = $cart->sub_total * $newTaxRate;
-//                    $cart->total_due = $cart->sub_total + $cart->tax_charge;
-//
-//                }else {
-//                    // Check if the no_extra_charge_type includes charges for choices/addons or choices/addons/sizes
-//                    if (Str::contains($promotion->no_extra_charge_type, ['Charges extra for Choices/Addons', 'Charges extra for Choices/Addons & Sizes'])) {
-//                        // Add the modifier_total to the cart's sub_total
-//                        $cart->sub_total += $modifierTotal;
-//                    }
-//                }
-//            }
-//
-//            //Apply Promotion
-//            $uid = auth()->id();
-//            $restaurantId = $request->post('restaurant_id');
-//
-////            // Check if the promotion is already applied to the user's cart
-//            $existingPromotion = Cart::where('uid', $uid)->pluck('promotion_id')->first();
-//
-//            if ($existingPromotion && $promotion->only_once_per_client == 0) {
-//                return response()->json(['message' => "This promotion can only be applied once per client!", 'success' => false]);
-//            }
-//
-//
-//            //for customer type
-//            $isReturningCustomer = Order::where('uid', $uid)->exists();
-//            $isNewCustomer = !Order::where('uid', $uid)->exists();
-//             $promotionTypes = PromotionType::where('promotion_type_id',$promotion->promotion_type_id)->first();
-//
-////            if (($promotion->client_type == 'Only New Customer' && $isReturningCustomer) || ($promotion->client_type == 'Only Returning Customer' && $isNewCustomer)) {
-////                return response()->json(['message' => "Promotion not applicable for the user type!", 'success' => false]);
-////            }
-//
-//             /* Promotions Helper logic function */
-//             $test[] = [$promotionTypes->promotion_type_id];
-//             // apply_promotion($promotionTypes->promotion_name,$promotion,$uid,$restaurantId,$cart);
-//             if(apply_promotion($promotionTypes->promotion_name,$promotion,$uid,$restaurantId,$cart) == true){
-//             }
-//
-//
-//            //for minimum order amount
-//            $cart = Cart::find($request->post('cart_id'));
-//            $cartTotal = $cart->total_due;
-//
-//            // Check if the cart total is less than the minimum order amount required by the promotion
-////            if ($promotion->set_minimum_order_amount && $cartTotal < $promotion->set_minimum_order_amount) {
-////                return response()->json([
-////                    'message' => "Promotion can not applied!",
-////                    'success' => false
-////                ]);
-////            }
-//
-//
-//            $promotionTypes = PromotionType::all();
-//            foreach ($promotionTypes as $promotion_type) {
-//                /* Promotions Helper logic function */
-//                $test[] = [$promotion_type->id];
-//
-//                 //calling the custom.php apply_promotion function
-//                if (apply_promotion($promotion_type->promotion_name, $promotion, $uid, $restaurantId, $cart) == true) {
-//                    break;
-//
-//                }
-////                dd($promotion_type);
-//
-//            }
-//
-////            dd($cart);
-//            $cartItem = Cart::where('restaurant_id', $restaurantId)->where('uid', $uid)->first();
-////            $cartItem->save();
-////            dd($cartItem);
-//            //==========================************
-////             dd($cart);
-//
-//
-//            $cart->promotion_id = $promotion->promotion_id;
-//            if ($cart->save()) {
-//                return response()->json([
-//                    'message' => "Promotion applied !",
-//                    'data' => [
-//                        'cart_list' => $cartItem,
-//                        'promotion_code' => $promotion->promotion_code,
-//                        'promotion_name' => $promotion->promotion_name,
-//                        'promotion_details' => $promotion->promotion_details,
-//                        'promotion_selected_payment_method'=>$promotion->selected_payment_status,
-//
-//                    ],
-//                    'success' => true], 200);
-//
-//            } else {
-//                return response()->json(['message' => "Promotion is not elegible for any item of the Cart !", 'success' => false]);
-//            }
-//
-//        } catch (\Throwable $th) {
-//            $errors['success'] = false;
-//            $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
-//            if ($request->post('debug_mode') == 'ON') {
-//                $errors['debug'] = $th->getMessage();
-//            }
-//            return response()->json($errors, 500);
-//        }
-//
-//    }
-
-
     public function applyPromotion(Request $request)
     {
+
         try {
+
+            //adding a new line in code for different cart id and promotions.
             $cartId = $request->post('cart_id');
             $existingPromotion = Cart::where('cart_id', $cartId)->pluck('promotion_id')->first();
 
@@ -990,87 +803,107 @@ class CartController extends Controller
             $promotion = Promotion::with('eligible_items')->where([
                 'restaurant_id' => $request->post('restaurant_id'),
                 'promotion_code' => $request->post('promotion_code'),
+
             ])->first();
+//            dd($promotion);
 
             if (!$promotion) {
-                return response()->json(['message' => "Invalid promotion code!", 'success' => false]);
+                return response()->json(['message' => "Invalid promotion code !", 'success' => false]);
             }
-//            //FOR AVAILABILITY
-////            if ($promotion->availability === 'Hidden') {
-////                return response()->json(['message' => "Promotion is hidden!", 'success' => false]);
-////            }
-////            elseif ($promotion->availability === 'Always Available') {
-////                return response()->json(['message' => "Promotion is Always Available!", 'success' => false]);
-////            }
-////            elseif ($promotion->availability === 'Restricted') {
-////                // If promotion is restricted, check if it is currently applicable based on restricted_days and restricted_hours
-////                $now = now();
-////                $restrictedDays = explode(',', $promotion->restricted_days);
-////                $restrictedHours = explode('-', $promotion->restricted_hours);
-////
-////                // Check if today is a restricted day
-////                if (in_array(strtolower($now->format('l')), $restrictedDays)) {
-////                    // Check if the current time is within the restricted hours
-////                    $startHour = (int) trim($restrictedHours[0]);
-////                    $endHour = (int) trim($restrictedHours[1]);
-////
-////                    if ($now->hour >= $startHour && $now->hour < $endHour) {
-////                        // Promotion is applicable during the restricted time
-////                    } else {
-////                        return response()->json(['message' => "Promotion is restricted at this time!", 'success' => false]);
-////                    }
-////                } else {
-////                    return response()->json(['message' => "Promotion is restricted on this day!", 'success' => false]);
-////                }
-////            }
+
+
+            //FOR AVAILABILITY
+//            if ($promotion->availability === 'Hidden') {
+//                return response()->json(['message' => "Promotion is hidden!", 'success' => false]);
+//            }
+//            elseif ($promotion->availability === 'Always Available') {
+//                return response()->json(['message' => "Promotion is Always Available!", 'success' => false]);
+//            }
+//            elseif ($promotion->availability === 'Restricted') {
+//                // If promotion is restricted, check if it is currently applicable based on restricted_days and restricted_hours
+//                $now = now();
+//                $restrictedDays = explode(',', $promotion->restricted_days);
+//                $restrictedHours = explode('-', $promotion->restricted_hours);
 //
-            $promotion_category_items = PromotionCategoryItem::where('promotion_id', $promotion->promotion_id)
-                ->with('category_item')->get();
+//                // Check if today is a restricted day
+//                if (in_array(strtolower($now->format('l')), $restrictedDays)) {
+//                    // Check if the current time is within the restricted hours
+//                    $startHour = (int) trim($restrictedHours[0]);
+//                    $endHour = (int) trim($restrictedHours[1]);
+//
+//                    if ($now->hour >= $startHour && $now->hour < $endHour) {
+//                        // Promotion is applicable during the restricted time
+//                    } else {
+//                        return response()->json(['message' => "Promotion is restricted at this time!", 'success' => false]);
+//                    }
+//                } else {
+//                    return response()->json(['message' => "Promotion is restricted on this day!", 'success' => false]);
+//                }
+//            }
+
+
+            $promotion_category_items = PromotionCategoryItem::where('promotion_id', $promotion->promotion_id)->with('category_item')->get();
 
             $eligible_item_ids = [];
             foreach ($promotion_category_items as $promotion_category_item) {
                 $eligible_item_ids[] = $promotion_category_item->category_item[0]->menu_id;
             }
 
-            $cart = Cart::find($cartId);
-            if (!$cart) {
-                return response()->json(['message' => "Cart not found!", 'success' => false]);
-            }
-
+            $cart = Cart::find($request->post('cart_id'));
             $cartItemIds = [];
             foreach ($cart->cartMenuItems as $item) {
                 $cartItemIds[] = $item->menu_id;
             }
+//            dd($promotion);
 
+
+            // FOR ADDONS
+            // Check if modifier_total is available in any cart menu item
+            $hasModifierTotal = $cart->cartMenuItems()->whereNotNull('modifier_total')->exists();
+
+            // Apply Promotion
+            if ($hasModifierTotal) {
+                $modifierTotal = $cart->cartMenuItems()->sum('modifier_total');
+                $cart->cartMenuItems()->update(['menu_total' => DB::raw('menu_total - modifier_total')]);
+
+                // Check the no_extra_charge_type from the promotions table
+                if ($promotion->no_extra_charge_type == 'No extra charges') {
+
+                    // Add the promotion discount to the cart's sub_total
+                    $cart->sub_total -= $promotion->discount;
+                    $newTaxRate = 0.1; // Adjust this based on your actual tax rate
+                    $cart->tax_charge = $cart->sub_total * $newTaxRate;
+                    $cart->total_due = $cart->sub_total + $cart->tax_charge;
+
+                }else {
+                    // Check if the no_extra_charge_type includes charges for choices/addons or choices/addons/sizes
+                    if (Str::contains($promotion->no_extra_charge_type, ['Charges extra for Choices/Addons', 'Charges extra for Choices/Addons & Sizes'])) {
+                        // Add the modifier_total to the cart's sub_total
+                        $cart->sub_total += $modifierTotal;
+                    }
+                }
+            }
+
+            //Apply Promotion
             $uid = auth()->id();
             $restaurantId = $request->post('restaurant_id');
+
+//            // Check if the promotion is already applied to the user's cart
             $existingPromotion = Cart::where('uid', $uid)->pluck('promotion_id')->first();
 
             if ($existingPromotion && $promotion->only_once_per_client == 0) {
                 return response()->json(['message' => "This promotion can only be applied once per client!", 'success' => false]);
             }
 
-//            //for customer type
+
+            //for customer type
             $isReturningCustomer = Order::where('uid', $uid)->exists();
             $isNewCustomer = !Order::where('uid', $uid)->exists();
              $promotionTypes = PromotionType::where('promotion_type_id',$promotion->promotion_type_id)->first();
 
-//            if (($promotion->client_type == 'Only New Customer' && $isReturningCustomer) || ($promotion->client_type == 'Only Returning Customer' && $isNewCustomer)) {
-//                return response()->json(['message' => "Promotion not applicable for the user type!", 'success' => false]);
-//            }
-
-             //for minimum order amount
-            $cart = Cart::find($request->post('cart_id'));
-            $cartTotal = $cart->total_due;
-
-            // Check if the cart total is less than the minimum order amount required by the promotion
-            if ($promotion->set_minimum_order_amount && $cartTotal < $promotion->set_minimum_order_amount) {
-                return response()->json([
-                    'message' => "Promotion can not applied!",
-                    'success' => false
-                ]);
+            if (($promotion->client_type == 'Only New Customer' && $isReturningCustomer) || ($promotion->client_type == 'Only Returning Customer' && $isNewCustomer)) {
+                return response()->json(['message' => "Promotion not applicable for the user type!", 'success' => false]);
             }
-
 
              /* Promotions Helper logic function */
              $test[] = [$promotionTypes->promotion_type_id];
@@ -1079,56 +912,62 @@ class CartController extends Controller
              }
 
 
+            //for minimum order amount
+            $cart = Cart::find($request->post('cart_id'));
+            $cartTotal = $cart->total_due;
+//            dd($cart);
+
+            // Check if the cart total is less than the minimum order amount required by the promotion
+//            if ($promotion->set_minimum_order_amount && $cartTotal < $promotion->set_minimum_order_amount) {
+//                return response()->json([
+//                    'message' => "Promotion can not applied!",
+//                    'success' => false
+//                ]);
+//            }
+
+//            dd($cart);
+
+
             $promotionTypes = PromotionType::all();
             foreach ($promotionTypes as $promotion_type) {
+                /* Promotions Helper logic function */
+                $test[] = [$promotion_type->id];
+
+                 //calling the custom.php apply_promotion function
                 if (apply_promotion($promotion_type->promotion_name, $promotion, $uid, $restaurantId, $cart) == true) {
                     break;
+
                 }
+//                dd($promotion_type);
+
             }
 
-            //FOR ADDONS Discount
-                if ($promotion->no_extra_charge_type === 'No extra charges') {
-                    // Apply the discount
-                    $cart->discount_charge = $promotion->discount;
-                    $cart->sub_total -= $promotion->discount;
+//            dd($cart);
+            $cartItem = Cart::where('restaurant_id', $restaurantId)->where('uid', $uid)->first();
+//            $cartItem->save();
+//            dd($cartItem);
+            //==========================************
+//             dd($cart);
 
-                    // Retrieve the sales tax rate from the restaurant table
-                    $restaurant = Restaurant::find($restaurantId);
-                    if (!$restaurant) {
-                        return response()->json(['message' => "Restaurant not found!", 'success' => false]);
-                    }
 
-                    $salesTaxRate = $restaurant->sales_tax / 100; // Convert percentage to decimal
-
-                    // Calculate the new tax and total due
-                    $cart->tax_charge = $cart->sub_total * $salesTaxRate;
-                    $cart->total_due = $cart->sub_total + $cart->tax_charge;
-
-                }else {
-                    // Check if the no_extra_charge_type includes charges for choices/addons or choices/addons/sizes
-                    if (Str::contains($promotion->no_extra_charge_type, ['Charges extra for Choices/Addons', 'Charges extra for Choices/Addons & Sizes'])) {
-                        // Add the modifier_total to the cart's sub_total
-                        $modifierTotal = $cart->cartMenuItems()->sum('modifier_total');
-                        $cart->sub_total += $modifierTotal;
-                    }
-                }
-                $cart->promotion_id = $promotion->promotion_id;
-
+            $cart->promotion_id = $promotion->promotion_id;
             if ($cart->save()) {
                 return response()->json([
-                    'message' => "Promotion applied!",
+                    'message' => "Promotion applied !",
                     'data' => [
-                        'cart_list' => $cart,
+                        'cart_list' => $cartItem,
                         'promotion_code' => $promotion->promotion_code,
                         'promotion_name' => $promotion->promotion_name,
                         'promotion_details' => $promotion->promotion_details,
-                        'promotion_selected_payment_method' => $promotion->selected_payment_status,
+                        'promotion_selected_payment_method'=>$promotion->selected_payment_status,
+
                     ],
-                    'success' => true,
-                ], 200);
+                    'success' => true], 200);
+
             } else {
-                return response()->json(['message' => "Promotion is not eligible for any item of the Cart!", 'success' => false]);
+                return response()->json(['message' => "Promotion is not elegible for any item of the Cart !", 'success' => false]);
             }
+
         } catch (\Throwable $th) {
             $errors['success'] = false;
             $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
@@ -1137,6 +976,7 @@ class CartController extends Controller
             }
             return response()->json($errors, 500);
         }
+
     }
 
     public function removePromotion(Request $request)
