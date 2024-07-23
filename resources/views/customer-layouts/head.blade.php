@@ -1,5 +1,6 @@
  <!-- Icons -->
  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+ {{-- <link rel="stylesheet" type="text/css" href="{{ asset('assets/customer/css/promotion_page.css') }}"> --}}
  <link rel="stylesheet" type="text/css" href="{{asset('assets/customer/vendors/bootstrap/css/bootstrap.min.css')}}">
  <link rel="stylesheet" type="text/css" href="{{asset('assets/customer/vendors/owl-carousel/css/owl.carousel.min.css')}}">
  <link rel="stylesheet" type="text/css" href="{{asset('assets/customer/vendors/owl-carousel/css/owl.theme.default.min.css')}}">

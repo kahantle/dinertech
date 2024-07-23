@@ -230,7 +230,7 @@
         align-items: center;
         padding: 10px;
     }
-    .owl-first-blog button.owl-prev {
+    /* .owl-first-blog button.owl-prev {
         position: relative;
         left: -2%;
     }
@@ -241,7 +241,7 @@
     .owl-first button.owl-prev {
         position: relative;
         left: -2%;
-    }
+    } */
     #testinomial .card img {
         height: 200px;
         object-fit: cover;

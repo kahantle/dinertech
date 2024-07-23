@@ -235,7 +235,7 @@
                                                 </span>
                                                 @else
                                                 <span class="more">
-                                                    No item selected.
+                                                    No item found.
                                                 </span>
                                                 @endif
                                             </td>
