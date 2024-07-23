@@ -223,7 +223,7 @@
                                             </td>
 
                                             <td class="reports-blog-swc">
-                                                @if($rulesItems)
+                                                @if(isset($rulesItems[$rules->rules_id]))
                                                 <span class="more">
                                                     @foreach ($rulesItems[$rules->rules_id] as $categoryName => $items)
                                                         {{$categoryName}} :
@@ -232,6 +232,10 @@
                                                         @endphp
                                                         {{$menu}},<br>
                                                     @endforeach
+                                                </span>
+                                                @else
+                                                <span class="more">
+                                                    No item selected.
                                                 </span>
                                                 @endif
                                             </td>
