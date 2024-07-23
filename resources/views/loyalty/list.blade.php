@@ -206,7 +206,9 @@
                                         <th scope="col" class="dr-title-t-inner-blog d-campaign-inner rules-blog-first">
                                             Points</th>
                                         <th scope="col" class="dr-title-t-inner-blog d-status-inner-blog rules-blog-second">
-                                            Items
+                                             @if($rulesItems)
+                                                Items
+                                             @endif
                                         </th>
                                         <th scope="col" class="dr-title-t-inner-blog d-creates rules-blog-third"></th>
                                     </tr>
@@ -221,6 +223,7 @@
                                             </td>
 
                                             <td class="reports-blog-swc">
+                                                @if($rulesItems)
                                                 <span class="more">
                                                     @foreach ($rulesItems[$rules->rules_id] as $categoryName => $items)
                                                         {{$categoryName}} :
@@ -230,6 +233,7 @@
                                                         {{$menu}},<br>
                                                     @endforeach
                                                 </span>
+                                                @endif
                                             </td>
                                             <td class="btn-blog-group btn-rules-desktop btn-rules-desktop btn-rules-desktop">
                                                 <button class="btn-edit btn-inner product-quantity-plus1 edit-rule"

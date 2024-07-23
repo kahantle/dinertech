@@ -83,6 +83,7 @@ class LoyaltyController extends Controller
             $data['loyalties'] = Loyalty::where('restaurant_id',$restaurant->restaurant_id)->get();
             $loyaltyRules = LoyaltyRule::with('rulesItems')->where('restaurant_id', $restaurant->restaurant_id)->get();
             // dd($loyaltyRules);
+            $menus = [];
             foreach($loyaltyRules as $loyaltyItems)
             {
                 foreach($loyaltyItems->rulesItems as $items)
@@ -97,9 +98,10 @@ class LoyaltyController extends Controller
                     }
                 }
             }
-            // dd($menuItems);
+            // dd($menus);
             $data['loyaltyRules'] = $loyaltyRules;
             $data['rulesItems'] = (isset($menuItems)) ? $menuItems : [] ;
+            // dd($data);
             return view('loyalty.list',$data);
         } else {
             return redirect()->route('loyalty.index')->with('error', 'Please purchase loyalty subscription.');
