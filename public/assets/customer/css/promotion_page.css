@@ -263,6 +263,11 @@
      width: 32px !important;
  }
 
+ #loginbutton {
+     margin-top: 10px;
+     width: auto;
+ }
+
  @media (max-width:1600px) {
      #addCardForm .input-group-text img {
          width: 20px !important;
@@ -598,7 +603,17 @@
 
  @media (max-width: 375px) {
      .wd-dr-now.d-flex {
+         display: flex;
          flex-direction: column;
+     }
+ }
+
+ @media (max-width: 768px) {
+     .wd-dr-now.d-flex {
+         flex-direction: column;
+         /* Stack buttons vertically on small screens */
+         align-items: stretch;
+         /* Stretch buttons to full width */
      }
  }
 
@@ -2305,10 +2320,6 @@
  }
 
  @media (max-width: 375px) {
-     .wd-dr-now.d-flex {
-        display: flex;
-        flex-direction: row;
-     }
 
      .owl-first-blog button.owl-prev {
          left: -5% !important;
@@ -4504,4 +4515,100 @@
 
  .rowinner a {
      width: 100%;
+ }
+
+ @media (max-width: 375px) {
+     .wd-dr-now .d-flex {
+         display: flex;
+         flex-direction: column;
+         align-items: center;
+     }
+
+     .wd-dr-now .d-flex button {
+         margin: 10px 5px;
+         width: 100%;
+     }
+
+ }
+
+ @media (max-width: 475px) {
+     .wd-dr-now .d-flex {
+         display: flex;
+         flex-direction: column;
+         align-items: center;
+     }
+
+     .wd-dr-now .d-flex button {
+         margin: 10px 5px;
+         width: 90%;
+     }
+
+     #loginbutton {
+         margin-top: 6px;
+         width: auto;
+     }
+
+     /* .tab h3{
+        width: 200px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+     } 
+     */
+     .tab h3 button {
+         font-size: .8rem;
+     }
+ }
+
+ @media (max-width: 700px) {
+     .wd-dr-now .d-flex {
+         display: flex;
+         justify-content: center;
+         align-items: center;
+     }
+
+     .d-flex button {
+         /* width: 150px; */
+     }
+
+     #loginbutton {
+         margin-top: 6px;
+         width: auto;
+     }
+ }
+
+ @media (min-width: 1200px) and (max-width: 1500px) {
+     .wd-dr-now.d-flex {
+         display: flex;
+         flex-direction: column;
+         justify-content: center;
+         align-items: center;
+     }
+
+     .wd-dr-now .d-flex button {
+         display: grid;
+         right: 0;
+         left: 0;
+         margin-bottom: 10px;
+         width: auto;
+     }
+
+     #loginbutton {
+         margin-top: 6px;
+         width: auto;
+     }
+ }
+
+ @media (max-width: 1200px) {
+     .wd-dr-now.d-flex {
+         display: flex;
+         /* flex-direction: row; */
+         justify-content: center;
+         align-items: center;
+     }
+
+     .wd-dr-now .d-flex button {
+         margin-bottom: 10px;
+         width: 300px;
+     }
  }

@@ -10,7 +10,7 @@
             @include('customer-layouts.navbar')
             <div id="chatdesk" class="chart-board ">
                 @include('customer.messages')
-                <div class="row flex-row flex-nowrap">
+                <div class="row flex-column flex-md-row flex-nowrap">
                     <div class="col-xl-8 col-lg-12 col-md-12 dashbord-home dashbord-home-cart active">
                         <div class="content ">
                             <div class="order-content order-content-second promotion_bg-cololr order-content-main">
@@ -35,7 +35,7 @@
                                     </h3>
                                     <p class="text-dark text-center font-weight-bold">{{$customer->mobile_number }}</p>
                                     <div class="order-user-name">
-                                        <div class="manage-address promotion_text-cololr p-3 cursor-pointer">
+                                        <div class="manage-address promotion_text-cololr p-3 cursor-pointer mb-3">
                                             <div class="d-flex align-items-center justify-content-between">
                                                 <div class="row align-items-center">
                                                     <div class="col-md-2 col-2">
@@ -56,7 +56,7 @@
                                                 <i class="fas fa-chevron-right"></i>
                                             </div>
                                         </div>
-                                        <div class="change-password promotion_text-cololr p-3 cursor-pointer">
+                                        <div class="change-password promotion_text-cololr p-3 cursor-pointer mb-3">
                                             <div class="d-flex align-items-center justify-content-between">
                                                 <div class="row align-items-center">
                                                     <div class="col-md-2 col-2">
@@ -77,7 +77,7 @@
                                                 <i class="fas fa-chevron-right"></i>
                                             </div>
                                         </div>
-                                        <div class="payment-method promotion_text-cololr p-3"
+                                        <div class="payment-method promotion_text-cololr p-3 mb-3"
                                             id="payment-method">
                                             <a href="{{route('customer.cards.list')}}">
                                                 <div class="d-flex align-items-center justify-content-between">
@@ -102,7 +102,7 @@
                                                 </div>
                                             </a>
                                         </div>
-                                        <div class="orders promotion_text-cololr p-3">
+                                        <div class="orders promotion_text-cololr p-3 mb-3">
                                             <a href="{{route('customer.orders')}}">
                                                 <div class="d-flex align-items-center justify-content-between">
                                                     <div class="row align-items-center">

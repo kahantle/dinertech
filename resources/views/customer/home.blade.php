@@ -49,7 +49,7 @@
                                 @if ($categories->count() != 0)
                                     <h2>What are you hungry for? </h2>
                                     <div id="testinomial" class="banner-container">
-                                        <div class="owl-carousel owl-theme owl-drag">
+                                        <div class="owl-carousel owl-carousell owl-first-blog  owl-theme">
                                             @foreach ($categories as $key => $category)
                                                 <div class="item category" data-category-id="{{ $category->category_id }}">
                                                     <div class="card">
@@ -58,7 +58,7 @@
                                                             alt="Card image cap"> --}}
                                                         <div class="card-body category">
                                                             <h5 class="card-title">{{ $category->category_name }}</h5>
-                                                            <p class="card-text">{{ $category->category_details }}</p>
+                                                            <p class="card-text">{{ $category->category_details ? $category->category_details : '--' }}</p>
                                                         </div>
                                                     </div>
                                                 </div>

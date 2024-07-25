@@ -34,7 +34,7 @@ class CardController extends Controller
     public function getCardsList()
     {
 
-        $uid = Auth::user()->uid;
+        $uid = Auth::user()->uid; 
         $data['cards'] = getUserCards(1,$uid);
         $data['orderDetails'] = array();
         $data['title'] = 'Payment Cards';

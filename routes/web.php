@@ -319,7 +319,7 @@ Route::prefix('customer')->group(function () {
         Route::post('/cart/customize/', 'customer\CartController@cartCustomize');
         Route::post('/cart/customize/update', 'customer\CartController@cartCustomizeUpdate')->name('customer.cart.customize.update');
 
-        /* Card List */
+        /* Card List */ 
         Route::get('/cards/list', 'customer\CardController@getCardsList')->name('customer.cards.list');
         Route::post('/cards/list', 'customer\CardController@index')->name('customer.cards');
         Route::get('/cards/add', 'customer\CardController@create')->name('customer.cards.create');
