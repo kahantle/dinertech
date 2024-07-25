@@ -4532,6 +4532,56 @@
  }
 
  @media (max-width: 475px) {
+
+     .wd-dr-right-toogle {
+         display: flex;
+         width: 100%;
+         position: fixed;
+         z-index: 11;
+         justify-content: space-between;
+         background: #535bfe;
+         align-items: center;
+         padding: 5px;
+     }
+
+
+     .sidebar-toggle {
+         font-size: 20px;
+         margin-left: 0px;
+     }
+
+
+     .wd-dr-res-img {
+         display: -webkit-box;
+         /* For older WebKit browsers */
+         display: -ms-flexbox;
+         /* For older Internet Explorer */
+         display: flex;
+         /* Standard Flexbox */
+         justify-content: center;
+         /* Center items horizontally */
+         align-items: center;
+         /* Center items vertically (if needed) */
+         width: 100%;
+         /* Ensure full width */
+         height: auto;
+         /* Adjust as necessary */
+         box-sizing: border-box;
+         /* Include padding and border in width and height */
+         /* Additional optional styles */
+         padding: 10px;
+     }
+
+     .wd-dr-res-img img {
+         width: 60px;
+         /* margin-right: 40px; */
+         margin-left: -50px;
+     }
+
+     .wd-dr-res-img {
+         text-align: center;
+     }
+
      .wd-dr-now .d-flex {
          display: flex;
          flex-direction: column;
