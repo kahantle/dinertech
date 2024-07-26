@@ -4615,10 +4615,11 @@
          display: flex;
          justify-content: center;
          align-items: center;
+        flex-direction: column;
      }
 
      .d-flex button {
-         /* width: 150px; */
+         width: 150px;
      }
 
      #loginbutton {
