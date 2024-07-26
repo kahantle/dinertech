@@ -4582,7 +4582,7 @@
          text-align: center;
      }
 
-     .wd-dr-now .d-flex {
+     .wd-dr-now.d-flex {
          display: flex;
          flex-direction: column;
          align-items: center;
@@ -4591,6 +4591,19 @@
      .wd-dr-now .d-flex button {
          margin: 10px 5px;
          width: 90%;
+     }
+
+     .timing-content .input {
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         flex-direction: column;
+     }
+
+     .timing-content .input input {
+         margin-left: 10px;
+         margin-right: 10px;
+         width: 100% !important;
      }
 
      #loginbutton {
@@ -4615,7 +4628,7 @@
          display: flex;
          justify-content: center;
          align-items: center;
-        flex-direction: column;
+         flex-direction: column;
      }
 
      .d-flex button {
@@ -4661,5 +4674,14 @@
      .wd-dr-now .d-flex button {
          margin-bottom: 10px;
          width: 300px;
+     }
+ }
+
+ @media (max-width: 475px) {
+     .profile-pic {
+         width: 80px;
+         /* Adjust as needed */
+         height: 80px;
+         /* Adjust as needed */
      }
  }

@@ -92,7 +92,10 @@
                                 <button type="button" class="btn btn-primary btn-later selected set-now">Now <br> <span style="font-size: 10px;">Get Your Order Made Now </span></button>
                                 <button type="button" class="btn btn-primary btn-later set-later" data-toggle="modal"
                                     data-target="#exampleModalCenter1">Later <br> <span style="font-size: 10px;">Scedule For a Future Time </span></button>
-                                <!-- Modal -->
+                               
+                            </div>
+                        </div>
+                         <!-- Modal -->
                                 <div class="modal fade modal-inner-first selectTime" id="exampleModalCenter1"
                                     tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
                                     aria-hidden="true">
@@ -104,20 +107,20 @@
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
                                             </div>
-                                            <div class="modal-body">
+                                            <div class="modal-body timing-content">
                                                 <h5 class="modal-title text-center" id="exampleModalCenterTitle">Select
                                                     Date
                                                     or time for future order</h5>
-                                                <input type="date" id="orderDate" name="date" class="mt-3">
-                                                <input type="time" id="orderTime" name="time" class="my-3"
-                                                    step="2700">
+                                                <div class="input">
+                                                    <input type="date" id="orderDate" name="date" class="mt-3">
+                                                    <input type="time" id="orderTime" name="time" class="my-3"
+                                                        step="2700">
+                                                </div>
                                                 <button type="button" class="btn btn-okey mb-3 btokey">Okey</button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
                         <hr>
                         <input type="hidden" name="promotion_id" class="promotion_id_field">
                         <p id="output" class="set-order-msg">Current Timing Is set in Your Order</p>
