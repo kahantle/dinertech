@@ -31,7 +31,7 @@
                                             </button>
                                         </div>
                                     </div>
-                                    <h3 class="prof-img-par-h3 h4 mt mb-0">Update Profile
+                                    <h3 class="prof-img-par-h3 h4 mb-0">Update Profile
                                     </h3>
                                     <p class="text-dark text-center font-weight-bold">{{$customer->mobile_number }}</p>
                                     <div class="order-user-name">
