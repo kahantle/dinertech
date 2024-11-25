@@ -30,13 +30,13 @@ class ChatNumberController extends Controller
                 $url = Config::get('constants.FIREBASE_DB_NAME') . "/" . $request->restaurant_id . "/" . $value->order_number . "/" . $order->uid . "/";
                 $message = $database->getReference($url)->getvalue();
                 $count = 0;
-                if ($message) {
+                if ($message) { 
                     foreach ($message as $key1 => $value1) {
                         if (!$value1['is_read'] && $value1['created_by'] == 'RESTAURANT') {
                             $count = $count + 1;
                         }
                     }
-                }
+                } 
                 $result[$key]['order_id'] = $value->order_id;
                 $result[$key]['order_number'] = $value->order_number;
                 $result[$key]['order_time'] = $value->order_date . " " . $value->order_time;
