@@ -9,7 +9,7 @@ use App\Models\Restaurant;
 use App\Models\RestaurantUser;
 use App\Models\Order;
 use App\Models\User;
-use App\Notifications\Otp;
+use App\Notifications\Otp; 
 use App\Notifications\RestaurantChat;
 use Carbon\Carbon;
 use Config;

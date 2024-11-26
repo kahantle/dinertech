@@ -42,7 +42,14 @@ return [
             'username' => env('MAIL_USERNAME'),
             'password' => env('MAIL_PASSWORD'),
             'timeout' => null,
+            'stream' => [
+                'ssl' => [
+                    'verify_peer' => false, // Set to true on production for better security
+                    'verify_peer_name' => false, // Set to true on production for better security
+                ],
+            ],
             'auth_mode' => null,
+            'verify_peer' => false, // Set to true on production for better security
         ],
 
         'ses' => [
