@@ -45,7 +45,7 @@ $(function() {
     });
 
     $('[name=paymentType]').on('change', function() {
-        if ($(this).val() == 'card') {
+        if ($(this).val() == 'Credit Card') {
             $(".cards").show();
         } else {
             $(".cards").hide();
@@ -54,13 +54,16 @@ $(function() {
 
     $(document).on("click", ".with-modifier-add", function() {
         var menuId = $(this).data("menu-id");
+        var paymentType = $("input[name='paymentType']:checked").val();
         $(".modifier-modal-" + menuId).modal("hide");
-        addToCart($("#addToCart").serialize(),menuId);
+        addToCart($("#addToCart").serialize(),paymentType,menuId);
     });
 
     $(document).on("click", ".add-to-order", function () {
         var menuId = $(this).attr("data-menu-id");
-        $(this).hasClass("have-modifiers") ? showMenuModifiers(menuId) : addToCart({menuId : menuId});
+        var paymentType = $("input[name='paymentType']:checked").val();
+        $(this).hasClass("have-modifiers") ? showMenuModifiers(menuId) : addToCart({menuId : menuId},paymentType);
+        $("#tips").load(location.href + " #tips");
     });
 
     $(document).on("change", ".radioModifierItem", function() {
@@ -82,6 +85,9 @@ $(function() {
         $(".primarycardnow").html(selectedModifier.join(','));
     });
 
+
+
+
     $(document).on("click", ".add-to-cart-again", function() {
         var menuId = $(this).data("menu-id");
         var cartMenuItemId = $(this).data("cart-menu-item-id");
@@ -92,13 +98,15 @@ $(function() {
     $(document).on("click", ".product-quantity-minus", function() {
         var cartMenuItemId = $(this).data("cart-menu-item-id");
         $(".quantity-" + cartMenuItemId).val() != 1 ? quantityChange(cartMenuItemId, "decreament") : removeItem(cartMenuItemId);
+        $("#tips").load(location.href + " #tips");
     });
 
     $(document).on("click", ".product-quantity-plus", function () {
         var menuId = $(this).data("menu-id");
         var cartMenuItemId = $(this).data("cart-menu-item-id");
         console.log(cartMenuItemId);
-        $(this).hasClass("have-modifiers") ? modalForPlusWithModifiers(cartMenuItemId) : quantityChange(cartMenuItemId, "increament");
+        $(this).hasClass("have-modifiers") ? modalForPlusWithModifiers(cartMenuItemId) : quantityChange(cartMenuItemId, "increament",menuId);
+        $("#tips").load(location.href + " #tips");
     });
 
     $(document).on("click", ".repeat-last-cart", function () {
@@ -106,8 +114,46 @@ $(function() {
         quantityChange(cartMenuItemId, "increament");
         $(".repeat-last-modal-" + cartMenuItemId).modal("hide");
     });
+    $(document).on("click", ".custom", function () {
+            $('#custommodel').modal('show');
+    });
+    $(document).on("click", ".tip", function () {
+        var text = $(this).val();
+        var total_price=$("#grand_total_ajax").val();
+        var textt=parseFloat(text).toFixed(2);
+        $("#tipsres").text(textt);
+        $("#newtips").val(textt);
+        var newtotal=parseFloat(total_price) + parseFloat(text);
+        var totalnew=newtotal.toFixed(2);
+        $("#total_price").text("$"+totalnew);
+        $("#grand_total").val(totalnew);
+     });
 
-    const addToCart = (data, menu_id = null) => {
+
+     $(document).on("click", "#custom_tip_ajax", function () {
+        var text=$("#customtips").val();
+        var total_price=$("#grand_total_ajax").val();
+        var textt=parseFloat(text).toFixed(2);
+        $("#cutomtip").text(textt);
+        $("#tipsres").text(textt);
+        $("#newtips").val(textt);
+        var newtotal=parseFloat(total_price) + parseFloat(textt);
+        $("#total_price").text("$"+newtotal);
+        $("#grand_total").val(newtotal);
+
+     });
+
+     $(document).on("click", ".notip", function () {
+        var text = $(this).val();
+        var total_price=$("#grand_total_ajax").val();
+        $("#tipsres").text(text);
+        $("#newtips").val(text);
+        $("#total_price").text("$"+total_price);
+        $("#grand_total").val(total_price);
+     });
+
+    // data['paymentType'] = paymentType ?? '';
+    const addToCart = (data,paymentType, menu_id = null) => {
         $.ajax({
             type: "POST",
             headers: {
@@ -178,7 +224,7 @@ $(function() {
         });
     }
 
-    const quantityChange = (cartMenuItemId, action) => {
+    const quantityChange = (cartMenuItemId, action,menuId) => {
         $.ajax({
             type: "POST",
             headers: {
@@ -187,11 +233,13 @@ $(function() {
             url: baseUrl + "/quantity-change",
             data: {
                 cartMenuItemId: cartMenuItemId,
-                action: action
+                action: action,
+                menu_id:menuId
             },
             success: response => {
                 if (response) {
                     $(".quantity-" + cartMenuItemId).val(response.new_qty);
+                    // $("#cart_items").load(location.href + "#cart_items");
                     $("#checkout").load(window.location.href + " #checkout");
                     $(".scroll-inner-blog").load(
                         window.location.href + " .scroll-inner-blog"

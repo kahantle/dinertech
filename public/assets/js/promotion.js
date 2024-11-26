@@ -46,7 +46,7 @@ $(document).ready(function(e) {
               headers: {
               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
               },
-              url: url,
+              url: url, 
               type: "POST",
               dataType: "json",
               beforeSend: function() {

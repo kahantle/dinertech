@@ -7,11 +7,13 @@ $(function() {
         var orderId = $(this).attr('data-orderid');
         var message = '';
 
+
         if ($(".chat-desktop").length == 1) {
-            message = $(".desktopMessage-" + orderId).val();
-            $(".desktopMessage-" + orderId).val('');
+            var message = $(".desktopMessage").val();
+            $(".desktopMessage" + orderId).val('');
         } else if ($(".chat-mobile").length == 1) {
-            message = $(".mobileMessage-" + orderId).val();
+            alert(2);
+            message = $(".mobileMessage").val();
             $(".mobileMessage-" + orderId).val('');
         }
         $.ajax({
@@ -32,12 +34,14 @@ $(function() {
     });
 
     $(document).on('keyup', "#message-output", function(event) {
+
         if (event.keyCode === 13) {
             var orderId = $(this).attr('data-orderid');
+            alert(orderId);
             var message = '';
 
             if ($(".chat-desktop").length == 1) {
-                message = $(".desktopMessage-" + orderId).val();
+                message = $(".desktopMessage").val();
                 $(".desktopMessage-" + orderId).val('');
             } else if ($(".chat-mobile").length == 1) {
                 message = $(".mobileMessage-" + orderId).val();
@@ -90,19 +94,19 @@ $(function() {
         noteContent = '';
         console.log(".voice-message" + orderId);
         /*-----------------------------
-                Voice Recognition 
+                Voice Recognition
          ------------------------------*/
 
         // If false, the recording will stop after a few seconds of silence.
         // When true, the silence period is longer (about 15 seconds),
-        // allowing us to keep recording even when the user pauses. 
+        // allowing us to keep recording even when the user pauses.
         recognition.continuous = true;
 
-        // This block is called every time the Speech APi captures a line. 
+        // This block is called every time the Speech APi captures a line.
         recognition.onresult = function(event) {
 
             // event is a SpeechRecognitionEvent object.
-            // It holds all the lines we have captured so far. 
+            // It holds all the lines we have captured so far.
             // We only need the current one.
             var current = event.resultIndex;
 
@@ -141,7 +145,7 @@ $(function() {
 
 
     /*-----------------------------
-        App buttons and input 
+        App buttons and input
     ------------------------------*/
 
     $(".start").on('click', function() {

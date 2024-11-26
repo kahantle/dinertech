@@ -227,6 +227,7 @@ Route::prefix('customer')->namespace('Api\Customer')->group(function () {
                 Route::post('/cancel', 'OrderController@cancelOrder')->name('order.cancel');
                 Route::post('/due','OrderController@dueOrder')->name('order.due');
                 Route::post('/refund', 'OrderController@refundOrder')->name('order.refund');
+                Route::post('/refund', 'OrderController@refundOrder')->name('order.refund');
             });
             Route::prefix('chat')->group(function () {
                 Route::post('/notification', 'ChatNumberController@sendChatNotification')->name('customer.chat.notification');

@@ -87,7 +87,7 @@ return [
     ],
     'ORDER_TYPE' => [
         '1' => 'Any Type',
-        '2' => 'Pickup Time',
+        '2' => 'Pickup Type',
         // '3' => 'Delhivery'
     ],
     'MARK_PROMO_AS' => [
@@ -169,10 +169,11 @@ return [
     'ORDER_PAYMENT_TYPE' => [
         'CASH' => 1,
         'CARD' => 0,
-        'CARD_PAYMENT' => 'Credit Card',
-        'CASH_PAYMENT' => 'Cash'
+        'CARD_PAYMENT' => 0,//'Credit Card'
+        'CASH_PAYMENT' => 1//'Cash'
     ],
     'CAMPAIGN_MONITOR' => [
+//        'EMAIL' => 'krayjada@dinertech.io',
         'EMAIL' => 'kevin@sohosushi.com',
         'CHROME' => 'None',
     ],

@@ -70,7 +70,7 @@ function applyCoupenCode() {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             success: function(result) {
-                console.log(result)
+                //console.log(result)
                 var discount=parseFloat(result.discount);
                 if(result.status=='success'){
                     console.log(promotion_id);
@@ -140,7 +140,7 @@ function remove_coupon_code() {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             success: function(result) {
-                console.log(result);
+                //console.log(result);
                 if (result != '') {
                     $('.coupenremove').hide();
                     $("#checkout").load(location.href + " #checkout");

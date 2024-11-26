@@ -18,6 +18,21 @@ $(function () {
                             html += "<span for='closing_hours' class='error'></span>";
                 html += "</div>";
             html += "</div>";
+            html += "<div class='col-xl-2 col-md-3 col-sm-4 col-5'>";
+                html += "<div class='form-group' style='display: inline-block'>";
+                        html +=
+                            " <select name='hour_type[]' data-number='"+i+"' id='hour_type' class='form-control'>";
+                            html +=  "<option selected disabled>Select Type</option>";
+                            html +=  "<option value='Breakfast'>Breakfast</option>";
+                            html +=  "<option value='Brunch'>Brunch</option>";
+                            html +=  "<option value='Lunch'>Lunch</option>";
+                            html +=  "<option value='Dinner'>Dinner</option>";
+                            html +=  "<option value='Late Night'>Late Night</option>";
+                        html +=
+                            " </select>";
+                 html += "</div>";
+            html += "</div>";
+
             html += "<div class='col-xl-2 col-md-2 col-sm-3 mt-3'>";
                 html += "<button class='btn btn-danger remove-btn' type='button'>Remove</button>";
             html += "</div>";
@@ -34,7 +49,7 @@ $(function () {
     $( ".opening_time" ).each(function() {
         $( this ).trigger("change");
     });
-    
+
     const closing_hours = {};
     console.log((Date.parse("1-1-2000 " + "12:00") < Date.parse("1-1-2000 " + "14:06") < Date.parse("1-1-2000 " +"17:06")));
     $(document).on("change", ".closing_time", function () {
@@ -49,12 +64,12 @@ $(function () {
                 else{
                     if(key!=0){
                         $.each(opening_hours, function(key1, value1) {
-                            
+
                             if((key1 != key && key1 < key)  && Date.parse("1-1-2000 " + opening_hours[key]) <= Date.parse("1-1-2000 " + closing_hours[key1]) && Date.parse("1-1-2000 " + closing_hours[key]) >= Date.parse("1-1-2000 " + opening_hours[key1])) {
                                 //else if(key!=0 && (Date.parse("1-1-2000 " + opening_hours[key-1]) < Date.parse("1-1-2000 " + opening_hours[key]) < Date.parse("1-1-2000 " + closing_hours[key-1])))
                                 delete opening_hours[key];
                                 delete closing_hours[key];
-                
+
                                 alert("Please do not Select In Between Time");
                                 $('.opening_time[data-number="'+key+'"]').val('');
                                 $('.closing_time[data-number="'+key+'"]').val('');
@@ -64,15 +79,15 @@ $(function () {
                 }
                 /*else if(key!=0 && (Date.parse("1-1-2000 " + opening_hours[key]) > Date.parse("1-1-2000 " + opening_hours[key-1]) && Date.parse("1-1-2000 " + opening_hours[key]) < Date.parse("1-1-2000 " + closing_hours[key-1]))) {
                 //else if(key!=0 && (Date.parse("1-1-2000 " + opening_hours[key-1]) < Date.parse("1-1-2000 " + opening_hours[key]) < Date.parse("1-1-2000 " + closing_hours[key-1])))
-                
+
                     alert("Please do not Select In Between Time");
                     $('.opening_time[data-number="'+key+'"]').val('');
                     $('.closing_time[data-number="'+key+'"]').val('');
                 }*/
-                
+
                 /*if (
                     value >= $(".opening_time").last().val() &&
-                    closing_hours[key] >= $(".closing_time").last().val() 
+                    closing_hours[key] >= $(".closing_time").last().val()
                 )
                 {
                     $("#submit_form").attr('disable',true);
