@@ -32,6 +32,7 @@ class DashboardController extends Controller
     {
         $uid = Auth::user()->uid;
         $restaurant = Restaurant::where('uid', $uid)->first();
+//        dd($uid);
         $orders = [];
 
         // -------------- due orders -----------------
@@ -45,6 +46,7 @@ class DashboardController extends Controller
         foreach ($due_orders as $key => $order) {
             $orders[] = $order;
         }
+
 
         // -------------- Accepted orders -----------------
 

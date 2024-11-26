@@ -12,10 +12,10 @@
 		@include('customer-layouts.navbar')
 		<div id="chatdesk" class="chart-board ">
 			@include('customer.messages')
-			<div class="row flex-row flex-nowrap">
+			<div class="row flex-column flex-md-row flex-nowrap">
 				<div class="col-xl-8 col-lg-12 col-md-12 dashbord-home dashbord-home-cart active">
 					<div class="order-content payment-table-detail p-4">
-						<h2 class="mb-5">
+						<h2 class="mb-5 h3 h-md-2">
                             <a href="{{route('customer.profile')}}" class="btn bg-transparent mx-2 payment-methods-btn-back">
                                 <i data-feather="arrow-left"></i>
                             </a>

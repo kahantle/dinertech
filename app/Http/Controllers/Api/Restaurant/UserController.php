@@ -58,7 +58,7 @@ class UserController extends Controller
                         ->get(['uid', 'first_name', 'last_name',
                             'email_id', 'mobile_number', 'profile_image',
                             'app_notifications', 'chat_notifications',
-                            'location_tracking', 'email_subscription','sales_tax','loyalty_subscription'])
+                            'location_tracking', 'email_subscription','sales_tax','pin','loyalty_subscription'])
                         ->first()
                         ->makeHidden('restaurant');
 
@@ -72,8 +72,9 @@ class UserController extends Controller
                     $user->restaurant_address = $user->restaurant->restaurant_address;
                     $user->restaurant_city = $user->restaurant->restaurant_city;
                     $user->restaurant_state = $user->restaurant->restaurant_state;
+                    $user['menu_pin'] = $user->pin;
                     $user->is_pin_protected = ($user->restaurant->is_pinprotected) ? true : false;
-                    $user->pin = ($user->restaurant->pin) ?? NULL ;
+                    $user->pin = ($user->restaurant->pin) ?? NULL;
                     $user->sales_tax = $user->restaurant->sales_tax;
 
                     $fcmId = $request->post('fcm_id');
@@ -263,6 +264,7 @@ class UserController extends Controller
             $user = User::where('uid', $request->post('uid'))
                 ->where('role', Config::get('constants.ROLES.RESTAURANT'))
                 ->first();
+                return response()->json([$request]); 
             if ($user) {
                 DB::beginTransaction();
                 $user->password = Hash::make($request->post('password'));
@@ -331,6 +333,22 @@ class UserController extends Controller
             return response()->json($errors, 401);
         }
 
+    }
+    public function store_pin(Request $request)
+    {
+        try {
+            $uid = auth('api')->user()->uid;
+            User::where('uid', $uid)->update(['pin' => $request->post('pin'), 'pin_notifications' => 'true']);
+
+            return response()->json(['message' => 'Pin set successfully.', 'success' => true], 200);
+        } catch (\Throwable $th) {
+            $errors['success'] = false;
+            $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
+            if ($request->debug_mode == 'ON') {
+                $errors['debug'] = $th->getMessage();
+            }
+            return response()->json($errors, 401);
+        }
     }
 
 }

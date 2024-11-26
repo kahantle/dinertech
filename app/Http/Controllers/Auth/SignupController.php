@@ -17,6 +17,7 @@ use DB;
 use Hash;
 use Illuminate\Http\Request;
 
+
 class SignupController extends Controller
 {
 
@@ -63,8 +64,11 @@ class SignupController extends Controller
             $user->otp_valid_time = Carbon::now()->addMinutes(Config::get('constants.OTP_VALID_DURATION'));
             $user->status = Config::get('constants.STATUS.INACTIVE');
             $user->save();
+            //to send otp on provided mail
+
             $otp = new Otp();
             $otp->sendOTP($user);
+
             $restaurant = new Restaurant;
             $restaurant->uid = $user->uid;
             $restaurant->restaurant_name = $request->post('restaurant_name');

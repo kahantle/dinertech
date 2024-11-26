@@ -13,7 +13,7 @@
             @include('customer-layouts.navbar')
             <div id="chatdesk" class="chart-board ">
                 @include('customer.messages')
-                <div class="row flex-row flex-nowrap">
+                <div class="row flex-column flex-md-row flex-nowrap">
                     <div class="col-xl-8 col-lg-12 col-md-12 dashbord-home dashbord-home-cart active">
                         <div class="content">
                             <div class="order-content order-content-second">
@@ -22,7 +22,7 @@
                                         class="btn bg-transparent text-dark mx-2 feedback-btn-back">
                                         <i data-feather="arrow-left"></i>
                                     </a>
-                                    <h3 class="feedback-h3">
+                                    <h3 class="mb-5 h4 h-md-2 feedback-h3">
                                         Send us your Feedback !
                                     </h3>
                                     <p class="feedback-p">

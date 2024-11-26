@@ -93,7 +93,7 @@
                         </div> --}}
                     {{-- </div> --}}
                     <div class="row my-4 profile-two-inner profile-third-tinner-blog d-flex align-itemes-center justify-content-center">
-                        <div class="col-lg-3 col-lg-two-inner">
+                        <div class="col-lg-3 mb-3 col-lg-two-inner">
                             <div class="card">
                                 <div class="card-body">
                                     <h6>Number of Orders</h6>
@@ -105,7 +105,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-3 col-lg-two-inner">
+                        <div class="col-lg-3 mb-3 col-lg-two-inner">
                             <div class="card">
                                 <div class="card-body">
                                     <h6>Amount Spent</h6>
@@ -117,7 +117,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-3 col-lg-two-inner">
+                        <div class="col-lg-3 mb-3 col-lg-two-inner">
                             <div class="card">
                                 <div class="card-body">
                                     <h6>Category Based </h6>
@@ -188,7 +188,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="profile-inner-blog">
-                                    <h2 class="m-0">Loyalty Rules List </h2>
+                                    <h2 class="m-0">Loyalty Redemption Rules </h2>
                                 </div>
                             </div>
                             <div class="col-md-6 text-right">
@@ -206,14 +206,15 @@
                                         <th scope="col" class="dr-title-t-inner-blog d-campaign-inner rules-blog-first">
                                             Points</th>
                                         <th scope="col" class="dr-title-t-inner-blog d-status-inner-blog rules-blog-second">
-                                            Items
+                                             @if($rulesItems)
+                                                Items
+                                             @endif
                                         </th>
                                         <th scope="col" class="dr-title-t-inner-blog d-creates rules-blog-third"></th>
                                     </tr>
                                 </thead>
                             </table>
                             @foreach ($loyaltyRules as $rules)
-                                {{-- {{dd($rules)}} --}}
                                 <table class="table table-responsive">
                                     <tbody>
                                         <tr class="header-url header-desk-board">
@@ -222,6 +223,7 @@
                                             </td>
 
                                             <td class="reports-blog-swc">
+                                                @if(isset($rulesItems[$rules->rules_id]))
                                                 <span class="more">
                                                     @foreach ($rulesItems[$rules->rules_id] as $categoryName => $items)
                                                         {{$categoryName}} :
@@ -231,6 +233,11 @@
                                                         {{$menu}},<br>
                                                     @endforeach
                                                 </span>
+                                                @else
+                                                <span class="more">
+                                                    No item found.
+                                                </span>
+                                                @endif
                                             </td>
                                             <td class="btn-blog-group btn-rules-desktop btn-rules-desktop btn-rules-desktop">
                                                 <button class="btn-edit btn-inner product-quantity-plus1 edit-rule"
@@ -349,9 +356,11 @@
                 <div class="modal-body modal-inner-blog modal-fif-blog">
                     <h6>Are you sure? </h6>
                     <p id="delete-message"></p>
-                    <form action="{{route('loyalty.rules.delete')}}" method="POST">
+                    <form action="{{route('loyalty.delete')}}" method="POST">
                         @csrf
-                        <input type="hidden" name="rule_id" id="rule_id">
+                        {{-- <input type="hidden" name="rule_id" id="rule_id"> --}}
+                        <input type="hidden" name="item_id" id="loyaltyId">
+                        <input type="hidden" name="loyalty_type" id="loyaltyType">
                         <div class="modal-footer-blog">
                             <button type="submit" class="btn btn-first btn-yes">Yes</button>
                             <button type="button" class="btn btn-second" data-dismiss="modal">Cancel</button>
@@ -367,7 +376,7 @@
         <div class="modal-dialog modal-dialog-centered modal-inner-system" role="document">
             <div class="modal-content">
                 <div class="modal-body modal-inner-blog">
-                    <h6 id="modal-title">Add Loyalty Rules</h6>
+                    <h6 id="modal-title">Add Loyalty Rules</h6> 
                     {{ Form::open(['route' => ['loyalty.rules.add'], 'id' => 'loyalty-rule-add', 'method' => 'POST']) }}
                         <input type="hidden" name="rule_id" id="ruleId">
                         <div class="form-group">
@@ -390,6 +399,8 @@
             </div>
         </div>
     </div>
+
+    {{-- Select Items Pop Up --}}
     <div id="editMenuItemModal">
         <div class="modal second-part" style="display: none;" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-inner-system" role="document">
@@ -399,41 +410,48 @@
                         <div class="content">
                             <div class="table-scroll-y-blog table-active-blog">
                                 <table class="table-inner-sec">
-                                    @foreach ($categories as $item)
-                                        @if (count($item->category_item) != 0)
-                                            <tbody class="t-b-blog">
-                                                <tr class="odd">
-                                                    <td class="table-tag-blog add">
-                                                        <div>
-                                                            <input type="checkbox" class="selectall inner-checkin-blog"
-                                                                data-category-id="{{ $item->category_id }}"
-                                                                id="modifier-group-{{ $item->category_id }}">
-                                                        </div>
-                                                    </td>
-                                                    <td class="forum-topic-blog">{{ $item->category_name }}</td>
-                                                </tr>
-                                                @foreach ($item->category_item as $menuItem)
-                                                    <tr class="even">
-                                                        <td class="table-tag add">
-                                                            <div class="form-item form-type-checkbox form-item-node-types-forum subOption">
-                                                                <input type="checkbox" id="edit-node-types-forum"
-                                                                    name="modifier_item" value="forum"
-                                                                    class="form-checkbox individual inner-checkin-blog item-group-{{ $menuItem->category_id }}"
-                                                                    data-item-id={{ $menuItem->menu_id }}
-                                                                    data-category-id="{{ $menuItem->category_id }}">
+
+                                    @if (count($categories) > 1)
+                                        @foreach ($categories as $item)
+                                            @if (count($item->category_item) != 0)
+                                                <tbody class="t-b-blog">
+                                                    <tr class="odd">
+                                                        <td class="table-tag-blog add">
+                                                            <div>
+                                                                <input type="checkbox" class="selectall inner-checkin-blog"
+                                                                    data-category-id="{{ $item->category_id }}"
+                                                                    id="modifier-group-{{ $item->category_id }}">
                                                             </div>
                                                         </td>
-                                                        <td class="forum-topic-blog">
-                                                            {{ $menuItem->item_name }}
-                                                        </td>
-                                                        <td class="forum-blog">
-                                                            <small>${{ number_format($menuItem->item_price, 2) }}</small>
-                                                        </td>
+                                                        <td class="forum-topic-blog">{{ $item->category_name }}</td>
                                                     </tr>
-                                                @endforeach
-                                            </tbody>
-                                        @endif
-                                    @endforeach
+                                                    @foreach ($item->category_item as $menuItem)
+                                                        <tr class="even">
+                                                            <td class="table-tag add">
+                                                                <div class="form-item form-type-checkbox form-item-node-types-forum subOption">
+                                                                    <input type="checkbox" id="edit-node-types-forum"
+                                                                        name="modifier_item" value="forum"
+                                                                        class="form-checkbox individual inner-checkin-blog item-group-{{ $menuItem->category_id }}"
+                                                                        data-item-id={{ $menuItem->menu_id }}
+                                                                        data-category-id="{{ $menuItem->category_id }}">
+                                                                </div>
+                                                            </td>
+                                                            <td class="forum-topic-blog">
+                                                                {{ $menuItem->item_name }}
+                                                            </td>
+                                                            <td class="forum-blog">
+                                                                <small>${{ number_format($menuItem->item_price, 2) }}</small>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            @endif
+                                        @endforeach
+                                    @else
+                                        <div style="text-align: center;">
+                                            <span>Data Not Found</span>
+                                        </div>
+                                    @endif
                                 </table>
                             </div>
                         </div>
@@ -446,7 +464,8 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="deleteModal" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+
+    <div class="modal fade" id="deleteRuleModal" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-inner-system" role="document">
             <div class="modal-content">
                 <div class="modal-body modal-inner-blog modal-fif-blog">
@@ -474,4 +493,6 @@
 {{-- {!! JsValidator::formRequest('App\Http\Requests\LoyaltyRequest', '#addOrderLoyaltyPoint') !!} --}}
     {{-- {!! JsValidator::formRequest('App\Http\Requests\LoyaltyAmountRequest', '#addAmountLoyalty') !!} --}}
     {{-- {!! JsValidator::formRequest('App\Http\Requests\LoyaltyRequest', '#addCategoryLoyalty') !!} --}}
+
+
 @endsection

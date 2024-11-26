@@ -23,22 +23,43 @@
                     </a>
                 </li>
                 <li class="{{ Request::is('customer/orders*') ? 'active' : '' }}">
+                    @if(auth()->check() == true)
                     <a href="{{ route('customer.orders') }}">
                         <i data-feather="user-plus"></i>
                         <span>Orders</span>
                     </a>
+                    @else
+                    <a data-toggle="modal" data-target="#yourModal">
+                        <i data-feather="user-plus"></i>
+                        <span>Orders</span>
+                    </a>
+                    @endif
                 </li>
                 <li class="{{ Request::is('customer/loyalty*') ? 'active' : '' }}">
+                    @if(auth()->check() == true)
                     <a href="{{ route('customer.loyalty') }}">
                         <i data-feather="gift"></i>
                         <span>Loyalty</span>
                     </a>
+                    @else
+                    <a data-toggle="modal" data-target="#yourModal">
+                        <i data-feather="gift"></i>
+                        <span>Loyalty</span>
+                    </a>
+                    @endif
                 </li>
                 <li class="{{ Request::is('customer/promotions*') ? 'active' : '' }}">
+                    @if(auth()->check() == true)
                     <a href="{{route('customer.promotions')}}">
                         <i data-feather="smartphone"></i>
                         <span>Promotions</span>
                     </a>
+                    @else
+                    <a data-toggle="modal" data-target="#yourModal">
+                        <i data-feather="smartphone"></i>
+                        <span>Promotions</span>
+                    </a>
+                    @endif
                 </li>
                 <li class="{{ Request::is('customer/restaurant/information') ? 'active' : '' }}">
                     <a href="{{ route('customer.restaurant.information') }}">
@@ -47,28 +68,56 @@
                     </a>
                 </li>
                 <li class="{{ Request::is('customer/cards/*') ? 'active' : '' }}">
+                    @if(auth()->check() == true)
                     <a href="{{ route('customer.cards.list') }}">
                         <i data-feather="archive"></i>
                         <span>Payment Methods</span>
                     </a>
+                    @else
+                    <a data-toggle="modal" data-target="#yourModal">
+                        <i data-feather="archive"></i>
+                        <span>Payment Methods</span>
+                    </a>
+                    @endif
                 </li>
                 <li class="{{ Request::is('customer/chats*') ? 'active' : '' }}">
+                    @if(auth()->check() == true)
                     <a href="{{ route('customer.chat.index') }}">
                         <i data-feather="message-square"></i>
                         <span>Chats</span>
                     </a>
+                    @else
+                    <a data-toggle="modal" data-target="#yourModal">
+                        <i data-feather="message-square"></i>
+                        <span>Chats</span>
+                    </a>
+                    @endif
                 </li>
-                <li class="{{ Request::is('customer/contact-us/*') ? 'active' : '' }}">
+                {{-- <li class="{{ Request::is('customer/contact-us/*') ? 'active' : '' }}">
+                    @if(auth()->check() == true)
                     <a href="{{ route('customer.contact-us') }}">
                         <i data-feather="phone"></i>
                         <span>Contact Us</span>
                     </a>
-                </li>
+                    @else
+                    <a data-toggle="modal" data-target="#yourModal">
+                        <i data-feather="phone"></i>
+                        <span>Contact Us</span>
+                    </a>
+                    @endif
+                </li> --}}
                 <li class="{{ Request::is('customer/setting/*') ? 'active' : '' }}">
+                    @if(auth()->check() == true)
                     <a href="{{ route('customer.settings') }}">
                         <i data-feather="settings"></i>
                         <span>Account Settings</span>
                     </a>
+                    @else
+                    <a data-toggle="modal" data-target="#yourModal">
+                        <i data-feather="settings"></i>
+                        <span>Account Settings</span>
+                    </a>
+                    @endif
                 </li>
             </ul>
         </div>

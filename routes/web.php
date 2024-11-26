@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\customer\PromotionController;
 
 //-------------------------- Restaurant Route ---------------------------------------------- //
 
@@ -63,12 +64,18 @@ Route::group(['middleware' => ['auth:web']], function () {
     });
     Route::prefix('account')->group(function () {
         Route::get('/', 'AccountController@index')->name('account');
+        Route::get('/menu_pin', 'AccountController@menuPin')->name('menu.pin');
+        Route::post('/set_menu_pin', 'AccountController@setMenuPin')->name('set.menu.pin');
+        Route::post('/remove_menu_pin', 'AccountController@removeMenuPin')->name('remove.menu.pin');
+        Route::post('/verify_menu_pin', 'AccountController@verifyMenuPin')->name('verify.menu.pin');
+        Route::post('/online_ordering', 'AccountController@onlineOrdering')->name('online.ordering');
         Route::post('/update-account-settings', 'AccountController@update')->name('update-account-settings');
         Route::get('/active-subscriptions','AccountController@showActiveSubscription')->name('account.active.subscription');
         Route::post('/delete','AccountController@deleteAccount')->name('account.delete');
     });
     Route::prefix('chat')->group(function () {
         Route::get('/', 'ChatController@index')->name('chat');
+        Route::post('/store-token', 'ChatController@storeToken')->name('store.token');
         Route::get('/{order_number}', 'ChatController@index')->name('chat.order');
         Route::post('/sendMessages', 'ChatController@sendMessages')->name('chat.send');
         Route::post('/getMessages', 'ChatController@getMessages')->name('chat.get');
@@ -93,6 +100,16 @@ Route::group(['middleware' => ['auth:web']], function () {
         Route::get('edit-item/{id}', 'ModifiersController@editModifierItem')->name('edit.modifier.item.post');
         Route::get('delete/{id}', 'ModifiersController@deleteGroup')->name('delete.modifier.post');
         Route::get('delete-item/{id}', 'ModifiersController@deleteItem')->name('delete.modifier.item.post');
+        Route::post('modifier_sequence_store', 'ModifiersController@storeModifierSequence')->name('store.modifier.sequence');
+
+          /* New Added */
+        Route::post('/store', 'ModifiersController@storeModifierGroup')->name('store.modifier.post');
+        Route::post('/edit', 'ModifiersController@editModifierGroupNew')->name('edit.modifier.post.new');
+        Route::post('item', 'ModifiersController@addModifierGroupItemNew')->name('add.modifier.item.post.new');
+        Route::post('item', 'ModifiersController@addModifierGroupItemNew')->name('add.modifier.item.post.new');
+        Route::get('delete', 'ModifiersController@deleteGroup')->name('delete.modifier.post.new');
+        Route::post('edit-item', 'ModifiersController@editModifierItemNew')->name('edit.modifier.item.post.new');
+        Route::get('delete-item', 'ModifiersController@deleteItemNew')->name('delete.modifier.item.post.new');
     });
 
     Route::prefix('menu')->group(function () {
@@ -103,6 +120,8 @@ Route::group(['middleware' => ['auth:web']], function () {
         Route::post('update', 'MenuController@update')->name('update.menu.post');
         Route::get('delete/{id}', 'MenuController@delete')->name('delete.menu.post');
         Route::post('remove/image/', 'MenuController@removeMenuImage')->name('remove.menu.image');
+        Route::post('store_stock_until', 'MenuController@storeStockUntil')->name('store.stock.until');
+
         Route::prefix('modifier')->group(function () {
             Route::post('/', 'MenuModifierController@addMenuModifierGroup')->name('add.menu.modifier.post');
             Route::get('/edit/{id}', 'MenuModifierController@editMenuModifierGroup')->name('edit.menu.modifier.post');
@@ -251,18 +270,29 @@ Route::prefix('customer')->group(function () {
     Route::post('/promotions/menu/getMenuModifier', 'customer\PromotionController@promotionMenuModifier')->name('customer.promotion.menu.modifier');
     Route::post('/promotion/menu/add-to-cart', 'customer\PromotionController@promotionMenuAddCart')->name('customer.promotion.menu.add.cart');
 
+    /*New Prmotion*/
+    Route::post('/newpromotion', 'customer\NewPromotionContoller@discountcart');
+
+    /*Remove Couoen */
+    Route::post('/remove_coupon_code','customer\NewPromotionContoller@remove_coupon_code');
+
     /* Google Signing */
     Route::get('auth/google', 'customer\GoogleController@redirectToGoogle')->name('customer.google.login');
     Route::get('auth/google/callback', 'customer\GoogleController@handleGoogleCallback')->name('customer.google.redirectUrl');
+
+     /* Menu Items */
+     Route::post('/menu-items', 'customer\HomeController@getMenuItems');
+     Route::post('/getMenumodifier', 'customer\HomeController@getMenumodifier');
+     Route::post('/search/menuitem', 'customer\HomeController@searchMenu');
+
+     //information
+     Route::get('/restaurant/information', 'customer\HoursController@index')->name('customer.restaurant.information');
 
     Route::group(['middleware' => ['web', 'is_customer']], function () {
         // Route::get('/home','customer\IndexController@homepage')->name('customer.home');
         Route::get('set-system-time', 'customer\HomeController@setSystemTime')->name('customer.system.time');
 
-        /* Menu Items */
-        Route::post('/menu-items', 'customer\HomeController@getMenuItems');
-        Route::post('/getMenumodifier', 'customer\HomeController@getMenumodifier');
-        Route::post('/search/menuitem', 'customer\HomeController@searchMenu');
+
 
         /* Add To Cart */
         Route::post('/add-to-cart', 'customer\CartController@addToCart')->name('customer.addToCart');
@@ -275,9 +305,11 @@ Route::prefix('customer')->group(function () {
         Route::get('/promotion', 'customer\PromotionController@show')->name('customer.show.promotions');
         Route::get('/promotion/get/eligible-items/{promotionId}', 'customer\PromotionController@getEligibleItems')->name('customer.promotions.getEligibleItems');
         Route::get('/promotion/apply/{promotionId}', 'customer\PromotionController@applyPromotion')->name('customer.apply.promotion');
+//       Route::get('/promotion/apply/{promotionId}',[PromotionController::class,'applyPromotion'])->name('customer.apply.promotion');
+
 
         /* Hours */
-        Route::get('/restaurant/information', 'customer\HoursController@index')->name('customer.restaurant.information');
+        // Route::get('/restaurant/information', 'customer\HoursController@index')->name('customer.restaurant.information');
         Route::post('contact/restaurant/send-mail', 'customer\HoursController@sendMail')->name('customer.restaurant.sendmail');
         // Route::get('/restaurant/information', 'customer\HoursController@index')->name('customer.restaurant.hours');
 
@@ -287,7 +319,7 @@ Route::prefix('customer')->group(function () {
         Route::post('/cart/customize/', 'customer\CartController@cartCustomize');
         Route::post('/cart/customize/update', 'customer\CartController@cartCustomizeUpdate')->name('customer.cart.customize.update');
 
-        /* Card List */
+        /* Card List */ 
         Route::get('/cards/list', 'customer\CardController@getCardsList')->name('customer.cards.list');
         Route::post('/cards/list', 'customer\CardController@index')->name('customer.cards');
         Route::get('/cards/add', 'customer\CardController@create')->name('customer.cards.create');
@@ -327,6 +359,7 @@ Route::prefix('customer')->group(function () {
 
         /* Chat */
         Route::get('/chats', 'customer\ChatController@index')->name('customer.chat.index');
+        Route::post('/chats/store-token', 'customer\ChatController@storeToken')->name('customer.store.token');
         Route::post('/getChats', 'customer\ChatController@getChat');
         Route::post('/send/message', 'customer\ChatController@sendMessage');
         Route::get('/chat/export/{orderId}', 'customer\ChatController@chatExport');

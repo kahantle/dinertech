@@ -22,7 +22,7 @@
             {{ Form::open(array('route' => array('update.hours.post'),'id'=>'hourForm','method'=>'POST','files'=>'true',    'class'=>'')) }}
 
             <div class="check-buttons">
-          
+
               <div class="form-group">
                 @for ($i =0; $i<7; $i++)
                   @php
@@ -38,7 +38,7 @@
                       <input type="checkbox" class="hours-disable" title="It's already selected for this resturant" disabled name="day[]" value="{{$day}}">
                       <label for="{{$day}}">{{$day}}</label>
                     </div>
-                  @else 
+                  @else
                     <div class="form-check">
                       <input type="checkbox" name="day[]" value="{{$day}}">
                       <label for="{{$day}}">{{$day}}</label>
@@ -48,7 +48,7 @@
               </div>
               {{-- @foreach($hoursdata as $hours) --}}
                   <input type="hidden" name="hidden_id" value="{{$hours_group_id}}">
-                  <div class="time-buttons">                
+                  <div class="time-buttons">
                       @forelse ($hoursdata as $key => $time)
                         <div class="row">
                           <div class="col-xl-2 col-md-3 col-sm-4 col-5">
@@ -61,6 +61,18 @@
                               <input type="time" class="add-time closing_time" id="closing_hours" name="closing_hours[]" placeholder="Time" data-number="{{$key}}" value="{{date('H:i',strtotime($time->closing_time))}}">
                             </div>
                           </div>
+                          <div class="col-xl-2 col-md-3 col-sm-4 col-5 mt-3">
+                            <div class="form-group" style="display: inline-block">
+                            <select name="hour_type[]" id="hour_type" class="form-control">
+                                <option selected disabled>Select Type</option>
+                                <option value="Breakfast" <?php echo ($time->hour_type == "Breakfast") ? 'selected' : ''  ?>>Breakfast</option>
+                                <option value="Brunch" <?php echo ($time->hour_type == "Brunch") ? 'selected' : ''  ?>>Brunch</option>
+                                <option value="Lunch" <?php echo ($time->hour_type == "Lunch") ? 'selected' : ''  ?>>Lunch</option>
+                                <option value="Dinner" <?php echo ($time->hour_type == "Dinner") ? 'selected' : ''  ?>>Dinner</option>
+                                <option value="Late Night" <?php echo ($time->hour_type == "Late Night") ? 'selected' : ''  ?>>Late Night</option>
+                            </select>
+                            </div>
+                        </div>
                           @if ($key == 0)
                             <div class="col-xl-2 col-md-2 col-sm-3 mt-3">
                               <button class="btn btn-primary" id="add-more" type="button">Add More</button>
@@ -105,7 +117,7 @@
               <div class="btn-custom text-center mt-5">
                 <button class="btn-blue"><span>Update Hours</span></button>
               </div>
-     
+
           </div>
         {{ Form::close() }}
 
@@ -118,6 +130,6 @@
 @endsection
 @section('scripts')
 <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js')}}"></script>
-{!! JsValidator::formRequest('App\Http\Requests\HourRequest','#hourForm'); !!} 
+{!! JsValidator::formRequest('App\Http\Requests\HourRequest','#hourForm'); !!}
 <script src="{{asset('/assets/js/add-hours.js')}}"></script>
 @endsection

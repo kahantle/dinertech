@@ -81,6 +81,8 @@ class LoginController extends Controller
 
     public function logout(Request $request)
     {
+        $uid = Auth::user()->uid;
+        User::where('uid',$uid)->update(['device_key' => NULL]);
         Auth::logout();
         return redirect()->route('customer.index');
     }

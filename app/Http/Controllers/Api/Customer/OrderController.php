@@ -123,15 +123,20 @@ class OrderController extends Controller
             $cartId = $request->post('cart_id');
             $check_cart = Cart::where('uid',$uid)->where('restaurant_id',$request->post('restaurant_id'))->where('cart_id',$cartId)->first();
 
+
             DB::beginTransaction();
             $order = new Order;
             $order->uid = $uid;
             $order->restaurant_id = $request->post('restaurant_id');
-            // $order->promotion_id = $check_cart->promotion_id;
+            $order->promotion_id = $check_cart->promotion_id ?? 0;
             $order->order_number = random_int(1000,1000000000000000);
             $order->payment_card_id = ($request->post('isCash') == 1) ? $request->post('payment_card_id') : NULL;
             $order->isCash = $request->post('isCash');
             $order->stripe_payment_id = ($request->post('isCash') == 1) ? $request->post('stripe_payment_id') : null;
+            $order->stripe_charge_id = ($request->post('isCash') == 1) ? $request->post('stripe_charge_id') : null;
+            $order->payment_method_id = ($request->post('isCash') == 1) ? $request->post('payment_method_id') : null;
+            $order->payment_intent_id = ($request->post('isCash') == 1) ? $request->post('payment_intent_id') : null;
+            $order->payment_intent_client_secret = ($request->post('isCash') == 1) ? $request->post('payment_intent_client_secret') : null;
             $order->cart_charge = $request->post('cart_charge');
             $order->delivery_charge = $request->post('delivery_charge');
             $order->discount_charge = $request->post('discount_charge');
@@ -148,6 +153,7 @@ class OrderController extends Controller
             $order->delivery_charge = $request->post('delivery_charge');
             $order->sales_tax = $request->post('sales_tax');
             $order->comments = $request->post('comments');
+            $order->platform = $request->post('platform') ? $request->post('platform') : NULL;
             $order->grand_total = $request->post('grand_total');
             $order->order_progress_status = Config::get('constants.ORDER_STATUS.INITIAL');
             if($order->save()){

@@ -73,7 +73,7 @@
                 <div class="child">
                   <div class="order-name">
                       <div class="circle"></div>
-                      <p class="mb-0 ml-2">{{$time->opening_time}} - {{$time->closing_time}}</p>
+                      <p class="mb-0 ml-2">{{$time->opening_time}} - {{$time->closing_time}} - {{$time->hour_type}}</p>
                   </div>
                 </div>
               @endforeach
@@ -86,6 +86,6 @@
 
 </section>
 @endsection
-@section('scripts') 
-<script src="{{asset('/assets/js/hours.js')}}"></script> 
+@section('scripts')
+<script src="{{asset('/assets/js/hours.js')}}"></script>
 @endsection

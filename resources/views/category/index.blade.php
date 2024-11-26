@@ -32,13 +32,13 @@
             <div class="orders category_display">
               <div class="order">
                 <div class="order-name">
-                    @if(!$item->image && $item->image == null)
+                    {{-- @if(!$item->image && $item->image == null)
                       <!-- <img src="{{ $item->getDefaultImage() }}" class="img-fluid"> -->
                     @else
                     <div class="img">
                       <img src="{{ $item->getImagePathAttribute() }}" class="img-fluid">
                     </div>
-                    @endif
+                    @endif --}}
                 <h4>{{$item->category_name}}</h4>
                 </div>
                 <div class="order-detail">

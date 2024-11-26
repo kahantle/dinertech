@@ -10,11 +10,13 @@ use App\Models\Category;
 use App\Models\ModifierGroup;
 use App\Models\MenuModifierItem;
 use App\Models\PromotionCategoryItem;
+use App\Models\User;
 use Config;
 use Toastr;
 use DB;
 use Auth;
 use Storage;
+use Session;
 
 class MenuController extends Controller
 {
@@ -25,6 +27,11 @@ class MenuController extends Controller
      */
     public function __construct()
     {
+        // $this->middleware('auth:web');
+        // $this->middleware(function ($request, $next) {
+        //     $this->id = Auth::user()->uid;
+        //     $this->global = "some value";
+        // });
     }
 
     /**
@@ -45,11 +52,24 @@ class MenuController extends Controller
         return view('menu.index',compact('menu','params'));
     }
 
-    public function add(){   
+    public function add(){
         $uid = Auth::user()->uid;
         $restaurant = Restaurant::where('uid', $uid)->first();
         $categories = Category::where('restaurant_id', $restaurant->restaurant_id)->get();
         $modifiers = ModifierGroup::where('restaurant_id', $restaurant->restaurant_id)->get();
+
+        $user = User::where('uid', $uid)->first();
+        $pinscreen = $user->pin_notifications === 'true';
+        if ($pinscreen) {
+            $is_verified = Session::get('is_menu_pin_verify');
+            if ($is_verified) {
+                Session::put('is_menu_pin_verify', '');
+                return view('menu.add',compact('categories','modifiers'));
+            }
+
+            $redirect_url = route('add.menu');
+            return view('account.menu_verify',compact('redirect_url'));
+        }
         return view('menu.add',compact('categories','modifiers'));
     }
 
@@ -60,12 +80,24 @@ class MenuController extends Controller
         $categories = Category::where('restaurant_id', $restaurant->restaurant_id)->get();
         $menuItem = MenuItem::where('menu_id', $request->id)->with('modifiers')->first();
         $modifiers = ModifierGroup::where('restaurant_id', $restaurant->restaurant_id)->get();
+
+        $user = User::where('uid', $uid)->first();
+        $pinscreen = $user->pin_notifications === 'true';
+        if ($pinscreen) {
+            $is_verified = Session::get('is_menu_pin_verify');
+            if ($is_verified) {
+                Session::put('is_menu_pin_verify', '');
+                return view('menu.edit',compact('menuItem','categories','modifiers'));
+            }
+
+            $redirect_url = route('edit.menu',$request->id);
+            return view('account.menu_verify',compact('redirect_url'));
+        }
         return view('menu.edit',compact('menuItem','categories','modifiers'));
     }
 
-
     public function store(MenuItemRequest $request)
-    {      
+    {
         try {
             $uid = Auth::user()->uid;
             $restaurant = Restaurant::where('uid', $uid)->first();
@@ -181,5 +213,49 @@ class MenuController extends Controller
          } else {
             return response()->json(['error' => 'Photo does not remove successfully.']);
          }
+    }
+
+    public function storeStockUntil(Request $request)
+    {
+        $selectedType = $request->selectedType;
+        $menuId = $request->menuId;
+        $start = $request->start;
+        $end = $request->end;
+
+        if($selectedType === 'rest_of_day'){
+            $out_of_stock_type = 'Rest Of Day';
+        } else if  ($selectedType === 'indefinitely') {
+            $out_of_stock_type = 'Indefinitely';
+        } else if  ($selectedType === 'custom_date') {
+            $out_of_stock_type = 'Custom Date';
+        } else {
+            $out_of_stock_type = 'Available';
+        };
+
+        $menuData = MenuItem::where('menu_id', $menuId)->first();
+        if(!empty($menuData)){
+
+            if($out_of_stock_type === 'Custom Date'){
+                $data = array(
+                    'out_of_stock_type' => $out_of_stock_type,
+                    'start_date' => $start,
+                    'end_date' => $end,
+                );
+
+                $modalclose = 'customDateModal';
+            } else {
+                $data = array(
+                    'out_of_stock_type' => $out_of_stock_type,
+                    'start_date' => NULL,
+                    'end_date' => NULL,
+                );
+
+                $modalclose = 'outOfStockModal';
+            }
+
+            MenuItem::where('menu_id', $menuId)->update($data);
+            return response()->json(['type' => true, 'message' => 'Stock Update Successfulluy', 'modalclose' => $modalclose ]);
+        }
+
     }
 }

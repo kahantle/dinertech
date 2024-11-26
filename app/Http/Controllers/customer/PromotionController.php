@@ -42,6 +42,7 @@ class PromotionController extends Controller
         $promotion = Promotion::where('promotion_id', $promotionId)
             ->with('promotion_item')
             ->first();
+
         if (!$promotion) {
             abort('404');
         }

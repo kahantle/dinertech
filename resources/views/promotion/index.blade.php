@@ -82,7 +82,7 @@
                 </div>
               </div>
               @endforeach
-              <div class="float-right"> {{ $promotion->links() }}</div>
+              <div class="float-right"> {{ $promotion->links('vendor.pagination.bootstrap-4') }}</div>
             </div>
           </div>
         </div>

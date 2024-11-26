@@ -5,20 +5,27 @@ namespace App\Http\Controllers\customer;
 use App\Http\Controllers\Controller;
 use App\Mail\CustomerContactMail;
 use App\Models\Restaurant;
+use App\Models\RestaurantHours;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use DB;
 
 class HoursController extends Controller
 {
     public function index()
     {
-        $uid = Auth::user()->uid;
+        $uid = Auth::user()->uid ?? 0;
         $restaurantId = session()->get('restaurantId');
         $restaurant = Restaurant::where('restaurant_id', $restaurantId)->with('user')
             ->first();
-        $data['address'] = $restaurant;
+        // $data['hoursdata']=RestaurantHours::select('restaurant_hours.*','times.opening_time','times.closing_time','times.hour_type')
+        // ->join('restaurant_hours_times as times','restaurant_hours.restaurant_hour_id','times.restaurant_hour_id')
+        // ->where('restaurant_hours.restaurant_id', $restaurantId)
+        // ->get();
 
+        $data['hoursdata'] = RestaurantHours::where('restaurant_id', $restaurantId)->with('allTimes')->orderBy('restaurant_hour_id', 'ASC')->get();
+        $data['address'] = $restaurant;
         $data['cards'] = getUserCards($restaurantId, $uid);
         $data['title'] = 'Information';
         return view('customer.hours.index', $data);

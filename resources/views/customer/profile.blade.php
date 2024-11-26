@@ -10,7 +10,7 @@
             @include('customer-layouts.navbar')
             <div id="chatdesk" class="chart-board ">
                 @include('customer.messages')
-                <div class="row flex-row flex-nowrap">
+                <div class="row flex-column flex-md-row flex-nowrap">
                     <div class="col-xl-8 col-lg-12 col-md-12 dashbord-home dashbord-home-cart active">
                         <div class="content ">
                             <div class="order-content order-content-second promotion_bg-cololr order-content-main">
@@ -31,11 +31,11 @@
                                             </button>
                                         </div>
                                     </div>
-                                    <h3 class="prof-img-par-h3 mb-0">Update Profile
+                                    <h3 class="prof-img-par-h3 h4 mb-0">Update Profile
                                     </h3>
                                     <p class="text-dark text-center font-weight-bold">{{$customer->mobile_number }}</p>
                                     <div class="order-user-name">
-                                        <div class="manage-address promotion_text-cololr p-3 cursor-pointer">
+                                        <div class="manage-address promotion_text-cololr p-3 cursor-pointer mb-3">
                                             <div class="d-flex align-items-center justify-content-between">
                                                 <div class="row align-items-center">
                                                     <div class="col-md-2 col-2">
@@ -56,7 +56,7 @@
                                                 <i class="fas fa-chevron-right"></i>
                                             </div>
                                         </div>
-                                        <div class="change-password promotion_text-cololr p-3 cursor-pointer">
+                                        <div class="change-password promotion_text-cololr p-3 cursor-pointer mb-3">
                                             <div class="d-flex align-items-center justify-content-between">
                                                 <div class="row align-items-center">
                                                     <div class="col-md-2 col-2">
@@ -77,7 +77,7 @@
                                                 <i class="fas fa-chevron-right"></i>
                                             </div>
                                         </div>
-                                        <div class="payment-method promotion_text-cololr p-3"
+                                        <div class="payment-method promotion_text-cololr p-3 mb-3"
                                             id="payment-method">
                                             <a href="{{route('customer.cards.list')}}">
                                                 <div class="d-flex align-items-center justify-content-between">
@@ -102,7 +102,7 @@
                                                 </div>
                                             </a>
                                         </div>
-                                        <div class="orders promotion_text-cololr p-3">
+                                        <div class="orders promotion_text-cololr p-3 mb-3">
                                             <a href="{{route('customer.orders')}}">
                                                 <div class="d-flex align-items-center justify-content-between">
                                                     <div class="row align-items-center">
@@ -198,15 +198,13 @@
                                     <div class="input-group manage-address-search">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text" id="basic-addon1">
-                                                <img width="30px" src="{{asset('assets/images/loction_mangeAddress.png')}}"
-                                                    alt="">
+                                                <img width="30px" src="{{asset('assets/images/loction_mangeAddress.png')}}" alt="">
                                             </span>
                                         </div>
-                                        <input type="text" class="form-control" placeholder="Search Address"
+                                        <input type="text" class="form-control" placeholder="Search Address" name="search"
                                             aria-label="Username" aria-describedby="basic-addon1">
                                         <div class="input-group-append">
-                                            <button
-                                                class="btn bg-white input-group-text font-weight-bold">x</button>
+                                        <button class="btn bg-white input-group-text font-weight-bold" id="clear_search" onclick="clearSearch()">x</button>
                                         </div>
                                     </div>
                                 </div>
@@ -239,25 +237,27 @@
                                 </div>
                                 <div class="order-user-name">
                                     <h4 class="promotion_text-cololr">Recently Used</h4>
-                                    @foreach ($addresses as $address)
-                                        <div class="order-content p-4 my-2">
-                                            <div class="d-flex align-items-end justify-content-between">
-                                                <div class="row align-items-center">
-                                                    <div class="col-md-2 text-center">
-                                                        <img width="30px"
-                                                            src="{{asset('assets/images/loction_mangeAddress.png')}}" alt="">
-                                                    </div>
-                                                    <div class="col-md-10">
-                                                        <div>
-                                                            <h4 class="mb-0">{{$address->type}}</h4>
-                                                            <p class="text-dark mb-0">{{$address->address}}</p>
+                                    <div id="address-list">
+                                        @foreach ($addresses as $address)
+                                            <div class="order-content p-4 my-2">
+                                                <div class="d-flex align-items-end justify-content-between">
+                                                    <div class="row align-items-center">
+                                                        <div class="col-md-2 text-center">
+                                                            <img width="30px"
+                                                                src="{{asset('assets/images/loction_mangeAddress.png')}}" alt="">
+                                                        </div>
+                                                        <div class="col-md-10">
+                                                            <div>
+                                                                <h4 class="mb-0">{{$address->type}}</h4>
+                                                                <p class="text-dark mb-0">{{$address->address}}</p>
+                                                            </div>
                                                         </div>
                                                     </div>
+                                                    {{-- <p class="promotion_text-cololr mx-2">8.7 Mile</p> --}}
                                                 </div>
-                                                {{-- <p class="promotion_text-cololr mx-2">8.7 Mile</p> --}}
                                             </div>
-                                        </div>
-                                    @endforeach
+                                        @endforeach
+                                    </div>
                                 </div>
                             </div>
                             <div class="order-content order-content-second change-password-content-update">
@@ -341,7 +341,74 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"> </script>
     <script src="{{ asset('assets/customer/js/additional-methods.min.js') }}"></script>
     <script src="{{ asset('assets/customer/js/custom-js/profile/profile.js') }}"></script>
+   
     <script>
+        // Function to clear the search input
+        function clearSearch() {
+             $('input[name="search"]').val(''); 
+        }
+
+        // Call API when pressing Enter in the search input (prevent form submission)
+        $('input[name="search"]').on('keydown', function(event) {
+            if (event.key === 'Enter') {
+                // Prevent form submission on Enter key
+                event.preventDefault();
+                
+                // Get the search term
+                const searchTerm = $(this).val().trim();
+                const uId =  {{ auth()->id() }};
+                //console.log(uId);
+
+                //if (searchTerm) {
+                    // Call API using jQuery AJAX
+                    $.ajax({
+                        url: `/api/customer/search-address`,
+                        method: 'POST',
+                        data: JSON.stringify({
+                            uid: uId,
+                            search: searchTerm
+                        }),
+                        dataType: 'json',
+                        success: function(res) {
+                            //console.log('API response:', res);
+                            // Handle the API response here (e.g., display results)
+                            // Clear the existing addresses
+                            $('#address-list').empty();
+
+                            if (res.data.length === 0) {
+                                $('#address-list').html('<p>No addresses found.</p>');
+                            } else {
+                                // Loop through the API response and append new address elements to the DOM
+                                res.data.forEach(function(address) {
+                                    var addressHTML = `
+                                        <div class="order-content p-4 my-2" data-address-id="${address.id}">
+                                            <div class="d-flex align-items-end justify-content-between">
+                                                <div class="row align-items-center">
+                                                    <div class="col-md-2 text-center">
+                                                        <img width="30px" src="{{ asset('assets/images/loction_mangeAddress.png') }}" alt="">
+                                                    </div>
+                                                    <div class="col-md-10">
+                                                        <div>
+                                                            <h4 class="mb-0">${address.type}</h4>
+                                                            <p class="text-dark mb-0">${address.address}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `;
+                                    $('#address-list').append(addressHTML);
+                                });
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('API call error:', error);
+                        }
+                    });
+                //}
+            }
+        });
+
         $(document).ready(function () {
             $("#changePasswordForm").validate({
                 rules: {

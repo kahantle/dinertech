@@ -22,12 +22,12 @@
     @include('common.flashMessage')
     <div class="container-fluid">
       {{ Form::open(array('route' => array('add.category.post'),'id'=>'categoryForm','method'=>'POST','class'=>'','files'=>'true')) }}
-      <div class="form-group">
+      {{-- <div class="form-group">
         <span class="slt-img">
         </span>
         <input id="image" type="file" name="profile_photo" placeholder="Photo" required="" capture="" style="display: none;">
         <label class="label-a"><i class="fa fa-camera" aria-hidden="true"></i>Select Picture</label>
-      </div>
+      </div> --}}
       <div class="form-group">
         <label class="label_cat">Category Name</label>
         <img src="{{ asset('assets/images/category-menu-icon.png') }}">

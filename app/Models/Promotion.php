@@ -8,6 +8,7 @@ use Config;
 class Promotion extends Model
 {
     protected $primaryKey = 'promotion_id';
+    protected $table = 'promotions';
 
     public function promotion_type()
     {
@@ -95,4 +96,5 @@ class Promotion extends Model
     //         }
     //     }
     // }
+
 }

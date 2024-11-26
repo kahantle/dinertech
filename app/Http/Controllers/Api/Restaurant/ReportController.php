@@ -194,7 +194,6 @@ class ReportController extends Controller
             [$result['sales_pr'], $result['sales_pr_status']] = $this->getPercentageData($sub_duration_sales, $result['sales_total']);
 
             // ------------
-
             $interval = DateInterval::createFromDateString('1 day');
             $period = new DatePeriod(new DateTime($duration[0]), $interval, new DateTime($duration[1]));
 

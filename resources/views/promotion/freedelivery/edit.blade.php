@@ -2,12 +2,15 @@
 
 @section('css')
     <link rel="stylesheet" href="{{ asset('/assets/css/promotion_style.css') }}">
+    <link rel="stylesheet" href="{{asset('vendor/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}">
     @if ($webview == 1)
         <style>
             #wrapper{
                 padding-left : 0px
             }
         </style>
+          <!-- datepicker and time -->
+          <link rel="stylesheet" href="{{asset('vendor/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}">
     @endif
 @endsection
 
@@ -135,19 +138,19 @@
                             </select>
                         </div>
 
-                        <div id="restricted-duration" class="overlay field-popup">
+                        <!-- <div id="restricted-duration" class="overlay field-popup">
                             <div class="popup text-center">
                               <h2>Restricted Duration</h2>
                               <a class="close eligible_popup_close" href="#">&times;</a>
                               <div class="content">
                                 <div id="accordion" class="accordion row">
                                     <div class="form-group col-md-6">
-                                        <label for="daysInput">Days</label>
-                                        <input type="number" name="restricted_days" value="{{$promotion->restricted_days}}" class="form-control input-sm" id="daysInput">
+                                        <label for="daysInput">Date</label>
+                                        <input data-provide="datepicker"  value="<?php echo \Carbon\Carbon::parse($promotion->restricted_days)->format('m-d-Y'); ?>"  data-date-autoclose="true" class="form-control" placeholder="Select Date" data-date-format="mm-dd-yyyy" name="restricted_days" id="daysInput">
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label for="hoursInput">Hours</label>
-                                        <input type="number" name="restricted_hours" value="{{$promotion->restricted_hours}}" max="23" class="form-control input-sm" id="hoursInput">
+                                        <input type="text" id="start_time" name="restricted_hours" value="{{$promotion->restricted_hours}}" class="form-control input-sm" placeholder="Select Time" name="start_time" autocomplete="off" />
                                     </div>
                                 </div>
                                 <div class="form-group form-btn justify-content-center">
@@ -155,7 +158,43 @@
                                 </div>
                               </div>
                             </div>
-                        </div>
+                        </div> -->
+
+                        <div class="modal fade" id="Admin" role="dialog" tabindex="-1">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h2 class="modal-title">Restricted Duration</h2><button aria-label="Close"
+                                            class="close" data-dismiss="modal" type="button"><span
+                                                aria-hidden="true">&times;</span></button>
+                                    </div>
+                                    <div class="modal-body text-center">
+                                        <div class="accordion row" id="accordion">
+                                            <div class="form-group col-md-6">
+                                                <label for="daysInput">Date</label>
+                                                <input data-provide="datepicker"
+                                                    value="<?php echo \Carbon\Carbon::parse($promotion->restricted_days)->format('m-d-Y'); ?>"
+                                                    data-date-autoclose="true" class="form-control"
+                                                    placeholder="Select Date" data-date-format="mm-dd-yyyy"
+                                                    name="restricted_days" id="daysInput">
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label for="hoursInput">Hours</label>
+                                                <input type="text" id="start_time" name="restricted_hours"
+                                                    value="{{$promotion->restricted_hours}}"
+                                                    class="form-control input-sm" placeholder="Select Time"
+                                                    name="start_time" autocomplete="off" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer justify-content-center">
+                                        <button class="btn btn-submit" data-dismiss="modal"
+                                            type="button">Submit</button>
+                                        {{-- <button class="btn btn-primary" type="button">Save changes</button> --}}
+                                    </div>
+                                </div><!-- /.modal-content -->
+                            </div><!-- /.modal-dialog -->
+                        </div><!-- /.modal -->
 
                     </div>
                 </div>
@@ -186,20 +225,53 @@
 
 @section('scripts')
     <script>
+    $("#display_time").on("change", function() {
+        var sOptionVal = $(this).val();
+        if (sOptionVal == 'Restricted') {
+            $('#Admin').modal('show');
+        }
+    });
+    </script>
+    <!-- <script>
         $("#display_time").change(function() {
             if (this.value == "Restricted") {
                 var overlay_url = window.location.href.replace("#","");
                 window.location.href = overlay_url += "#restricted-duration";
             }
         });
+    </script> -->
+     <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                jQuery('#start_time, #end_time, #appt_time, #meet_time, #odd_time').timepicker({
+
+                });
+            });
     </script>
     <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js')}}"></script>
     <script src="{{ asset('assets/js/common.js')}}"></script>
     <script src="{{ asset('assets/js/type/cart.js')}}"></script>
+    <script src="{{asset('vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}"></script>
+    <script src="{{asset('vendor/timepicker-bs4.js')}}" defer="defer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.11.4/dayjs.min.js" integrity="sha512-Ot7ArUEhJDU0cwoBNNnWe487kjL5wAOsIYig8llY/l0P2TUFwgsAHVmrZMHsT8NGo+HwkjTJsNErS6QqIkBxDw==" crossorigin="anonymous" referrerpolicy="no-referrer" defer="defer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/js/bootstrap.bundle.min.js" integrity="sha512-igl8WEUuas9k5dtnhKqyyld6TzzRjvMqLC79jkgT3z02FvJyHAuUtyemm/P/jYSne1xwFI06ezQxEwweaiV7VA==" crossorigin="anonymous" referrerpolicy="no-referrer" defer="defer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js" integrity="sha512-Tn2m0TIpgVyTzzvmxLNuqbSJH3JP8jm+Cy3hvHrW7ndTDcJ1w5mBiksqDBb8GpE2ksktFvDB/ykZ0mDpsZj20w==" crossorigin="anonymous" referrerpolicy="no-referrer" defer="defer"></script>
     @if ($webview == 1)
         <script src="{{asset('assets/customer/js/jquery.validate.min.js')}}"></script>
         <script src="{{asset('assets/customer/js/additional-methods.min.js')}}"></script>
         <script src="{{asset('assets/js/type/freedelivery-webview.js')}}"></script>
+         <!-- datepicker and time -->
+         <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                jQuery('#start_time, #end_time, #appt_time, #meet_time, #odd_time').timepicker({
+
+                });
+            });
+        </script>
+        <script src="{{asset('vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}"></script>
+        <script src="{{asset('vendor/timepicker-bs4.js')}}" defer="defer"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.11.4/dayjs.min.js" integrity="sha512-Ot7ArUEhJDU0cwoBNNnWe487kjL5wAOsIYig8llY/l0P2TUFwgsAHVmrZMHsT8NGo+HwkjTJsNErS6QqIkBxDw==" crossorigin="anonymous" referrerpolicy="no-referrer" defer="defer"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/js/bootstrap.bundle.min.js" integrity="sha512-igl8WEUuas9k5dtnhKqyyld6TzzRjvMqLC79jkgT3z02FvJyHAuUtyemm/P/jYSne1xwFI06ezQxEwweaiV7VA==" crossorigin="anonymous" referrerpolicy="no-referrer" defer="defer"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js" integrity="sha512-Tn2m0TIpgVyTzzvmxLNuqbSJH3JP8jm+Cy3hvHrW7ndTDcJ1w5mBiksqDBb8GpE2ksktFvDB/ykZ0mDpsZj20w==" crossorigin="anonymous" referrerpolicy="no-referrer" defer="defer"></script>
     @else
         {!! JsValidator::formRequest('App\Http\Requests\PromotionFreedeliveryRequest','#promotionForm'); !!}
     @endif

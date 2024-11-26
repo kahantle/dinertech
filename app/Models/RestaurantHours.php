@@ -16,7 +16,13 @@ class RestaurantHours extends Model
      */
     public function allTimes()
     {
-        return $this->hasMany(RestaurantHoursTimes::class, 'restaurant_hour_id', 'restaurant_hour_id')->groupBy('hours_group_id')->groupBy('opening_time')->groupBy('closing_time');
+        return $this->hasMany(RestaurantHoursTimes::class, 'restaurant_hour_id', 'restaurant_hour_id');
+        // return $this->hasMany(RestaurantHoursTimes::class, 'restaurant_hour_id', 'restaurant_hour_id')->groupBy('hours_group_id')->groupBy('opening_time')->groupBy('closing_time');
+        // return $this->hasOne(RestaurantHoursTimes::class, 'restaurant_hour_id');
+    }
+    public function restaurant()
+    {
+        return $this->belongsTo(Restaurant::class,'restaurant_id');
     }
 
 }

@@ -20,11 +20,44 @@ class ProfileController extends Controller
             $uid = Auth::user()->uid;
             $data['cards'] = getUserCards($restaurantId, $uid);
             $data['title'] = 'Profile';
-            $data['addresses'] = CustomerAddress::all();
+           
+            $data['addresses'] = CustomerAddress::where('uid', $uid)->get();
             return view('customer.profile', $data);
         }
         return redirect()->route('customer.index');
     }
+
+    // Get the list of Address based on the search key
+    public function searchAddress(Request $request)
+    {
+        $request_data = $request->json()->all();
+        // return response()->json($request_data['uid']);
+        // Validate that both 'uid' and 'search' are provided
+        // $validated = $request->validate([
+        //     'uid' => 'required|integer',  // Assuming uid is an integer
+        //     'search' => 'required|string', // Assuming search term is a string
+        // ]);
+
+        // Start the query builder
+        $query =  $request_data['search'];
+        $data = trim($query) != '' ? CustomerAddress::where('uid', $request_data['uid'])
+            ->where(function ($q) use ($query) {
+                // Grouping all the `orWhere` conditions
+                $q->where('address', 'like', '%' . $query . '%')
+                ->orWhere('state', 'like', '%' . $query . '%')
+                ->orWhere('city', 'like', '%' . $query . '%')
+                ->orWhere('lat', 'like', '%' . $query . '%')
+                ->orWhere('long', 'like', '%' . $query . '%')
+                ->orWhere('zip', 'like', '%' . $query . '%');
+            })->get() : CustomerAddress::where('uid', $request_data['uid'])->get();
+        // Return the results as a JSON response
+        return response()->json([
+            'status' => true,
+            'data' => $data,
+            'search_param' => [$request_data['uid'], $request_data['search']]
+        ], 200);
+    }
+
 
     public function update(Request $request)
     {

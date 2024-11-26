@@ -3,7 +3,7 @@
 @section('css')
     <!-- Rating bar css -->
     <link rel="stylesheet" href="{{ asset('assets/customer/css/rateYo/2.3.2/jquery.rateyo.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{asset('assets/customer/css/promotion_page.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/customer/css/promotion_page.css') }}">
 @endsection
 
 @section('content')
@@ -19,10 +19,15 @@
                         <div id="menuItems">
                             <div class="content">
                                 <div id="testinomial" class="banner-container">
-                                    <div class="owl-carousel owl-first-blog  owl-theme">
+                                    <div class="owl-carousel owl-carousell owl-first-blog  owl-theme">
                                         @foreach ($promotionLists as $promotion)
                                             <div class="item">
-                                                <div class="card-main-blog @if ($promotion->promotion_type_id == 1 || $promotion->promotion_type_id == 3 || $promotion->promotion_type_id == 4 || $promotion->promotion_type_id == 5) card-v-inner-sys-five @elseif($promotion->promotion_type_id == 2) card-v-inner-sys-first @elseif($promotion->promotion_type_id == 6) card-v-inner-sys-seven @elseif($promotion->promotion_type_id == 7) card-v-inner-sys-six @elseif ($promotion->promotion_type_id == 8) card-v-inner-sys-four @elseif ($promotion->promotion_type_id == 9) card-v-inner-sys-third @elseif ($promotion->promotion_type_id == 10) card-v-inner-sys-second @endif">
+                                                <div
+                                                    class="card-main-blog @if (
+                                                        $promotion->promotion_type_id == 1 ||
+                                                            $promotion->promotion_type_id == 3 ||
+                                                            $promotion->promotion_type_id == 4 ||
+                                                            $promotion->promotion_type_id == 5) card-v-inner-sys-five @elseif($promotion->promotion_type_id == 2) card-v-inner-sys-first @elseif($promotion->promotion_type_id == 6) card-v-inner-sys-seven @elseif($promotion->promotion_type_id == 7) card-v-inner-sys-six @elseif ($promotion->promotion_type_id == 8) card-v-inner-sys-four @elseif ($promotion->promotion_type_id == 9) card-v-inner-sys-third @elseif ($promotion->promotion_type_id == 10) card-v-inner-sys-second @endif">
                                                     <div class="wp-inner-st">
                                                         <h5 class="card-title">{{ $promotion->promotion_name }}</h5>
                                                         <p class="card-text">{{ $promotion->promotion_details }}</p>
@@ -44,16 +49,16 @@
                                 @if ($categories->count() != 0)
                                     <h2>What are you hungry for? </h2>
                                     <div id="testinomial" class="banner-container">
-                                        <div class="owl-carousel owl-theme owl-drag">
+                                        <div class="owl-carousel owl-carousell owl-first-blog  owl-theme">
                                             @foreach ($categories as $key => $category)
                                                 <div class="item category" data-category-id="{{ $category->category_id }}">
                                                     <div class="card">
-                                                        <img class="card-img-top lazy"
+                                                        {{-- <img class="card-img-top lazy"
                                                             data-src="{{ $category->getImagePathAttribute() ? $category->getImagePathAttribute() : $category->getDefaultImage() }}"
-                                                            alt="Card image cap">
+                                                            alt="Card image cap"> --}}
                                                         <div class="card-body category">
                                                             <h5 class="card-title">{{ $category->category_name }}</h5>
-                                                            <p class="card-text">{{ $category->category_details }}</p>
+                                                            <p class="card-text">{{ $category->category_details ? $category->category_details : '--' }}</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -68,10 +73,13 @@
                     @include('customer-layouts.right-sidebar')
                 </div>
             </div>
+        </div>
     </section>
-    @guest
+    @include('customer.guest')
+    {{-- @guest
         @include('customer.guest')
-    @endguest
+    @endguest --}}
+
 @endsection
 
 @section('scripts')

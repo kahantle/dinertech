@@ -9,10 +9,14 @@ use App\Models\CartMenuGroup;
 use App\Models\CustomerAddress;
 use App\Models\Order;
 use App\Models\Loyalty;
+use App\Models\LoyaltyCategory;
+use App\Models\MenuItem;
 use App\Models\OrderMenuGroup;
 use App\Models\OrderMenuGroupItem;
 use App\Models\OrderMenuItem;
+use App\Models\RestaurantHours;
 use App\Models\RestaurantUser;
+use App\Models\User;
 use Auth;
 use Cartalyst\Stripe\Stripe;
 use Config;
@@ -124,16 +128,69 @@ class OrdersController extends Controller
         if (!isset($request->order_status)) {
             return redirect()->back()->with('error', 'Please Select Order Timing.');
         }
+
+        //Restaurant Open or Not
+        $restaurantdays  = RestaurantHours::where('restaurant_id',1)->get();
+
+        $testDay  = [];
+        foreach($restaurantdays as $day) {
+            $currentday=lcfirst(date('l'));
+            $testDay[]= $day->day == $currentday;
+        }
+
+        $restaurantday  = RestaurantHours::with('allTimes')->where('restaurant_id',1)->first();
+        $testResult  = [];
+        if (in_array(true,$testDay)) {
+            foreach($restaurantday->allTimes as $time){
+                $openingtime =date('H:i A', strtotime($time->opening_time));
+                $closingtime =date('H:i A', strtotime($time->closing_time));
+                $openTime =date('H:i A', time());
+                $testResult[] =$openingtime <= $openTime &&  $openTime <= $closingtime;
+            }
+        }
+        //testresult false to in if condiftion
+        if (!in_array(true,$testResult)) {
+            return redirect()->back()->with('error', 'Oops! Betty Burger is not open for orders at the time selected. Please select another time');
+        }
+        //Restaurant Open close code over
         $orderDetails = ['order_status' => $request->order_status, 'menu_item' => json_decode(base64_decode($request->menuItem)), 'instruction' => $request->instruction, 'cart_charge' => $request->cart_charge, 'sales_tax' => $request->sales_tax, 'discount_charge' => $request->discount_charge, 'orderDate' => $request->orderDate, 'orderTime' => $request->orderTime, 'grand_total' => $request->grand_total];
+
         $uid = Auth::user()->uid;
         $restaurantId = 1;
-        $loyalty = Loyalty::where('status',Config::get('constants.STATUS.ACTIVE'))->first();
+
+
+        $userPoint = auth()->user()->total_points;
+        $loyalty = Loyalty::where('status',Config::get('constants.STATUS.ACTIVE'))->where('restaurant_id',$restaurantId)->first();
         if($loyalty){
             if($loyalty->loyalty_type == Config::get('constants.LOYALTY_TYPE.NO_OF_ORDERS')){
-                $noOfOrders = Order::where('uid',$uid)->count();
+                $getOrderIds = Order::where('uid',$uid)->where('order_progress_status',Config::get('constants.ORDER_STATUS.COMPLETED'))->where('point_count',Config::get('constants.ORDER_POINT_COUNT.NO'))->limit($loyalty->no_of_orders)->get()->pluck('order_id');
+                if(count($getOrderIds) == $loyalty->no_of_orders){
+                    $totalPoint = $userPoint + $loyalty->point;
+                    User::where('uid',$uid)->update(['total_points' => $totalPoint]);
+                    Order::whereIn('order_id',$getOrderIds)->update(['point_count' => Config::get('constants.ORDER_POINT_COUNT.YES')]);
+                }
             }else if($loyalty->loyalty_type == Config::get('constants.LOYALTY_TYPE.AMOUNT_SPENT')){
+                $grandTotal =(float)$request->cart_charge;
+                $loyaltypoint=(float)$loyalty->amount;
+                if($grandTotal > $loyaltypoint){
+                    $totalPoint = $userPoint + $loyalty->point;
+                    User::where('uid',$uid)->update(['total_points' => $totalPoint]);
+                }
 
             }else if($loyalty->loyalty_type == Config::get('constants.LOYALTY_TYPE.CATEGORY_BASED')){
+                $loyaltyCategories = LoyaltyCategory::where('loyalty_id',$loyalty->loyalty_id)->where('restaurant_id',$restaurantId)->get()->pluck('category_id')->toArray();
+                foreach ($orderDetails['menu_item'] as $key => $menuItem) {
+                    $category_menu = MenuItem::where('menu_id',$menuItem->menu_id)->first();
+                    $addPoint = false;
+                    if($category_menu && in_array($category_menu->category_id,$loyaltyCategories)){
+                        $addPoint = true;
+                        break;
+                    }
+                }
+                if($addPoint == true){
+                    $totalPoint = $userPoint + $loyalty->point;
+                    User::where('uid',$uid)->update(['total_points' => $totalPoint]);
+                }
 
             }else{
 
@@ -147,7 +204,7 @@ class OrdersController extends Controller
             $addressId = null;
         }
 
-        if ($request->paymentType == 'card') {
+        if ($request->paymentType == 'Credit Card') {
             $card = Card::where('card_id', $request->card_id)->where('uid', $uid)->where('restaurant_id', $restaurantId)->first();
 
             $cardExp = explode('/', $card->card_expire_date);
@@ -171,13 +228,13 @@ class OrdersController extends Controller
                 if (!isset($token['id'])) {
                     return redirect()->back()->with('error', 'Invalid card details please try again.');
                 }
-
                 $charge = $stripe->charges()->create([
                     'source' => $token['id'],
                     'currency' => 'USD',
                     'amount' => $orderDetails['grand_total'],
                     'description' => random_int(1000, 1000000000000000),
                 ]);
+
 
                 if ($charge['status'] == 'succeeded') {
                     DB::beginTransaction();
@@ -188,9 +245,13 @@ class OrdersController extends Controller
                     $order->payment_card_id = $cardId;
                     $order->isCash = Config::get('constants.ORDER_PAYMENT_TYPE.CARD_PAYMENT');
                     $order->stripe_payment_id = $charge['created'];
+                    $order->promotion_id = $request->promotion_id;
                     $order->cart_charge = $orderDetails['cart_charge'];
                     $order->delivery_charge = '0.00';
-                    $order->discount_charge = $orderDetails['discount_charge'];
+                    $order->discount_charge =$request->discount_charge;
+                    $order->tip_amount =$request->newtips;
+                    $order->sales_tax=$request->sales_tax;
+                    $order->platform='W';
                     $order->is_feature = ($orderDetails['order_status'] == 1) ? 1 : 0;
                     $order->order_status = null;
                     $order->order_progress_status = Config::get('constants.ORDER_STATUS.INITIAL');
@@ -218,8 +279,8 @@ class OrdersController extends Controller
                             $menuItemData = new OrderMenuItem;
                             $menuItemData->menu_id = $menuItem->menu_id;
                             $menuItemData->menu_name = $menuItem->menu_name;
-                            $menuItemData->menu_total = $menuItem->menu_total;
                             $menuItemData->menu_qty = $menuItem->menu_qty;
+                            $menuItemData->menu_price = $menuItem->menu_price;
                             $menuItemData->menu_total = $menuItem->menu_total;
                             $menuItemData->modifier_total = $menuItem->modifier_total;
                             $menuItemData->order_id = $order->order_id;

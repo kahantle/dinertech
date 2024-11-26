@@ -14,14 +14,15 @@ use NotificationChannels\Fcm\Resources\ApnsFcmOptions;
 
 class PreparedOrder extends Notification
 {
+    public $resturantdata;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($resturant)
     {
-        //
+        $this->resturantdata = $resturant;
     }
 
     /**
@@ -47,7 +48,7 @@ class PreparedOrder extends Notification
             ->setData(['notification_type' => 'Prepared Order'])
             ->setNotification(\NotificationChannels\Fcm\Resources\Notification::create()
                 ->setTitle('Order Prepared')
-                ->setBody("Your Order has been prepared by restaurant."))
+                ->setBody("Your ".$this->resturantdata['restaurant_name']." Order Is Ready!"))
             ->setAndroid(
                 AndroidConfig::create()
                     ->setFcmOptions(AndroidFcmOptions::create()->setAnalyticsLabel('analytics'))

@@ -1,11 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\Customer\CartController;
+use App\Http\Controllers\CampaignController;
+use App\Http\Controllers\customer\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
 | API Routes
-|--------------------------------------------------------------------------
+|------------------------------------   --------------------------------------
 |
 | Here is where you can register API routes for your application. These
 | routes are loaded by the RouteServiceProvider within a group which
@@ -28,7 +31,7 @@ Route::prefix('customer')->namespace('Api\Customer')->group(function () {
     Route::post('/delete-account', 'UserController@deleteAccount')->name('customer.delete-account');
 });
 
-Route::namespace ('Api')->group(function () {
+  Route::namespace ('Api')->group(function () {
 
     //API FOR CUSTOMER
     Route::prefix('customer')->namespace('Customer')->group(function () {
@@ -47,7 +50,8 @@ Route::namespace ('Api')->group(function () {
         Route::post('/logout', 'UserController@logout')->name('customer.logout');
 
         //Role Customer
-        Route::middleware(['auth:api', 'role-customer'])->group(function () {
+        Route::middleware(['auth:api'])->group(function () {
+
             Route::get('check-cart-points','LoyaltyRuleController@checkCartPoints');
             Route::post('/category', 'CategoryController@getCategoryList')->name('customer.category.list');
             Route::post('/profile', 'UserController@profile')->name('customer.profile');
@@ -97,23 +101,31 @@ Route::namespace ('Api')->group(function () {
             Route::prefix('loyalties')->group(function(){
                 Route::post('/','LoyaltyRuleController@index')->name('customer.loyalties');
             });
+
+
             Route::prefix('cart')->group(function(){
-                Route::post('/','CartController@index')->name('customer.carts');
-                Route::post('/add','CartController@store')->name('customer.carts.add');
-                Route::post('/quantity/increment','CartController@quantityIncrement')->name('customer.cart.quantityIncrement');
+                Route::post('/',[CartController::class,'index'])->name('customer.carts');
+                Route::post('/apply-promotion', [CartController::class, 'applyPromotion']);
+                Route::post('/remove-promotion', [CartController::class, 'removePromotion']);
+                Route::post('/add',[CartController::class,'store'])->name('customer.carts.add');
                 Route::post('/quantity/decrement','CartController@quantityDecrement')->name('customer.cart.quantityDecrement');
                 Route::post('/getMenu/modifier','CartController@getCartMenuModifier')->name('customer.cart.getMenu.modifier');
                 Route::post('/customize/modifier','CartController@customizeModifier')->name('customer.cart.customize.modifier');
-                Route::post('/delete','CartController@destroy')->name('customer.cart.delete');
-                Route::post('/remove-promotion','CartController@removePromotion');
-                Route::post('/apply-promotion','CartController@applyPromotion');
+                Route::post('/delete',[CartController::class,'destroy'])->name('customer.cart.delete');
+                Route::post('/quantity/increment','CartController@quantityIncrement')->name('customer.cart.quantityIncrement');
+
             });
         });
+
     });
 
+    
+
     //API FOR restaurant
+
     Route::prefix('restaurant')->namespace('Restaurant')->group(function () {
         Route::post('/login', 'UserController@login')->name('restaurant.login');
+        Route::post('/store_pin', 'UserController@store_pin')->name('restaurant.store.pin');
         Route::post('/signup', 'UserController@signup')->name('restaurant.signup');
         Route::post('/verify-otp', 'UserController@verifyOtp')->name('restaurant.verify-otp');
         Route::post('/forgot-password', 'UserController@forgotPassword')->name('restaurant.forgot');
@@ -128,7 +140,7 @@ Route::namespace ('Api')->group(function () {
             Route::get('/{uid?}', 'EmailSubscriptionController@index')->name('restaurant.email.subscriptions.list');
             Route::post('/payment/modal', 'EmailSubscriptionController@paymentModal')->name('restaurant.email.subscriptions.payment');
             Route::post('pay', 'EmailSubscriptionController@subscriptionPayment')->name('restaurant.email.subscription.pay');
-            Route::get('/cancel/subscription/{subscription_id}/{uid}', 'EmailSubscriptionController@cancel_subscription')->name('restaurant.email.subscription.cancel');
+            Route::get('/cancel/subscription/{subscription_id}/{uid}', 'EmailSubscriptionController@cancel_subscription')->name   ('restaurant.email.subscription.cancel');
             Route::get('/upgrade/subscription/{uid?}', 'EmailSubscriptionController@upgradeSubscription')->name('restaurant.email.subscription.upgrade');
         });
 
@@ -156,6 +168,7 @@ Route::namespace ('Api')->group(function () {
             Route::post('/modifier-edit-item', 'ModifierController@editModifierGroupItem')->name('customer.modifier.edit');
             Route::post('/modifier/delete', 'ModifierController@delete')->name('modifier.delete');
             Route::post('/modifier-item/delete', 'ModifierController@deleteItem')->name('modifier.item.delete');
+            Route::post('/modifier_sequence', 'ModifierController@storeModifierSequence')->name('store.modifier.sequence');
 
             Route::post('/menu', 'MenuItemController@getMenuList')->name('restaurant.menu.list');
             Route::post('/menu/add', 'MenuItemController@addMenuItem')->name('restaurant.menu.add');
@@ -213,6 +226,7 @@ Route::namespace ('Api')->group(function () {
                 Route::post('/prepared', 'OrderController@preparedOrder')->name('order.prepared');
                 Route::post('/cancel', 'OrderController@cancelOrder')->name('order.cancel');
                 Route::post('/due','OrderController@dueOrder')->name('order.due');
+                Route::post('/refund', 'OrderController@refundOrder')->name('order.refund');
             });
             Route::prefix('chat')->group(function () {
                 Route::post('/notification', 'ChatNumberController@sendChatNotification')->name('customer.chat.notification');
@@ -237,3 +251,10 @@ Route::namespace ('Api')->group(function () {
         });
     });
 });
+
+Route::middleware(['auth:api'])->group(function () {
+    Route::get('client-id', [CampaignController::class, 'getClients']);
+    Route::post('sub-list', [CampaignController::class, 'getAllSubscribers']);
+});
+
+Route::post('/customer/search-address', [ProfileController::class, 'searchAddress']);

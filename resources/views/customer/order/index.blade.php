@@ -131,4 +131,35 @@
         // Get the element with id="defaultOpen" and click on it
         document.getElementById("defaultOpen").click();
     </script>
+    <script src="{{ asset('/assets/js/firebase.js') }}"></script>
+    <script>
+    $('document').ready(function() {
+            var config = {
+                apiKey: "{{config('services.firebase.apiKey')}}",
+                authDomain: "{{config('services.firebase.authDomain')}}",
+                databaseURL: "{{config('services.firebase.databaseURL')}}",
+                projectId: "{{config('services.firebase.projectId')}}",
+                storageBucket: "{{config('services.firebase.storageBucket')}}",
+                messagingSenderId: "{{config('services.firebase.messagingSenderId')}}",
+                appId : "{{config('services.firebase.appId')}}",
+                measurementId : "{{config('services.firebase.measurementId')}}",
+            };
+            firebase.initializeApp(config);
+
+
+            const messaging = firebase.messaging();
+
+
+            messaging.onMessage(function(payload) {
+                console.log("Message received.", payload);
+                const noteTitle = payload.notification.title;
+                const noteOptions = {
+                    body: payload.notification.body,
+                    icon: payload.notification.icon,
+                };
+
+                new Notification(noteTitle, noteOptions);
+            });
+    });
+    </script>
 @endsection

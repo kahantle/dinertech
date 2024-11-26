@@ -9,7 +9,7 @@ use App\Models\Restaurant;
 use App\Models\RestaurantUser;
 use App\Models\Order;
 use App\Models\User;
-use App\Notifications\Otp; 
+use App\Notifications\Otp;
 use App\Notifications\RestaurantChat;
 use Carbon\Carbon;
 use Config;
@@ -201,7 +201,7 @@ class UserController extends Controller
                 $user->status = Config::get('constants.STATUS.ACTIVE');
                 $user->save();
                 DB::commit();
-                return response()->json(['uid' => $user->uid, 'message' => 'You account succcessfully verified.', 'success' => true], 200);
+                return response()->json(['uid' => $user->uid, 'message' => 'You account successfully verified.', 'success' => true], 200);
             } else {
                 return response()->json(['success' => false, 'message' => "Please enter valid otp."], 400);
             }
@@ -234,8 +234,8 @@ class UserController extends Controller
             $mobile = $request->post('mobile_number');
             $user = User::where('role', Config::get('constants.ROLES.CUSTOMER'))
                 ->where(function ($query) use ($email, $mobile) {
-                    $query->where('email_id', $email);
-                    $query->orWhere('mobile_number', $mobile);
+                    $query->where('email_id', $email)
+                          ->orWhere('mobile_number', $mobile);
                 })
                 ->whereHas('restaurant_user', function ($query) use ($restaurantId) {
                     $query->where('restaurant_id', $restaurantId);
@@ -409,7 +409,7 @@ class UserController extends Controller
             $user = $user->with('address')
                 ->where('uid', $user->uid)
                 ->first(['uid', 'first_name', 'last_name', 'email_id', 'mobile_number', 'profile_image', 'app_notifications', 'chat_notifications', 'location_tracking']);
-            return response()->json(['message' => 'You have succcessfully update profile.', 'success' => true, 'user' => $user], 200);
+            return response()->json(['message' => 'You have successfully update profile.', 'success' => true, 'user' => $user], 200);
         } catch (\Throwable $th) {
             DB::rollBack();
             $errors['success'] = false;

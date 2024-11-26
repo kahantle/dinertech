@@ -10,17 +10,19 @@ use NotificationChannels\Fcm\Resources\AndroidFcmOptions;
 use NotificationChannels\Fcm\Resources\AndroidNotification;
 use NotificationChannels\Fcm\Resources\ApnsConfig;
 use NotificationChannels\Fcm\Resources\ApnsFcmOptions;
+use Illuminate\Notifications\Notifiable;
 
 class AcceptOrder extends Notification
 {
+    public $resturantdata;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($resturant)
     {
-        //
+        $this->resturantdata = $resturant;
     }
 
     /**
@@ -41,13 +43,14 @@ class AcceptOrder extends Notification
      * @param  mixed  $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
-    public function toFcm($notifiable)
-    {
+    public function toFcm($Notifiable)
+    { 
+
         return FcmMessage::create()
             ->setData(['notification_type' => 'Accept Order'])
             ->setNotification(\NotificationChannels\Fcm\Resources\Notification::create()
                 ->setTitle('Order Accepted')
-                ->setBody("Your order has been accepted by the restaurant."))
+                ->setBody("Your ".$this->resturantdata['restaurant_name']." Order Is Accepted!"))
             ->setAndroid(
                 AndroidConfig::create()
                     ->setFcmOptions(AndroidFcmOptions::create()->setAnalyticsLabel('analytics'))

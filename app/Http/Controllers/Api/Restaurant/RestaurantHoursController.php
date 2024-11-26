@@ -121,8 +121,8 @@ class RestaurantHoursController extends Controller
             if(is_array($requestDays)){
                 foreach ($requestDays as $key => $value) {
                     $countRestaurantHours = RestaurantHours::where('day',strtolower($value))
-                    ->where('restaurant_id',$request->post('restaurant_id'))
-                    ->where('hours_group_id','!=',$request->post('hours_group_id'))
+                    ->where('restaurant_id', $request->post('restaurant_id'))
+                    ->where('hours_group_id','!=', $request->post('hours_group_id'))
                     ->first();
                     if($countRestaurantHours){
                         $days .= ($days=='')? $value : ",".$value;

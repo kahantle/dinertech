@@ -23,7 +23,7 @@ class EmailSubscriptionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index($uid = null)
-    {
+    { 
         $data['subscriptions'] = Subscription::where('subscription_plan', Config::get('constants.SUBSCRIPTION_PLAN.2'))->get();
         $data['uid'] = $uid;
         $data['upgrade_subscription'] = false;

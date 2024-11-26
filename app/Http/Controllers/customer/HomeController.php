@@ -40,7 +40,7 @@ class HomeController extends Controller
         $data['cartMenuItems'] = getCartQty();
         $data['cartMenuItemIds'] = !empty($cart) ? array_column($cart->cartMenuItems->toArray(),'menu_id','cart_menu_item_id') : [];
         $data['category'] = Category::where('restaurant_id', $restaurantId)->where('category_id', $categoryId)->first();
-        $data['menuItems'] = MenuItem::with('modifierList')->where('restaurant_id', $restaurantId)->where('category_id', $categoryId)->get();
+        $data['menuItems'] = MenuItem::with('modifierList','modifierList.modifier_item')->where('restaurant_id', $restaurantId)->where('category_id', $categoryId)->get();
         return response()->json(['view' => \View::make('customer.menu_item', $data)->render()], 200);
     }
 
@@ -60,6 +60,12 @@ class HomeController extends Controller
         $restaurantId = 1;
         $data['item'] = MenuItem::with('modifierList', 'modifierList.modifier_item')->where('restaurant_id', $restaurantId)->where('menu_id', $menuId)->first();
         return response()->json(['view' => \View::make('customer.menu_modifier', $data)->render()], 200);
+    }
+    public function setSystemTime(Request $request)
+    {
+        if ($request->ajax()) {
+            session()->put('sys_timezone', $request->get('sys_timezone'));
+        }
     }
 
 }

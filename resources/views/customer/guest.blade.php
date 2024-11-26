@@ -1,10 +1,10 @@
 
-<div class="modal modal-sign-up" id="first-modal" data-backdrop="static" data-keyboard="false">
+<div class="modal modal-sign-up" id="yourModal" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="myModalLabel"><b>Login</b></h4>
-                {{-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> --}}
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
                 <div class="alert alert-danger" id="login-error"></div>
@@ -42,10 +42,10 @@
                 <form action="{{ route('customer.signup') }}" method="post" id="customer-signup">
                     @csrf
                     <div class="form-group row">
-                        <div class="col-md-6">
+                        <div class="col-12 col-md-6 mb-3 mb-md-0">
                             <input type="text" class="form-control" name="first_name" placeholder="First Name">
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-12 col-md-6">
                             <input type="text" class="form-control" name="last_name" placeholder="Last Name">
                         </div>
                     </div>
@@ -55,7 +55,7 @@
                             name="physical_address">
                     </div>
                     <div class="form-group row">
-                        <div class="col-md-6">
+                        <div class="col-md-6 mb-3 mb-md-0">
                             <input type="text" class="form-control" placeholder="City" name="city">
                         </div>
                         <div class="col-md-6">
@@ -66,7 +66,7 @@
                         <input type="text" class="form-control" placeholder="Zip code" name="zipcode">
                     </div>
                     <div class="form-group row">
-                        <div class="col-md-6">
+                        <div class="col-md-6 mb-3 mb-md-0">
                             <input type="text" class="form-control" placeholder="Mobile Number" name="mobile_number">
                         </div>
                         <div class="col-md-6">

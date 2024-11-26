@@ -23,7 +23,7 @@
     <link href="{{ asset('/assets/css/select2.min.css') }}" rel="stylesheet">
     <link href="{{ asset('/assets/css/print.min.css') }}" rel="stylesheet">
 
-    <style>
+    <style> 
         .someBlock {
             background: #fff no-repeat 50% 50%;
             background-size: contain;
@@ -56,6 +56,7 @@
     <script src="{{ asset('/assets/js/jquery.preloader.min.js') }}"></script>
     <script src="{{ asset('assets/js/select2.min.js') }}"></script>
     <script src="{{ asset('assets/js/print.min.js') }}"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 </body>
 
 </html>

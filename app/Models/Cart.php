@@ -24,6 +24,12 @@ class Cart extends Model
         return $this->hasMany(CartMenuGroupItem::class,  'cart_id');
     }
 
+    public function cartResturant()
+    {
+        return $this->hasOne(Restaurant::class ,'restaurant_id');
+        // return $this->belongsTo(Restaurant::class ,'restaurant_id');
+    }
+
     public function promotion()
     {
         return $this->hasOne(Promotion::class,'promotion_id','promotion_id');
