@@ -14,179 +14,181 @@
 			@include('customer.messages')
 			<div class="row flex-column flex-md-row flex-nowrap">
 				<div class="col-xl-8 col-lg-12 col-md-12 dashbord-home dashbord-home-cart active">
-					<div class="order-content payment-table-detail p-4">
-						<h2 class="mb-5 h3 h-md-2">
-                            <a href="{{route('customer.profile')}}" class="btn bg-transparent mx-2 payment-methods-btn-back">
-                                <i data-feather="arrow-left"></i>
-                            </a>
-                            Payment Methods
-                        </h2>
-						 <div class="table-responsive">
-							<table class="table table-inner table-payment-detail">
-								<tbody>
-									@foreach($cards as $card)
-									<tr>
-										<td style="width: 16%;" class="wd-dr-text-line">
-											@if($card->card_type == Config::get('constants.CARD_TYPE.AMERICAN_EXPRESS'))
-												<img src="{{asset('assets/customer/images/chat/express.png')}}" class="img-fluid">
-											@elseif ($card->card_type == Config::get('constants.CARD_TYPE.VISA'))
-												<img src="{{asset('assets/customer/images/chat/visa.png')}}" class="img-fluid">
-											@elseif ($card->card_type == Config::get('constants.CARD_TYPE.DISCOVER'))
-												<img src="{{asset('assets/customer/images/chat/discover.png')}}" class="img-fluid">
-											@elseif ($card->card_type == Config::get('constants.CARD_TYPE.MASTER_CARD'))
-												<img src="{{asset('assets/customer/images/chat/master_card.png')}}" class="img-fluid">
-											@endif
-										</td>
-										<td style="width: 50%;">XXXX - XXXX - XXXX - {{ Str::substr($card->card_number,15,19)}}</td>
-										<td class="wd-dr-text-line">{{$card->card_expire_date}}</td>
-										<td rowspan="1" class="wd-dr-text-line">
-											<div class="wd-dr-next-line">
-												<i class="fas fa-cog"></i>
-												<a href="javascript:void(0)" class="delete-card" data-card-id={{$card->card_id}}>
-													<i class="fas fa-trash-alt"></i>
-												</a>
-											</div>
-										</td>
-									</tr>
-									@endforeach
-								</tbody>
-							</table>
-						</div>
-						<button type="button" class="add-payment-new mt-2">Add A New Payment Method</button>
-					</div>
-                    <div class="card order-content add-card-detail">
-                        <div class="card-body wd-dr-dashboart-inner">
-                            <h2 class="card-title">
-                                <button class="btn bg-transparent payment-table-detail-back d-inline-flex">
+				    <div class="content">
+                        <div class="order-content payment-table-detail p-4">
+                            <h2 class="mb-5 h3 h-md-2">
+                                <a href="{{route('customer.profile')}}" class="btn bg-transparent mx-2 payment-methods-btn-back">
                                     <i data-feather="arrow-left"></i>
-                                </button>
-                                Add Card Details
+                                </a>
+                                Payment Methods
                             </h2>
-                            <div class="row">
-                                <div class="col-md-6 col-lg-6 mb-4">
-                                    <div class="wd-dr-background add-payment add-pay-inner-d">
-                                        <h4>
-                                            <img src="{{asset('assets/images/logo-payment.png')}}"
-                                                class="show-card-image show">
-                                        </h4>
-                                        <label class="card-font card-number">XXXX XXXX XXXX XXXX</label>
-                                        <div>
-                                            <div class="expdate">
-                                                <label class="datetext">Exp Date</label>
-                                                <label class="card-font card-exp-date">MM / YY</label>
+                            <div class="table-responsive">
+                                <table class="table table-inner table-payment-detail">
+                                    <tbody>
+                                        @foreach($cards as $card)
+                                        <tr>
+                                            <td style="width: 16%;" class="wd-dr-text-line">
+                                                @if($card->card_type == Config::get('constants.CARD_TYPE.AMERICAN_EXPRESS'))
+                                                    <img src="{{asset('assets/customer/images/chat/express.png')}}" class="img-fluid">
+                                                @elseif ($card->card_type == Config::get('constants.CARD_TYPE.VISA'))
+                                                    <img src="{{asset('assets/customer/images/chat/visa.png')}}" class="img-fluid">
+                                                @elseif ($card->card_type == Config::get('constants.CARD_TYPE.DISCOVER'))
+                                                    <img src="{{asset('assets/customer/images/chat/discover.png')}}" class="img-fluid">
+                                                @elseif ($card->card_type == Config::get('constants.CARD_TYPE.MASTER_CARD'))
+                                                    <img src="{{asset('assets/customer/images/chat/master_card.png')}}" class="img-fluid">
+                                                @endif
+                                            </td>
+                                            <td style="width: 50%;">XXXX - XXXX - XXXX - {{ Str::substr($card->card_number,15,19)}}</td>
+                                            <td class="wd-dr-text-line">{{$card->card_expire_date}}</td>
+                                            <td rowspan="1" class="wd-dr-text-line">
+                                                <div class="wd-dr-next-line">
+                                                    <i class="fas fa-cog"></i>
+                                                    <a href="javascript:void(0)" class="delete-card" data-card-id={{$card->card_id}}>
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button type="button" class="add-payment-new mt-2">Add A New Payment Method</button>
+                        </div>
+                        <div class="card order-content add-card-detail">
+                            <div class="card-body wd-dr-dashboart-inner">
+                                <h2 class="card-title">
+                                    <button class="btn bg-transparent payment-table-detail-back d-inline-flex">
+                                        <i data-feather="arrow-left"></i>
+                                    </button>
+                                    Add Card Details
+                                </h2>
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-6 mb-4">
+                                        <div class="wd-dr-background add-payment add-pay-inner-d">
+                                            <h4>
+                                                <img src="{{asset('assets/images/logo-payment.png')}}"
+                                                    class="show-card-image show">
+                                            </h4>
+                                            <label class="card-font card-number">XXXX XXXX XXXX XXXX</label>
+                                            <div>
+                                                <div class="expdate">
+                                                    <label class="datetext">Exp Date</label>
+                                                    <label class="card-font card-exp-date">MM / YY</label>
+                                                </div>
+                                                <div class="cvv">
+                                                    <label class="datetext">CVV</label>
+                                                    <label class=" card-font card-cvv">***</label>
+                                                </div>
                                             </div>
-                                            <div class="cvv">
-                                                <label class="datetext">CVV</label>
-                                                <label class=" card-font card-cvv">***</label>
+                                            <div class="clearfix ">
+
                                             </div>
-                                        </div>
-                                        <div class="clearfix ">
+                                            <label>
+                                                Card Holder Name
+                                            </label>
+                                            <h4 class="card-holder-name">
+                                                XXXX XXXX XXXX.
+                                            </h4>
+                                            <div class="clearfix ">
 
-                                        </div>
-                                        <label>
-                                            Card Holder Name
-                                        </label>
-                                        <h4 class="card-holder-name">
-                                            XXXX XXXX XXXX.
-                                        </h4>
-                                        <div class="clearfix ">
-
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6 col-lg-6 card-detail">
-                                    <h3 class="card-title"> Card Details </h3>
-                                    <form id="addCardForm" class="cardit-card-form" method="POST" action="{{ route('customer.cards.store') }}">
-                                        @csrf
-                                        <input type="hidden" name="card_type" id="cardType">
-                                        <div class="form-group my-4">
-                                            <div class="input-group mb-3">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text" id="basic-addon1"><img
-                                                            src="{{asset('assets/images/credit-card-numbar.png')}}"
-                                                            alt=""></span>
-                                                </div>
-                                                <input id="card-number" type="tel" name="card_number"
-                                                    class="form-control address" inputmode="numeric"
-                                                    pattern="[0-9\s]{13,19}" autocomplete="cc-number"
-                                                    maxlength="19" placeholder="Card Number">
-                                            </div>
-                                        </div>
-                                        <div class="row form-group my-4">
-                                            <div class="col-sm-6">
+                                    <div class="col-md-6 col-lg-6 card-detail">
+                                        <h3 class="card-title"> Card Details </h3>
+                                        <form id="addCardForm" class="cardit-card-form" method="POST" action="{{ route('customer.cards.store') }}">
+                                            @csrf
+                                            <input type="hidden" name="card_type" id="cardType">
+                                            <div class="form-group my-4">
                                                 <div class="input-group mb-3">
                                                     <div class="input-group-prepend">
-                                                        <span class="input-group-text"
-                                                            id="basic-addon1"><img
-                                                                src="{{asset('assets/images/credit-card-cut.png')}}"
+                                                        <span class="input-group-text" id="basic-addon1"><img
+                                                                src="{{asset('assets/images/credit-card-numbar.png')}}"
+                                                                alt=""></span>
+                                                    </div>
+                                                    <input id="card-number" type="tel" name="card_number"
+                                                        class="form-control address" inputmode="numeric"
+                                                        pattern="[0-9\s]{13,19}" autocomplete="cc-number"
+                                                        maxlength="19" placeholder="Card Number">
+                                                </div>
+                                            </div>
+                                            <div class="row form-group my-4">
+                                                <div class="col-sm-6">
+                                                    <div class="input-group mb-3">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text"
+                                                                id="basic-addon1"><img
+                                                                    src="{{asset('assets/images/credit-card-cut.png')}}"
+                                                                    alt=""></span>
+                                                        </div>
+                                                        <input type="text" class="form-control address"
+                                                            name="card_expire_date" id="card-exp-date"
+                                                            placeholder="Exp Date" maxlength="5">
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="input-group mb-3">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text"
+                                                                id="basic-addon1"><img
+                                                                    src="{{asset('assets/images/credit-card-cvv.png')}}"
+                                                                    alt=""></span>
+                                                        </div>
+                                                        <input type="text" class="form-control address"
+                                                            name="card_cvv" id="card-cvv" placeholder="CVV"
+                                                            maxlength="3">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group my-4">
+                                                <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text" id="basic-addon1"><img
+                                                                src="{{asset('assets/images/creadit catd name.png')}}"
                                                                 alt=""></span>
                                                     </div>
                                                     <input type="text" class="form-control address"
-                                                        name="card_expire_date" id="card-exp-date"
-                                                        placeholder="Exp Date" maxlength="5">
+                                                        name="card_holder_name" id="card-holder-name"
+                                                        placeholder="Card Holder Name">
                                                 </div>
                                             </div>
-                                            <div class="col-sm-6">
-                                                <div class="input-group mb-3">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text"
-                                                            id="basic-addon1"><img
-                                                                src="{{asset('assets/images/credit-card-cvv.png')}}"
-                                                                alt=""></span>
-                                                    </div>
-                                                    <input type="text" class="form-control address"
-                                                        name="card_cvv" id="card-cvv" placeholder="CVV"
-                                                        maxlength="3">
+                                            <div class="row form-group my-4">
+                                                <div class="col-md-12" align="end">
+                                                    <button type="submit"
+                                                        class="btn btn-primary btn-add-to-cart px-3"
+                                                        alt="Add Card">
+                                                        <h6 class="mb-0">
+                                                            <img width="32px"
+                                                                src="{{asset('assets/images/credit-card-icon-png-4401.png')}}"
+                                                                alt="">
+                                                            Add Card
+                                                        </h6>
+                                                    </button>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group my-4">
-                                            <div class="input-group mb-3">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text" id="basic-addon1"><img
-                                                            src="{{asset('assets/images/creadit catd name.png')}}"
-                                                            alt=""></span>
-                                                </div>
-                                                <input type="text" class="form-control address"
-                                                    name="card_holder_name" id="card-holder-name"
-                                                    placeholder="Card Holder Name">
-                                            </div>
-                                        </div>
-                                        <div class="row form-group my-4">
-                                            <div class="col-md-12" align="end">
-                                                <button type="submit"
-                                                    class="btn btn-primary btn-add-to-cart px-3"
-                                                    alt="Add Card">
-                                                    <h6 class="mb-0">
-                                                        <img width="32px"
-                                                            src="{{asset('assets/images/credit-card-icon-png-4401.png')}}"
-                                                            alt="">
-                                                        Add Card
-                                                    </h6>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="row mx-auto mt-4">
-                                    <div class="col-md-3 col-6 text-center">
-                                        <img src="{{asset('assets/images/visa.png')}}" class="rounded card-image">
+                                        </form>
                                     </div>
-                                    <div class="col-md-3 col-6 text-center">
-                                        <img src="{{asset('assets/images/master_card.png')}}"
-                                            class="rounded card-image">
-                                    </div>
-                                    <div class="col-md-3 col-6 text-center">
-                                        <img src="{{asset('assets/images/american-express_1.png')}}"
-                                            class="rounded card-image">
-                                    </div>
-                                    <div class="col-md-3 col-6 text-center">
-                                        <img src="{{asset('assets/images/discover.png')}}" class="rounded card-image">
+                                    <div class="row mx-auto mt-4">
+                                        <div class="col-md-3 col-6 text-center">
+                                            <img src="{{asset('assets/images/visa.png')}}" class="rounded card-image">
+                                        </div>
+                                        <div class="col-md-3 col-6 text-center">
+                                            <img src="{{asset('assets/images/master_card.png')}}"
+                                                class="rounded card-image">
+                                        </div>
+                                        <div class="col-md-3 col-6 text-center">
+                                            <img src="{{asset('assets/images/american-express_1.png')}}"
+                                                class="rounded card-image">
+                                        </div>
+                                        <div class="col-md-3 col-6 text-center">
+                                            <img src="{{asset('assets/images/discover.png')}}" class="rounded card-image">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+				    </div>
 				</div>
 				@include('customer-layouts.right-sidebar')
 			</div>
