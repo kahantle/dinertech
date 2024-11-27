@@ -44,7 +44,7 @@
                       </div>
                     </label>
                   </div>
-                  <p>{{$item->promotion_type->promotion_name}}</p>
+                  <p>{{$item->promotion_type->promotion_name ?? ''}}</p>
                 </div>
                 <div class="right-s">
                   <p>{{($item->promotion_code?$item->promotion_code:"-")}}</p>
