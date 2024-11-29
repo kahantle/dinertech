@@ -358,11 +358,14 @@
                 const searchTerm = $(this).val().trim();
                 const uId =  {{ auth()->id() }};
                 //console.log(uId);
+                
+                let baseUrl = window.location.origin; // Gets the base URL (e.g., https://dinertech.io)
+                let ajaxUrl = baseUrl === "https://dinertech.io" ? "/web/api/customer/search-address" : "/api/customer/search-address";
 
                 //if (searchTerm) {
                     // Call API using jQuery AJAX
                     $.ajax({
-                        url: `/api/customer/search-address`,
+                        url: ajaxUrl,
                         method: 'POST',
                         data: JSON.stringify({
                             uid: uId,

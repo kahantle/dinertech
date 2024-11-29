@@ -552,7 +552,7 @@
                                 class="aa-coupon-code apply_coupon_code_box" name="coupon_code" id="coupon_code">
                             <div class="input-group-append">
                                 <input type="button" value="Apply" class="aa-browsw-btn"
-                                    onclick="applyCoupenCode()">
+                                    onclick="applyCoupenCode()"> 
                             </div>
                             <div id="coupen_code_msg" style="color:red"></div>
                         </div>

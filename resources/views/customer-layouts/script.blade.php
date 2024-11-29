@@ -60,9 +60,12 @@ function applyCoupenCode() {
         'cart_id':cart_id
     };
     if (coupon_code != '') {
+        let baseUrl = window.location.origin; // Gets the base URL (e.g., https://dinertech.io)
+        let ajaxUrl = baseUrl === "https://dinertech.io" ? "/web/customer/newpromotion" : "/customer/newpromotion";
+
         $.ajax({
             type: "post",
-            url: '/customer/newpromotion',
+            url: ajaxUrl,
             data: itemFormData,
             dataType: "json",
             cache: true,
