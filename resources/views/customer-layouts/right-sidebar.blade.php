@@ -64,6 +64,27 @@
         border-radius: 50px;
         color: red;
     }
+    .d-flex.first {
+        display: flex;
+        justify-content: space-between; /* Default: buttons spaced apart */
+        flex-wrap: wrap; /* Allow wrapping for responsiveness */
+    }
+    .d-flex.first .d-flex .btn {
+        width: 45%; /* Make each button take full width on small screens */
+        margin-bottom: 10px; /* Add space between the buttons */
+        align-items: center; /* Center the buttons */
+    }
+    @media (max-width: 768px) {
+       .d-flex.first{
+            flex-direction: column; /* Stack buttons vertically on small screens */
+            align-items: center; /* Center the buttons */
+        }
+
+        .d-flex.first .d-flex .btn {
+            width: 100%; /* Make each button take full width on small screens */
+            margin-bottom: 10px; /* Add space between the buttons */
+        }
+    }
 </style>
 <div class="col-xl-4 col-lg-12 col-md-12 wd-dr-dashboart-inner">
     <div class="Promotion-content">
@@ -79,20 +100,19 @@
                             <span> When Would You Like Your Order?</span>
                         </div>
 
-                        <div class="d-flex align-items-center wd-dr-now">
+                        <div class="d-flex first align-items-center wd-dr-now" >
                             {{-- <div class="input-group w-auto mr-3">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="basic-addon1"><i class="fas fa-clock"></i></span>
                                 </div>
                             </div> --}}
-                            <div class="d-flex">
+                            <div class="d-flex flex-wrap w-100 justify-content-between">
                                 {{-- <button type="button" class="btn btn-later btn-innr selected set-now">Now</button>
                                 <button type="button" class="btn btn-later btn-innr set-later" data-toggle="modal"
                                     data-target="#exampleModalCenter1">Later</button> --}}
                                 <button type="button" class="btn btn-primary btn-later selected set-now">Now <br> <span style="font-size: 10px;">Get Your Order Made Now </span></button>
                                 <button type="button" class="btn btn-primary btn-later set-later" data-toggle="modal"
                                     data-target="#exampleModalCenter1">Later <br> <span style="font-size: 10px;">Scedule For a Future Time </span></button>
-                               
                             </div>
                         </div>
                          <!-- Modal -->
@@ -244,7 +264,7 @@
                                         alt="" />
                                     <div class="mx-2">
                                         <h5 class="mb-0 promotion_text-cololr">Promotion</h5>
-                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing
+                                        <p id="promo_description">Lorem ipsum dolor sit amet consectetur adipisicing
                                             elit.
                                         </p>
                                     </div>
@@ -266,10 +286,11 @@
                                     @php
                                         $promotion_code ="";
                                         $prmotion_id = $cart['promotion_id'] ?? "0";
-                                        if($prmotion_id)
-                                        $promotion_code = \App\Models\Promotion::where('restaurant_id', 1)
+                                        if($prmotion_id){
+                                            $promotion_code = \App\Models\Promotion::where('restaurant_id', 1)
                                                 ->where('promotion_id',$prmotion_id)
-                                                ->first()->promotion_code;
+                                                ->first();
+                                        }
                                     @endphp
                                     <input type="hidden" name="promotion_id" id="promotion_id" value={{$prmotion_id}}>
 
@@ -281,7 +302,8 @@
                                             window.onload = function() {
                                                 // Only execute if there is a valid promotion code
                                                 if ("{{ $prmotion_id }}" !== "0") {
-                                                    $('.couponcode').html("{{$promotion_code}}");
+                                                    $('.couponcode').html("{{$promotion_code->promotion_code ?? ''}}");
+                                                    $('#promo_description').html("{{$promotion_code->promotion_details ?? ''}}");
                                                     $('#coupon_code').val("{{$promotion_code}}");
                                                     $('.coupenremove').show();
                                                     // Change background color

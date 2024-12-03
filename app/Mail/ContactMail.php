@@ -28,7 +28,7 @@ class ContactMail extends Mailable
      */
     public function build()
     {
-        return $this->subject("New Message in " . env('APP_NAME'))->markdown('emails.contact');
+        return $this->subject("New Message in " . env('APP_NAME'))->markdown('emails.contact'); 
 
     }
 }

@@ -1,12 +1,13 @@
 @component('mail::message')
 
-    ### Dear Restaurant,
-
-    <p>Name : {{ $data['customer_name'] }} </p>
-    <p>Message : {{ $data['message'] }}</p>
+### Dear Restaurant,
 
 
-    Thanks,<br>
-    {{ config('app.name') }}
+<p>Name : {!! $data['customer_name'] !!} </p>
+<p>Phone : {!! $data['customer_phone'] !!} </p>
+<p>Message : {!! $data['message'] !!}</p>
 
+
+Thanks,<br>
+{{ config('app.name') }}
 @endcomponent

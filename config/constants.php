@@ -110,7 +110,7 @@ return [
         '2' => 'Manually set discount',
     ],
     'FIREBASE_DB_NAME' => 'chats',
-    'CONTACT_MAIL' => 'kwest@dinertech.io',
+    'CONTACT_MAIL' => 'kwest@dinertech.io', 
     'CUSTOMER_FEEDBACK_TYPE' => [
         '1' => 'General Feedback',
         '2' => 'Quality Feedback',

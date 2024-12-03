@@ -29,7 +29,7 @@ class CustomerContactMail extends Mailable
     public function build()
     {
         // return $this->view('view.name');
-        return $this->subject("New Message in " . env('APP_NAME'))->markdown('emails.customer.contact');
+        return $this->subject("New Message in " . env('APP_NAME'))->markdown('emails.customer.contact'); 
 
     }
 }

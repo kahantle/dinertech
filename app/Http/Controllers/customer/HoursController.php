@@ -28,6 +28,8 @@ class HoursController extends Controller
         $data['address'] = $restaurant;
         $data['cards'] = getUserCards($restaurantId, $uid);
         $data['title'] = 'Information';
+        $data['restaurant_phone'] = 'Information';
+        // dd($data);
         return view('customer.hours.index', $data);
     }
 
@@ -48,6 +50,7 @@ class HoursController extends Controller
             $data = [
                 // 'restaurant_name' => $restaurant->restaurant_name,
                 'customer_name' => $request->name,
+                'customer_phone' => $request->phone_number,
                 'message' => $request->message,
             ];
 

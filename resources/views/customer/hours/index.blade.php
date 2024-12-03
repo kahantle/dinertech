@@ -13,7 +13,7 @@
             <div id="chatdesk" class="chart-board ">
                 @include('customer.messages')
                 <div class="row">
-                    <div class="col-xl-8 col-lg-12 col-md-12">
+                    <div class="col-xl-8 col-lg-12 col-md-12 mb-3">
                         <div class="content ">
                             <div class="wd-hours-method">
                                 <h2 class="mb-3">Hours of Operation </h2>
@@ -79,7 +79,7 @@
                                             <div class="mb-2">
                                                 <button type="button" class="btn btn-dark btn-call-log">Call Us </button>
                                             </div>
-                                            <span>###-###-#### </span>
+                                            {{-- <span>{{$address->restaurant_address}}</span> --}}
                                         </div>
                                         @if ($address->restaurant_address)
                                             <div class="media">

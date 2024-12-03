@@ -73,15 +73,16 @@ function applyCoupenCode() {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             success: function(result) {
-                //console.log(result)
+                console.log(result);
                 var discount=parseFloat(result.discount);
                 if(result.status=='success'){
-                    console.log(promotion_id);
+                    //console.log(promotion_id);
                     $('.coupenremove').show();
                     $('#coupon_code_msgs').hide();
                     $('#discount').html('$' + discount.toFixed(2));
                     $('#total_price').html('$' + result.itemPrice.toFixed(2));
                     $('#promotion_id').val(result.promotion_id);
+                    $('#promo_description').html(result.promo_description);
                     $('.couponcode').html(result.couponcode);
                     $(".bgcolorchange").css("background-color","#54ba72");
                     $(".apply-content").css("display", "none");
@@ -149,6 +150,7 @@ function remove_coupon_code() {
                     $("#checkout").load(location.href + " #checkout");
                     $("#prmotioncode").load(location.href + " #prmotioncode");
                     $(".bgcolorchange").css("background-color", "");
+                    $('#promo_description').html('');
                 } else {
 
                 }

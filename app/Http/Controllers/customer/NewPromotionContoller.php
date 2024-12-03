@@ -38,6 +38,7 @@ class NewPromotionContoller extends Controller
             $item=0;
             $status='';
             $msg='';
+            $promo_description = '';
             if($restaurant != '' && $restaurant != '0')
             {
                 $result = Promotion::select("*",DB::raw("CONCAT(promotions.restricted_days,' ',promotions.restricted_hours) AS publish_date_time"))->where('promotion_code', $request->coupon_code)->where('restaurant_id', getRestaurantId())->first();
@@ -317,13 +318,14 @@ class NewPromotionContoller extends Controller
                 $item = ($totalPrice* $discount) / 100;
                 $itemPrice=$totalPrice-$item;
             }
+            $promo_description = $result->promotion_details;
 
             $taxCharge = number_format(($itemPrice * $restaurantid->sales_tax) / 100,2);
             $totalPayableAmount = number_format($itemPrice + $taxCharge,2);
             Cart::where('uid',$uid)->where('restaurant_id',$restaurant)->where('cart_id',$request->cart_id)->update(['sub_total' => number_format($totalPrice,2),'discount_charge'=>number_format($item,2),'tax_charge' =>number_format($taxCharge,2),'total_due' => number_format($totalPayableAmount,2),'promotion_id'=>$result->promotion_id]);
         }
 
-        return response()->json(['msg'=>$msg,'status'=>$status,''=>$cartId, 'couponcode'=> $couponcode,'discount'=>$item,'itemPrice'=>$itemPrice,'promotion_id'=>$result->promotion_id]);
+        return response()->json(['msg'=>$msg,'status'=>$status,''=>$cartId, 'couponcode'=> $couponcode, 'promo_description'=>$promo_description,'discount'=>$item,'itemPrice'=>$itemPrice,'promotion_id'=>$result->promotion_id]);
 
     }
     public function remove_coupon_code(Request $request)
