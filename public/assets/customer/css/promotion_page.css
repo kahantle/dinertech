@@ -4641,30 +4641,63 @@
      }
  }
 
- @media (min-width: 1200px) and (max-width: 1500px) {
-     .wd-dr-now.d-flex {
-         display: flex;
+ @media (min-width: 1200px) and (max-width: 1300px) {
+     .wd-dr-now.d-flex .d-flex {
+         margin: 0 !important;
+         width: 100% !important;
+         /* Adjusts the width of the parent container */
          flex-direction: column;
-         justify-content: center;
+         /* Stacks children vertically */
+         align-items: center;
+         /* Centers the children */
+     }
+
+     .wd-dr-now.d-flex button {
+         margin-bottom: 10px;
+         /* Adds space between buttons */
+         width: 80% !important;
+         /* Ensures buttons take the full width */
+     }
+ }
+
+ @media (min-width: 1300px) {
+     .wd-dr-now.d-flex .d-flex {
+         width: 100% !important;
+         /* Adjusts the width of the parent container */
+         flex-direction: column;
+         /* Stacks children vertically */
+         align-items: center;
+         /* Centers the children */
+     }
+
+     .wd-dr-now.d-flex button {
+         margin-bottom: 10px;
+         /* Adds space between buttons */
+         width: 75% !important;
+         /* Ensures buttons take the full width */
+     }
+ }
+
+ /* @media (min-width: 1200px) and (max-width: 1300px) {
+     .wd-dr-now.d-flex {
+         width: 400px;
+         flex-direction: column;
          align-items: center;
      }
 
      .wd-dr-now .d-flex button {
-         display: grid;
-         right: 0;
-         left: 0;
          margin-bottom: 10px;
-         width: auto;
+         width: 100%;
      }
 
      #loginbutton {
          margin-top: 6px;
          width: auto;
      }
- }
+ } */
 
  @media (max-width: 1200px) {
-     .wd-dr-now.d-flex {
+     .wd-dr-now.d-flex .d-flex {
          display: flex;
          /* flex-direction: row; */
          justify-content: center;

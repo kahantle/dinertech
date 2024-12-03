@@ -70,10 +70,23 @@
         flex-wrap: wrap; /* Allow wrapping for responsiveness */
     }
     .d-flex.first .d-flex .btn {
-        width: 45%; /* Make each button take full width on small screens */
+        width: 46%; /* Make each button take full width on small screens */
         margin-bottom: 10px; /* Add space between the buttons */
         align-items: center; /* Center the buttons */
     }
+   /* @media screen and (min-width: 1200px) {
+        .d-flex {
+            margin-left: -40px;
+            width: 400px; 
+            flex-direction: column; 
+            align-items: center;
+        }
+
+        .btn {
+            width: 100%; 
+            text-align: center;
+        }
+    }*/
     @media (max-width: 768px) {
        .d-flex.first{
             flex-direction: column; /* Stack buttons vertically on small screens */

@@ -81,21 +81,25 @@
                                             </div>
                                             {{-- <span>{{$address->restaurant_address}}</span> --}}
                                         </div>
-                                        @if ($address->restaurant_address)
-                                            <div class="media">
-                                                <div class="media-left">
-                                                    <a href="#" alt="Map">
-                                                        <img src="{{ asset('assets/customer/images/map-black.png') }}"
-                                                            class="img-fluid mb-3">
-                                                    </a>
+                                        @if($address)
+                                        {{dd($address)}}
+                                            @if ($address->restaurant_address)
+                                                <div class="media">
+                                                    <div class="media-left">
+                                                        <a href="#" alt="Map">
+                                                            <img src="{{ asset('assets/customer/images/map-black.png') }}"
+                                                                class="img-fluid mb-3">
+                                                        </a>
+                                                    </div>
+                                                    <div class="media-body">
+                                                        <p>
+                                                            {{ $address->restaurant_address }}
+                                                        </p>
+                                                    </div>
                                                 </div>
-                                                <div class="media-body">
-                                                    <p>
-                                                        {{ $address->restaurant_address }}
-                                                    </p>
-                                                </div>
-                                            </div>
+                                            @endif
                                         @endif
+                                        
 
                                         @if ($address->restaurant_mobile_number)
                                             <div class="media">

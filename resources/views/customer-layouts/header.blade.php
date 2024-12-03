@@ -62,10 +62,17 @@
                     @endif
                 </li>
                 <li class="{{ Request::is('customer/restaurant/information') ? 'active' : '' }}">
-                    <a href="{{ route('customer.restaurant.information') }}">
-                        <i data-feather="alert-circle"></i>
-                        <span>Information</span>
-                    </a>
+                    @if(auth()->check() == true)
+                        <a href="{{ route('customer.restaurant.information') }}">
+                            <i data-feather="alert-circle"></i>
+                            <span>Information</span>
+                        </a>
+                        @else
+                        <a data-toggle="modal" data-target="#yourModal">
+                            <i data-feather="archive"></i>
+                            <span>Information</span>
+                        </a>
+                        @endif
                 </li>
                 <li class="{{ Request::is('customer/cards/*') ? 'active' : '' }}">
                     @if(auth()->check() == true)
