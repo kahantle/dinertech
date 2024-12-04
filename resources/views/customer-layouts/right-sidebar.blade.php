@@ -119,13 +119,13 @@
                                     <span class="input-group-text" id="basic-addon1"><i class="fas fa-clock"></i></span>
                                 </div>
                             </div> --}}
-                            <div class="d-flex flex-wrap w-100 justify-content-between">
+                            <div class="d-flex flex-wrap w-100 justify-content-between ">
                                 {{-- <button type="button" class="btn btn-later btn-innr selected set-now">Now</button>
                                 <button type="button" class="btn btn-later btn-innr set-later" data-toggle="modal"
                                     data-target="#exampleModalCenter1">Later</button> --}}
-                                <button type="button" class="btn btn-primary btn-later selected set-now">Now <br> <span style="font-size: 10px;">Get Your Order Made Now </span></button>
-                                <button type="button" class="btn btn-primary btn-later set-later" data-toggle="modal"
-                                    data-target="#exampleModalCenter1">Later <br> <span style="font-size: 10px;">Scedule For a Future Time </span></button>
+                                <button type="button" class="btn btn-primary btn-later selected set-now">Now <br> <span class="justify-content-center align-items-center" style="font-size: 10px;">Get Your Order Made Now </span></button>
+                                <button type="button" class="btn btn-primary btn-later set-later " data-toggle="modal"
+                                    data-target="#exampleModalCenter1">Later <br> <span class="justify-content-center align-items-center" style="font-size: 10px;">Scedule For a Future Time </span></button>
                             </div>
                         </div>
                          <!-- Modal -->
@@ -278,7 +278,7 @@
                                     <div class="mx-2">
                                         <h5 class="mb-0 promotion_text-cololr">Promotion</h5>
                                         <p id="promo_description">
-                                        
+
                                         </p>
                                     </div>
                                 </div>

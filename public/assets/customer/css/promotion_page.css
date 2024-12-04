@@ -4641,7 +4641,7 @@
      }
  }
 
- @media (min-width: 1200px) and (max-width: 1300px) {
+ @media (min-width: 1200px) and (max-width: 1399px) {
      .wd-dr-now.d-flex .d-flex {
          margin: 0 !important;
          width: 100% !important;
@@ -4660,21 +4660,31 @@
      }
  }
 
- @media (min-width: 1300px) {
+ @media (min-width: 1400px) {
      .wd-dr-now.d-flex .d-flex {
          width: 100% !important;
+         display: flex;
+         justify-content: space-between;
+         /* Default: buttons spaced apart */
+         flex-wrap: wrap;
+         /* Allow wrapping for responsiveness */
          /* Adjusts the width of the parent container */
-         flex-direction: column;
+         /* flex-direction: column; */
          /* Stacks children vertically */
-         align-items: center;
+         /* align-items: center; */
          /* Centers the children */
      }
 
      .wd-dr-now.d-flex button {
          margin-bottom: 10px;
          /* Adds space between buttons */
-         width: 75% !important;
+         width: 45% !important;
          /* Ensures buttons take the full width */
+     }
+
+     .wd-dr-now.d-flex button span {
+         display: flex;
+         align-items: center !important;
      }
  }
 
