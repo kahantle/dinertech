@@ -4,7 +4,7 @@
 @include('layouts.sidebar')
 <div id="navbar-wrapper">
         <nav class="navbar navbar-inverse">
-          <div class="container-fluid">
+          <div class="container-fluid"> 
             <div class="navbar-header">
               <div class="profile-title-new">
                 <a href="#" class="navbar-brand" id="sidebar-toggle"><i class="fa fa-bars"></i></a>
@@ -93,7 +93,8 @@
 
                       <li>
                         <p>Tax</p>
-                        <p>${{number_format($order->tax_charge,2)}}</p>
+                        <p>${{number_format($order->sales_tax,2)}}</p>
+                        {{-- <p>${{number_format($order->tax_charge,2)}}</p> --}}
                       </li>
                       <li class="total">
                         <p><b>Grand Total</b></p>
@@ -109,7 +110,13 @@
                 @foreach($order->orderItems as $items)
                 <div class="odc">
                   <div class="image">
-                    <img src="{{ asset('assets/images/mi-3.png') }}" class="img-fluid">
+                      @foreach ($items->menuItems as $menu)
+                        {{-- @if (file_exists($menu->getMenuImgAttribute())) --}}
+                          <img src="{{ $menu->getMenuImgAttribute() }}" class="img-fluid">
+                          {{-- @else
+                            <img src="{{ asset('assets/images/mi-3.png') }}" class="img-fluid">
+                          @endif --}}
+                      @endforeach
                   </div>
                   <div class="text">
                     <h6>{{$items->menu_name}}</h6>

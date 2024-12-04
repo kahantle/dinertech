@@ -39,8 +39,8 @@
         </div>
     @empty
 
-    <div class="menu-item-found-blog">
-        <h4>No Item Found</h4>
+    <div class="d-flex justify-content-center col-md-12 menu-item-found-blog">
+        <h4> No Item Found In This Category</h4>
     </div>
 
     @endforelse

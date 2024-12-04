@@ -74,7 +74,7 @@ class OrdersController extends Controller
         $data['cards'] = getUserCards($restaurantId, $uid);
         $data['title'] = 'Order Detail';
         return view('customer.order.detail', $data);
-    }
+    } 
 
     public function submitToOrder(Request $request)
     {

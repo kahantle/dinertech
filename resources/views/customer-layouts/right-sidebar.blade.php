@@ -277,8 +277,8 @@
                                         alt="" />
                                     <div class="mx-2">
                                         <h5 class="mb-0 promotion_text-cololr">Promotion</h5>
-                                        <p id="promo_description">Lorem ipsum dolor sit amet consectetur adipisicing
-                                            elit.
+                                        <p id="promo_description">
+                                        
                                         </p>
                                     </div>
                                 </div>

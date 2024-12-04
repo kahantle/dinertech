@@ -51,6 +51,10 @@
 					<td style="">Total Discount</td>
 					<td style="text-align:right;">${{number_format($order->discount_charge,2)}}</td>
 				</tr>
+				<tr>
+					<td style="">Tax</td>
+					<td style="text-align:right;">${{number_format($order->sales_tax,2)}}</td>
+				</tr>
 				<tr style="font-size:30px;">
 					<td style="">Total</td>
 					<td style="text-align:right;">${{number_format($order->grand_total,2)}}</td>

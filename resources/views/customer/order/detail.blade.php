@@ -9,7 +9,7 @@
         <div class="wrp-ar-nav-body">
             @include('customer-layouts.navbar')
             <div id="chatdesk" class="chart-board ">
-                @include('customer.messages')
+                @include('customer.messages') 
                 <div class="row">
                     <div class="col-xl-8 col-lg-12 col-md-12">
                         <div class="content ">

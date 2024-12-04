@@ -82,7 +82,7 @@
                                             {{-- <span>{{$address->restaurant_address}}</span> --}}
                                         </div>
                                         @if($address)
-                                        {{dd($address)}}
+                                        {{-- {{dd($address)}} --}}
                                             @if ($address->restaurant_address)
                                                 <div class="media">
                                                     <div class="media-left">
