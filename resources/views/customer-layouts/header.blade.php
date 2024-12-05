@@ -197,7 +197,7 @@
                         <i data-feather="grid"></i>
                         <span>Menu</span>
                     </a>
-                </li>
+                </li> 
                 <li class="{{ Request::is('customer/orders*') ? 'active' : '' }}">
                     <a href="{{ route('customer.orders') }}">
                         <i data-feather="user-plus"></i>
