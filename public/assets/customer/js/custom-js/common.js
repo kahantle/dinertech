@@ -285,6 +285,7 @@ $(function() {
         $("#orderTime").val(convertTime(getTime));
     });
 
+    
     $(".btokey").on("click", function() {
         var date = new Date($("#orderDate").val());
         var dateFormat = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
@@ -292,7 +293,8 @@ $(function() {
         $(".set-order-msg").html("Your order will be ready at: " + dateFormat + " and time " + getTime);
         $("#setDate").val(dateFormat);
         $("#setTime").val(getTime);
-        $(".selectTime").modal('hide');
+        $("#orderTime").val(getTime);
+        $(".selectTime").modal('hide'); 
     });
 
     function convertTime(timeStr) {

@@ -124,10 +124,10 @@ function remove_coupon_code() {
     $('#coupon_code_msg').html('');
     var coupon_code = $('#coupon_code').val();
     var promotion_id = $('#promotion_id').val();
-    console.log("Pomo -->"+promotion_id);
+    //console.log("Pomo -->"+promotion_id);
     $('#coupon_code').val('');
     var cart_id = $('#cartid').val();
-    console.log("Cart -->"+cart_id);
+    //console.log("Cart -->"+cart_id);
     var removecoupendata = {
         'promotion_id': promotion_id,
         'coupon_code': coupon_code,

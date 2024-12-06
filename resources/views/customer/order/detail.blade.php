@@ -35,13 +35,13 @@
                                     @else
                                         <div class="row order-heading">
                                             <div class="col-md-4 order-detail-heading">
-                                                <ul class="m-0">
-                                                    <li>
-                                                        <h3>{{ $order->order_number }}</h3>
-                                                    </li>
-                                                </ul>
-                                                <label class="order-accepted">ORDER
-                                                    {{ $order->order_progress_status }}</label>
+                                                {{-- <ul class="m-0"> --}}
+                                                    {{-- <li> --}}
+                                                        <label>{{ $order->order_number }}</label>
+                                                    {{-- </li> --}}
+                                                {{-- </ul> --}}
+                                                <h3 class="order-accepted">ORDER
+                                                    {{ $order->order_progress_status }}</h3>
                                             </div>
                                             <div class="col-md-4 order-detail-pickup">
                                                 <label class="order-lable">Pickup Time</label>

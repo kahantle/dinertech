@@ -141,15 +141,12 @@
                                                 </button>
                                             </div>
                                             <div class="modal-body timing-content">
-                                                <h5 class="modal-title text-center" id="exampleModalCenterTitle">Select
-                                                    Date
-                                                    or time for future order</h5>
+                                                <h5 class="modal-title text-center" id="exampleModalCenterTitle">Please select a day and time to have your order ready</h5>
                                                 <div class="input">
-                                                    <input type="date" id="orderDate" name="date" class="mt-3">
-                                                    <input type="time" id="orderTime" name="time" class="my-3"
-                                                        step="2700">
+                                                    <input type="date" id="orderDate" name="date" class="mt-3" min="<?php echo date('Y-m-d'); ?>">
+                                                    <input type="time" id="orderTime" name="time" class="my-3" step="2700">
                                                 </div>
-                                                <button type="button" class="btn btn-okey mb-3 btokey">Okey</button>
+                                                <button type="button" class="btn btn-okey mb-3 btokey">Confirm</button>
                                             </div>
                                         </div>
                                     </div>
@@ -311,6 +308,7 @@
                                     @if($prmotion_id !== "0") <!-- Check if there is a valid promotion_id -->
                                         <!-- JavaScript Code to handle the background color change and element visibility -->
                                         <script>
+                                        
                                             // This will run during the page load
                                             window.onload = function() {
                                                 // Only execute if there is a valid promotion code
@@ -328,7 +326,7 @@
 
                                                     // Optionally, if you need to use the $prmotion_id in JavaScript:
                                                     var promotionId = "{{ $prmotion_id }}";  // Pass the PHP variable to JavaScript
-                                                    console.log('Promotion ID:', promotionId);  // You can use this value in further JS logic if needed
+                                                    //console.log('Promotion ID:', promotionId);  // You can use this value in further JS logic if needed
                                                 }
                                             };
                                         </script>
