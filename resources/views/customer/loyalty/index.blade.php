@@ -28,6 +28,10 @@
                                                 $menuItem = $item->menuItems->first();
                                                 $loyaltyPoints = $loyaltyRule->point;
                                                 $notEligable = $available_points < $loyaltyPoints;
+                                                $isInCart = \App\Models\CartItem::where("cart_id", $cart_id)
+                                                    ->where("menu_id", $menuItem->menu_id)
+                                                    ->where("is_loyalty", '1')
+                                                    ->first();
                                             @endphp
 
 
@@ -48,13 +52,14 @@
                                                         </div>
                                                         <div class="modal-points-left">
                                                             @if (!$notEligable)
-                                                                <button type="button" class="modal-add-button toggle addProduct" data-loyaltyRuleId = "{{$loyaltyRule->rules_id}}" data-menuId="{{$menuItem->menu_id}}">Add</button>
+                                                                <button type="button" class="modal-add-button toggle addProduct" style="display:{{$isInCart ? "none" : "block"}}" data-loyaltyRuleId = "{{$loyaltyRule->rules_id}}" data-menuId="{{$menuItem->menu_id}}">Add</button>
+                                                                <button type="button" class="btn btn-danger toggle removeProduct" style="display:{{$isInCart ? "block" : "none"}}" data-cartMenuItemId = "{{$isInCart->cart_menu_item_id ?? 0}}" data-menuId="{{$menuItem->menu_id}}">Cancel</button>
                                                             @endif
                                                         </div>
                                                     </div>
                                                 </a>
                                             </div>
-                                        @endforeach
+                                        @endforeach 
                                     </div>
                                 @endforeach
                             </div>
@@ -78,6 +83,12 @@
                 addToCart({menuId : menuId,loyaltyRuleId : loyaltyRuleId})
             });
 
+            $(document).on("click", ".removeProduct", function () {
+                var menuId = $(this).attr("data-menuId");
+                var cartMenuItemId = $(this).attr("data-cartMenuItemId");
+                removeToCart({menuId : menuId,cartMenuItemId : cartMenuItemId})
+            });
+
             function addToCart(data) {
                 $.ajax({
                     type: "POST",
@@ -96,6 +107,32 @@
                                 window.location.href + " .content"
                             )
                             $("#checkout").load(window.location.href + " #checkout");
+                            $(".addProduct").css("display", "none");
+                            $(".removeProduct").css("display", "block");
+                        }
+                    }
+                });
+            }
+            function removeToCart(data) {
+                $.ajax({
+                    type: "POST",
+                    headers: {
+                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+                    },
+                    url: "{{ route('customer.cart.remove.item') }}",
+                    data: data,
+                    dataType: "html",
+                    success: function (response) {
+                        if (response) {
+                            $(".scroll-inner-blog").load(
+                                window.location.href + " .scroll-inner-blog"
+                            );
+                            $(".content").load(
+                                window.location.href + " .content"
+                            )
+                            $("#checkout").load(window.location.href + " #checkout");
+                            $(".removeProduct").css("display", "none");
+                            $(".addProduct").css("display", "block");
                         }
                     }
                 });

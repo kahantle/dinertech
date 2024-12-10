@@ -79,7 +79,7 @@ class CartController extends Controller
             $cart_sub_total = 0;
             $cart = new Cart;
             $cart->restaurant_id = 1;
-            $cart->uid = $uid;
+            $cart->uid = $uid; 
             $cart->order_type = Config::get('constants.ORDER_TYPE.2');
             $cart->is_payment = Config::get('constants.ORDER_PAYMENT_TYPE.CARD_PAYMENT');
             $cart->save();
