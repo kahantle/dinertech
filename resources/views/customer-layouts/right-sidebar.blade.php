@@ -185,11 +185,26 @@
                         <div class="scroll-inner-blog mt-4" id="cart_items">
                             @php
                                 $cart = getCart($restaurantId = 1);
-                                $menuItem= [];
+                                $menuItem= []; 
                             @endphp
                             @if (!empty($cart->cartMenuItems))
                                 @forelse ($cart->cartMenuItems as $key => $item)
                                     @php
+                                    
+                                        $loyalties = \App\Models\CartItem::where("cart_id", $cart->cart_id)
+                                                ->where("is_loyalty", '1')
+                                                ->get();
+                                        $loyaltyCount = $loyalties->count();
+                                        $isRedeemable = \App\Models\LoyaltyRuleItem::where("menu_id", $item['menu_id'])
+                                                    ->where('restaurant_id',$restaurantId = 1)
+                                                    ->first();
+                                        //find the loyalty point
+                                        if($isRedeemable)
+                                            {
+                                                $loyaltyPoint = \App\Models\LoyaltyRule::where('restaurant_id',$restaurantId = 1)
+                                                            ->where('rules_id', $isRedeemable->loyalty_rule_id)
+                                                            ->first()->point;
+                                            }
                                         $cartTotal += $item['menu_price'] * $item['menu_qty'] + $item['modifier_total'] * $item['menu_qty'];
 
                                         $menuItem[] = ['menu_id' => $item['menu_id'], 'menu_name' => $item['menu_name'],'menu_price' => $item['menu_price'],'menu_total' => $item['menu_total'], 'menu_qty' => $item['menu_qty'], 'modifier_total' => $item['modifier_total']];
@@ -205,7 +220,7 @@
                                                 <div class="no-photos-blog">
                                                     <p class="m-0"> {{ $item['menu_name'] }} </p>
                                                     <!-- <p>( ${{ $item['menu_price'] }} × {{ $item['menu_qty'] }} )</p> -->
-                                                    @if($item->is_loyalty==1)
+                                                    @if($item->is_loyalty==1) 
                                                         <div class="iconbutton d-flex  align-items-center">
                                                             <i class="fa fa-gift pr-3" aria-hidden="true"></i>
                                                             <p class="mb-0">{{ $item->loyalty_point }} pts</p>
@@ -235,6 +250,12 @@
                                                 <span class="product-quantity-plus" data-menu-id="{{$item->menu_id}}"
                                                     data-cart-menu-item-id="{{ $item->cart_menu_item_id }}"></span>
                                             </div>
+                                            @if($isRedeemable && !$loyaltyCount)
+                                                <a href="#" style="color: red; text-decoration: none;" class="iconbutton d-flex  align-items-center col-6 redeemProduct" data-cartLoyaltyRuleId = "{{$isRedeemable->loyalty_rule_id}}" data-cartMenuId="{{$item->menu_id}}">
+                                                    <i class="fa fa-gift pr-3" aria-hidden="true"></i>
+                                                    <p class="mb-0">Redeem for {{ $loyaltyPoint }} pts</p>
+                                                </a>
+                                            @endif
                                             @endif
                                             <div class="my-2">
                                                 @foreach ($item->CartMenuGroups as $modifier_group)

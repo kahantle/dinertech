@@ -20,9 +20,8 @@ class LoyaltyController extends Controller
         $cart_id = $userCart->cart_id ?? 0;
         $data['cards'] = getUserCards($restaurantId, $uid);
         $data['cart_id'] = $cart_id;
-        $data['title'] = 'Loyalty';
+        $data['title'] = 'Loyalty'; 
         $data['loyalties'] = LoyaltyRule::with('rulesItems')->where('restaurant_id',$restaurantId)->get(['rules_id','restaurant_id','point']);
-        // dd($data);
         return view('customer.loyalty.index',$data);
     }
 }

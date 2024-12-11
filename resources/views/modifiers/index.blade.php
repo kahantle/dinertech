@@ -764,7 +764,7 @@ $(document).ready(function() {
                 'is_required' : is_required,
                 'allow_multiple' : modifier,
                 'minimum' : minimum,
-                'maximum' : maximum,
+                'maximum' : maximum, 
                 'modifier_group_id' : edit_modifier_group_id,
             },
             dataType:'json',

@@ -22,7 +22,12 @@
                                 @foreach ($loyalties as $loyaltyRule)
                                     <h6 class="mt-5 mb-3">{{ $loyaltyRule->point }} Points</h6>
                                     <div class="row">
-
+                                        @php
+                                            $loyalties = \App\Models\CartItem::where("cart_id", $cart_id)
+                                                    ->where("is_loyalty", '1')
+                                                    ->get();
+                                            $loyaltyCount = $loyalties->count();
+                                        @endphp
                                         @foreach ($loyaltyRule->rulesItems as $item)
                                             @php
                                                 $menuItem = $item->menuItems->first();
@@ -52,8 +57,14 @@
                                                         </div>
                                                         <div class="modal-points-left">
                                                             @if (!$notEligable)
-                                                                <button type="button" class="modal-add-button toggle addProduct" style="display:{{$isInCart ? "none" : "block"}}" data-loyaltyRuleId = "{{$loyaltyRule->rules_id}}" data-menuId="{{$menuItem->menu_id}}">Add</button>
-                                                                <button type="button" class="btn btn-danger toggle removeProduct" style="display:{{$isInCart ? "block" : "none"}}" data-cartMenuItemId = "{{$isInCart->cart_menu_item_id ?? 0}}" data-menuId="{{$menuItem->menu_id}}">Cancel</button>
+                                                                @if($loyaltyCount>0)
+                                                                    @if($isInCart && $isInCart->menu_id == $menuItem->menu_id)
+                                                                        <button type="button" class="modal-add-button toggle addProduct" style="display:{{$isInCart ? "none" : "block"}}" data-loyaltyRuleId = "{{$loyaltyRule->rules_id}}" data-menuId="{{$menuItem->menu_id}}">Add</button>
+                                                                        <button type="button" class="btn btn-danger toggle removeProduct" style="display:{{$isInCart ? "block" : "none"}}" data-cartMenuItemId = "{{$isInCart->cart_menu_item_id ?? 0}}" data-menuId="{{$menuItem->menu_id}}">Cancel</button>
+                                                                    @endif
+                                                                @else
+                                                                    <button type="button" class="modal-add-button toggle addProduct" style="display:{{$isInCart ? "none" : "block"}}" data-loyaltyRuleId = "{{$loyaltyRule->rules_id}}" data-menuId="{{$menuItem->menu_id}}">Add</button>
+                                                                @endif
                                                             @endif
                                                         </div>
                                                     </div>
@@ -71,7 +82,7 @@
             </div>
         </div>
     </section>
-    @endsection
+    @endsection 
 
 @section('scripts')
     <script>

@@ -160,6 +160,37 @@ function remove_coupon_code() {
 }
 
 
+$(document).on("click", ".redeemProduct", function () {
+    var menuId = $(this).attr("data-cartMenuId");
+    var loyaltyRuleId = $(this).attr("data-cartLoyaltyRuleId");
+    redeemToCart({menuId : menuId,loyaltyRuleId : loyaltyRuleId})
+});
+
+
+function redeemToCart(data) {
+    $.ajax({
+        type: "POST",
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+        },
+        url: "{{ route('customer.addToCart') }}",
+        data: data,
+        dataType: "html",
+        success: function (response) {
+            if (response) {
+                $(".scroll-inner-blog").load(
+                    window.location.href + " .scroll-inner-blog"
+                );
+                $(".content").load(
+                    window.location.href + " .content"
+                )
+                $("#checkout").load(window.location.href + " #checkout");
+                //$(".addProduct").css("display", "none");
+                //$(".removeProduct").css("display", "block");
+            }
+        }
+    });
+}
 
 </script>
 @yield('scripts')

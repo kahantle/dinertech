@@ -40,7 +40,7 @@ class CartController extends Controller
                 'restaurant_id' => 'required'
             ]);
             $uid = auth('api')->user()->uid;
-            $restaurantId = $request->post('restaurant_id');
+            $restaurantId = $request->post('restaurant_id'); 
             $restaurant = Restaurant::where('restaurant_id', $request->post('restaurant_id'))->first();
 
             $cartItem = Cart::with(['cartMenuItems' => function ($cartItems) {
@@ -150,6 +150,7 @@ class CartController extends Controller
                         $cartMenuItemData->menu_total = $menuItem['menu_total'];
                         $cart_sub_total = $menuItem['menu_total'];
                         $cartMenuItemData->modifier_total = $menuItem['modifier_total'];
+                        $cart_sub_total += $menuItem['modifier_total'];
                         $cartMenuItemData->is_loyalty = ($menuItem['is_loyalty'] == true) ? 1 : 0;
                         $cartMenuItemData->loyalty_point = $menuItem['loyalty_point'];
                         $cartMenuItemData->save();

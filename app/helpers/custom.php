@@ -70,7 +70,7 @@ if (!function_exists('getCartItem')) {
     }
 }
 
-if (!function_exists('getCart')) {
+if (!function_exists('getCart')) { 
     function getCart($restaurant_id = 1)
     {
         $uid = auth()->user()->uid ?? 0;

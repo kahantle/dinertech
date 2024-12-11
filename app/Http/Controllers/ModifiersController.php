@@ -190,12 +190,14 @@ class ModifiersController extends Controller
             $modifier->is_required = $request->is_required;
             $modifier->allow_multiple = ($request->allow_multiple == Config::get('constants.MODIFIER_TYPE.MULTIPLE_MODIFIER')) ? 1 : 0;
 
-            if ($request->allow_multiple === 'SINGLE') {
+            if ($request->allow_multiple === 'SINGLE') { 
                 $modifier->minimum = 0;
                 $modifier->maximum = 0;
+                $modifier->type = 0;
             } else {
                 $modifier->minimum = $request->post('minimum');
                 $modifier->maximum = $request->post('maximum');
+                $modifier->type = 1;
             }
             $modifier->save();
 
