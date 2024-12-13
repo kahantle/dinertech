@@ -602,6 +602,59 @@ class CartController extends Controller
             return response()->json($errors, 500);
         }
     }
+    
+    public function destroyLoyalty(Request $request)
+    {
+        try {
+            $request_data = $request->json()->all();
+            $validator = Validator::make($request_data, [
+                'restaurant_id' => 'required',
+                'cart_menu_item_id' => 'required'
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json(['success' => false, 'message' => $validator->errors()], 400);
+            }
+
+            $cart_menu_item = CartItem::where('cart_menu_item_id', $request->post('cart_menu_item_id'))->first();
+            if ($cart_menu_item->is_loyalty != 1) {
+                return response()->json(['success' => false, 'message' => 'Not a loyalty item'], 200);
+            }
+            $user = Auth::user();
+            $user->update(['total_points' => $user->total_points + (int)$cart_menu_item->loyalty_point]);
+            
+            $uid = auth('api')->user()->uid;
+            $check_cart = Cart::where('uid', $uid)->where('restaurant_id', $request->post('restaurant_id'))->first();
+            $cartMenuItems = CartItem::where('cart_id', $check_cart->cart_id);
+
+
+            if ($cartMenuItems->get()->count() > 1) {
+                CartMenuGroup::where('cart_menu_item_id', $request->post('cart_menu_item_id'))->where('cart_id', $check_cart->cart_id)->delete();
+                CartMenuGroupItem::where('cart_menu_item_id', $request->post('cart_menu_item_id'))->where('cart_id', $check_cart->cart_id)->delete();
+                $cartMenuItems->where('cart_id', $check_cart->cart_id)->where('cart_menu_item_id', $request->post('cart_menu_item_id'))->delete();
+            } else {
+                CartMenuGroup::where('cart_id', $check_cart->cart_id)->delete();
+                CartMenuGroupItem::where('cart_id', $check_cart->cart_id)->delete();
+                $cartMenuItems->where('cart_menu_item_id', $request->post('cart_menu_item_id'))->delete();
+                $check_cart->delete();
+            }
+            //Cart Total Update
+            $restaurantid = Restaurant::where('restaurant_id', $request->post('restaurant_id'))->first();
+            $subtotal = CartItem::where('cart_id', $check_cart->cart_id)->sum('menu_total');
+            $taxCharge = ($subtotal * $restaurantid->sales_tax) / 100;
+            $totalPayableAmount = $subtotal + $taxCharge;
+
+            Cart::where('uid', auth()->id())->where('restaurant_id', $request->post('restaurant_id'))->where('cart_id', $check_cart->cart_id)->update(['sub_total' => (float)$subtotal, 'tax_charge' => (float)$taxCharge, 'total_due' => (float)$totalPayableAmount]);
+            return response()->json(['success' => true, 'message' => 'Cart item remove successfully.'], 200);
+        } catch (\Throwable $th) {
+            $errors['success'] = false;
+            $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
+            if ($request->post('debug_mode') == 'ON') {
+                $errors['debug'] = $th->getMessage();
+            }
+            return response()->json($errors, 500);
+        }
+    }
 
     public function quantityIncrement(Request $request)
     {

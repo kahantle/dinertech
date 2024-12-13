@@ -112,6 +112,7 @@ Route::prefix('customer')->namespace('Api\Customer')->group(function () {
                 Route::post('/getMenu/modifier','CartController@getCartMenuModifier')->name('customer.cart.getMenu.modifier');
                 Route::post('/customize/modifier','CartController@customizeModifier')->name('customer.cart.customize.modifier');
                 Route::post('/delete',[CartController::class,'destroy'])->name('customer.cart.delete');
+                Route::post('/delete-loyalty',[CartController::class,'destroyLoyalty'])->name('customer.cart.delete.loyalty');
                 Route::post('/quantity/increment','CartController@quantityIncrement')->name('customer.cart.quantityIncrement');
 
             });
