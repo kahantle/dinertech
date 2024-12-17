@@ -620,6 +620,13 @@ class CartController extends Controller
             if ($cart_menu_item->is_loyalty != 1) {
                 return response()->json(['success' => false, 'message' => 'Not a loyalty item'], 200);
             }
+            // 
+            $cart_item = CartItem::where('menu_id', $cart_menu_item->menu_id)->where('menu_name', $cart_menu_item->menu_name)->first();
+            if($cart_item){
+                $cart_item->menu_qty +=1;
+                $cart_item->save();
+            }
+            
             $user = Auth::user();
             $user->update(['total_points' => $user->total_points + (int)$cart_menu_item->loyalty_point]);
             
