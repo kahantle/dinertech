@@ -624,7 +624,7 @@ class CartController extends Controller
             $cart_item = CartItem::where('menu_id', $cart_menu_item->menu_id)->where('menu_name', $cart_menu_item->menu_name)->first();
             if($cart_item){
                 $cart_item->menu_qty +=1;
-                $cart_item->redeem_status = 1;
+                $cart_item->redeem_status = 0;
                 $cart_item->save();
             }
             
