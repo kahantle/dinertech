@@ -621,10 +621,10 @@ class CartController extends Controller
                 return response()->json(['success' => false, 'message' => 'Not a loyalty item'], 200);
             }
             // 
-            $cart_item = CartItem::where('menu_id', $cart_menu_item->menu_id)->where('menu_name', $cart_menu_item->menu_name)->first();
+            $cart_item = CartItem::where('menu_id', $cart_menu_item->menu_id)->where('menu_name', $cart_menu_item->menu_name)->where('is_loyalty', '0')->first();
             if($cart_item){
                 $cart_item->menu_qty += 1;
-                $cart_item->is_loyalty = 0;
+                $cart_item->redeem_status = 0;
                 $cart_item->save();
             }
             
@@ -636,9 +636,10 @@ class CartController extends Controller
             $cartMenuItems = CartItem::where('cart_id', $check_cart->cart_id);
 
 
+            $cartMenuItems->where('cart_id', $check_cart->cart_id)->where('cart_menu_item_id', $request->post('cart_menu_item_id'))->delete();
             if ($cartMenuItems->get()->count() > 1) {
-                CartMenuGroup::where('cart_menu_item_id', $request->post('cart_menu_item_id'))->where('cart_id', $check_cart->cart_id)->delete();
-                CartMenuGroupItem::where('cart_menu_item_id', $request->post('cart_menu_item_id'))->where('cart_id', $check_cart->cart_id)->delete();
+                // CartMenuGroup::where('cart_menu_item_id', $request->post('cart_menu_item_id'))->where('cart_id', $check_cart->cart_id)->delete();
+                // CartMenuGroupItem::where('cart_menu_item_id', $request->post('cart_menu_item_id'))->where('cart_id', $check_cart->cart_id)->delete();
                 $cartMenuItems->where('cart_id', $check_cart->cart_id)->where('cart_menu_item_id', $request->post('cart_menu_item_id'))->delete();
             } else {
                 CartMenuGroup::where('cart_id', $check_cart->cart_id)->delete();
