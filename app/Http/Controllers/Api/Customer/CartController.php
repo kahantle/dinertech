@@ -17,6 +17,7 @@ use App\Models\CartItem;
 use App\Models\Restaurant;
 use App\Models\CartMenuGroup;
 use App\Models\CartMenuGroupItem;
+use App\Models\LoyaltyRuleItem;
 use App\Models\MenuItem;
 use App\Models\PromotionType;
 use App\Models\Promotion;
@@ -621,22 +622,41 @@ class CartController extends Controller
                 return response()->json(['success' => false, 'message' => 'Not a loyalty item'], 200);
             }
             // 
-            $cart_item = CartItem::where('menu_id', $cart_menu_item->menu_id)->where('menu_name', $cart_menu_item->menu_name)->first();
-            if($cart_item){
-                $cart_item->menu_qty +=1;
-                $cart_item->redeem_status = 0;
-                $cart_item->save();
-            }
             
             $user = Auth::user();
             $user->update(['total_points' => $user->total_points + (int)$cart_menu_item->loyalty_point]);
             
             $uid = auth('api')->user()->uid;
             $check_cart = Cart::where('uid', $uid)->where('restaurant_id', $request->post('restaurant_id'))->first();
-            // $cartMenuItems = CartItem::where('cart_id', $check_cart->cart_id);
+            $cartMenuItems = CartItem::where('cart_id', $check_cart->cart_id);
+            $cart_item = CartItem::where('menu_id', $cart_menu_item->menu_id)->where('menu_name', $cart_menu_item->menu_name)->where('is_loyalty', 0)->first();
+            if($cart_item){
+                $cart_item->menu_qty += 1;
+                $cart_item->redeem_status = 0;
+                $cart_item->save();
+            }else{
+                // Re-add the item in the cart
+                $cart_sub_total = $check_cart->sub_total;
+                $menu_item = MenuItem::where('menu_id', $cart_menu_item->menu_id)->first();
+                // check if it is a loyalty item
+                $is_loyalty_item = LoyaltyRuleItem::where('restaurant_id', $request->post('restaurant_id'))->where('menu_id', $menu_item->menu_id)->first();
+                $cartMenuItemData = new CartItem();
+                $cartMenuItemData->cart_id = $check_cart->cart_id;
+                $cartMenuItemData->category_id = (int)$menu_item->category_id;
+                $cartMenuItemData->menu_id = (int)$menu_item->menu_id;
+                $cartMenuItemData->menu_name = $menu_item->item_name;
+                $cartMenuItemData->menu_qty = '1';
+                $cartMenuItemData->menu_price = $menu_item->item_price;
+                $cartMenuItemData->modifier_total = '0';
+                $cartMenuItemData->menu_total = $menu_item->item_price;
+                $cart_sub_total += $menu_item->item_price;
+                $cartMenuItemData->is_loyalty = 0;
+                $cartMenuItemData->loyalty_point = 0; // $is_loyalty_item->loyaltyRule->point;
+                $cartMenuItemData->save();
 
-            $cart_menu_item->delete();
-            /*if ($cartMenuItems->get()->count() > 1) {
+            }
+
+            if ($cartMenuItems->get()->count() > 1) {
                 CartMenuGroup::where('cart_menu_item_id', $request->post('cart_menu_item_id'))->where('cart_id', $check_cart->cart_id)->delete();
                 CartMenuGroupItem::where('cart_menu_item_id', $request->post('cart_menu_item_id'))->where('cart_id', $check_cart->cart_id)->delete();
                 $cartMenuItems->where('cart_id', $check_cart->cart_id)->where('cart_menu_item_id', $request->post('cart_menu_item_id'))->delete();
@@ -645,7 +665,7 @@ class CartController extends Controller
                 CartMenuGroupItem::where('cart_id', $check_cart->cart_id)->delete();
                 $cartMenuItems->where('cart_menu_item_id', $request->post('cart_menu_item_id'))->delete();
                 $check_cart->delete();
-            }*/
+            }
             //Cart Total Update
             $restaurantid = Restaurant::where('restaurant_id', $request->post('restaurant_id'))->first();
             $subtotal = CartItem::where('cart_id', $check_cart->cart_id)->sum('menu_total');
