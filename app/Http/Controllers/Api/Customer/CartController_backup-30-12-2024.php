@@ -154,9 +154,6 @@ class CartController extends Controller
                         $cart_sub_total += $menuItem['modifier_total'];
                         $cartMenuItemData->is_loyalty = ($menuItem['is_loyalty'] == true) ? 1 : 0;
                         $cartMenuItemData->loyalty_point = $menuItem['loyalty_point'];
-                        if($cartMenuItemData->is_loyalty && (int)$user->total_points < (int)$menuItem['loyalty_point']){
-                            $cartMenuItemData->redeem_status = 1;
-                        }
                         $cartMenuItemData->save();
                         if (isset($menuItem['modifier_list'])) {
                             foreach ($menuItem['modifier_list'] as $modifierKey => $modifier) {
@@ -208,9 +205,6 @@ class CartController extends Controller
                         $cart_sub_total += $menuItem['menu_total'];
                         $cartMenuItemData->is_loyalty = ($menuItem['is_loyalty'] == true) ? 1 : 0;
                         $cartMenuItemData->loyalty_point = $menuItem['loyalty_point'];
-                        if($cartMenuItemData->is_loyalty && (int)$user->total_points < (int)$menuItem['loyalty_point']){
-                            $cartMenuItemData->redeem_status = 1;
-                        }
                         $cartMenuItemData->save();
                         if (isset($menuItem['modifier_list'])) {
                             foreach ($menuItem['modifier_list'] as $modifierKey => $modifier) {
