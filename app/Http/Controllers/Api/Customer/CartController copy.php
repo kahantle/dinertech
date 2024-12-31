@@ -91,7 +91,7 @@ class CartController extends Controller
 //dd($cartItem);
 
 
-                return response()->json(['cart_list' => $cartItem, 'success' => true], 200);
+                return response()->json(['cart_list' => $cartItem, 'user_point'=>$userPoints, 'success' => true], 200);
             }
             return response()->json(['cart_list' => (object)[], 'message' => 'Your cart is empty', 'success' => true], 200);
 

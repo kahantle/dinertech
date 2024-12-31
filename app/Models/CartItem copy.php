@@ -39,12 +39,10 @@ class CartItem extends Model
 
         $loyaltyitem=LoyaltyRuleItem::where('menu_id', $menuid)->exists();
         $uid = Auth::id();
-        $user = User::where('uid', $uid)->first();
-        $userPoint = $user->total_points;
 
-        $cartitems=CartItem::where('menu_id',$menuid)->where('redeem_status',0)->get();
+            $cartitems=CartItem::where('menu_id',$menuid)->where('redeem_status',0)->get();
 
-        $cartmenuitems=CartItem::select('cart_menu_items.*')->where('redeem_status',1)->get();
+            $cartmenuitems=CartItem::select('cart_menu_items.*')->where('redeem_status',1)->get();
 
 
         // $cartmenuitem=CartItem::select('cart_menu_items.*')->join('restaurant_loyalty_rules', 'cart_menu_items.menu_id', '=', 'restaurant_loyalty_rules.rules_id')->get();
@@ -63,7 +61,7 @@ class CartItem extends Model
                 }
                 else{
                     if ($loyaltyitem) {
-                        return (int)$cartitem->loyalty_point<=$userPoint ? 1 : 0;
+                        return 1;
                     }
                     else{
                         return 0;
