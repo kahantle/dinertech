@@ -185,6 +185,7 @@
                         <div class="scroll-inner-blog mt-4" id="cart_items">
                             @php
                                 $cart = getCart($restaurantId = 1);
+                                $user = \App\Models\User::where('uid', $cart->uid)->first();
                                 $menuItem= []; 
                             @endphp
                             @if (!empty($cart->cartMenuItems))
@@ -250,7 +251,7 @@
                                                 <span class="product-quantity-plus" data-menu-id="{{$item->menu_id}}"
                                                     data-cart-menu-item-id="{{ $item->cart_menu_item_id }}"></span>
                                             </div>
-                                            @if($isRedeemable && !$loyaltyCount)
+                                            @if( $user && $isRedeemable && !$loyaltyCount && (int)$loyaltyPoint < (int)$user->total_points)
                                                 <a href="#" style="color: red; text-decoration: none;" class="iconbutton d-flex  align-items-center col-6 redeemProduct" data-cartLoyaltyRuleId = "{{$isRedeemable->loyalty_rule_id}}" data-cartMenuId="{{$item->menu_id}}">
                                                     <i class="fa fa-gift pr-3" aria-hidden="true"></i>
                                                     <p class="mb-0">Redeem for {{ $loyaltyPoint }} pts</p>
