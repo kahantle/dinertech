@@ -63,7 +63,7 @@ class CartItem extends Model
                 }
                 else{
                     if ($loyaltyitem) {
-                        return (int)$cartitem->loyalty_point<=$userPoint ? 1 : 0;
+                        return (int)$cartitem->point<=(int)$userPoint ? 1 : 0;
                     }
                     else{
                         return 0;
