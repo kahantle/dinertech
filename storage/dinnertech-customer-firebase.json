@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "dinnertech-customer-a1ad9",
+  "private_key_id": "9a267262f913067f36b5ec911a32c9433084a306",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDJnvzge5fMSEcE\nWJv4U0H1BRsMoQ/h5xj75O4XmCvwob+kIMAw92vfJ0476/GXG30JutqwElIv64k0\nMrd4SFzsOXbWqsNO8QCpiN8Z8S+pNkHBYkDhLRnPc1z33cPH/GF2uVjDoaNLHLJw\nT2MQ4AbkM48mUtnKbpmc9lZtxPH/VB3w/R88zOjSqnpKoYzcuUymxSMKxTJmsmiu\nOkLqg+BWDj+mPnRbWRziHTWvXRpHSryIFyNObvbDOnZEzOLMJy76EIIpiPCUZ6CI\n0YVwSpEQMJdiLDG2S15CUHHbY7VjIgQeBNkY4kfvHktnEz1vFfaIkhzFeqVovxF0\nSTN6ejzDAgMBAAECggEAB2V8zYn9dx1m0Y02VUngDQ75Gv0AMPG5CvwKgNmC6ErD\nVdAjMWQaQeYfmGUDiIPM2yHhDzRd/+tTUm8b3qfU8Eb7rnER/HJRWUJCF9jBdVnC\ns1mrm4BE2Onq30L0XMneXSxFXG0L8nIbtEN7Aq3UHlIGwLc7zWz5IK3DXO31vwjh\n/xL2E3ZyXS/a4ytenYTTmyUnIiHtzpQiHU86U1DKETT6lKAU1OrIgPDOz0dgiuDb\njPAJ1JrfEfpoC7DvuwGoGbQujjPh/SIzpCwBIyZHLivTJXfOexfNCrKN5E/qRFCH\n3H/VtaKjhkO3xlrVk2FZUEASVnzySXeHC6R1EpHAKQKBgQD4dV9jxYgHx+oEG8Vq\nBrGrm33VL9hAdqvV71PUVT00QSYqDQQ4krqkhRr6mvPIqzTJWaEdwTz0szJa0JTL\nxfS/si+SFNw6UoUCyJ28Y5hxEXlMK1uhwgNlhbv/PjBA2vHHxEpkGkzzRYqGjvWH\ndNSOKK5QYRwgkPiSJjBGJq5OCwKBgQDPvash+8fWTcHoC5Z30ZghrK6JdgWWGwzC\nR58jFZowBJw7jCa4zmMZ2Kq7Jn45GYtvXcBYrJH1QWUlJ/N8waTKRG8D1G+aRjcj\nsWDkZ/U5rV1t3WowAvIBXohp4bncuIGRR7J6rdmPQHLHYmYULI1n7jRfD72m7PRE\nW6pmrF5XKQKBgEFDm5X6qjvZAJiprtamAX+hbZFVawmr4oFkx3FsHpKeVmcPWj9+\nE3bp2+deUpEwn8IQQCkvvFJOy/hc9+j7C8pbBPHrdtn/GR9dEUoOI1n4DBO9A+ne\nq8O8OGDYthYjLQWbgyr+WZ5BcxzbapV1U+wvtXI5wAix7Al/7IhQ2tJ3AoGBAInr\nTFCVjkjy+seJ2e3Wkv/YW1AbsP3FG6VoU3jBgMpcZTULiTGspBKmzELP/YD/OplH\nTsoQWB7Rucr/SSIMldFLucB7K1TrRPRHcSJy+lW+iYbFNxiE/BJ4pmxVVkX5oNvJ\nE+9quEPo78r7wvWl1oOnm9F469qE+m7fxLPBwChxAoGAIm9/o5Qr7JZ27XbZGR/l\nzY8dkdK/y0T7MlccMi+xWKE4pL4M4qIeCwaQazDcJPonTFEYqclbI9qu5icA/CWt\nI6iedtatyhuaDZf1kMayjBlZWVaRnurBEVuCZdntRbHIL5L3MrPuzgGbWOshIYBD\nTYXkG0Dt7rAVuH6q+43M364=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-15gaq@dinnertech-customer-a1ad9.iam.gserviceaccount.com",
+  "client_id": "111182202194399798551",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-15gaq%40dinnertech-customer-a1ad9.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

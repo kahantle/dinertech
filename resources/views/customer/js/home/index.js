@@ -493,7 +493,7 @@ $(function(){
         var categoryId = $(this).data("category-id");
         // $(".quantity-counter-"+menuName).removeClass("hide");
         // $(".quantity-counter-"+menuName).addClass("show");
-        
+      console.log(baseUrl);
         $.ajax({
           type: "POST",
           headers: {

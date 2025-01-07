@@ -60,7 +60,8 @@
             "app/Libraries"
         ],
         "files": [
-            "app/helpers/custom.php"
+            "app/helpers/custom.php",
+            "app/helpers/notify.php"
         ]
     },
     "autoload-dev": {

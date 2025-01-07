@@ -110,7 +110,7 @@ class OrderController extends Controller
                 'is_tip'     => 'required',
                 'tip_amount' => 'required',
                 // 'payment_card_id' => 'required',
-                'isCash'          => 'required',
+                'isCash' => 'required',
                 // 'stripe_payment_id' => 'required',
                 'menu_item'=>'required'
             ]);
@@ -122,7 +122,6 @@ class OrderController extends Controller
             $uid = auth('api')->user()->uid;
             $cartId = $request->post('cart_id');
             $check_cart = Cart::where('uid',$uid)->where('restaurant_id',$request->post('restaurant_id'))->where('cart_id',$cartId)->first();
-
 
             DB::beginTransaction();
             $order = new Order;
@@ -203,6 +202,8 @@ class OrderController extends Controller
                 $restaurant = Restaurant::with(['order' => function($order) use($uid,$orderNumber){
                     $order->with('user')->where('uid',$uid)->where('order_number',$orderNumber)->first();
                 }])->find($request->post('restaurant_id'));
+                $title = "Place Order";
+                $fcm_token = $restaurant->order->user->fcm_id;
 
                 if($request->post('is_feature') == 1){
                     // if($request->post('isCash') == 0)
@@ -215,24 +216,33 @@ class OrderController extends Controller
                     // }
                     switch ($request->post('isCash')) {
                         case '0':
-                            $restaurant->notify(new PlaceFutureOrderCash($restaurant));
+                            $message = $restaurant->order->user->full_name.' placed a Future Order with Order id '.$restaurant->order->order_number.' using Cash on Pickup. Future order pickup is on '.date('F d,Y',strtotime($restaurant->order->feature_date)).' at '.$restaurant->order->feature_time;
+                            // $restaurant->notify(new PlaceFutureOrderCash($restaurant));
+                            sendPlaceFutureOrder(1,2, $fcm_token, $title, $message, 1);
                             break;
 
                         default:
-                            $restaurant->notify(new PlaceFutureOrderCard($restaurant));
+                            $message = $restaurant->order->user->full_name.' placed a Future Order with Order id '.$restaurant->order->order_number.' using Cash on Pickup. Future order pickup is on '.date('F d,Y',strtotime($restaurant->order->feature_date)).' at '.$restaurant->order->feature_time;
+                            sendPlaceFutureOrder(1,2, $fcm_token, $title, $message, 1);
+                            // $restaurant->notify(new PlaceFutureOrderCard($restaurant));
                             break;
                     }
                 } else {
                     switch ($request->post('isCash')) {
                         case '0':
-                            $restaurant->notify(new PlaceOrderCash($restaurant));
+                            $message = $restaurant->order->user->full_name.' placed an Order with Order id '.$restaurant->order->order_number.' using Cash on Pickup.';
+                            sendPlaceFutureOrder(1,2, $fcm_token, $title, $message, 1);
+                            // $restaurant->notify(new PlaceOrderCash($restaurant));
                             break;
 
                         default:
-                            $restaurant->notify(new PlaceOrderCard($restaurant));
+                            $message = $restaurant->order->user->full_name.' placed an Order with Order id '.$restaurant->order->order_number.' using Credit Card.';
+                            sendPlaceFutureOrder(1,2, $fcm_token, $title, $message, 1);
+                            // $restaurant->notify(new PlaceOrderCard($restaurant));
                             break;
                     }
                 }
+
                 $userPoint = auth('api')->user()->total_points;
                 $redeemPoint = $request->post('point');
                 if(($redeemPoint != 0) && ($userPoint < 0)){

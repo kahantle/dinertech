@@ -184,8 +184,10 @@
                         @endphp
                         <div class="scroll-inner-blog mt-4" id="cart_items">
                             @php
+                                $userId = auth()->id(); 
                                 $cart = getCart($restaurantId = 1);
-                                $user = \App\Models\User::where('uid', $cart->uid)->first();
+                                $user = \App\Models\User::where('uid', $userId)->first();
+                                // Retrieve the authenticated user's ID
                                 $menuItem= []; 
                             @endphp
                             @if (!empty($cart->cartMenuItems))

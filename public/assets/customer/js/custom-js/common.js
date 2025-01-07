@@ -159,7 +159,8 @@ $(function() {
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
             },
-            url: "customer/add-to-cart",
+            url: baseUrl + "/add-to-cart",
+            // url: "customer/add-to-cart",
             data: data,
             dataType: "html",
             success: function (response) {
