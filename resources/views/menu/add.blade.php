@@ -80,7 +80,7 @@
                     <a href="{{ route('menu') }}" class="btn-grey"><span>Cancel</span></a>
                 </div>
                 <div class="btn-custom">
-                    <button class="btn-blue"><span>Add Menu</span></button>
+                    <button class="btn-blue"><span>Add Item</span></button>
                 </div>
             </div>
             </form>

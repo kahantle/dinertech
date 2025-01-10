@@ -191,7 +191,7 @@ return [
         'NO'  => 'NO'
     ],
     'MODIFIER_TYPE'  => [
-        'SINGLE_MODIFIER'    => 'SINGLE',
+        'SINGLE_MODIFIER'    => 'SINGLE', 
         'MULTIPLE_MODIFIER'  => 'MULTIPLE'
     ],
 ];

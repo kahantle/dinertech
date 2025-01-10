@@ -29,30 +29,30 @@ class ModifiersController extends Controller
      * Show the application dashboard.
      *
      * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function index()
-    {
-        $uid = Auth::user()->uid;
-        $restaurant = Restaurant::where('uid', $uid)->first();
-        $modifiers = ModifierGroup::where('restaurant_id', $restaurant->restaurant_id)
-        ->with('modifier_item_custome')
-        ->paginate(Config::get('constants.PAGINATION_PER_PAGE'));
+        */
+        public function index()
+        {
+            $uid = Auth::user()->uid;
+            $restaurant = Restaurant::where('uid', $uid)->first();
+            $modifiers = ModifierGroup::where('restaurant_id', $restaurant->restaurant_id)
+            ->with('modifier_item_custome')
+            ->paginate(Config::get('constants.PAGINATION_PER_PAGE'));
 
-        $user = User::where('uid', $uid)->first();
-        $pinscreen = $user->pin_notifications === 'true';
-        if ($pinscreen) {
-            $is_verified = Session::get('is_menu_pin_verify');
-            if ($is_verified) {
-                Session::put('is_menu_pin_verify', '');
-                return view('modifiers.index',compact('modifiers'));
+            $user = User::where('uid', $uid)->first();
+            $pinscreen = $user->pin_notifications === 'true';
+            if ($pinscreen) {
+                $is_verified = Session::get('is_menu_pin_verify');
+                if ($is_verified) {
+                    Session::put('is_menu_pin_verify', '');
+                    return view('modifiers.index',compact('modifiers'));
+                }
+
+                $redirect_url = route('modifier');
+                return view('account.menu_verify',compact('redirect_url'));
             }
 
-            $redirect_url = route('modifier');
-            return view('account.menu_verify',compact('redirect_url'));
+            return view('modifiers.index',compact('modifiers'));
         }
-
-        return view('modifiers.index',compact('modifiers'));
-    }
 
 
     public function addModifierGroup(ModifierGroupRequest $request)

@@ -381,7 +381,6 @@ Route::prefix('admin')->group(function () {
     Route::get('/login', 'Admin\LoginController@showLogin')->name('admin.login');
     Route::post('/login', 'Admin\LoginController@attemptLogin')->name('admin.auth.login');
     Route::post('/logout', 'Admin\LoginController@logout')->name('admin.logout');
-
     /* Forgot Password */
     Route::get('/forgot-password', 'Admin\ForgotpasswordController@forgotPasswordShow')->name('admin.auth.forgot-password');
     Route::post('/forgot-password', 'Admin\ForgotpasswordController@forgotPassword')->name('admin.auth.forget-passsword.getcode');

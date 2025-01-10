@@ -90,7 +90,7 @@ class RestaurantController extends Controller
             {
                 foreach($menuModifiers as $value)
                 {
-                    $menuModifierItem = new MenuModifierItem;
+                    $menuModifierItem = new MenuModifierItem; 
                     $menuModifierItem->menu_id = $menu->menu_id;
                     $menuModifierItem->modifier_id = $value;
                     $menuModifierItem->save();
