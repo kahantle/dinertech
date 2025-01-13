@@ -75,8 +75,8 @@ class ModifiersController extends Controller
             $modifier->is_required = ($request->is_required) ? 1 : 0;
             $modifier->allow_multiple = ($request->allow_multiple == Config::get('constants.MODIFIER_TYPE.MULTIPLE_MODIFIER')) ? 1 : 0;
             // $modifier->allow_multiple = ($request->allow_multiple)?1:0;
-            $modifier->minimum = $request->post('minimum');
-            $modifier->maximum = $request->post('maximum');
+            // $modifier->minimum = $request->post('minimum');
+            // $modifier->maximum = $request->post('maximum');
             $modifier->save();
             Toastr::success($message,'', Config::get('constants.toster'));
             return redirect()->route('modifier');
@@ -191,12 +191,12 @@ class ModifiersController extends Controller
             $modifier->allow_multiple = ($request->allow_multiple == Config::get('constants.MODIFIER_TYPE.MULTIPLE_MODIFIER')) ? 1 : 0;
 
             if ($request->allow_multiple === 'SINGLE') { 
-                $modifier->minimum = 0;
-                $modifier->maximum = 0;
+                // $modifier->minimum = 0;
+                // $modifier->maximum = 0;
                 $modifier->type = 0;
             } else {
-                $modifier->minimum = $request->post('minimum');
-                $modifier->maximum = $request->post('maximum');
+                // $modifier->minimum = $request->post('minimum');
+                // $modifier->maximum = $request->post('maximum');
                 $modifier->type = 1;
             }
             $modifier->save();
