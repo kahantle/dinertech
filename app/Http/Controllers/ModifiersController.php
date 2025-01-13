@@ -87,6 +87,7 @@ class ModifiersController extends Controller
     }
 
 
+    
     public function addModifierGroupItem(ModifierItemPriceRequest $request)
     {
         try {
@@ -107,6 +108,15 @@ class ModifiersController extends Controller
             $modifierItem->modifier_group_item_name = $request->post('modifier_group_item_name');
             $modifierItem->modifier_group_item_price = $request->post('modifier_group_item_price');
             $modifierItem->save();
+
+            //check if the modifier group allow multiple or not
+            $modifierGroup = ModifierGroup::where('restaurant_id', $restaurant->restaurant_id)->where('modifier_group_id', $request->post('modifier_item_group_id'))->first();
+            if($modifierGroup->allow_multiple == 0){
+                $modifierGroup->minimum=0;
+                $modifierGroup->maximum=0;
+                $modifierGroup->save();
+            }
+            
             Toastr::success($message,'', Config::get('constants.toster'));
             return redirect()->route('modifier');
         } catch (\Throwable $th) {
