@@ -639,6 +639,7 @@ class OrderController extends Controller
                 '" . Config::get('constants.ORDER_STATUS.INITIAL') . "', 
                 '" . Config::get('constants.ORDER_STATUS.ORDER_DUE') . "', 
                 '" . Config::get('constants.ORDER_STATUS.ACCEPTED') . "')")
+            ->with('orderItems','user')
             ->latest() // For orders with the same status, sort by the latest created_at
             ->get();
 
