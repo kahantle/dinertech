@@ -557,7 +557,6 @@ class OrderController extends Controller
                 ->where('order_progress_status',Config::get('constants.ORDER_STATUS.INITIAL'))
                 ->orWhere('order_progress_status',Config::get('constants.ORDER_STATUS.ACCEPTED'))
                 ->orWhere('order_progress_status',Config::get('constants.ORDER_STATUS.ORDER_DUE'))
-                ->with('orderItems','user')
                 ->latest()
                 ->get();
             return response()->json([
