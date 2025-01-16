@@ -508,89 +508,156 @@ class OrderController extends Controller
         }
     }
 
+    // public function getRecentOrder(Request $request)
+    // {
+    //     try {
+    //         $request_data = $request->json()->all();
+
+
+    //         $validator = Validator::make($request_data,['restaurant_id' => 'required']);
+    //         if ($validator->fails()) {
+    //             return response()->json(['success' => false, 'message' => $validator->errors()], 400);
+    //         }
+    //             //Time check
+    //         $data  = RestaurantHours::with('allTimes')->where('restaurant_id', $request->restaurant_id)->where('day', 'like', '%' . $request->day . '%')->first();
+    //         if (empty($data)) {
+    //             return response()->json(['success' => false, 'message' => 'Oops! Betty Burger is not open for orders at the time selected. Please select another time']);
+    //         }
+
+    //         $testResult  = [];
+
+    //         foreach($data->allTimes as $time) {
+    //             $openingtime =date('H:i A', strtotime($time->opening_time));
+    //             $closingtime =date('H:i A', strtotime($time->closing_time));
+    //             $openTime =date('H:i A', strtotime($request->time));
+    //             $testResult[] =$openingtime <= $openTime &&  $openTime <= $closingtime;
+    //         }
+
+    //         if (is_array($testResult)){
+    //             foreach ($testResult as $k => &$value) {
+    //                 if($value == true)
+    //                 {
+    //                     $restaurant=true;
+    //                 }
+    //                 else
+    //                 {
+    //                     $restaurant=false;
+    //                 }
+    //             }
+    //         }
+
+    //         $order = Order::where('restaurant_id', $request->post('restaurant_id'))
+    //             //->whereNull('order_status')
+    //             ->where(function($q){
+    //                 $q->where('is_feature',1);
+    //                 $q->orWhere('order_progress_status',Config::get('constants.ORDER_STATUS.INITIAL'));
+    //                 $q->orWhere('order_progress_status',Config::get('constants.ORDER_STATUS.ACCEPTED'));
+    //                 $q->orWhere('order_progress_status',Config::get('constants.ORDER_STATUS.ORDER_DUE'));
+    //             })
+    //             ->where('order_progress_status',Config::get('constants.ORDER_STATUS.INITIAL'))
+    //             ->orWhere('order_progress_status',Config::get('constants.ORDER_STATUS.ACCEPTED'))
+    //             ->orWhere('order_progress_status',Config::get('constants.ORDER_STATUS.ORDER_DUE'))
+    //             ->with('orderItems','user')
+    //             ->latest()
+    //             ->get();
+    //         return response()->json([
+    //             'resturantopen'=>$restaurant,
+    //             'order' => $order,
+    //             'auto_print_receipts' => Restaurant::select('auto_print_receipts')->where('restaurant_id', $request->post('restaurant_id'))->first()->auto_print_receipts,
+    //             'success' => true
+    //         ], 200);
+    //         // $result = [];
+    //         // foreach ($order as $key => $value) {
+    //         //     $database = app('firebase.database');
+    //         //     $url = Config::get('constants.FIREBASE_DB_NAME')."/".$request->post('restaurant_id')."/".$value->order_number."/".$value->uid."/";
+    //         //     $message = $database->getReference($url)->getvalue();
+    //         //     $count = 0 ;
+    //         //     if($message){
+    //         //         foreach ($message as $key => $value1) {
+    //         //             if(!$value1['is_read'] && $value1['created_by']=='RESTAURANT'){
+    //         //                 $count =$count+1;
+    //         //             }
+    //         //         }
+    //         //     }
+    //         //     $result[$key] = $value;
+    //         //     $result[$key]['notification_badge'] = $count ;
+    //         // }
+
+
+    //     } catch (\Throwable $th) {
+    //         $errors['success'] = false;
+    //         $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
+    //         if ($request->debug_mode == 'ON') {
+    //             $errors['debug'] = $th->getMessage();
+    //         }
+    //         return response()->json($errors, 500);
+    //     }
+    // }
     public function getRecentOrder(Request $request)
-    {
-        try {
-            $request_data = $request->json()->all();
+{
+    try {
+        $request_data = $request->json()->all();
 
-
-            $validator = Validator::make($request_data,['restaurant_id' => 'required']);
-            if ($validator->fails()) {
-                return response()->json(['success' => false, 'message' => $validator->errors()], 400);
-            }
-                //Time check
-            $data  = RestaurantHours::with('allTimes')->where('restaurant_id', $request->restaurant_id)->where('day', 'like', '%' . $request->day . '%')->first();
-            if (empty($data)) {
-                return response()->json(['success' => false, 'message' => 'Oops! Betty Burger is not open for orders at the time selected. Please select another time']);
-            }
-
-            $testResult  = [];
-
-            foreach($data->allTimes as $time) {
-                $openingtime =date('H:i A', strtotime($time->opening_time));
-                $closingtime =date('H:i A', strtotime($time->closing_time));
-                $openTime =date('H:i A', strtotime($request->time));
-                $testResult[] =$openingtime <= $openTime &&  $openTime <= $closingtime;
-            }
-
-            if (is_array($testResult)){
-                foreach ($testResult as $k => &$value) {
-                    if($value == true)
-                    {
-                        $restaurant=true;
-                    }
-                    else
-                    {
-                        $restaurant=false;
-                    }
-                }
-            }
-
-            $order = Order::where('restaurant_id', $request->post('restaurant_id'))
-                //->whereNull('order_status')
-                ->where(function($q){
-                    $q->where('is_feature',1);
-                    $q->orWhere('order_progress_status',Config::get('constants.ORDER_STATUS.INITIAL'));
-                    $q->orWhere('order_progress_status',Config::get('constants.ORDER_STATUS.ACCEPTED'));
-                    $q->orWhere('order_progress_status',Config::get('constants.ORDER_STATUS.ORDER_DUE'));
-                })
-                ->where('order_progress_status',Config::get('constants.ORDER_STATUS.INITIAL'))
-                ->orWhere('order_progress_status',Config::get('constants.ORDER_STATUS.ACCEPTED'))
-                ->orWhere('order_progress_status',Config::get('constants.ORDER_STATUS.ORDER_DUE'))
-                ->with('orderItems','user')
-                ->latest()
-                ->get();
-            return response()->json([
-                'resturantopen'=>$restaurant,
-                'order' => $order,
-                'auto_print_receipts' => Restaurant::select('auto_print_receipts')->where('restaurant_id', $request->post('restaurant_id'))->first()->auto_print_receipts,
-                'success' => true
-            ], 200);
-            // $result = [];
-            // foreach ($order as $key => $value) {
-            //     $database = app('firebase.database');
-            //     $url = Config::get('constants.FIREBASE_DB_NAME')."/".$request->post('restaurant_id')."/".$value->order_number."/".$value->uid."/";
-            //     $message = $database->getReference($url)->getvalue();
-            //     $count = 0 ;
-            //     if($message){
-            //         foreach ($message as $key => $value1) {
-            //             if(!$value1['is_read'] && $value1['created_by']=='RESTAURANT'){
-            //                 $count =$count+1;
-            //             }
-            //         }
-            //     }
-            //     $result[$key] = $value;
-            //     $result[$key]['notification_badge'] = $count ;
-            // }
-
-
-        } catch (\Throwable $th) {
-            $errors['success'] = false;
-            $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
-            if ($request->debug_mode == 'ON') {
-                $errors['debug'] = $th->getMessage();
-            }
-            return response()->json($errors, 500);
+        // Validate the input
+        $validator = Validator::make($request_data, ['restaurant_id' => 'required']);
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'message' => $validator->errors()], 400);
         }
+
+        // Time check
+        $data = RestaurantHours::with('allTimes')
+            ->where('restaurant_id', $request->restaurant_id)
+            ->where('day', 'like', '%' . $request->day . '%')
+            ->first();
+
+        if (empty($data)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Oops! Restaurant is not open for orders at the time selected. Please select another time'
+            ]);
+        }
+
+        $testResult = [];
+        foreach ($data->allTimes as $time) {
+            $openingtime = date('H:i A', strtotime($time->opening_time));
+            $closingtime = date('H:i A', strtotime($time->closing_time));
+            $openTime = date('H:i A', strtotime($request->time));
+            $testResult[] = $openingtime <= $openTime && $openTime <= $closingtime;
+        }
+
+        $restaurant = in_array(true, $testResult, true);
+
+        // Fetch orders and sort by status (INITIAL -> ORDER_DUE -> ACCEPTED)
+        $order = Order::where('restaurant_id', $request->post('restaurant_id'))
+            ->whereIn('order_progress_status', [
+                Config::get('constants.ORDER_STATUS.INITIAL'),
+                Config::get('constants.ORDER_STATUS.ORDER_DUE'),
+                Config::get('constants.ORDER_STATUS.ACCEPTED')
+            ])
+            ->with('orderItems', 'user')
+            ->orderByRaw("FIELD(order_progress_status, 
+                '" . Config::get('constants.ORDER_STATUS.INITIAL') . "', 
+                '" . Config::get('constants.ORDER_STATUS.ORDER_DUE') . "', 
+                '" . Config::get('constants.ORDER_STATUS.ACCEPTED') . "')")
+            ->latest() // For orders with the same status, sort by the latest created_at
+            ->get();
+
+        return response()->json([
+            'restaurantopen' => $restaurant,
+            'order' => $order,
+            'auto_print_receipts' => Restaurant::select('auto_print_receipts')
+                ->where('restaurant_id', $request->post('restaurant_id'))
+                ->first()->auto_print_receipts,
+            'success' => true
+        ], 200);
+
+    } catch (\Throwable $th) {
+        $errors['success'] = false;
+        $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
+        if ($request->debug_mode == 'ON') {
+            $errors['debug'] = $th->getMessage();
+        }
+        return response()->json($errors, 500);
     }
+  }
 }
