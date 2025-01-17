@@ -195,7 +195,7 @@ class OrderController extends Controller
     {
         try {
             $request_data = $request->json()->all();
-            dd('makeOrder API called', ['payload' => $request->all()]);
+            
             $validator = Validator::make($request_data,[
                 'restaurant_id' => 'required',
                 'order_id' => 'required',
@@ -213,7 +213,7 @@ class OrderController extends Controller
             ->whereNull('order_status')
             ->first();
             if(!$order){
-                dd('Order fetched.', ['order' => $order]);
+                
                 return response()->json(['message' => "Invalid Order or already procceed.", 'success' => true], 401);
             }
 
@@ -251,7 +251,7 @@ class OrderController extends Controller
                 return response()->json(['message' => "Order accepted successfully.", 'success' => true], 200);
             }else{
                 DB::rollBack();
-                dd('Failed to save order.');
+                
                 return response()->json(['message' => "Order does not accepted successfully.", 'success' => true], 401);
             }
         } catch (\Throwable $th) {
