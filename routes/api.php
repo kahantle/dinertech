@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Customer\CartController;
 use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\customer\ProfileController;
+use App\Http\Controllers\Api\Restaurant\OrderController;
 
 /*
 |--------------------------------------------------------------------------
