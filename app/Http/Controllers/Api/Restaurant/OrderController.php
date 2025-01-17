@@ -242,10 +242,10 @@ class OrderController extends Controller
                     'sent_from'=> Config::get('constants.ROLES.RESTAURANT'),
                     'user_id'=>$customer_id
                 ];
-                $newPostKey = $database->getReference(Config::get('constants.FIREBASE_DB_NAME'))->push()->getKey();
-                $url = Config::get('constants.FIREBASE_DB_NAME').'/'.$user_id.'/'.$order_id."/"."/".$customer_id."/" ;
-                $updates = [$url.$newPostKey  => $postData];
-                $database->getReference()->update($updates);
+                // $newPostKey = $database->getReference(Config::get('constants.FIREBASE_DB_NAME'))->push()->getKey();
+                // $url = Config::get('constants.FIREBASE_DB_NAME').'/'.$user_id.'/'.$order_id."/"."/".$customer_id."/" ;
+                // $updates = [$url.$newPostKey  => $postData];
+                // $database->getReference()->update($updates);
                 return response()->json(['message' => "Order accepted successfully.", 'success' => true], 200);
             }else{
                 DB::rollBack();
@@ -258,7 +258,7 @@ class OrderController extends Controller
             if ($request->debug_mode == 'ON') {
                 $errors['debug'] = $th->getMessage();
             }
-            return response()->json($errors, 500);
+            return response()->json($errors, 300);
         }
     }
 
