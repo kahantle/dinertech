@@ -195,6 +195,7 @@ class OrderController extends Controller
     {
         try {
             $request_data = $request->json()->all();
+            dd('makeOrder API called', ['payload' => $request->all()]);
             $validator = Validator::make($request_data,[
                 'restaurant_id' => 'required',
                 'order_id' => 'required',
@@ -212,6 +213,7 @@ class OrderController extends Controller
             ->whereNull('order_status')
             ->first();
             if(!$order){
+                dd('Order fetched.', ['order' => $order]);
                 return response()->json(['message' => "Invalid Order or already procceed.", 'success' => true], 401);
             }
 
@@ -242,13 +244,14 @@ class OrderController extends Controller
                     'sent_from'=> Config::get('constants.ROLES.RESTAURANT'),
                     'user_id'=>$customer_id
                 ];
-                // $newPostKey = $database->getReference(Config::get('constants.FIREBASE_DB_NAME'))->push()->getKey();
-                // $url = Config::get('constants.FIREBASE_DB_NAME').'/'.$user_id.'/'.$order_id."/"."/".$customer_id."/" ;
-                // $updates = [$url.$newPostKey  => $postData];
-                // $database->getReference()->update($updates);
+                $newPostKey = $database->getReference(Config::get('constants.FIREBASE_DB_NAME'))->push()->getKey();
+                $url = Config::get('constants.FIREBASE_DB_NAME').'/'.$user_id.'/'.$order_id."/"."/".$customer_id."/" ;
+                $updates = [$url.$newPostKey  => $postData];
+                $database->getReference()->update($updates);
                 return response()->json(['message' => "Order accepted successfully.", 'success' => true], 200);
             }else{
                 DB::rollBack();
+                dd('Failed to save order.');
                 return response()->json(['message' => "Order does not accepted successfully.", 'success' => true], 401);
             }
         } catch (\Throwable $th) {
@@ -258,7 +261,7 @@ class OrderController extends Controller
             if ($request->debug_mode == 'ON') {
                 $errors['debug'] = $th->getMessage();
             }
-            return response()->json($errors, 300);
+            return response()->json($errors, 500);
         }
     }
 
