@@ -298,7 +298,7 @@ class OrderController extends Controller
             if($order->save()){
                 DB::commit();
                 $user = User::find($order->uid);
-                $user->notify(new DeclineOrder($order));
+                // $user->notify(new DeclineOrder($order));
                 return response()->json(['message' => "Order declined successfully.", 'success' => true], 200);
             }else{
                 DB::rollBack();
@@ -454,7 +454,7 @@ class OrderController extends Controller
                 if($order->save()){
                     DB::commit();
                     $user = User::find($order->uid);
-                    $user->notify(new PreparedOrder($restaurant));
+                    // $user->notify(new PreparedOrder($restaurant));
                     return response()->json(['message' => "Order has been Prepared Now.", 'success' => true], 200);
                 }else{
                     DB::rollBack();
