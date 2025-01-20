@@ -227,7 +227,7 @@ class OrderController extends Controller
                 $user = User::find($order->uid);
                 // echo($restaurant);
                 // return;
-                $user->notify(new AcceptOrder($restaurant));
+                // $user->notify(new AcceptOrder($restaurant));
                 $database = app('firebase.database');
                 $order_id =  $order->order_number;
                 $customer_id = $order->uid;
@@ -261,7 +261,7 @@ class OrderController extends Controller
             if ($request->debug_mode == 'ON') {
                 $errors['debug'] = $th->getMessage();
             }
-            return response()->json($errors, 500);
+            return response()->jsno($errors, 500);
         }
     }
 
