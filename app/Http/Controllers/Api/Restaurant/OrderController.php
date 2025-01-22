@@ -284,7 +284,7 @@ class OrderController extends Controller
             // ->whereNull('order_status')
             // ->first();
             $order = Order::select('orders.order_id','orders.uid','orders.restaurant_id',
-            'orders.stripe_payment_id','orders.order_number','restaurants.restaurant_name')
+            'orders.stripe_payment_id','orders.order_number','restaurants.restaurant_name','orders.order_status','orders.order_progress_status')
             ->join('restaurants','restaurants.restaurant_id','orders.restaurant_id')
             ->where('orders.restaurant_id', $request->post('restaurant_id'))
             ->first();
