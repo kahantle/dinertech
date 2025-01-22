@@ -621,11 +621,24 @@ class OrderController extends Controller
         }
 
         $testResult = [];
+        // foreach ($data->allTimes as $time) {
+        //     $openingtime = date('H:i A', strtotime($time->opening_time));
+        //     $closingtime = date('H:i A', strtotime($time->closing_time));
+        //     $openTime = date('H:i A', strtotime($request->time));
+        //     $testResult[] = $openingtime <= $openTime && $openTime <= $closingtime;
+        // }
+
         foreach ($data->allTimes as $time) {
-            $openingtime = date('H:i A', strtotime($time->opening_time));
-            $closingtime = date('H:i A', strtotime($time->closing_time));
-            $openTime = date('H:i A', strtotime($request->time));
-            $testResult[] = $openingtime <= $openTime && $openTime <= $closingtime;
+            $openingTimeTimestamp = strtotime($time->opening_time);
+            $closingTimeTimestamp = strtotime($time->closing_time);
+            $openTimeTimestamp = strtotime($request->time);
+
+    // Handle cases where closing time is after midnight
+            if ($closingTimeTimestamp < $openingTimeTimestamp) {
+                $closingTimeTimestamp += 86400; // Add 24 hours to closing time
+            }
+
+            $testResult[] = $openingTimeTimestamp <= $openTimeTimestamp && $openTimeTimestamp <= $closingTimeTimestamp;
         }
 
         $restaurant = in_array(true, $testResult, true);
