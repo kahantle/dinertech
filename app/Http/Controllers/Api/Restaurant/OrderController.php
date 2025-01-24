@@ -19,6 +19,7 @@ use App\Notifications\AcceptOrder;
 use App\Notifications\DeclineOrder;
 use App\Notifications\PreparedOrder;
 use DB;
+use Carbon\Carbon;
 
 class OrderController extends Controller
 {
@@ -228,6 +229,10 @@ class OrderController extends Controller
                 // echo($restaurant);
                 // return;
                 // $user->notify(new AcceptOrder($restaurant));
+                $title = "Order Accepted";
+                $message = "Your ".$restaurant->restaurant_name." Order Is Accepted!";
+                sendPlaceFutureOrder($restaurant->uid,$user->uid, $user->fcm_id, $title, $message, 1);
+
                 $database = app('firebase.database');
                 $order_id =  $order->order_number;
                 $customer_id = $order->uid;
@@ -299,6 +304,10 @@ class OrderController extends Controller
                 DB::commit();
                 $user = User::find($order->uid);
                 // $user->notify(new DeclineOrder($order));
+                $title = "Order Declined";
+                $message = "Your ".$restaurant->restaurant_name." Order ".$order->order_number." has declined by The Restaurant.If any amount debit from your account, that will be credited in your account with in 7 Days.";
+                sendPlaceFutureOrder($restaurant->uid,$user->uid, $user->fcm_id, $title, $message, 1);
+
                 return response()->json(['message' => "Order declined successfully.", 'success' => true], 200);
             }else{
                 DB::rollBack();
@@ -399,8 +408,12 @@ class OrderController extends Controller
                                 if($refund_history->save()){
 
                                     DB::commit();
-                                    // $user = User::find($order->uid);
+                                    $user = User::find($order->uid);
+                                    $restaurant = Restaurant::find($order->restaurant_id);
                                     // $user->notify(new DeclineOrder($order));
+                                    $title = "Order Declined";
+                                    $message = "Your ".$restaurant->restaurant_name." Order ".$order->order_number." has declined by The Restaurant.If any amount debit from your account, that will be credited in your account with in 7 Days.";
+                                    sendPlaceFutureOrder($restaurant->uid,$user->uid, $user->fcm_id, $title, $message, 1);
                                     return response()->json(['message' => 'Your refund has been processed & refund amount will reflected in you account within 3 business days!!','success' => true], 200);
 
                                 } else {
@@ -455,6 +468,10 @@ class OrderController extends Controller
                     DB::commit();
                     $user = User::find($order->uid);
                     // $user->notify(new PreparedOrder($restaurant));
+                    $title = "Order Prepared";
+                    $message = "Your ".$restaurant->restaurant_name." Order Is Ready!";
+                    sendPlaceFutureOrder($restaurant->uid,$user->uid, $user->fcm_id, $title, $message, 1);
+                    
                     return response()->json(['message' => "Order has been Prepared Now.", 'success' => true], 200);
                 }else{
                     DB::rollBack();
@@ -608,9 +625,11 @@ class OrderController extends Controller
         }
 
         // Time check
+        $current_dt = Carbon::now();
+        $day = $current_dt->format('l');
         $data = RestaurantHours::with('allTimes')
             ->where('restaurant_id', $request->restaurant_id)
-            ->where('day', 'like', '%' . $request->day . '%')
+            ->where('day', 'like', '%' . $day ?? $request->day . '%')
             ->first();
 
         if (empty($data)) {
@@ -627,13 +646,13 @@ class OrderController extends Controller
         //     $openTime = date('H:i A', strtotime($request->time));
         //     $testResult[] = $openingtime <= $openTime && $openTime <= $closingtime;
         // }
-
-        foreach ($data->allTimes as $time) {
+        // return response()->json([$data]);
+       /* foreach ($data->allTimes as $time) {
             $openingTimeTimestamp = strtotime($time->opening_time);
             $closingTimeTimestamp = strtotime($time->closing_time);
             $openTimeTimestamp = strtotime($request->time);
 
-    // Handle cases where closing time is after midnight
+            // Handle cases where closing time is after midnight
             if ($closingTimeTimestamp < $openingTimeTimestamp) {
                 $closingTimeTimestamp += 86400; // Add 24 hours to closing time
             }
@@ -641,6 +660,24 @@ class OrderController extends Controller
             $testResult[] = $openingTimeTimestamp <= $openTimeTimestamp && $openTimeTimestamp <= $closingTimeTimestamp;
         }
 
+        $restaurant = in_array(true, $testResult, true);
+        */
+        foreach ($data->allTimes as $time) {
+            // Convert times to timestamps
+            $openingTimeTimestamp = strtotime($time->opening_time);
+            $closingTimeTimestamp = strtotime($time->closing_time);
+            $currentTimestamp = strtotime($current_dt->format('H:i'));
+
+            // Handle cases where closing time is after midnight
+            if ($closingTimeTimestamp < $openingTimeTimestamp) {
+                $closingTimeTimestamp += 86400; // Add 24 hours to closing time
+            }
+
+            // Check if the current time is within the opening and closing times
+            $testResult[] = $openingTimeTimestamp <= $currentTimestamp && $currentTimestamp <= $closingTimeTimestamp;
+        }
+
+        // Determine if the restaurant is open
         $restaurant = in_array(true, $testResult, true);
 
         // Fetch orders and sort by status (INITIAL -> ORDER_DUE -> ACCEPTED)

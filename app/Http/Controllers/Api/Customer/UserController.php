@@ -442,10 +442,14 @@ class UserController extends Controller
                 $order->where('order_number', $orderId)->where('restaurant_id', $restaurantId)->first();
             }])->first();
             $messageData = ['message' => $message,'order_id' => (string) $restaurant->order->order_id, 'order_number' => (string) $restaurant->order->order_number];
-            $restaurant->notify(new RestaurantChat($messageData));
+            // $restaurant->notify(new RestaurantChat($messageData));
+            $user = User::where('uid', Order::where('order_number', $orderId)->first()->uid)->first();
+            $title = "Chat message";
+            $message = $messageData['message'];
+            sendPlaceFutureOrder($user->uid, $restaurantId, $restaurant->user->fcm_id, $title, $message, 1);
             $messageCount = $restaurant->order->customer_msg_count + 1;
             Order::where('order_id',$restaurant->order->order_id)->where('restaurant_id',$restaurantId)->update(['customer_msg_count' => $messageCount]);
-            return response()->json(['message' => 'Chat notification send successfully.', 'success' => true], 200);
+            return response()->json(['message' => 'Chat notification send successfully.', 'success' => true, 'fcm'=>$restaurant->user->fcm_id], 200);
         } catch (\Throwable $th) {
             $errors['success'] = false;
             $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');

@@ -10,6 +10,7 @@ use App\Models\RestaurantHours;
 use App\Models\RestaurantHoursTimes;
 use Config;
 use DB;
+use Carbon\Carbon;
 class RestaurantHoursController extends Controller
 {
 
@@ -185,16 +186,17 @@ class RestaurantHoursController extends Controller
             $validator = Validator::make($request_data, ['restaurant_id' => 'required']);
             if ($validator->fails()) {
                 return response()->json(['success' => false, 'message' => $validator->errors()], 400);
-            }
+            } 
             // $list = RestaurantHours::
             // select('restaurant_hours.*',DB::raw('group_concat(day) as days'))
             // ->where('restaurant_id', $request->post('restaurant_id'))
             // ->groupBy('restaurant_hours.hours_group_id')
             // ->get();
+            $curdt = Carbon::now();
             $list  = RestaurantHours::select('restaurant_hour_id','hours_group_id','restaurant_id',\DB::raw("GROUP_CONCAT(day) as `groupDayS`"))->with(['allTimes' => function($query){
                 $query->select('restaurant_time_id','restaurant_hour_id','opening_time','closing_time','hour_type');
             }])->groupBy('hours_group_id')->where('restaurant_id', $request->post('restaurant_id'))->get();
-            return response()->json(['list' => $list, 'success' => true], 200);
+            return response()->json(['list' => $list, 'success' => true, 'current_time'=>$curdt->format('Y-m-d H:i:s')], 200);
         } catch (\Throwable $th) {
             $errors['success'] = false;
             $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');

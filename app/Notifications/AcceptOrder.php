@@ -45,7 +45,7 @@ class AcceptOrder extends Notification
      */
     public function toFcm($Notifiable)
     { 
-
+ 
         return FcmMessage::create()
             ->setData(['notification_type' => 'Accept Order'])
             ->setNotification(\NotificationChannels\Fcm\Resources\Notification::create()

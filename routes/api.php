@@ -50,6 +50,10 @@ Route::prefix('customer')->namespace('Api\Customer')->group(function () {
         Route::post('/promotion-list', 'PromotionController@getRecords')->name('customer.promotion.without.auth.get');
         Route::post('/logout', 'UserController@logout')->name('customer.logout');
 
+        /***
+         * Testing Notif
+         */
+        Route::post('notif/send', 'Notifcontroller@send');
         //Role Customer
         Route::middleware(['auth:api'])->group(function () {
 
@@ -221,7 +225,7 @@ Route::prefix('customer')->namespace('Api\Customer')->group(function () {
                 Route::post('/status', 'PinController@status')->name('pin.status');
             });
             Route::prefix('order')->group(function () {
-                Route::post('/list', '  @getOrderList')->name('order.list');
+                Route::post('/list', 'OrderController@getOrderList')->name('order.list');
                 Route::post('/recent', 'OrderController@getRecentOrder')->name('order.recent');
                 Route::post('/id', 'OrderController@getOrderById')->name('order.id');
                 Route::post('/accept', 'OrderController@makeOrder')->name('order.accept');
