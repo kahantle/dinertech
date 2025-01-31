@@ -243,9 +243,16 @@ class CartController extends Controller
                 }
                 if (isset($request_data['cartmenuitemid'])) {
                     $cart_item = CartItem::where('cart_menu_item_id', $request_data['cartmenuitemid'])->first();
+                    $mn_price = $cart_item->menu_price;// return response()->json([
+                    //     'cart_menu_item_id'=>$cart_item
+                    // ]);
                     if ($cart_item->menu_qty == "1") {
                         $cartitemdelete = $cart_item->delete();
                         if ($cartitemdelete == true) {
+                            // return response()->json([
+                            //     'cart_menu_item_id'=>$cart_item
+                            // ]);
+                            // $finalTotal -= $cart_item->menu_price;
                             foreach ($request->post('menu_item') as $key => $menuItem) {
                                 $cartMenuItemData = new CartItem;
                                 $cartMenuItemData->cart_id = $check_cart->cart_id;
@@ -288,8 +295,36 @@ class CartController extends Controller
                                         }
                                     }
                                 }
-                                $finalTotal += 0.00;
+                                // $finalTotal += 0.00;
+                                $finalTotal += $cart_sub_total;
                             }
+                            // Calculate tax rate
+                            $rate = ($check_cart->tax_charge / $check_cart->sub_total) * 100;
+
+                            // Calculate new subtotal
+                            $finalTotal -= $mn_price;
+
+                            // Calculate new tax charge
+                            $tax_charge = ($rate * $finalTotal) / 100;
+
+                            // Calculate total due
+                            $total_due = $finalTotal + $tax_charge;
+
+                            // Determine order type
+                            $orderType = Config::get('constants.ORDER_TYPE.' . ($request->post('order_type') == Config::get('constants.ORDER_TYPE.1') ? '1' : '2'));
+
+                            // Update cart
+                            Cart::where([
+                                'uid' => $uid,
+                                'restaurant_id' => $request->post('restaurant_id'),
+                                'cart_id' => $check_cart->cart_id
+                            ])->update([
+                                'order_type' => $orderType,
+                                'sub_total'  => number_format($finalTotal, 2, '.', ''),
+                                'tax_charge' => number_format($tax_charge, 2, '.', ''),
+                                'total_due'  => number_format($total_due, 2, '.', '')
+                            ]);
+                            return response()->json(['success' => true, 'message' => "Item added to the cart successfully."], 200);
                         }
                     } elseif ($cart_item) {
                         $qty = $cart_item->menu_qty;
