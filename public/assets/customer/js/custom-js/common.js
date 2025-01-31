@@ -193,15 +193,17 @@ $(function() {
             dataType: "json",
             success: response => {
                 if (response) {
+                    console.log(response)
+                    console.log(window.location.href)
                     $(".add-order-" + response.menu_id).removeClass("d-none");
                     $(".product-quantity-" + response.menu_id).removeClass("d-inline-flex").addClass("d-none");
                     $("#checkout").load(window.location.href + " #checkout");
+                    // $(".content").load(
+                    //     window.location.href + " .content"
+                    // );
                     $(".scroll-inner-blog").load(
                         window.location.href + " .scroll-inner-blog"
                     );
-                    $(".content").load(
-                        window.location.href + " .content"
-                    )
                 }
             }
         });

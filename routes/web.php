@@ -102,7 +102,7 @@ Route::group(['middleware' => ['auth:web']], function () {
         Route::get('delete-item/{id}', 'ModifiersController@deleteItem')->name('delete.modifier.item.post');
         Route::post('modifier_sequence_store', 'ModifiersController@storeModifierSequence')->name('store.modifier.sequence');
 
-          /* New Added */
+        /* New Added */
         Route::post('/store', 'ModifiersController@storeModifierGroup')->name('store.modifier.post');
         Route::post('/edit', 'ModifiersController@editModifierGroupNew')->name('edit.modifier.post.new');
         Route::post('item', 'ModifiersController@addModifierGroupItemNew')->name('add.modifier.item.post.new');

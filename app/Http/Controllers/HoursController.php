@@ -44,6 +44,7 @@ class HoursController extends Controller
 
       $uid = Auth::user()->uid;
       $restaurant = Restaurant::where('uid', $uid)->first();
+      // dd(json_decode($request->groupOfTime));
         try {
           if($request->post('day') ){
               $countRestaurantHours = RestaurantHours::where('restaurant_id',$restaurant->restaurant_id)

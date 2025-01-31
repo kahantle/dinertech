@@ -266,7 +266,7 @@
                                 <label for="time_mode_pm_e">PM</label>
                             </div>
                         </div>
-                    </div>
+                    </div> 
                 </div>
                 <div class="modal-footer justify-content-center">
                     <div>
@@ -290,7 +290,7 @@
 <script>
     $(document).ready(function() {
 
-        var dynamicTime = [];
+        var dynamicTime = JSON.parse(localStorage.getItem('timeStoreData')) ?? [];
         AppendTimeTable();
 
         /* Append Times */
@@ -299,9 +299,20 @@
             var timeStoreData = localStorage.getItem('timeStoreData');
             var loopData = jQuery.parseJSON( timeStoreData ) ?? [];
             $.each(loopData, function(key, element) {
-                $('#appendTimeTb').append('<tr><td>'+element.start+' - '+element.end+'</td><td>'+element.type+'</td><td><button class="btn btn-danger btn-sm ArraySlice" data-id="'+key+'">Delete</button></td></tr>');
+                $('#appendTimeTb').append('<tr><td>'+element.start+' - '+element.end+'</td><td>'+element.type+'</td><td><button type="button" class="btn btn-danger btn-sm ArraySlice" data-id="'+key+'" id="dlt'+key+'">Delete</button></td></tr>');
             });
         }
+
+        /* Delete time */
+        $(document).on('click', '.ArraySlice', function() {
+            var id = $(this).data('id'); // Get the row index
+
+            if (dynamicTime.length > id) {
+                dynamicTime.splice(id, 1); // Remove the item at index 'id'
+                localStorage.setItem('timeStoreData', JSON.stringify(dynamicTime)); // Update storage
+                AppendTimeTable(); // Refresh table
+            }
+        });
 
         /* Time Convert Function */
         const convertTime12to24 = (time12h) => {
