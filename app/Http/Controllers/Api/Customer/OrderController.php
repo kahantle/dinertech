@@ -203,7 +203,8 @@ class OrderController extends Controller
                     $order->with('user')->where('uid',$uid)->where('order_number',$orderNumber)->first();
                 }])->find($request->post('restaurant_id'));
                 $title = "Place Order";
-                $fcm_token = $restaurant->order->user->fcm_id;
+                // $fcm_token = $restaurant->order->user->fcm_id;
+                $fcm_token = $restaurant->user->fcm_id;
 
                 if($request->post('is_feature') == 1){
                     // if($request->post('isCash') == 0)
