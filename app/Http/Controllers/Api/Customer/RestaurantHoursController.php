@@ -9,6 +9,7 @@ use App\Models\Restaurant;
 use App\Models\RestaurantHours;
 use Config;
 use DateTime;
+use Carbon\Carbon;
 
 
 class RestaurantHoursController extends Controller
@@ -72,8 +73,40 @@ class RestaurantHoursController extends Controller
         // {
         //     return response()->json(['success' => false, 'message' => "Restaurant can't able to accept online order in this time !"]);
         // }
+ // check if the retaurant is open or not
 
-        return response()->json(['success' => true, 'message' => 'Restaurant founded successfully..']);
+            // Time check
+            $current_dt = Carbon::now();
+            $day = $current_dt->format('l');
+            $data = RestaurantHours::with('allTimes')
+                ->where('restaurant_id', $request->restaurant_id)
+                ->where('day', 'like', '%' . $day ?? $request->day . '%')
+                ->first();
+
+            $testResult = [];
+            if (($data)) {
+
+
+                foreach ($data->allTimes as $time) {
+                    // Convert times to timestamps
+                    $openingTimeTimestamp = strtotime($time->opening_time);
+                    $closingTimeTimestamp = strtotime($time->closing_time);
+                    $currentTimestamp = strtotime($current_dt->format('H:i'));
+
+                    // Handle cases where closing time is after midnight
+                    if ($closingTimeTimestamp < $openingTimeTimestamp) {
+                        $closingTimeTimestamp += 86400; // Add 24 hours to closing time
+                    }
+
+                    // Check if the current time is within the opening and closing times
+                    $testResult[] = $openingTimeTimestamp <= $currentTimestamp && $currentTimestamp <= $closingTimeTimestamp;
+                }
+
+            }
+            // Determine if the restaurant is open
+            $restaurant = in_array(true, $testResult, true);
+
+        return response()->json(['restaurantopen' => $restaurant, 'success' => true, 'message' => 'Restaurant founded successfully..']);
 
     }
 }

@@ -623,7 +623,11 @@ class OrderController extends Controller
         if ($validator->fails()) {
             return response()->json(['success' => false, 'message' => $validator->errors()], 400);
         }
-
+        
+        if ($fcmId = $request->post('fcm_id')) {
+            Restaurant::where('restaurant_id', $request->post('restaurant_id'))->first()?->user()?->update(['fcm_id' => $fcmId]);
+        }
+        
         // Time check
         $current_dt = Carbon::now();
         $day = $current_dt->format('l');

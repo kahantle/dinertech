@@ -51,6 +51,9 @@ class UserController extends Controller
                 return response()->json(['success' => false, 'message' => "Please verify this account."], 400);
             }
             if ($user) {
+                // save the fcmID
+                $user->fcm_id = $request->post('fcm_id');
+                $user->save();
                 if (Hash::check($request->post('password'), $user->password)) {
                     $token = $user->createToken('Laravel Password Grant Client')->accessToken;
                     $user = $user->with('restaurant')
