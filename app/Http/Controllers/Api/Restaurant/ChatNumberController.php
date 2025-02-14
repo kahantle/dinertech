@@ -113,7 +113,8 @@ class ChatNumberController extends Controller
                 if($messages){
                     foreach ($messages as $key => $value) {
                         if ($value['sent_from'] == Config::get('constants.ROLES.CUSTOMER')) {
-                            $updates = (object)[];
+                            // $updates = (object)[];
+                            $updates = [];
                             $value['isseen'] = true;
                             $updateUrl = $url.'/'.$key.'/';
                             $updates[$updateUrl]  = $value;
