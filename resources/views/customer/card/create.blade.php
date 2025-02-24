@@ -94,7 +94,7 @@
                                             </div>
                                         </form>
                                     </div>
-                                    <div class="row mx-auto mt-4">
+                                    {{-- <div class="row mx-auto mt-4">
                                         <div class="col-md-3">
                                             <img src="{{ asset('assets/customer/images/visa.png') }}"
                                                 class="rounded card-image">
@@ -111,7 +111,7 @@
                                             <img src="{{ asset('assets/customer/images/discover.png') }}"
                                                 class="rounded card-image">
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
                         </div>

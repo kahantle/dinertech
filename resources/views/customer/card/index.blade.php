@@ -169,7 +169,14 @@
                                             </div>
                                         </form>
                                     </div>
-                                    <div class="row mx-auto mt-4">
+                                    <div class="row mx-auto mt-4 d-flex justify-content-center align-items-center gap-3">
+                                        <img src="{{ asset('assets/customer/images/visa.png') }}" class="rounded card-image ml-3">
+                                        <img src="{{ asset('assets/customer/images/master_card.png') }}" class="rounded card-image ml-3">
+                                        <img src="{{ asset('assets/customer/images/american-express_1.png') }}" class="rounded card-image ml-3">
+                                        <img src="{{ asset('assets/customer/images/discover.png') }}" class="rounded card-image ml-3">
+                                    </div>
+                                    
+                                    {{-- <div class="row mx-auto mt-4">
                                         <div class="col-md-3 col-6 text-center">
                                             <img src="{{asset('assets/images/visa.png')}}" class="rounded card-image">
                                         </div>
@@ -184,7 +191,7 @@
                                         <div class="col-md-3 col-6 text-center">
                                             <img src="{{asset('assets/images/discover.png')}}" class="rounded card-image">
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
                         </div>

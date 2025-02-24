@@ -38,7 +38,7 @@ class CardController extends Controller
         $data['cards'] = getUserCards(1,$uid);
         $data['orderDetails'] = array();
         $data['title'] = 'Payment Cards';
-        return view('customer.card.index',$data);
+        return view('customer.card.index',$data); 
 
     }
 

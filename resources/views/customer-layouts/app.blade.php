@@ -8,6 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8" content="{{route('customer.index')}}" id="base-url">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    {{-- Js for date  --}}<!-- jQuery (Required) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- jQuery UI (Required for datepicker) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
     <link rel="shortcut icon" type="image/x-icon" href="{{asset('assets/customer/images/favicon.ico')}}" />
     <style>
         button.owl-prev{

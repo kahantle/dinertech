@@ -49,6 +49,7 @@ Route::prefix('customer')->namespace('Api\Customer')->group(function () {
         Route::post('/modifier-list', 'ModifierController@getModifierList')->name('customer.modifier.without.auth.list');
         Route::post('/promotion-list', 'PromotionController@getRecords')->name('customer.promotion.without.auth.get');
         Route::post('/logout', 'UserController@logout')->name('customer.logout');
+        Route::post('/get-hours', 'RestaurantHoursController@get')->name('customer.menu.get-hours');
 
         /***
          * Testing Notif

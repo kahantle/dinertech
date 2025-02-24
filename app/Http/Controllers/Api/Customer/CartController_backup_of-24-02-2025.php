@@ -841,18 +841,13 @@ class CartController extends Controller
                             $cartItem->menu_qty = $menuNewQuantity;
                             $cartItem->menu_total = (float)$menu_price * (float)$menuNewQuantity + (float)$modifiertotal;
                             $cartItem->save();
-                            $cart = Cart::where('uid', $uid)->where('restaurant_id', $request->post('restaurant_id'))->where('cart_id', $check_cart->cart_id)->first();
+
                             $subtotal = CartItem::where('cart_id', $check_cart->cart_id)->sum('menu_total');
-                            $restaurant = Restaurant::where('restaurant_id',$request->post('restaurant_id'))->first();
-                            $salesTax = $restaurant->sales_tax;
-                            $salesDiscount = $cart->discount_charge;
-                            $taxCharge = ($subtotal * $salesTax) / 100;
-                            $finalTotal = $subtotal + $taxCharge - $salesDiscount;
-                            // $cart->update(['sub_total' => (float)$subtotal, 'total_due' => (float)$finalTotal]);
-                            $cart->sub_total = (float)$subtotal;
-                            $cart->total_due = (float)$finalTotal;
-                            $cart->save();
-                            // Cart::where('uid', $uid)->where('restaurant_id', $request->post('restaurant_id'))->where('cart_id', $check_cart->cart_id)->update(['sub_total' => (float)$subtotal, 'total_due' => (float)$finalTotal]);
+                            // $restaurant = Restaurant::where('restaurant_id',$request->post('restaurant_id'))->first();
+                            // $salesTax = $restaurant->sales_tax;
+                            // $taxCharge = ($subtotal * $salesTax) / 100;
+                            // $finalTotal = $subtotal + $taxCharge;
+                            Cart::where('uid', $uid)->where('restaurant_id', $request->post('restaurant_id'))->where('cart_id', $check_cart->cart_id)->update(['sub_total' => (float)$subtotal, 'total_due' => (float)$subtotal]);
                             return response()->json(['message' => "Cart quantity decrement successfully.", 'success' => true], 200);
                         } else {
                             return response()->json(['message' => "Do not set quantity to less than one.", 'success' => true], 400);

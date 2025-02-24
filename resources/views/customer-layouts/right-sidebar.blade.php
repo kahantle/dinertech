@@ -1,4 +1,20 @@
 <style>
+    .custom-tip-btn {
+            border: 2px solid #007bff; /* Blue border to make it pop */
+            background-color: transparent; /* Transparent background */
+            color: #007bff; /* Text matches border */
+            border-radius: 20px; /* Rounded corners */
+            padding: 5px 10px; /* Proper spacing */
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .custom-tip-btn:hover {
+            background-color: #007bff; /* Blue background on hover */
+            color: white; /* White text on hover */
+        }
+
     .btn-area {
         background-color: rgb(241, 241, 241);
         border: none;
@@ -97,7 +113,68 @@
             width: 100%; /* Make each button take full width on small screens */
             margin-bottom: 10px; /* Add space between the buttons */
         }
+    } 
+    .stafftip {
+        background-color: #007bff; /* Primary color */
+        color: white; /* White text */
+        font-weight: bold;
+        padding: 8px 3px;
+        border-radius: 8px;
     }
+
+.tipbutton {
+    border: 2px solid #007bff; /* Blue border */
+    background-color: transparent; /* Transparent background */
+    color: #007bff; /* Blue text */
+    font-weight: bold;
+    padding: 8px 10px;
+    border-radius: 8px;
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+.tipbutton:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+.input-group {
+    display: flex;
+    gap: 10px; /* Adds space between elements */
+}
+
+.customtip {
+    padding: 10px 16px;
+    font-weight: bold;
+    border-radius: 8px;
+}
+
+.custom-tip-btn {
+    padding: 5px 10px;
+    border: 2px solid #007bff; /* Blue border */
+    background-color: white; /* White background */
+    color: #007bff; /* Blue text */
+    font-weight: bold;
+    border-radius: 8px;
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+.custom-tip-btn:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+.no-tip-btn {
+    border-color: #dc3545; /* Red border for 'No Tip' */
+    color: #dc3545;
+}
+
+.no-tip-btn:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
 </style>
 <div class="col-xl-4 col-lg-12 col-md-12 wd-dr-dashboart-inner">
     <div class="Promotion-content">
@@ -144,9 +221,13 @@
                                                 <h5 class="modal-title text-center" id="exampleModalCenterTitle">Please select a day and time to have your order ready</h5>
                                                 <div class="input">
                                                     <input type="date" id="orderDate" name="date" class="mt-3" min="<?php echo date('Y-m-d'); ?>">
-                                                    <input type="time" id="orderTime" name="time" class="my-3" step="2700">
+                                                    <select id="orderTime" name="time" class="my-3">
+                                                        <option value="">Select Time</option>
+                                                    </select>
+                                                    {{-- <input type="time" id="orderTime" name="time" class="my-3"> --}}
+                                                    {{-- <input type="time" id="orderTime" name="time" class="my-3" step="2700"> --}}
                                                 </div>
-                                                <button type="button" class="btn btn-okey mb-3 btokey">Confirm</button>
+                                                <button type="button" class="btn btn-okey mb-3 btokey" id="confirm_time">Confirm</button>
                                             </div>
                                         </div>
                                     </div>
@@ -380,13 +461,48 @@
                                 </div>
                                 <button type="button" style="padding: 6px" value="{{ round($totalwithsalestax * 20) / 100 ,2}}" class="btn btn-light tip tipbutton">${{ round ($totalwithsalestax * 20) / 100 ,2}}</button>
                             </div>
+                            {{-- <br>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text stafftip">15%</span>
+                                </div>
+                                <button type="button" class="btn tipbutton" 
+                                    value="{{ round($totalwithsalestax * 15 / 100, 2) }}">
+                                    ${{ round($totalwithsalestax * 15 / 100, 2) }}
+                                </button>
+                            
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text stafftip">18%</span>
+                                </div>
+                                <button type="button" class="btn tipbutton" 
+                                    value="{{ round($totalwithsalestax * 18 / 100, 2) }}">
+                                    ${{ round($totalwithsalestax * 18 / 100, 2) }}
+                                </button>
+                            
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text stafftip">20%</span>
+                                </div>
+                                <button type="button" class="btn tipbutton" 
+                                    value="{{ round($totalwithsalestax * 20 / 100, 2) }}">
+                                    ${{ round($totalwithsalestax * 20 / 100, 2) }}
+                                </button>
+                            </div>
+                             --}}
                             <br>
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text bg-primary text-white customtip">CUSTOM</span>
+                                    <span class="input-group-text custom-tip-btn bg-primary text-white customtip">CUSTOM</span>
                                 </div>
-                                <button type="button" style="boarder-radius:20px" class="btn btn-light custom custombutton" id="cutomtip">0.00</button>
-                                <button type="button" style="width: 140px" class="btn btn-light">No Tip</button>
+                                <button type="button" class="btn custom-tip-btn  custom custombutton" id="cutomtip">0.00</button>
+
+                                <button type="button" class="btn custom-tip-btn">No Tip</button>
+
+                                {{-- <button type="button" style="boarder-radius:20px" class="btn btn-light custom custombutton" id="cutomtip">0.00</button>
+                                <button type="button" style="width: 140px" class="btn btn-light">No Tip</button> --}}
+                                {{-- <button type="button" class="btn btn-light custom custombutton" id="cutomtip" style="border-radius: 20px; padding: 10px 20px; font-weight: bold;">0.00</button>
+
+                                <button type="button" class="btn btn-light" style="width: 140px; border-radius: 20px; padding: 10px 20px; font-weight: bold;">No Tip</button> --}}
+                                
                             </div>
                         </div>
                         <hr>
@@ -656,6 +772,84 @@
     </div>
 </div>
 
+<script>
+    document.getElementById("confirm_time").disabled = true;
+    let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+    document.addEventListener("DOMContentLoaded", function () {
+    let orderDateInput = document.getElementById("orderDate");
+    let orderTimeSelect = document.getElementById("orderTime");
+
+    // Fetch available days and times from your API
+    fetch("/api/customer/get-hours",{
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": csrfToken // Add CSRF token here
+            },
+            body: JSON.stringify({
+                restaurant_id: 1, 
+                debug_mode: "ON"
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+                console.log(data)
+                if (data.success) {
+                setupDateSelector(data.list);
+            } else {
+                console.error("Error fetching restaurant hours.");
+            }
+        })
+        .catch(error => console.error("Fetch error:", error));
+
+    function setupDateSelector(daysData) {
+        let today = new Date();
+        let availableDates = {};
+
+        daysData.forEach(entry => {
+            let weekday = entry.groupDayS.toLowerCase();
+            availableDates[weekday] = entry.all_times; // Store available times for each weekday
+        });
+
+        // Enable only the available days in the date picker
+        orderDateInput.addEventListener("change", function () {
+            let selectedDate = new Date(this.value);
+            let selectedDay = selectedDate.toLocaleString("en-US", { weekday: "long" }).toLowerCase();
+
+            if (availableDates[selectedDay]) {
+                // document.getElementById("confirm_time").disabled = false;
+                populateTimeOptions(availableDates[selectedDay]);
+            } else {
+                document.getElementById("confirm_time").disabled = true;
+                alert("Restaurant is closed on this day.");
+                orderTimeSelect.innerHTML = ""; // Clear previous options
+            }
+        });
+    }
+
+    function populateTimeOptions(timeSlots) {
+        orderTimeSelect.innerHTML = ""; // Clear previous options
+        document.getElementById("confirm_time").disabled = false;
+
+        timeSlots.forEach(slot => {
+            let option = document.createElement("option");
+            option.value = slot.opening_time;
+            option.textContent = `${slot.opening_time} - ${slot.closing_time} (${slot.hour_type || "Any"})`;
+            orderTimeSelect.appendChild(option);
+        });
+    }
+});
+    //  document.getElementById("orderTime").addEventListener("change", function () {
+    //     const allowedTimes = ["09:00", "09:45", "10:30", "11:15", "12:00", "12:45", "13:30", "14:15", "15:00"]; // Allowed times
+    //     let selectedTime = this.value;
+
+    //     if (!allowedTimes.includes(selectedTime)) {
+    //         alert("Please select a valid time slot!");
+    //         document.getElementById("confirm_time").disabled = true;
+    //         this.value = ""; // Clear the input
+    //     }
+    // });
+</script>
 
 
 

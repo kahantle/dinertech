@@ -6,6 +6,8 @@
     <meta name="description" content="">
     <meta charset="utf-8" content="{{url('/admin')}}" id="base-url">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    {{-- Js for date  --}}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <title>{{$title}}</title>
     <link rel="shortcut icon" type="image/x-icon" href="{{asset('assets/customer/images/favicon.ico')}}" />
 

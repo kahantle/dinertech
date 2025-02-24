@@ -2470,7 +2470,7 @@ body.swal2-shown.swal2-height-auto {
     }
     .card-image {
         display: flex;
-        justify-content: center;
+        justify-content: start;
         align-items: center;
         margin: 0 auto;
     }

@@ -131,21 +131,37 @@ class OrdersController extends Controller
 
         //Restaurant Open or Not
         $restaurantdays  = RestaurantHours::where('restaurant_id',1)->get();
+        // dd($request);
 
         $testDay  = [];
-        foreach($restaurantdays as $day) {
+        if($request->post("date")){
+            $givenDate = "26-02-2025"; // Example: dd-mm-yyyy format
+            $dateObject = \DateTime::createFromFormat('d-m-Y', $givenDate);
+
+            $currentday = lcfirst($dateObject->format('l')); 
+        }else{
             $currentday=lcfirst(date('l'));
+        }
+        // dd($currentday);
+        foreach($restaurantdays as $day) {
             $testDay[]= $day->day == $currentday;
         }
 
         $restaurantday  = RestaurantHours::with('allTimes')->where('restaurant_id',1)->first();
         $testResult  = [];
+        if($request->post("time")){
+            $dateTime = \DateTime::createFromFormat('h:i A', $request->post("time"));
+
+            $openTime = $dateTime->format('H:i A');
+        }else{
+            $openTime = date('H:i A', time());
+        }
+        // dd($openTime);
         if (in_array(true,$testDay)) {
             foreach($restaurantday->allTimes as $time){
                 $openingtime =date('H:i A', strtotime($time->opening_time));
                 $closingtime =date('H:i A', strtotime($time->closing_time));
-                $openTime =date('H:i A', time());
-                $testResult[] =$openingtime <= $openTime &&  $openTime <= $closingtime;
+                $testResult[] = $openingtime <= $openTime &&  $openTime <= $closingtime;
             }
         }
         //testresult false to in if condiftion
