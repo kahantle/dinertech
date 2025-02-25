@@ -4,7 +4,11 @@
     @forelse($menuItems as $item)
         <div class="col-md-6">
             <div class="card">
-                <img class="card-img-top" src="{{ $item->item_img ? $item->getMenuImgAttribute() : 'https://w7.pngwing.com/pngs/156/887/png-transparent-local-food-ottawa-computer-icons-restaurant-others-miscellaneous-food-company.png' }}" alt="Card image cap" width="489" height="224">
+                @php
+                    $imagePath = public_path('uploads/menu/' . $item->item_img); // Adjust the path as per your storage
+                @endphp
+                <img class="card-img-top" src="{{ $item->item_img && file_exists($imagePath) ? $item->getMenuImgAttribute() : asset('images/d-logo.png') }}" alt="Card image cap" style="width: 100%; height: 224px; object-fit: cover; border-radius: 8px;" width="489" height="224">
+                {{-- <img class="card-img-top" src="{{ $item->item_img && file_exists($imagePath) ? $item->getMenuImgAttribute() : 'https://w7.pngwing.com/pngs/156/887/png-transparent-local-food-ottawa-computer-icons-restaurant-others-miscellaneous-food-company.png' }}" alt="Card image cap" width="489" height="224"> --}}
                 <div class="card-body">
                     <div class="d-flex align-items-center justify-content-between w-100 wd-dr-menu-item mb-1">
                         <p>{{ $item->item_name }}</p>

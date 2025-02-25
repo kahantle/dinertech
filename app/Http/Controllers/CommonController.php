@@ -10,7 +10,7 @@ use Response;
 class CommonController extends Controller
 {
     public function displayImage($path, $file)
-    {
+    { 
         $img_path = storage_path('app/' . $path . '/' . $file);
         if (!File::exists($img_path)) {
             abort(404);

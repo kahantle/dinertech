@@ -76,19 +76,22 @@
 
 @media (max-width: 1812px) {
     .content .scrollbar {
-        height: 809px
+        height: auto !important
+        /* height: 809px */
     }
 }
 
 @media (max-width: 1381px) {
     .content .scrollbar {
-        height: 670px!important;
+        height: auto !important
+        /* height: 670px !important; */
     }
 }
 
 @media (max-width: 1558px) {
     .content .scrollbar {
-        height: 873px;
+        height: auto !important
+        /* height: 873px; */
     }
 }
 
@@ -137,7 +140,8 @@
         font-size: 20px;
     }
     .content .scrollbar {
-        height: 790px!important;
+        height: auto !important
+        /* height: 790px !important; */
     }
 }
 

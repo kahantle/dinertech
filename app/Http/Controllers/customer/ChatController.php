@@ -38,6 +38,7 @@ class ChatController extends Controller
         $data['cards'] = getUserCards($restaurantId, $userId);
         $data['uid'] = $userId;
         $data['resturantId'] = $restaurantId;
+        // dd(Auth::user()->profile_image);
         return view('customer.chat.index', $data); 
     }
 

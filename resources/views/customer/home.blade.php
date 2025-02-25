@@ -4,6 +4,51 @@
     <!-- Rating bar css -->
     <link rel="stylesheet" href="{{ asset('assets/customer/css/rateYo/2.3.2/jquery.rateyo.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/customer/css/promotion_page.css') }}">
+    <style>
+        
+        #testinomial{
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+        #testinomial .cat .owl-carousel .owl-stage-outer .owl-stage .owl-item {
+            width: 140px !important;
+        }
+        .item.category {
+            cursor: pointer;
+            /* border: 1px solid transparent; */
+            transition: all 0.3s ease;
+            width: 150px !important;
+        }
+
+        .item h5 {
+            margin: 0;
+            font-weight: bold;
+        } 
+        .item h6{
+            color: #0d6efd !important; /* Bootstrap primary blue */
+        }
+
+        /* Selected Category */
+        .item.active h6{
+            color: #ffffff !important;
+            background: #007bff !important;
+        }
+
+        span {
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .text-secondary {
+            color: #6c757d !important; /* Light grey text */
+        }
+
+        .bg-primary {
+            font-weight: bold;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+    </style>
 @endsection
 
 @section('content')
@@ -49,20 +94,33 @@
                                 @if ($categories->count() != 0)
                                     <h2>What are you hungry for? </h2>
                                     <div id="testinomial" class="banner-container">
-                                        <div class="owl-carousel owl-carousell owl-first-blog  owl-theme">
-                                            @foreach ($categories as $key => $category)
-                                                <div class="item category" data-category-id="{{ $category->category_id }}">
-                                                    <div class="card">
-                                                        {{-- <img class="card-img-top lazy"
-                                                            data-src="{{ $category->getImagePathAttribute() ? $category->getImagePathAttribute() : $category->getDefaultImage() }}"
-                                                            alt="Card image cap"> --}}
-                                                        <div class="card-body category">
-                                                            <h5 class="card-title">{{ $category->category_name }}</h5>
-                                                            <p class="card-text">{{ $category->category_details ? $category->category_details : '--' }}</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            @endforeach
+                                        <div class="cat">
+                                            <div class="owl-carousel owl-carousell owl-first-blog  owl-theme">
+                                                @foreach ($categories as $key => $category)
+                                                    {{-- <div class="item category" data-category-id="{{ $category->category_id }}"> --}}
+                                                        {{-- <div class="card"> --}}
+                                                            {{-- <img class="card-img-top lazy"
+                                                                data-src="{{ $category->getImagePathAttribute() ? $category->getImagePathAttribute() : $category->getDefaultImage() }}"
+                                                                alt="Card image cap"> --}}
+                                                            {{-- <div class="card-body category"> --}}
+                                                                {{-- <h5 class=" card-title">{{ $category->category_name }}</h5> --}}
+                                                                {{-- <p class="card-text">{{ $category->category_details ? $category->category_details : '--' }}</p> --}}
+                                                            {{-- </div>
+                                                        </div> --}}
+                                                    {{-- </div> --}}
+                                                    <div class="item category px-2 mt-4 my-2" data-category-id="{{ $category->category_id }}" onclick="selectCategory(this)">
+                                                        <h6 class="text-center py-2">
+                                                            {{ $category->category_name }}
+                                                        </h6>
+                                                    </div>                                                
+                                                @endforeach
+                                                {{-- <div class="d-flex justify-content-center align-items-center gap-3 my-3">
+                                                    <span class="text-secondary">Pav Bhaji</span>
+                                                    <span class="bg-primary text-white px-4 py-2 rounded">Sandwiches</span>
+                                                    <span class="text-secondary">Burgers</span>
+                                                </div> --}}
+                                                
+                                            </div>
                                         </div>
                                     </div>
                                 @endif
@@ -89,4 +147,16 @@
     <!-- Rating bar js -->
     <script src="{{ asset('assets/customer/js/rateYo/2.3.2/jquery.rateyo.min.js') }}"></script>
     <script src="{{ asset('assets/customer/js/custom-js/home/index.js') }}"></script>
+    <script>
+        function selectCategory(element) {
+            // Remove 'active' class from all categories
+            document.querySelectorAll('.item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Add 'active' class to the clicked element
+            element.classList.add('active');
+        }
+
+    </script>
 @endsection

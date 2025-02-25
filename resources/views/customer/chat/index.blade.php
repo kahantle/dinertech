@@ -279,7 +279,7 @@
 
         var restaurantImage = '{{ asset('assets/customer/images/Logo-Round.png') }}';
         var customerImage =
-            '{{ route('display.image', [Config::get('constants.IMAGES.USER_IMAGE_PATH'), Auth::user()->profile_image]) }}';
+            '{{ !Auth::user()->profile_image ? asset('assets/customer/images/user-small.png') : route('display.image', [Config::get('constants.IMAGES.USER_IMAGE_PATH'), Auth::user()->profile_image]) }}';
         if (!customerImage) {
             customerImage = '{{ asset('assets/customer/images/user-small.png') }}';
         }

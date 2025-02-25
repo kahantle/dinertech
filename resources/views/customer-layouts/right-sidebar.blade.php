@@ -297,7 +297,10 @@
                                     <div
                                         class="d-flex rounded wp-border-size-blog @if ($key != 0) mt-2 @endif">
                                         <div class="wb-inner-system">
-                                            <img src="{{ $item['item_img'] }}" class="img-fluid">
+                                            @php
+                                                $imagePath = public_path('uploads/menu/' . $item->item_img); // Adjust the path as per your storage
+                                            @endphp
+                                            <img src="{{ $item['item_img'] && file_exists($imagePath) ?  $item['item_img'] : asset('images/d-logo.png') }}" class="img-fluid">
                                         </div>
                                         <div class="wb-inner-system-first">
                                             <div class="d-flex wd-menu-photo justify-content-between w-100">
@@ -827,17 +830,83 @@
         });
     }
 
-    function populateTimeOptions(timeSlots) {
-        orderTimeSelect.innerHTML = ""; // Clear previous options
-        document.getElementById("confirm_time").disabled = false;
+    // function populateTimeOptions(timeSlots) {
+    //     orderTimeSelect.innerHTML = ""; // Clear previous options
+    //     document.getElementById("confirm_time").disabled = false;
 
-        timeSlots.forEach(slot => {
+    //     timeSlots.forEach(slot => {
+    //         let option = document.createElement("option");
+    //         option.value = slot.opening_time;
+    //         option.textContent = `${slot.opening_time} - ${slot.closing_time} (${slot.hour_type || "Any"})`;
+    //         orderTimeSelect.appendChild(option);
+    //     });
+    // }
+    function populateTimeOptions(timeSlots) {
+    const orderTimeSelect = document.getElementById("orderTime");
+    orderTimeSelect.innerHTML = ""; // Clear previous options
+    document.getElementById("confirm_time").disabled = false;
+
+    timeSlots.forEach(slot => {
+        let { opening_time, closing_time, hour_type } = slot;
+
+        let times = generateTimeIntervals(opening_time, closing_time, 15); // Generate slots every 15 min
+
+        times.forEach(time => {
             let option = document.createElement("option");
-            option.value = slot.opening_time;
-            option.textContent = `${slot.opening_time} - ${slot.closing_time} (${slot.hour_type || "Any"})`;
+            option.value = time;
+            option.textContent = `${time} (${hour_type || "Any"})`;
             orderTimeSelect.appendChild(option);
         });
+    });
+}
+
+// ✅ Function to Generate Time Intervals
+function generateTimeIntervals(startTime, endTime, stepMinutes) {
+    let timeList = [];
+    let start = parseTime(startTime);
+    let end = parseTime(endTime);
+
+    while (start < end) {
+        timeList.push(formatTime(start));
+        start.setMinutes(start.getMinutes() + stepMinutes); // Increase by stepMinutes (e.g., 15 min)
     }
+
+    return timeList;
+}
+
+// ✅ Convert "07:00 AM" to a Date object
+function parseTime(timeStr) {
+    let [time, modifier] = timeStr.split(" ");
+    let [hours, minutes] = time.split(":").map(Number);
+
+    if (modifier === "PM" && hours !== 12) hours += 12;
+    if (modifier === "AM" && hours === 12) hours = 0;
+
+    let date = new Date();
+    date.setHours(hours, minutes, 0, 0);
+    return date;
+}
+
+// ✅ Format Date object to "HH:mm AM/PM"
+function formatTime(date) {
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+    let ampm = hours >= 12 ? "PM" : "AM";
+
+    hours = hours % 12 || 12; // Convert 24h to 12h format
+    minutes = minutes.toString().padStart(2, "0"); // Ensure two digits
+
+    return `${hours}:${minutes} ${ampm}`;
+}
+
+// Example usage:
+let timeSlots = [
+    { opening_time: "07:00 AM", closing_time: "08:15 AM", hour_type: "Morning" },
+    { opening_time: "02:00 PM", closing_time: "04:00 PM", hour_type: "Afternoon" }
+];
+
+populateTimeOptions(timeSlots);
+
 });
     //  document.getElementById("orderTime").addEventListener("change", function () {
     //     const allowedTimes = ["09:00", "09:45", "10:30", "11:15", "12:00", "12:45", "13:30", "14:15", "15:00"]; // Allowed times
