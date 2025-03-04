@@ -57,19 +57,18 @@ class OrderController extends Controller
                     }
                 }
                 else
-                {
+                { 
                     $result[] = $order;
-                }
+                } 
             }
-
-            // Sort the result based on `pickup_minutes`, but only for orders with status 'ACCEPTED'
-            usort($result, function ($a, $b) {
-                if ($a->order_progress_status === Config::get('constants.ORDER_STATUS.ACCEPTED') &&
-                    $b->order_progress_status === Config::get('constants.ORDER_STATUS.ACCEPTED')) {
-                    return $a->pickup_minutes - $b->pickup_minutes;
-                }
-                return 0; // Keep other orders in their original order
-            });
+                // Sort the result based on `pickup_minutes`, but only for orders with status 'ACCEPTED'
+                usort($result, function ($a, $b) {
+                    if ($a->order_progress_status === Config::get('constants.ORDER_STATUS.ACCEPTED') &&
+                        $b->order_progress_status === Config::get('constants.ORDER_STATUS.ACCEPTED')) {
+                        return $a->pickup_minutes - $b->pickup_minutes;
+                    }
+                    return 0; // Keep other orders in their original order
+                });
 
             return response()->json(['order_list' => $result, 'success' => true], 200);
         } catch (\Throwable $th) {
