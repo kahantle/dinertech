@@ -204,6 +204,18 @@
                         <span>Orders</span>
                     </a>
                 </li>
+                <li class="{{ Request::is('customer/loyalty*') ? 'active' : '' }}">
+                    <a href="{{ route('customer.loyalty') }}">
+                        <i data-feather="gift"></i>
+                        <span>Loyalty</span>
+                    </a>
+                </li>
+                <li class="{{ Request::is('customer/promotions*') ? 'active' : '' }}">
+                    <a href="{{route('customer.promotions')}}">
+                        <i data-feather="smartphone"></i>
+                        <span>Promotions</span>
+                    </a>
+                </li>
                 <li class="{{ Request::is('customer/restaurant/information') ? 'active' : '' }}">
                     <a href="{{ route('customer.restaurant.information') }}">
                         <i data-feather="alert-circle"></i>

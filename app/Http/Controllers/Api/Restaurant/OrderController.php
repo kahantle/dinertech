@@ -41,11 +41,14 @@ class OrderController extends Controller
             {
                 $list = $list->whereDate('order_date','=',$today->format('Y-m-d'));
             }
+
             $list->orderBy('orders.order_id', 'DESC');
             $list = $list->get();
             $result = [];
             foreach($list as $key => $order)
             {
+                $time = trim($order->order_time); // Remove any extra spaces
+                $order->order_time = \Carbon\Carbon::createFromFormat('h:i A', $time)->format('H:i');
                 if($order->order_progress_status == Config::get('constants.ORDER_STATUS.COMPLETED'))
                 {
                     if((date("Y-m-d",strtotime($order->order_date)) >= date('Y-m-d', strtotime('-7 days'))) && (date("Y-m-d",strtotime($order->order_date)) <= $today->format('Y-m-d')))
@@ -58,6 +61,16 @@ class OrderController extends Controller
                     $result[] = $order;
                 }
             }
+
+            // Sort the result based on `pickup_minutes`, but only for orders with status 'ACCEPTED'
+            usort($result, function ($a, $b) {
+                if ($a->order_progress_status === Config::get('constants.ORDER_STATUS.ACCEPTED') &&
+                    $b->order_progress_status === Config::get('constants.ORDER_STATUS.ACCEPTED')) {
+                    return $a->pickup_minutes - $b->pickup_minutes;
+                }
+                return 0; // Keep other orders in their original order
+            });
+
             return response()->json(['order_list' => $result, 'success' => true], 200);
         } catch (\Throwable $th) {
             $errors['success'] = false;
@@ -305,7 +318,8 @@ class OrderController extends Controller
                 $user = User::find($order->uid);
                 // $user->notify(new DeclineOrder($order));
                 $title = "Order Declined";
-                $message = "Your ".$restaurant->restaurant_name." Order ".$order->order_number." has declined by The Restaurant.If any amount debit from your account, that will be credited in your account with in 7 Days.";
+                // $message = "Your ".$restaurant->restaurant_name." Order ".$order->order_number." has declined by The Restaurant.If any amount debit from your account, that will be credited in your account with in 7 Days.";
+                $message = "Your ".$restaurant->restaurant_name." order has been rejected. Please contact us for additional information.";
                 sendPlaceFutureOrder($restaurant->uid,$user->uid, $user->fcm_id, $title, $message, 1);
 
                 return response()->json(['message' => "Order declined successfully.", 'success' => true], 200);
@@ -510,6 +524,7 @@ class OrderController extends Controller
                 return response()->json(['message' => "Invalid Order.", 'success' => true], 401);
             }
             $order->order_progress_status = Config::get('constants.ORDER_STATUS.ORDER_DUE');
+            $order->order_due = \Carbon\Carbon::now(); // This is the due date and time of the order by taking the current date and time
             if($order->save()){
                 DB::commit();
                 return response()->json(['message' => "Order due successfully.", 'success' => true], 200);

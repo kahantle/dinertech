@@ -300,7 +300,8 @@
                                             @php
                                                 $imagePath = public_path('uploads/menu/' . $item->item_img); // Adjust the path as per your storage
                                             @endphp
-                                            <img src="{{ $item['item_img'] && file_exists($imagePath) ?  $item['item_img'] : asset('images/d-logo.png') }}" class="img-fluid">
+                                            <img src="{{ $item['item_img'] ?  $item['item_img'] : asset('images/d-logo.png') }}" class="img-fluid">
+                                            {{-- <img src="{{ $item['item_img'] && file_exists($imagePath) ?  $item['item_img'] : asset('images/d-logo.png') }}" class="img-fluid"> --}}
                                         </div>
                                         <div class="wb-inner-system-first">
                                             <div class="d-flex wd-menu-photo justify-content-between w-100">
