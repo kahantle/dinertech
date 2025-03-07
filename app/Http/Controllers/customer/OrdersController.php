@@ -134,9 +134,9 @@ class OrdersController extends Controller
         // dd($request);
 
         $testDay  = [];
-        if($request->post("date")){
-            $givenDate = "26-02-2025"; // Example: dd-mm-yyyy format
-            $dateObject = \DateTime::createFromFormat('d-m-Y', $givenDate);
+        if($request->post("orderDate")){
+            $givenDate = $request->post("orderDate"); // "26-02-2025"; // Example: dd-mm-yyyy format
+            $dateObject = \DateTime::createFromFormat('j/n/Y', $givenDate);
 
             $currentday = lcfirst($dateObject->format('l')); 
         }else{
@@ -147,10 +147,13 @@ class OrdersController extends Controller
             $testDay[]= $day->day == $currentday;
         }
 
-        $restaurantday  = RestaurantHours::with('allTimes')->where('restaurant_id',1)->first();
+        $restaurantday  = RestaurantHours::with('allTimes')->where('restaurant_id',1)->get();
         $testResult  = [];
-        if($request->post("time")){
-            $dateTime = \DateTime::createFromFormat('h:i A', $request->post("time"));
+        // dd($testDay);
+        if($request->post("orderTime")){
+            $request->order_status = '1';
+            $dateTime = \DateTime::createFromFormat('h:i A', $request->post("orderTime"));
+            // dd($dateTime);
 
             $openTime = $dateTime->format('H:i A');
         }else{
@@ -158,12 +161,16 @@ class OrdersController extends Controller
         }
         // dd($openTime);
         if (in_array(true,$testDay)) {
-            foreach($restaurantday->allTimes as $time){
-                $openingtime =date('H:i A', strtotime($time->opening_time));
-                $closingtime =date('H:i A', strtotime($time->closing_time));
-                $testResult[] = $openingtime <= $openTime &&  $openTime <= $closingtime;
+            // dd($restaurantday);
+            foreach($restaurantday as $restaurantdayTime){
+                foreach($restaurantdayTime->allTimes as $time){
+                    $openingtime =date('H:i A', strtotime($time->opening_time));
+                    $closingtime =date('H:i A', strtotime($time->closing_time));
+                    $testResult[] = $openingtime <= $openTime &&  $openTime <= $closingtime;
+                }
             }
         }
+        // dd($testResult);
         //testresult false to in if condiftion
         if (!in_array(true,$testResult)) {
             return redirect()->back()->with('error', 'Oops! Betty Burger is not open for orders at the time selected. Please select another time');
@@ -251,6 +258,7 @@ class OrdersController extends Controller
                     'description' => random_int(1000, 1000000000000000),
                 ]);
 
+                // dd($orderDetails);
 
                 if ($charge['status'] == 'succeeded') {
                     DB::beginTransaction();
@@ -276,7 +284,8 @@ class OrdersController extends Controller
                     if ($orderDetails['order_status'] == 1) {
                         $order->order_date = date('Y-m-d');
                         $order->order_time = date('h:m:A');
-                        $order->feature_date = date("Y-m-d", strtotime($orderDetails['orderDate']));
+                        $order->feature_date = \DateTime::createFromFormat('d/m/Y', $orderDetails['orderDate'])->format('Y-m-d');
+                        // $order->feature_date = date("Y-m-d", strtotime($orderDetails['orderDate']));
                         $order->feature_time = date("h:m:A", strtotime($orderDetails['orderTime']));
                     } else {
                         $order->order_date = date('Y-m-d');
@@ -374,7 +383,8 @@ class OrdersController extends Controller
                 if ($orderDetails['order_status'] == 1) {
                     $order->order_date = date('Y-m-d');
                     $order->order_time = date('h:m:A');
-                    $order->feature_date = date("Y-m-d", strtotime($orderDetails['orderDate']));
+                    $order->feature_date = \DateTime::createFromFormat('d/m/Y', $orderDetails['orderDate'])->format('Y-m-d');
+                    // $order->feature_date = date("Y-m-d", strtotime($orderDetails['orderDate']));
                     $order->feature_time = date("h:m:A", strtotime($orderDetails['orderTime']));
                 } else {
                     $order->order_date = date('Y-m-d');

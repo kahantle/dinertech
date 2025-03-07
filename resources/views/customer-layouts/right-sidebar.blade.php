@@ -782,6 +782,7 @@
     document.addEventListener("DOMContentLoaded", function () {
     let orderDateInput = document.getElementById("orderDate");
     let orderTimeSelect = document.getElementById("orderTime");
+    let orderStatus = document.getElementById("order_status");
 
     // Fetch available days and times from your API
     fetch("/api/customer/get-hours",{
@@ -814,7 +815,7 @@
             let weekday = entry.groupDayS.toLowerCase();
             availableDates[weekday] = entry.all_times; // Store available times for each weekday
         });
-
+        console.log(availableDates)
         // Enable only the available days in the date picker
         orderDateInput.addEventListener("change", function () {
             let selectedDate = new Date(this.value);
@@ -845,7 +846,6 @@
     function populateTimeOptions(timeSlots) {
     const orderTimeSelect = document.getElementById("orderTime");
     orderTimeSelect.innerHTML = ""; // Clear previous options
-    document.getElementById("confirm_time").disabled = false;
 
     timeSlots.forEach(slot => {
         let { opening_time, closing_time, hour_type } = slot;
@@ -859,6 +859,7 @@
             orderTimeSelect.appendChild(option);
         });
     });
+    document.getElementById("confirm_time").disabled = false;
 }
 
 // ✅ Function to Generate Time Intervals
