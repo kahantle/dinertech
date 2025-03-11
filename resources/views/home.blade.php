@@ -21,6 +21,13 @@
     <link rel="stylesheet" href="{{ asset('css/responsive.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
+
+        {{--  --}}
+    <!-- Include Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <!-- Include Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
 </head>
 <body>
     <div id="preloader-active">

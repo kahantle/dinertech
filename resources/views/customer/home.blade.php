@@ -108,7 +108,7 @@
                                                             {{-- </div>
                                                         </div> --}}
                                                     {{-- </div> --}}
-                                                    <div class="item category px-2 mt-4 my-2" data-category-id="{{ $category->category_id }}" onclick="selectCategory(this)">
+                                                    <div class="item category px-2 mt-4 my-2 {{ $key == 0 ? 'active' : '' }}" data-category-id="{{ $category->category_id }}" onclick="selectCategory(this)">
                                                         <h6 class="text-center py-2">
                                                             {{ $category->category_name }}
                                                         </h6>

@@ -1,4 +1,66 @@
 <style>
+    /* redeem buttom style */
+
+    /* Base Styling */
+    .iconbutton {
+        display: flex;
+        align-items: center;
+        justify-content: center; /* Center content */
+        color: red;
+        text-decoration: none;
+        font-size: 16px;
+        padding: 10px;
+        border-radius: 6px;
+        transition: all 0.3s ease-in-out;
+        width: 100%;
+    }
+
+    /* Icon Styling */
+    .iconbutton i {
+        margin-right: 8px; /* Space between icon and text */
+        font-size: 18px;
+    }
+
+    /* Text Styling */
+    .iconbutton p {
+        margin: 0;
+        font-weight: bold;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .iconbutton {
+            font-size: 10px;
+            padding: 8px;
+        }
+
+        .iconbutton i {
+            font-size: 12px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .iconbutton {
+            font-size: 12px;
+            flex-direction: column; /* Stack icon & text */
+            text-align: center;
+            padding: 6px;
+        }
+
+        .iconbutton i {
+            font-size: 10px;
+            margin-bottom: 4px;
+        }
+    }
+
+    /* End redeem buttom style */
+    .fulll-div {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 8px; /* Adds spacing */
+    }
     .custom-tip-btn {
             border: 2px solid #007bff; /* Blue border to make it pop */
             background-color: transparent; /* Transparent background */
@@ -113,7 +175,63 @@
             width: 100%; /* Make each button take full width on small screens */
             margin-bottom: 10px; /* Add space between the buttons */
         }
-    } 
+    }
+   
+/* Responsive Design */
+@media (max-width: 768px) {
+    .fulll-div {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .tip-group {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .stafftip {
+        width: 45px;
+        height: 35px;
+        font-size: 12px;
+    }
+
+    .tipbutton {
+        flex-grow: 1;
+        text-align: center;
+        padding: 10px;
+        font-size: 14px;
+    }
+}
+
+/* Extra Small Screens (Mobile) */
+ @media (max-width: 480px) {
+    .fulll-div {
+        flex-direction: wrap;
+        align-items: center;
+    }
+
+    .tip-group {
+        flex-direction: column;
+        align-items: center;
+        /* width: 100%; */
+        /* gap: 6px; */
+    }
+
+    .stafftip {
+        width: 40px;
+        height: 30px;
+        font-size: 10px;
+    }
+
+    .tipbutton {
+        /* width: 10%; */
+        text-align: center;
+        padding: 12px;
+        font-size: 14px;
+        border-radius: 6px;
+    }
+} 
     .stafftip {
         background-color: #007bff; /* Primary color */
         color: white; /* White text */
@@ -220,6 +338,9 @@
                                             <div class="modal-body timing-content">
                                                 <h5 class="modal-title text-center" id="exampleModalCenterTitle">Please select a day and time to have your order ready</h5>
                                                 <div class="input">
+                                                    <p id="formattedDate" class="my-3">Select a date</p>
+                                                    {{-- <input type="date" id="orderDate" name="date" class="mt-3" min="<?= date('Y-m-d'); ?>"> --}}
+
                                                     <input type="date" id="orderDate" name="date" class="mt-3" min="<?php echo date('Y-m-d'); ?>">
                                                     <select id="orderTime" name="time" class="my-3">
                                                         <option value="">Select Time</option>
@@ -339,9 +460,17 @@
                                                     data-cart-menu-item-id="{{ $item->cart_menu_item_id }}"></span>
                                             </div>
                                             @if( $user && $isRedeemable && !$loyaltyCount && (int)$loyaltyPoint < (int)$user->total_points)
-                                                <a href="#" style="color: red; text-decoration: none;" class="iconbutton d-flex  align-items-center col-6 redeemProduct" data-cartLoyaltyRuleId = "{{$isRedeemable->loyalty_rule_id}}" data-cartMenuId="{{$item->menu_id}}">
+                                                {{-- <a href="#" style="color: red; text-decoration: none;" class="iconbutton d-flex  align-items-center col-6 redeemProduct" data-cartLoyaltyRuleId = "{{$isRedeemable->loyalty_rule_id}}" data-cartMenuId="{{$item->menu_id}}">
                                                     <i class="fa fa-gift pr-3" aria-hidden="true"></i>
                                                     <p class="mb-0">Redeem for {{ $loyaltyPoint }} pts</p>
+                                                </a> --}}
+                                                <a href="#" class="iconbutton d-flex align-items-center justify-content-center col-6 redeemProduct"
+                                                    data-cartLoyaltyRuleId="{{$isRedeemable->loyalty_rule_id}}" 
+                                                    data-cartMenuId="{{$item->menu_id}}">
+                                                    
+                                                    <i class="fa fa-gift" aria-hidden="true"></i>
+                                                    <p>Redeem for {{ $loyaltyPoint }} pts</p>
+
                                                 </a>
                                             @endif
                                             @endif
@@ -449,7 +578,7 @@
                             @php
                                 $totalwithsalestax = ($cart['sub_total'] ?? 0.00) + ($cart['tax_charge'] ?? 0.00);
                             @endphp
-                            <div class="input-group mb-3">
+                            <div class="input-group mb-3 full-div">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text bg-primary text-white stafftip" >15%</span>
                                 </div>
@@ -783,6 +912,7 @@
     let orderDateInput = document.getElementById("orderDate");
     let orderTimeSelect = document.getElementById("orderTime");
     let orderStatus = document.getElementById("order_status");
+    const formattedDateP = document.getElementById("formattedDate");
 
     // Fetch available days and times from your API
     fetch("/api/customer/get-hours",{
@@ -818,12 +948,18 @@
         console.log(availableDates)
         // Enable only the available days in the date picker
         orderDateInput.addEventListener("change", function () {
-            let selectedDate = new Date(this.value);
-            let selectedDay = selectedDate.toLocaleString("en-US", { weekday: "long" }).toLowerCase();
 
-            if (availableDates[selectedDay]) {
+            let selectedDate = new Date(this.value);
+            let options = { month: "long", day: "numeric", year: "numeric" };
+            let selectedDay = selectedDate.toLocaleDateString("en-US", options); 
+            let checkDay = selectedDate.toLocaleString("en-US", { weekday: "long" }).toLowerCase();
+
+            console.log(selectedDay)
+            // Set the initial <p> text if there's already a value
+            formattedDateP.textContent = selectedDay;
+            if (availableDates[checkDay]) {
                 // document.getElementById("confirm_time").disabled = false;
-                populateTimeOptions(availableDates[selectedDay]);
+                populateTimeOptions(availableDates[checkDay]);
             } else {
                 document.getElementById("confirm_time").disabled = true;
                 alert("Restaurant is closed on this day.");
