@@ -628,108 +628,108 @@ class OrderController extends Controller
     //     }
     // }
     public function getRecentOrder(Request $request)
-{
-    try {
-        $request_data = $request->json()->all();
+    {
+        try {
+            $request_data = $request->json()->all();
 
-        // Validate the input
-        $validator = Validator::make($request_data, ['restaurant_id' => 'required']);
-        if ($validator->fails()) {
-            return response()->json(['success' => false, 'message' => $validator->errors()], 400);
-        }
-        
-        if ($fcmId = $request->post('fcm_id')) {
-            Restaurant::where('restaurant_id', $request->post('restaurant_id'))->first()?->user()?->update(['fcm_id' => $fcmId]);
-        }
-        
-        // Time check
-        $current_dt = Carbon::now();
-        $day = $current_dt->format('l');
-        $data = RestaurantHours::with('allTimes')
-            ->where('restaurant_id', $request->restaurant_id)
-            ->where('day', 'like', '%' . $day ?? $request->day . '%')
-            ->first();
+            // Validate the input
+            $validator = Validator::make($request_data, ['restaurant_id' => 'required']);
+            if ($validator->fails()) {
+                return response()->json(['success' => false, 'message' => $validator->errors()], 400);
+            }
+            
+            if ($fcmId = $request->post('fcm_id')) {
+                Restaurant::where('restaurant_id', $request->post('restaurant_id'))->first()?->user()?->update(['fcm_id' => $fcmId]);
+            }
+            
+            // Time check
+            $current_dt = Carbon::now();
+            $day = $current_dt->format('l');
+            $data = RestaurantHours::with('allTimes')
+                ->where('restaurant_id', $request->restaurant_id)
+                ->where('day', 'like', '%' . $day ?? $request->day . '%')
+                ->first();
 
-        if (empty($data)) {
+            if (empty($data)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Oops! Restaurant is not open for orders at the time selected. Please select another time'
+                ]);
+            }
+
+            $testResult = [];
+            // foreach ($data->allTimes as $time) {
+            //     $openingtime = date('H:i A', strtotime($time->opening_time));
+            //     $closingtime = date('H:i A', strtotime($time->closing_time));
+            //     $openTime = date('H:i A', strtotime($request->time));
+            //     $testResult[] = $openingtime <= $openTime && $openTime <= $closingtime;
+            // }
+            // return response()->json([$data]);
+        /* foreach ($data->allTimes as $time) {
+                $openingTimeTimestamp = strtotime($time->opening_time);
+                $closingTimeTimestamp = strtotime($time->closing_time);
+                $openTimeTimestamp = strtotime($request->time);
+
+                // Handle cases where closing time is after midnight
+                if ($closingTimeTimestamp < $openingTimeTimestamp) {
+                    $closingTimeTimestamp += 86400; // Add 24 hours to closing time
+                }
+
+                $testResult[] = $openingTimeTimestamp <= $openTimeTimestamp && $openTimeTimestamp <= $closingTimeTimestamp;
+            }
+
+            $restaurant = in_array(true, $testResult, true);
+            */
+            foreach ($data->allTimes as $time) {
+                // Convert times to timestamps
+                $openingTimeTimestamp = strtotime($time->opening_time);
+                $closingTimeTimestamp = strtotime($time->closing_time);
+                $currentTimestamp = strtotime($current_dt->format('H:i'));
+
+                // Handle cases where closing time is after midnight
+                if ($closingTimeTimestamp < $openingTimeTimestamp) {
+                    $closingTimeTimestamp += 86400; // Add 24 hours to closing time
+                }
+
+                // Check if the current time is within the opening and closing times
+                $testResult[] = $openingTimeTimestamp <= $currentTimestamp && $currentTimestamp <= $closingTimeTimestamp;
+            }
+
+            // Determine if the restaurant is open
+            $restaurant = in_array(true, $testResult, true);
+
+            // Fetch orders and sort by status (INITIAL -> ORDER_DUE -> ACCEPTED)
+            $order = Order::where('restaurant_id', $request->post('restaurant_id'))
+                ->whereIn('order_progress_status', [
+                    Config::get('constants.ORDER_STATUS.INITIAL'),
+                    Config::get('constants.ORDER_STATUS.ORDER_DUE'),
+                    Config::get('constants.ORDER_STATUS.ACCEPTED')
+                ])
+                ->with('orderItems', 'user')
+                ->orderByRaw("FIELD(order_progress_status, 
+                    '" . Config::get('constants.ORDER_STATUS.INITIAL') . "', 
+                    '" . Config::get('constants.ORDER_STATUS.ORDER_DUE') . "', 
+                    '" . Config::get('constants.ORDER_STATUS.ACCEPTED') . "')")
+                ->with('orderItems','user')
+                ->latest() // For orders with the same status, sort by the latest created_at
+                ->get();
+
             return response()->json([
-                'success' => false,
-                'message' => 'Oops! Restaurant is not open for orders at the time selected. Please select another time'
-            ]);
-        }
+                'restaurantopen' => $restaurant,
+                'order' => $order,
+                'auto_print_receipts' => Restaurant::select('auto_print_receipts')
+                    ->where('restaurant_id', $request->post('restaurant_id'))
+                    ->first()->auto_print_receipts,
+                'success' => true
+            ], 200);
 
-        $testResult = [];
-        // foreach ($data->allTimes as $time) {
-        //     $openingtime = date('H:i A', strtotime($time->opening_time));
-        //     $closingtime = date('H:i A', strtotime($time->closing_time));
-        //     $openTime = date('H:i A', strtotime($request->time));
-        //     $testResult[] = $openingtime <= $openTime && $openTime <= $closingtime;
-        // }
-        // return response()->json([$data]);
-       /* foreach ($data->allTimes as $time) {
-            $openingTimeTimestamp = strtotime($time->opening_time);
-            $closingTimeTimestamp = strtotime($time->closing_time);
-            $openTimeTimestamp = strtotime($request->time);
-
-            // Handle cases where closing time is after midnight
-            if ($closingTimeTimestamp < $openingTimeTimestamp) {
-                $closingTimeTimestamp += 86400; // Add 24 hours to closing time
+        } catch (\Throwable $th) {
+            $errors['success'] = false;
+            $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
+            if ($request->debug_mode == 'ON') {
+                $errors['debug'] = $th->getMessage();
             }
-
-            $testResult[] = $openingTimeTimestamp <= $openTimeTimestamp && $openTimeTimestamp <= $closingTimeTimestamp;
+            return response()->json($errors, 500);
         }
-
-        $restaurant = in_array(true, $testResult, true);
-        */
-        foreach ($data->allTimes as $time) {
-            // Convert times to timestamps
-            $openingTimeTimestamp = strtotime($time->opening_time);
-            $closingTimeTimestamp = strtotime($time->closing_time);
-            $currentTimestamp = strtotime($current_dt->format('H:i'));
-
-            // Handle cases where closing time is after midnight
-            if ($closingTimeTimestamp < $openingTimeTimestamp) {
-                $closingTimeTimestamp += 86400; // Add 24 hours to closing time
-            }
-
-            // Check if the current time is within the opening and closing times
-            $testResult[] = $openingTimeTimestamp <= $currentTimestamp && $currentTimestamp <= $closingTimeTimestamp;
-        }
-
-        // Determine if the restaurant is open
-        $restaurant = in_array(true, $testResult, true);
-
-        // Fetch orders and sort by status (INITIAL -> ORDER_DUE -> ACCEPTED)
-        $order = Order::where('restaurant_id', $request->post('restaurant_id'))
-            ->whereIn('order_progress_status', [
-                Config::get('constants.ORDER_STATUS.INITIAL'),
-                Config::get('constants.ORDER_STATUS.ORDER_DUE'),
-                Config::get('constants.ORDER_STATUS.ACCEPTED')
-            ])
-            ->with('orderItems', 'user')
-            ->orderByRaw("FIELD(order_progress_status, 
-                '" . Config::get('constants.ORDER_STATUS.INITIAL') . "', 
-                '" . Config::get('constants.ORDER_STATUS.ORDER_DUE') . "', 
-                '" . Config::get('constants.ORDER_STATUS.ACCEPTED') . "')")
-            ->with('orderItems','user')
-            ->latest() // For orders with the same status, sort by the latest created_at
-            ->get();
-
-        return response()->json([
-            'restaurantopen' => $restaurant,
-            'order' => $order,
-            'auto_print_receipts' => Restaurant::select('auto_print_receipts')
-                ->where('restaurant_id', $request->post('restaurant_id'))
-                ->first()->auto_print_receipts,
-            'success' => true
-        ], 200);
-
-    } catch (\Throwable $th) {
-        $errors['success'] = false;
-        $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');
-        if ($request->debug_mode == 'ON') {
-            $errors['debug'] = $th->getMessage();
-        }
-        return response()->json($errors, 500);
     }
-  }
 }

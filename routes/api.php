@@ -225,7 +225,7 @@ Route::prefix('customer')->namespace('Api\Customer')->group(function () {
                 Route::post('/add', 'PinController@add')->name('set.pin');
                 Route::post('/status', 'PinController@status')->name('pin.status');
             });
-            Route::prefix('order')->group(function () {
+            Route::prefix('order')->middleware(['throttle:3000,1'])->group(function () {
                 Route::post('/list', 'OrderController@getOrderList')->name('order.list');
                 Route::post('/recent', 'OrderController@getRecentOrder')->name('order.recent');
                 Route::post('/id', 'OrderController@getOrderById')->name('order.id');
