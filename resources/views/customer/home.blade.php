@@ -10,14 +10,35 @@
             padding-left: 10px;
             padding-right: 10px;
         }
+        #testinomial .cat1 .owl-carousel .owl-stage-outer .owl-stage .owl-item {
+            width: 166px !important;
+            height: 42px !important;
+            border-radius: 100px !important;
+        }
+        #testinomial .cat1 .card-main-blog, 
+           #testinomial .cat1 .card-v-inner-sys-five {
+                height: 42px; /* Set height */
+                font-family: 'Poppins', sans-serif;
+                text-align: center;
+                font-size: 12px;
+                border-radius: 15px;
+                padding: 5px 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 42px; /* Ensures it doesn't shrink */
+                border-radius: 100px !important;
+            }
         #testinomial .cat .owl-carousel .owl-stage-outer .owl-stage .owl-item {
-            width: 140px !important;
+            width: 138px !important;
+            border-radius: 100px !important;
         }
         .item.category {
             cursor: pointer;
             /* border: 1px solid transparent; */
             transition: all 0.3s ease;
-            width: 150px !important;
+            width: 138px !important;
+            border-radius: 100px !important;
         }
 
         .item h5 {
@@ -32,6 +53,7 @@
         .item.active h6{
             color: #ffffff !important;
             background: #007bff !important;
+            border-radius: 100px !important;
         }
 
         span {
@@ -46,6 +68,100 @@
         .bg-primary {
             font-weight: bold;
             box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        @media (max-width: 768px) { 
+            .owl-next, .owl-prev {
+                pointer-events: none; /* Disables clicking */
+                opacity: 0; /* Hides the button */
+                visibility: hidden; /* Ensures it's fully removed */
+            }
+            .card-main-blog {
+                text-align: center; /* Center content */
+                font-size: 14px; /* Adjust text size */
+                border-radius: 50px; /* Rounded corners */
+                padding: 15px; /* Padding for spacing */
+                display: flex;
+                flex-direction: column; /* Stack items vertically */
+                align-items: center;
+                justify-content: space-between;
+                min-height: 120px; /* Increase height for button space */
+            }
+
+            .card-text {
+                font-size: 6px;
+                font-weight: 300;
+                display: block;
+                font-family: 'Poppins', sans-serif;
+                /* margin-bottom: 10px;  */
+                margin: 0;
+                padding: 0;
+            }
+
+            /* Button styling */
+            .rowinner {
+                display: flex;
+                justify-content: center;
+                gap: 10px; /* Space between buttons */
+                margin-top: 10px;
+                width: 100%;
+            }
+
+            .cancel-btn {
+                background: #6F70C2; /* Button color */
+                color: #fff;
+                border: none;
+                border-radius: 40px; /* Rounded buttons */
+                padding: 10px 15px;
+                font-size: 12px;
+                cursor: pointer;
+                transition: 0.3s;
+            }
+
+            .cancel-btn:hover {
+                background: #5a5eb5; /* Slightly darker on hover */
+            }
+            .wp-inner-st{
+                height: 42px !important;
+            }
+            .card-main-blog, 
+            .card-v-inner-sys-five {
+                height: 42px; /* Set height */
+                font-family: 'Poppins', sans-serif;
+                text-align: center;
+                font-size: 12px;
+                border-radius: 15px;
+                padding: 5px 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 42px; /* Ensures it doesn't shrink */
+                border-radius: 100px !important;
+            }
+
+            /* .owl-carousel .item {
+                display: block;
+                width: 100%; 
+                margin: 10px 0; 
+            }
+
+            .card-main-blog {
+                border-radius: 10px !important; 
+                padding: 15px; 
+                text-align: left;
+            }
+
+            .rowinner.row-ib-blog {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                flex-wrap: wrap;
+            }
+
+            .rowinner .cancel-btn {
+                flex: 1; 
+                width: auto;
+                padding: 8px 10px;
+            } */
         }
 
     </style>
@@ -64,32 +180,55 @@
                         <div id="menuItems">
                             <div class="content">
                                 <div id="testinomial" class="banner-container">
-                                    <div class="owl-carousel owl-carousell owl-first-blog  owl-theme">
-                                        @foreach ($promotionLists as $promotion)
-                                            <div class="item">
-                                                <div
-                                                    class="card-main-blog @if (
-                                                        $promotion->promotion_type_id == 1 ||
-                                                            $promotion->promotion_type_id == 3 ||
-                                                            $promotion->promotion_type_id == 4 ||
-                                                            $promotion->promotion_type_id == 5) card-v-inner-sys-five @elseif($promotion->promotion_type_id == 2) card-v-inner-sys-first @elseif($promotion->promotion_type_id == 6) card-v-inner-sys-seven @elseif($promotion->promotion_type_id == 7) card-v-inner-sys-six @elseif ($promotion->promotion_type_id == 8) card-v-inner-sys-four @elseif ($promotion->promotion_type_id == 9) card-v-inner-sys-third @elseif ($promotion->promotion_type_id == 10) card-v-inner-sys-second @endif">
-                                                    <div class="wp-inner-st">
-                                                        <h5 class="card-title">{{ $promotion->promotion_name }}</h5>
-                                                        <p class="card-text">{{ $promotion->promotion_details }}</p>
+                                    @if (isMobile())
+                                         <!-- Mobile -->
+                                         <div class="cat1">
+                                            <div class="owl-carousel owl-carousellx owl-first-blog  owl-theme">
+                                                @foreach ($promotionLists as $promotion)
+                                                    <div class="item"> 
+                                                        <div
+                                                            class="card-main-blog @if ( 
+                                                                $promotion->promotion_type_id == 1 ||
+                                                                    $promotion->promotion_type_id == 3 ||
+                                                                    $promotion->promotion_type_id == 4 ||
+                                                                    $promotion->promotion_type_id == 5) card-v-inner-sys-five @elseif($promotion->promotion_type_id == 2) card-v-inner-sys-first @elseif($promotion->promotion_type_id == 6) card-v-inner-sys-seven @elseif($promotion->promotion_type_id == 7) card-v-inner-sys-six @elseif ($promotion->promotion_type_id == 8) card-v-inner-sys-four @elseif ($promotion->promotion_type_id == 9) card-v-inner-sys-third @elseif ($promotion->promotion_type_id == 10) card-v-inner-sys-second @endif">
+                                                            <div class="wp-inner-st">
+                                                                <span class="card-text">{{ $promotion->promotion_name }}</span>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <div class="rowinner row-ib-blog">
-                                                        <a href="javascript:void(0);" class="openPromotion"
-                                                            data-promotion-id="{{ $promotion->promotion_id }}"
-                                                            data-promotion-type="{{ $promotion->promotion_type_id }}"><button
-                                                                class="cancel-btn">Learn More</button></a>
-                                                        <span class="get-border"></span>
-                                                        <a href="{{ route('customer.promotions.getEligibleItems', $promotion->promotion_id) }}"><button
-                                                                class="cancel-btn">Get it Now</button></a>
+                                                @endforeach
+                                            </div> 
+                                        </div> 
+                                    @else
+                                        <!-- Descktop -->
+                                        <div class="owl-carousel owl-carousell owl-first-blog  owl-theme">
+                                            @foreach ($promotionLists as $promotion)
+                                                <div class="item"> 
+                                                    <div
+                                                        class="card-main-blog @if ( 
+                                                            $promotion->promotion_type_id == 1 ||
+                                                                $promotion->promotion_type_id == 3 ||
+                                                                $promotion->promotion_type_id == 4 ||
+                                                                $promotion->promotion_type_id == 5) card-v-inner-sys-five @elseif($promotion->promotion_type_id == 2) card-v-inner-sys-first @elseif($promotion->promotion_type_id == 6) card-v-inner-sys-seven @elseif($promotion->promotion_type_id == 7) card-v-inner-sys-six @elseif ($promotion->promotion_type_id == 8) card-v-inner-sys-four @elseif ($promotion->promotion_type_id == 9) card-v-inner-sys-third @elseif ($promotion->promotion_type_id == 10) card-v-inner-sys-second @endif">
+                                                        <div class="wp-inner-st">
+                                                            <h5 class="card-title">{{ $promotion->promotion_name }}</h5>
+                                                            <p class="card-text">{{ $promotion->promotion_details }}</p>
+                                                        </div>
+                                                        <div class="rowinner row-ib-blog">
+                                                            <a href="javascript:void(0);" class="openPromotion"
+                                                                data-promotion-id="{{ $promotion->promotion_id }}"
+                                                                data-promotion-type="{{ $promotion->promotion_type_id }}"><button
+                                                                    class="cancel-btn">Learn More</button></a>
+                                                            <span class="get-border"></span>
+                                                            <a href="{{ route('customer.promotions.getEligibleItems', $promotion->promotion_id) }}"><button
+                                                                    class="cancel-btn">Get it Now</button></a>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        @endforeach
-                                    </div>
+                                            @endforeach
+                                        </div> 
+                                    @endif
                                 </div>
                                 @if ($categories->count() != 0)
                                     <h2>What are you hungry for? </h2>
