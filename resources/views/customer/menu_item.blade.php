@@ -3,7 +3,7 @@
 <div class="row">
     @forelse($menuItems as $item)
         <div class="col-md-6">
-            <div class="card">
+            <div class="card border-card">
                 @php
                     $imagePath = route('display.image', [config('constants.IMAGES.MENU_IMAGE_PATH'), $item->item_img]) ;
                     $imageUrl = file_exists($imagePath) 
@@ -11,7 +11,7 @@
                         : asset('images/d-logo.png');
                 @endphp
                 {{-- <p>{{ $imageUrl }}</p> --}}
-                <img class="card-img-top" src="{{$item->item_img ? $imagePath : $imageUrl }}" alt="Card image cap" class="img-fluid" width="489" height="224">
+                <img class="img-fluid menu-img" src="{{$item->item_img ? $imagePath : $imageUrl }}" alt="Card image cap">
                 {{-- <img class="card-img-top" src="{{ file_exists($imagePath) ? route('display.image', [config('constants.IMAGES.MENU_IMAGE_PATH'), $item->item_img]) : asset('images/d-logo.png') }}" alt="Card image cap" style="width: 489px; height: 500px; object-fit: cover; border-radius: 8px;"> --}}
                 {{-- {{ $item->item_img && file_exists($imagePath) ? $item->getMenuImgAttribute() : asset('images/d-logo.png') }} --}}
                 

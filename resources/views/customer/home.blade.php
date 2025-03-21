@@ -7,12 +7,13 @@
     <style>
         
         #testinomial{
-            padding-left: 10px;
-            padding-right: 10px;
+            padding-left: 0px;
+            padding-right: 0px;
         }
         #testinomial .cat1 .owl-carousel .owl-stage-outer .owl-stage .owl-item {
             width: 166px !important;
-            height: 42px !important;
+            height: auto !important;
+            /* height: 42px !important; */
             border-radius: 100px !important;
         }
         #testinomial .cat1 .card-main-blog, 
@@ -95,6 +96,20 @@
                 /* margin-bottom: 10px;  */
                 margin: 0;
                 padding: 0;
+                
+                font-size: 12px !important; /* Slightly larger for better readability */
+                font-weight: 500 !important; /* Medium weight for better contrast */
+                font-family: 'Poppins', sans-serif !important;
+                text-align: center;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+                word-wrap: break-word;
+                white-space: normal;
             }
 
             /* Button styling */
@@ -125,17 +140,19 @@
             }
             .card-main-blog, 
             .card-v-inner-sys-five {
-                height: 42px; /* Set height */
+                /* height: 42px;  */
                 font-family: 'Poppins', sans-serif;
                 text-align: center;
-                font-size: 12px;
-                border-radius: 15px;
-                padding: 5px 10px;
+                font-size: 10px;
+                padding: 10px 10px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 min-height: 42px; /* Ensures it doesn't shrink */
+                height: auto;
                 border-radius: 100px !important;
+                white-space: normal; /* Allows text to wrap inside */
+                word-wrap: break-word;
             }
 
             /* .owl-carousel .item {
@@ -162,6 +179,25 @@
                 width: auto;
                 padding: 8px 10px;
             } */
+        }
+        .border-card {
+            /* height: 67px !important; */
+            border: none !important; /* Removes any existing border */
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15); /* Uniform shadow on all sides */
+            padding: 10px; /* Adds spacing inside */
+            background: white; /* Ensures shadow is visible */
+            border-radius: 20px !important; /* Optional: Soft rounded corners */
+        }
+        /* Menu item images */
+        .menu-img{
+            width: 470 !important;
+            height: 214 !important;
+            /* width: 367px;
+            height: 182.77px; */
+            margin: 10px;      
+            object-fit: cover;
+            display: block;
+            border-radius: 20px !important;
         }
 
     </style>

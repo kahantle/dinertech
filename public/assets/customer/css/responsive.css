@@ -38,7 +38,15 @@
         font-size: 22px;
     }
     .btn-later {
-        padding: 3px 20px;
+        height: 42px !important;
+        font-size: 16px !important; /* Slightly larger for better readability */
+        font-weight: 600 !important; /* Medium weight for better contrast */
+        font-family: 'Poppins', sans-serif !important;
+        text-align: center;
+        padding-top: 100px !important;
+        padding-bottom: 100px !important;
+        /* padding: 20px 20px !important; */
+        border-radius: 100px !important;
     }
     .wb-inner-system {
         margin-right: 5px;

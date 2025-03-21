@@ -3,6 +3,9 @@
 @section('css')
 	<link rel="stylesheet" href="{{asset('assets/customer/css/bootstrap-datetimepicker.min.css')}}">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.2/css/font-awesome.min.css">
+	<style>
+
+	</style>
 @endsection
 
 @section('content')
@@ -148,7 +151,7 @@
 								<img src="{{asset('assets/customer/images/clock_cart.png')}}">
 								<div class="apply-coupen-data selectTiming">
 									<h4>Order Timing</h4>
-									<span class="oreder-text">
+									<span class="oreder-text ">
 										When would you like your order?
 									</span>
 									<div class="options hide">

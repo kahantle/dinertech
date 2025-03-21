@@ -784,7 +784,7 @@ button:focus {
 }
 
 .btn-later {
-    padding: 3px 30px;
+    padding: 10px 30px !important;
     font-size: 16px;
     color: #fff;
     margin: 0 14px 0 0;
@@ -817,6 +817,7 @@ button:focus {
 
 .wd-innerborder {
     border-bottom: 2px solid #eeeeee;
+    
 }
 
 .dropdown-content {
