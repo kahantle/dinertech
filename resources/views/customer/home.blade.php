@@ -352,6 +352,10 @@
             font-weight: 600;
             color: #626262;
         }
+
+        .menu-item{
+            margin-right: -20px !important;
+        }
     </style>
 @endsection
 
@@ -451,7 +455,7 @@
                                         </div>
                                     </div>
                                 @endif
-                                <div class="scrollbar" id="style-4"></div>
+                                <div class="scrollbar menu-item" id="style-4"></div>
                             </div>
                         </div>
                     </div>

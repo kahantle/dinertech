@@ -1,21 +1,21 @@
 <!-- HEADER STRAT -->
 <nav class="sidebar-ar" id="sidebar">
     <div class="wd-sl-headerall">
-        {{-- <div class="logo-img-ar">
+        <div class="logo-img-ar">
             <img class="lazy" data-src="{{ asset('assets/customer/images/chat/logo.png') }}">
             
         </div>
-        <div class="right-icon">
+        {{-- <div class="right-icon">
             <i data-feather="shopping-cart"></i>
         </div> --}}
-        <div class="header-container">
+        {{-- <div class="header-container">
             <div class="logo-img-ar">
                 <img class="lazy" data-src="{{ asset('assets/customer/images/chat/logo.png') }}" alt="Logo">
             </div>
             <div class="right-icon">
                 <i data-feather="shopping-cart"></i>
             </div>
-        </div>
+        </div> --}}
         {{-- <div>
             @if(auth()->check() == true)
             <a href="{{ route('customer.orders') }}">
@@ -159,7 +159,34 @@
         <i class="fas fa-align-left"></i>
     </button>
     <div class="wd-dr-res-img">
-        <img class="lazy" data-src="{{ asset('assets/customer/images/chat/logo.png') }}">
+        <div class="header-container mobile">
+            <div class="logo-img-ar">
+                <img class="lazy" data-src="{{ asset('assets/customer/images/chat/logo.png') }}" alt="Logo">
+            </div>
+            <div class="right-icon">
+                
+                @if(auth()->check() == true)
+                <a href="{{ Request::is('customer/cart') ? route('customer.index') : route('customer.cart')}}">
+                    @if (Request::is('customer/cart'))
+                        <img class="lazy" data-src="{{ asset('assets/customer/images/chat/home.png') }}" alt="Home">
+                    @else
+                        <img class="lazy" data-src="{{ asset('assets/customer/images/chat/cart.png') }}" alt="Cart">
+                    @endif
+                </a>
+                @else
+                <a data-toggle="modal" data-target="#yourModal">
+                    @if (Request::is('customer/cart'))
+                        <img class="lazy" data-src="{{ asset('assets/customer/images/chat/home.png') }}" alt="Home">
+                    @else
+                        <img class="lazy" data-src="{{ asset('assets/customer/images/chat/cart.png') }}" alt="Cart">
+                    @endif
+                </a>
+                @endif
+                {{-- <i data-feather="shopping-cart"></i> --}}
+            </div>
+        </div> 
+        {{-- <img class="lazy" data-src="{{ asset('assets/customer/images/chat/logo.png') }}"> --}}
+
     </div>
     <div class="wd-sl-resright">
         <!-- <button class="wd-sl-serchtoggle" id="show-hidden-menu30"><i class="fas fa-ellipsis-h"></i></button> -->
@@ -259,16 +286,26 @@
                 </li>
             </ul>
             <ul class="nav-list-ul mt-4">
-                <li>
-                    <form method="POST" action="{{ route('customer.logout') }}">
-                        @csrf
-                        <a href="{{ route('customer.logout') }}"
-                            onclick="event.preventDefault();this.closest('form').submit();" alt="Logout">
-                            <i data-feather="log-out"></i>
-                            <span>Logout</span>
-                        </a>
-                    </form>
-                </li>
+                
+                @if(auth()->check())
+                    <li >
+                        <form method="POST" action="{{ route('customer.logout') }}">
+                            @csrf
+                            <a href="{{ route('customer.logout') }}"
+                                onclick="event.preventDefault(); this.closest('form').submit();" alt="Logout">
+                                <i data-feather="log-out"></i>
+                                <span>Logout</span>
+                            </a>
+                        </form>
+                    </li> 
+                @else
+                <li >
+                    <a href="{{ route('customer.cards.list') }}"  data-toggle="modal" data-target="#yourModal" onclick="closeSibar()">
+                        <i data-feather="log-in"></i>
+                        <span>Login</span>
+                    </a>
+                </li> 
+                @endif
             </ul>
         </div>
     </div>

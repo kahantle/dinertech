@@ -13,10 +13,16 @@
 
 <!-- jQuery UI (Required for datepicker) -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 
     <link rel="shortcut icon" type="image/x-icon" href="{{asset('assets/customer/images/favicon.ico')}}" />
     <style>
+        .wrp-ar-nav-body {
+            padding: 5px 10px 5px 10px !important;
+            top: -30px !important;
+        }
         button.owl-prev{
             border: none;
             background: transparent;
@@ -40,16 +46,17 @@
             padding: 10px;
         }
 
-        .logo-img-ar {
+        .mobile .logo-img-ar {
             position: absolute;
             left: 50%;
+            width: 50px;
             transform: translateX(-50%);
         }
 
         .right-icon {
             position: absolute;
-            right: 20px;
-            font-size: 24px;
+            right: -20px;
+            width: 20px;
             cursor: pointer;
         }
 
@@ -67,5 +74,8 @@
 </body>
 <script>
     feather.replace(); // Ensures Feather icons load properly
+    function closeSibar() {
+        document.querySelector(".sidebar").classList.remove("show-sidebar");
+    }
 </script>
 </html>

@@ -137,6 +137,16 @@
             color: #438F00;
             font-weight: bold;
             font-size: 12px;
+            /* text-transform: lowercase; */
+        }
+        .order-status-danger {
+            font-family: 'Poppins', sans-serif; /* Keeps consistency */
+            display: flex;
+            align-items: center;
+            color: #FC0000;
+            font-weight: bold;
+            font-size: 12px;
+            /* text-transform: lowercase; */
         }
 
         .status-dot {
@@ -211,9 +221,18 @@
                                         <span class="order-price">${{ $currentOrder->grand_total }}</span>
                                     </div>
                                     <div class="order-footer">
-                                        <span class="order-status">
+                                        @if($currentOrder->order_progress_status == 'CANCEL')
+                                            <span class="order-status-danger">
+                                                <span class="status-dot-danger"></span> {{ ucfirst(strtolower($currentOrder->order_progress_status)) }}
+                                            </span>
+                                        @else
+                                            <span class="order-status">
+                                                <span class="status-dot"></span> {{ ucfirst(strtolower($currentOrder->order_progress_status)) }}
+                                            </span>
+                                        @endif
+                                        {{-- <span class="order-status">
                                             <span class="status-dot"></span> {{ $currentOrder->order_progress_status }}
-                                        </span>
+                                        </span> --}}
                                         <a href="{{ route('customer.orders.details', $currentOrder->order_id) }}" class="order-details">Details</a>
                                     </div>
                                 </div> 
@@ -232,13 +251,15 @@
                                             <span class="order-price">${{ $pastOrder->grand_total }}</span>
                                         </div>
                                         <div class="order-footer">
-                                            <span class="order-status">
                                                 @if($pastOrder->order_progress_status == 'CANCEL')
-                                                    <span class="status-dot-danger"></span> {{ $pastOrder->order_progress_status }}
+                                                    <span class="order-status-danger">
+                                                        <span class="status-dot-danger"></span> {{ ucfirst(strtolower($pastOrder->order_progress_status)) }}
+                                                    </span>
                                                 @else
-                                                    <span class="status-dot"></span> {{ $pastOrder->order_progress_status }}
+                                                    <span class="order-status">
+                                                        <span class="status-dot"></span> {{ ucfirst(strtolower($pastOrder->order_progress_status)) }}
+                                                    </span>
                                                 @endif
-                                            </span>
                                             <a href="{{ route('customer.orders.details', $pastOrder->order_id) }}" class="order-details">Details</a>
                                         </div>
                                     </div> 

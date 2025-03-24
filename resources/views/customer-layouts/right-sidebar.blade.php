@@ -179,6 +179,11 @@
    
 /* Responsive Design */
 @media (max-width: 768px) {
+    .owl-next, .owl-prev {
+        pointer-events: none; /* Disables clicking */
+        opacity: 0; /* Hides the button */
+        visibility: hidden; /* Ensures it's fully removed */
+    }
     .fulll-div {
         flex-direction: column;
         align-items: center;
@@ -206,6 +211,11 @@
 
 /* Extra Small Screens (Mobile) */
  @media (max-width: 480px) {
+    .owl-next, .owl-prev {
+        pointer-events: none; /* Disables clicking */
+        opacity: 0; /* Hides the button */
+        visibility: hidden; /* Ensures it's fully removed */
+    }
     .fulll-div {
         flex-direction: wrap;
         align-items: center;
@@ -587,13 +597,14 @@
 .pagination-container {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     gap: 20px;
+    width: 100%;
 }
 
 .pagination-btn {
-    width: 40px;
-    height: 40px;
+    width: 27px;
+    height: 27px;
     border: none;
     border-radius: 50%;
     background-color: #2f54eb;
@@ -603,6 +614,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+.pagination-btn i{
+    width: 6px;
+    height: 9px;
 }
 
 .pagination {
@@ -994,7 +1009,6 @@
                                 
                                 <div class="d-flex align-items-center w-100 justify-content-center mb-2">
                                     <h5 class="payment-blog-title m-0 ">Payment Methods</h5>
-                                    {{-- <h5 class="md-payment-blog ">Payment Methods</h5> --}}
                                 </div>
 
 
@@ -1073,20 +1087,26 @@
                                                         </div>
                                                     </div>
                                                 @endforeach
-                                                {{-- pagination --}}
-                                                <div class="pagination-container">
-                                                    <button class="pagination-btn" id="prevBtn">&lt;</button>
-                                                    <div class="pagination">
-                                                        <span class="page active"></span>
-                                                        <span class="page"></span>
-                                                        <span class="page"></span>
-                                                        <span class="page"></span>
-                                                    </div>
-                                                    <button class="pagination-btn" id="nextBtn">&gt;</button>
-                                                </div>
+                                               
                                                 
                                             </div>
-                                        @else
+                                             {{-- pagination --}}
+                                                    <div class="pagination-container mt-3">
+                                                        <div class="pagination-btn">
+                                                            <i class="fas fa-chevron-left"></i>
+                                                        </div>
+                                                        {{-- <button class="pagination-btn" id="prevBtn">&lt;</button> --}}
+                                                        <div class="pagination">
+                                                            @foreach ($cards as $key=>$card)
+                                                                <span class="page {{ $key==0 ? 'active' : '' }}"></span>
+                                                            @endforeach
+                                                        </div>
+                                                        {{-- <button class="pagination-btn" id="nextBtn">></button> --}}
+                                                        <div class="pagination-btn">
+                                                            <i class="fas fa-chevron-right"></i>
+                                                        </div>
+                                                    </div>
+                                            @else
                                             <div class="text-center">
                                                 <h4>Cards not found</h4>
                                             </div>

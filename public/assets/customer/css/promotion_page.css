@@ -456,11 +456,11 @@
 
  *::-webkit-scrollbar {
      width: 5px;
-     background-color: #535bfe66;
+     background-color: #fff;
  }
 
  *::-webkit-scrollbar-thumb {
-     background-color: #535bfe;
+     background-color: #fff;
      border: unset;
  }
 
