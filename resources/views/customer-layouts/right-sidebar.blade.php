@@ -615,10 +615,10 @@
     align-items: center;
     justify-content: center;
 }
-.pagination-btn i{
+/* .pagination-btn i{
     width: 6px;
     height: 9px;
-}
+} */
 
 .pagination {
     display: flex;
