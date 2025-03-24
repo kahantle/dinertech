@@ -17,7 +17,7 @@ class AccountController extends Controller
     {
         try {
             $restaurant = Restaurant::where('restaurant_id', $request->post('restaurant_id'))->first();
-            $restaurant_settings = Restaurant::select('sales_tax','is_pinprotected','auto_print_receipts')->where('restaurant_id', $request->post('restaurant_id'))->first();
+            $restaurant_settings = Restaurant::select('sales_tax','is_pinprotected','auto_print_receipts', 'tip1', 'tip2', 'tip3')->where('restaurant_id', $request->post('restaurant_id'))->first();
             $user_settings = User::select('chat_notifications','location_tracking','pin_notifications','pin','pin As menu_pin')->where('uid',$restaurant->uid)->first()->toArray();
             unset($user_settings['full_name'],$user_settings['image_path']);
             return response()->json([ 'settings' => array_merge($restaurant_settings->toArray(), $user_settings) , 'message' => "All Settings fetched Successfully.", 'success' => true], 200);
@@ -49,6 +49,16 @@ class AccountController extends Controller
                 ->first();
             $restaurant->sales_tax = $request->post('sales_tax');
             $restaurant->auto_print_receipts = ($request->post('auto_print_receipts') == "true") ? 1 : 0;
+            if(($request->post('tip1')) && !empty($request->post('tip1'))){
+                $restaurant->tip1 = $request->post('tip1');
+            }
+            if(($request->post('tip2')) && !empty($request->post('tip2'))){
+                $restaurant->tip2 = $request->post('tip2');
+            }
+            if(($request->post('tip3')) && !empty($request->post('tip3'))){
+                $restaurant->tip3 = $request->post('tip3');
+            }
+
             $user = User::where('uid',$restaurant->uid)->first();
             if($user){
                 $user->chat_notifications = ($request->post('chat_notifications') == "true") ? 1 : 0;

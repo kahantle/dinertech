@@ -14,12 +14,15 @@ use Illuminate\Http\Request;
 use App\Models\LoyaltyRule;
 use App\Models\Restaurant;
 use Config;
+use Auth;
 
 class CartController extends Controller
 {
     public function index()
     {
         $cart = session()->get('cart', []);
+        $uid = Auth::user()->uid;
+        $restaurantId = session()->get('restaurantId');
         if (!empty($cart)) {
             $cartItems = array();
             $modifierdata = array();
@@ -46,6 +49,7 @@ class CartController extends Controller
         } else {
             $data['cartItems'] = array();
         }
+        $data['cards'] = getUserCards($restaurantId, $uid);
         $data['promotions'] = session()->get('promotion');
         $data['title'] = 'Cart - Dinertech';
         return view('customer.cart.index', $data);

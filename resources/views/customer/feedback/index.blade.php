@@ -116,7 +116,7 @@
                             </div>
                         </div>
                     </div>
-                    @include('customer-layouts.right-sidebar')
+                    {{-- @include('customer-layouts.right-sidebar') --}}
                 </div>
             </div>
         </div>
