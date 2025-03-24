@@ -65,9 +65,9 @@ class RestaurantHoursController extends Controller
 
         $restaurant = Restaurant::where('restaurant_id', $request->restaurant_id)->first();
 
-        $tip1=0;
-        $tip2=0;
-        $tip3=0;
+        $tip1="0.0";
+        $tip2="0.0";
+        $tip3="0.0";
         if ($restaurant) {
             // Ensure tip values are properly formatted as strings with two decimal places
             $tip1 = sprintf("%.2f", (float) $restaurant->tip1);
