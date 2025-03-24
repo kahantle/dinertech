@@ -18,9 +18,23 @@ class AccountController extends Controller
         try {
             $restaurant = Restaurant::where('restaurant_id', $request->post('restaurant_id'))->first();
             $restaurant_settings = Restaurant::select('sales_tax','is_pinprotected','auto_print_receipts', 'tip1', 'tip2', 'tip3')->where('restaurant_id', $request->post('restaurant_id'))->first();
+            if ($restaurant_settings) {
+                // Ensure tip values are properly formatted as strings with two decimal places
+                $restaurant_settings->tip1 = sprintf("%.2f", (float) $restaurant_settings->tip1);
+                $restaurant_settings->tip2 = sprintf("%.2f", (float) $restaurant_settings->tip2);
+                $restaurant_settings->tip3 = sprintf("%.2f", (float) $restaurant_settings->tip3);
+            }
+            
+            
+            
             $user_settings = User::select('chat_notifications','location_tracking','pin_notifications','pin','pin As menu_pin')->where('uid',$restaurant->uid)->first()->toArray();
             unset($user_settings['full_name'],$user_settings['image_path']);
-            return response()->json([ 'settings' => array_merge($restaurant_settings->toArray(), $user_settings) , 'message' => "All Settings fetched Successfully.", 'success' => true], 200);
+            return response()->json([ 
+                'settings' => array_merge(
+                    collect($restaurant_settings->toArray())->map(function ($value, $key) {
+                        return in_array($key, ['tip1', 'tip2', 'tip3']) ? sprintf("%.2f", (float) $value) : $value;
+                    })->toArray(),
+                 $user_settings) , 'message' => "All Settings fetched Successfully.", 'success' => true], 200);
         } catch (\Throwable $th) {
             $errors['success'] = false;
             $errors['message'] = Config::get('constants.COMMON_MESSAGES.CATCH_ERRORS');

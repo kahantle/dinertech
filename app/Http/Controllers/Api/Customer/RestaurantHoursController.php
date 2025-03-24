@@ -65,6 +65,15 @@ class RestaurantHoursController extends Controller
 
         $restaurant = Restaurant::where('restaurant_id', $request->restaurant_id)->first();
 
+        $tip1=0;
+        $tip2=0;
+        $tip3=0;
+        if ($restaurant) {
+            // Ensure tip values are properly formatted as strings with two decimal places
+            $tip1 = sprintf("%.2f", (float) $restaurant->tip1);
+            $tip2 = sprintf("%.2f", (float) $restaurant->tip2);
+            $tip3 = sprintf("%.2f", (float) $restaurant->tip3);
+        }
         if($restaurant->online_order_status == 0){
             return response()->json(['success' => false, 'message' => "Restaurant can't able to accept online order in this time !"]);
         }
@@ -106,7 +115,7 @@ class RestaurantHoursController extends Controller
             // Determine if the restaurant is open
             $restaurant = in_array(true, $testResult, true);
 
-        return response()->json(['restaurantopen' => $restaurant, 'success' => true, 'message' => 'Restaurant founded successfully..']);
+        return response()->json(['restaurantopen' => $restaurant, 'tip1'=>$tip1, 'tip2'=>$tip2, 'tip3'=>$tip3, 'success' => true, 'message' => 'Restaurant founded successfully..']);
 
     }
 }

@@ -7,7 +7,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
-        
+        .owl-next, .owl-prev {
+                pointer-events: none; /* Disables clicking */
+                opacity: 0; /* Hides the button */
+                visibility: hidden; /* Ensures it's fully removed */
+            }
         #testinomial{
             padding-left: 0px;
             padding-right: 0px;
@@ -73,11 +77,7 @@
             box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
         }
         @media (max-width: 768px) { 
-            .owl-next, .owl-prev {
-                pointer-events: none; /* Disables clicking */
-                opacity: 0; /* Hides the button */
-                visibility: hidden; /* Ensures it's fully removed */
-            }
+            
             .card-main-blog {
                 text-align: center; /* Center content */
                 font-size: 14px; /* Adjust text size */
@@ -363,7 +363,7 @@
             <div id="chatdesk" class="chart-board ">
                 @include('customer.messages')
                 <div class="row">
-                    <div class="col-xl-8 col-lg-12 col-md-12">
+                    <div class="col-xl-12 col-lg-12 col-md-12">
                         <div id="searchItems" class="scrollbar"></div>
                         <div id="menuItems">
                             <div class="content">
@@ -455,7 +455,7 @@
                             </div>
                         </div>
                     </div>
-                    {{-- {{-- @include('customer-layouts.right-sidebar') --}} --}}
+                    {{-- @include('customer-layouts.right-sidebar') --}}
                 </div>
             </div>
         </div>

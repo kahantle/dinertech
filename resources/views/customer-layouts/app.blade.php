@@ -31,6 +31,28 @@
             right: -19px;
             top: 30%;
         }
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            width: 100%;
+            padding: 10px;
+        }
+
+        .logo-img-ar {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .right-icon {
+            position: absolute;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
     </style>
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     @include('customer-layouts.head')
@@ -43,4 +65,7 @@
     </main>
     @include('customer-layouts.script')
 </body>
+<script>
+    feather.replace(); // Ensures Feather icons load properly
+</script>
 </html>

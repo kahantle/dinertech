@@ -1,10 +1,33 @@
 <!-- HEADER STRAT -->
 <nav class="sidebar-ar" id="sidebar">
     <div class="wd-sl-headerall">
-        <div class="logo-img-ar">
+        {{-- <div class="logo-img-ar">
             <img class="lazy" data-src="{{ asset('assets/customer/images/chat/logo.png') }}">
+            
         </div>
-        @auth
+        <div class="right-icon">
+            <i data-feather="shopping-cart"></i>
+        </div> --}}
+        <div class="header-container">
+            <div class="logo-img-ar">
+                <img class="lazy" data-src="{{ asset('assets/customer/images/chat/logo.png') }}" alt="Logo">
+            </div>
+            <div class="right-icon">
+                <i data-feather="shopping-cart"></i>
+            </div>
+        </div>
+        {{-- <div>
+            @if(auth()->check() == true)
+            <a href="{{ route('customer.orders') }}">
+                <i data-feather="shopping-cart"></i>
+            </a>
+            @else
+            <a data-toggle="modal" data-target="#yourModal">
+                <i data-feather="shopping-cart"></i>
+            </a>
+            @endif
+        </div> --}}
+        {{-- @auth
             <div class="wd-dr-sec-das">
                 @if (Auth::user()->profile_image)
                     <img src="{{ route('display.image', [Config::get('constants.IMAGES.USER_IMAGE_PATH'), Auth::user()->profile_image]) }}"
@@ -13,7 +36,7 @@
                 <h3 class="m-0">{{ \Auth::user()->full_name }}</h3>
                 <p class="mt-1">My Profile </p>
             </div>
-        @endauth
+        @endauth --}}
         <div class="nav-list-ar">
             <ul class="nav-list-ul">
                 <li class="{{ Request::is('customer') ? 'active' : '' }}">
