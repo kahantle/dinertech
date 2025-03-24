@@ -35,10 +35,15 @@ class LoyaltyRuleController extends Controller
             $results = array();
             $loyaltiesItems = array();
             if($loyalties->count() != 0){
+                // $loyalties = $loyalties->sortByDesc('point'); 
                 foreach($loyalties as $loyaltyKey => $loyalty){
                     $results[$loyaltyKey] = ['rules_id' => $loyalty->rules_id,'restaurant_id' => $loyalty->restaurant_id,'point' => $loyalty->point];
                     $results[$loyaltyKey]['menuItems'] = get_menuItems($loyalty->rulesItems,$loyalty->point);
                 }
+                // Sort the results array by 'point' in ascending order
+                usort($results, function ($a, $b) {
+                    return $a['point'] <=> $b['point'];
+                });
             }else{
                 $results = [];
             }

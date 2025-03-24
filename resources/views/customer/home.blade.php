@@ -4,7 +4,9 @@
     <!-- Rating bar css -->
     <link rel="stylesheet" href="{{ asset('assets/customer/css/rateYo/2.3.2/jquery.rateyo.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/customer/css/promotion_page.css') }}">
-    <style>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
         
         #testinomial{
             padding-left: 0px;
@@ -200,6 +202,156 @@
             border-radius: 20px !important;
         }
 
+        /* Modifier modal css */
+        /* .modifier-modal{ */
+        #exampleModalCenter .modal-content{
+            border: 1px solid white !important;
+            border-radius: 20px !important;
+        }
+        #exampleModalCenter .modal-content .modal-footer .with-modifier-add{
+            font-weight: 600;
+            font-size: 14px;
+            font-family: 'Poppins', sans-serif; /* Keeps consistency */
+        }
+        #exampleModalCenter .modal-content .modal-body .slct-btn{
+            background-color: #636363 !important;
+            color: white !important;
+
+        }
+
+        /* #exampleModalCenter .modal-content .modal-body input[type="radio"],
+        #exampleModalCenter .modal-content .modal-body input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid #636363;
+            border-radius: 4px;
+            background-color: white;
+            cursor: pointer;
+            position: relative;
+        }
+
+        #exampleModalCenter .modal-content .modal-body input[type="radio"]:checked,
+        #exampleModalCenter .modal-content .modal-body input[type="checkbox"]:checked {
+            background-color: #636363 !important;
+            border-color: #636363;
+            color: white !important;
+        }
+
+        #exampleModalCenter .modal-content .modal-body label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            color: #333;
+        } */
+
+        /* ========== */
+        /* Hide default checkboxes and radio buttons */
+         #exampleModalCenter .modal-content .modal-body input[type="radio"],
+         #exampleModalCenter .modal-content .modal-body input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid #636363;
+            border-radius: 4px;
+            background-color: white;
+            cursor: pointer;
+            position: relative;
+            display: inline-block;
+        }
+
+        #exampleModalCenter .modal-content .modal-header .modal-title {
+            font-family: 'Poppins', sans-serif;
+            color: #4E4E4E;
+            font-weight: 600;
+            font-size: 18px;
+        }
+        #exampleModalCenter .modal-content .modal-header .close .closing-logo{
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            width: 27px !important;
+            height: 27px !important;
+            background-color: #2B34FB;
+            border-radius: 100%;
+        }
+        #exampleModalCenter .modal-content .modal-header .close .closing-logo span{
+            color: white;
+            /* width: 6px;
+            height: 9px; */
+            /* margin: -2px; */
+        }
+        .modal-second-inner h6{
+            color:#007AFF;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 16px;
+
+        }
+        .modal-second-inner .modifier-modal.sub-tile{
+            color: #B4B4B4;
+            font-weight: 600;
+            font-size: 14px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Style when checked */
+         #exampleModalCenter .modal-content .modal-body input[type="radio"]:checked,
+         #exampleModalCenter .modal-content .modal-body input[type="checkbox"]:checked {
+            background-color: #636363 !important;
+            border-color: #636363;
+            position: relative;
+        }
+
+        /* Add white checkmark for checkbox */
+         #exampleModalCenter .modal-content .modal-body input[type="checkbox"]:checked::after {
+            content: '✓'; 
+            font-size: 14px;
+            font-weight: bold;
+            color: white;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Add a white dot for radio buttons */
+         #exampleModalCenter .modal-content .modal-body input[type="radio"]:checked::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background-color: white;
+            border-radius: 50%;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Style the label to align better */
+         #exampleModalCenter .modal-content .modal-body label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #626262;
+        }
+        #exampleModalCenter .modal-content .modal-body .price {
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #626262;
+        }
     </style>
 @endsection
 
@@ -332,6 +484,17 @@
             // Add 'active' class to the clicked element
             element.classList.add('active');
         }
+        document.querySelectorAll('.slct-btn').forEach(input => {
+            input.addEventListener('change', function() {
+                if (this.checked) {
+                    this.style.backgroundColor = "#636363";
+                    this.style.color = "white";
+                } else {
+                    this.style.backgroundColor = "white";
+                    this.style.color = "#333";
+                }
+            });
+        });
 
     </script>
 @endsection

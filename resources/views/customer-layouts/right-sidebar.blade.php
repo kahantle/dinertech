@@ -326,22 +326,22 @@
     /* background-color: #5657DB; */
     border: none !important;
     color: white;
-    font-size: 14px;
+    font-size: 12px;
     
     /* margin-top: 14px !important;
     margin-bottom: 14px !important; */
 }
 
-.form-control {
+.order-note .form-control {
     color: white !important;
-    font-size: 14px;
+    font-size: 12px;
     height: 40px;
     border: none;
     border-radius: 50px; 
     padding-left: 15px;
 }
 
-.form-control::placeholder {
+.order-note .form-control::placeholder {
     color: white !important;
     opacity: 0.8;
 }
@@ -366,6 +366,12 @@
 }
 .cart-item-bt-div{
     margin-bottom: -10px !important;
+}
+.cart-item-bt-div .price{
+    color: #4E4E4E;
+    font-family: 'Lato', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
 }
 .m-p-btn{
     background-color: #636363;
@@ -559,6 +565,11 @@
     border-bottom-right-radius: 12px; /* Rounded bottom-right */
     margin: 3px 3px;
 }
+
+.tip-item.no{
+    padding: 10px 5px;
+}
+
 .tipbutton-no{
     color: #A7A9AC;
     width: 106px !important;
@@ -567,6 +578,51 @@
     background-color: transparent;
     padding: 20px;
 }
+.rounded-full{
+    border-radius: 100px;
+    width: 100%;
+}
+
+/* CARD pagination */
+.pagination-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.pagination-btn {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background-color: #2f54eb;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.page {
+    width: 30px;
+    height: 6px;
+    background-color: #ccc;
+    border-radius: 3px;
+}
+
+.page.active {
+    background-color: #2f54eb;
+    width: 40px;
+}
+
 </style>
 <div class="col-xl-4 col-lg-12 col-md-12 wd-dr-dashboart-inner">
     <div class="Promotion-content">
@@ -649,7 +705,7 @@
                                 </div>
                             </div>
                             <div class="text-center" id="loginbutton">
-                                    <button type="button" class="btn btn-primary btn-lg" title="Login" data-toggle="modal" data-target="#yourModal">Login</button>
+                                    <button type="button" class="btn btn-primary btn-lg rounded-full" title="Login" data-toggle="modal" data-target="#yourModal">Login</button>
                             </div>
                         </div>
                         @auth
@@ -720,7 +776,7 @@
                                                 </div>
                                                 @if($item->is_loyalty==0)
                                                 <div class="d-flex justify-content-between align-items-center mb-0 mt-3 cart-item-bt-div">
-                                                    <p class="mt-2 mb-0">
+                                                    <p class="mt-2 mb-0 price">
                                                         ${{ number_format($item['menu_price'] * $item['menu_qty'] + $item['modifier_total'] * $item['menu_qty'], 2) }}
                                                     </p>
                                                     <div class="product-quantity product-quantity-{{ $item->menu_id }} d-inline-flex ">
@@ -914,7 +970,7 @@
                                             <span class="stafftip" >CUSTOM</span>
                                             <button type="button"  class="btn btn-light tip  tipbutton-custom" id="cutomtip">0.00</button>
                                         </div>
-                                        <div class="tip-item  d-flex flex-column align-items-center">
+                                        <div class="tip-item no d-flex flex-column align-items-center">
                                             <button type="button"class="btn btn-light tip tipbutton-no">No Tip</button>
                                         </div>
                                     </div>
@@ -936,10 +992,11 @@
 
                             <div class="card-inner-body">
                                 
-                                <div class="d-flex align-items-center w-100 justify-content-center mb-4">
+                                <div class="d-flex align-items-center w-100 justify-content-center mb-2">
                                     <h5 class="payment-blog-title m-0 ">Payment Methods</h5>
                                     {{-- <h5 class="md-payment-blog ">Payment Methods</h5> --}}
                                 </div>
+
 
                                 <div class="d-flex justify-content-center w-100 mb-5">
                                     <div class="payment-option mr-2">
@@ -1016,6 +1073,18 @@
                                                         </div>
                                                     </div>
                                                 @endforeach
+                                                {{-- pagination --}}
+                                                <div class="pagination-container">
+                                                    <button class="pagination-btn" id="prevBtn">&lt;</button>
+                                                    <div class="pagination">
+                                                        <span class="page active"></span>
+                                                        <span class="page"></span>
+                                                        <span class="page"></span>
+                                                        <span class="page"></span>
+                                                    </div>
+                                                    <button class="pagination-btn" id="nextBtn">&gt;</button>
+                                                </div>
+                                                
                                             </div>
                                         @else
                                             <div class="text-center">

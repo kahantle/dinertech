@@ -226,7 +226,7 @@ class OrdersController extends Controller
         } else {
             $addressId = null;
         }
-dd($request);
+// dd($request);
         if ($request->paymentType == 'Credit Card') {
             $card = Card::where('card_id', $request->card_id)->where('uid', $uid)->where('restaurant_id', $restaurantId)->first();
 

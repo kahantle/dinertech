@@ -147,14 +147,6 @@
             display: inline-block;
             margin-right: 5px;
         }
-        .status-dot-danger {
-            width: 8px;
-            height: 8px;
-            background-color: #FC0000;
-            border-radius: 50%;
-            display: inline-block;
-            margin-right: 5px;
-        }
 
         .order-details {
             font-family: 'Poppins', sans-serif; /* Keeps consistency */
@@ -187,7 +179,19 @@
                     @include('customer.messages')
                     <div class="col-xl-8 col-lg-12 col-md-12">
                         <div class="content">
-                            <!-- Tab links --> 
+                            <!-- Tab links -->
+                            {{-- @if (isMobile()) --}}
+                            {{-- <div class="orer-btn w-100"> 
+                                <h3>
+                                    <button class="tablinks btn-current-event active" onclick="openCity(event, 'Current')" id="defaultOpen">
+                                        Current Order
+                                    </button>
+                                    <button class="tablinks btn-current-event" onclick="openCity(event, 'Past')">
+                                        Past Order
+                                    </button>
+                                </h3>
+                            </div> --}}
+                            {{-- <div class="orer-btn"> --}}
                                 <h3 class="orer-btn mb-4">
                                     <button class="tablinks btn-current-event active" onclick="openCity(event, 'Current')" id="defaultOpen">
                                         Current Order
@@ -195,7 +199,19 @@
                                     <button class="tablinks btn-current-event" onclick="openCity(event, 'Past')">
                                         Past Order
                                     </button>
-                                </h3> 
+                                </h3>
+                            {{-- </div> --}}
+                            
+                            {{-- @else
+                            <div class="tab"> 
+                                <h3>
+                                    <button class="tablinks btn-current-event" onclick="openCity(event, 'Current')"
+                                        id="defaultOpen" alt="Current Order">Current Order</button>
+                                    <button class="tablinks btn-current-event" onclick="openCity(event, 'Past')"
+                                        style="margin-left: -40px;" alt="Past Order">Past Order</button>
+                                </h3>
+                            </div>
+                            @endif --}}
                             
                             <!-- Tab links -->
                             <!-- Tab content -->
@@ -204,7 +220,7 @@
                                 <div class="order-card mb-3">
                                     <div class="order-header">
                                         <span class="order-date">{{ date('M d, Y', strtotime($currentOrder->order_date)) }} | <span class="order-payment"> <a href="#">{{ !isset($currentOrder->payment_card_id) ? 'Cash' : 'Card'}}</a> </span></span>
-                                        <span class="pickup-time">Pickup : {{ $currentOrder->isPickUp == 1 ? date("h:i A", strtotime($currentOrder->pickup_time)) : '00:00' }}</span>
+                                        <span class="pickup-time">Pickup :- {{ $currentOrder->isPickUp == 1 ? $currentOrder->pickup_time : '00:00' }}</span>
                                     </div>
                                     <div class="order-body">
                                         <a href="#" class="order-number">{{ $currentOrder->order_number }}</a>
@@ -216,33 +232,60 @@
                                         </span>
                                         <a href="{{ route('customer.orders.details', $currentOrder->order_id) }}" class="order-details">Details</a>
                                     </div>
-                                </div> 
+                                </div>
+                                    <!-- <div class="row1 order-border1" >
+                                        <div class="col-sm-3 for-right-border1">
+                                            {{-- <img src="images/Logo-small.png"> --}}
+                                            <h3 class="orderi-no">{{ $currentOrder->order_number }}</h3>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center flex-wrap for-right-border">
+                                            <div class="order-date">
+                                                <h3 class="orderi-no">
+                                                    {{ date('M d, Y', strtotime($currentOrder->order_date)) }}
+                                                </h3>
+                                            </div>
+                                            <div class="pickup-time">
+                                                <h3 class="orderi-no">
+                                                    Pickup :- {{ $currentOrder->isPickUp == 1 ? $currentOrder->pickup_time : '00:00' }}
+                                                </h3>
+                                            </div>
+                                        </div>
+                                        {{-- <div class="col-sm-2 for-right-border">
+                                            <h3 class="orderi-no">
+                                                {{ date('M d,Y', strtotime($currentOrder->order_date)) }}</h3>
+                                        </div>
+                                        <div class="col-sm-3 for-right-border">
+                                            @if ($currentOrder->isPickUp == 1)
+                                                <h3 class="orderi-no">Pickup :- {{ $currentOrder->pickup_time }}</h3>
+                                            @else
+                                                <h3 class="orderi-no">Pickup :- 00:00</h3>
+                                            @endif
+                                        </div> --}}
+                                        <div class="col-sm-2 for-right-border">
+                                            <h3>
+                                                <ul>
+                                                    <li>
+                                                        {{ $currentOrder->order_progress_status }}
+                                                    </li>
+                                                </ul>
+                                            </h3>
+                                        </div>
+                                        <div class="col-sm-1 for-right-border">
+                                            <h3 class="orderi-no">${{ $currentOrder->grand_total }}</h3>
+                                        </div>
+                                        <div class="col-sm-1 info">
+                                            <a href="{{ route('customer.orders.details', $currentOrder->order_id) }}"
+                                                alt="Information">
+                                                <img src="{{ asset('assets/customer/images/information.png') }}">
+                                            </a>
+                                        </div>
+                                    </div> -->
                                 @endforeach
                             </div>
 
                             <div id="Past" class="tabcontent">
                                 @foreach ($pastOrders as $pastOrder)
-                                    <div class="order-card mb-3">
-                                        <div class="order-header">
-                                            <span class="order-date">{{ date('M d, Y', strtotime($pastOrder->order_date)) }} | <span class="order-payment"> <a href="#">{{ !isset($pastOrder->payment_card_id) ? 'Cash' : 'Card'}}</a> </span></span>
-                                            <span class="pickup-time">Pickup : {{ $pastOrder->isPickUp == 1 ? date("h:i A", strtotime($pastOrder->pickup_time)) : '00:00' }}</span>
-                                        </div>
-                                        <div class="order-body">
-                                            <a href="#" class="order-number">{{ $pastOrder->order_number }}</a>
-                                            <span class="order-price">${{ $pastOrder->grand_total }}</span>
-                                        </div>
-                                        <div class="order-footer">
-                                            <span class="order-status">
-                                                @if($pastOrder->order_progress_status == 'CANCEL')
-                                                    <span class="status-dot-danger"></span> {{ $pastOrder->order_progress_status }}
-                                                @else
-                                                    <span class="status-dot"></span> {{ $pastOrder->order_progress_status }}
-                                                @endif
-                                            </span>
-                                            <a href="{{ route('customer.orders.details', $pastOrder->order_id) }}" class="order-details">Details</a>
-                                        </div>
-                                    </div> 
-                                    {{-- <div class="row order-border" style="top:-16px !important;">
+                                    <div class="row order-border" style="top:-16px !important;">
                                         <div class="col-sm-4 for-right-border">
                                             <h3>{{ $pastOrder->order_number }}</h3>
                                         </div>
@@ -267,7 +310,7 @@
                                                 <img src="{{ asset('assets/customer/images/information.png') }}">
                                             </a>
                                         </div>
-                                    </div> --}}
+                                    </div>
                                 @endforeach
                             </div>
                         </div>
@@ -282,11 +325,6 @@
 @section('scripts')
     <script>
         function openCity(evt, cityName) {
-            
-            let tabs = document.querySelectorAll(".tablinks");
-            tabs.forEach(btn => btn.classList.remove("active"));
-
-            evt.currentTarget.classList.add("active");
             // Declare all variables
             var i, tabcontent, tablinks;
 
@@ -341,6 +379,12 @@
                 new Notification(noteTitle, noteOptions);
             });
     });
+    function openCity(evt, cityName) {
+        let tabs = document.querySelectorAll(".tablinks");
+        tabs.forEach(btn => btn.classList.remove("active"));
+
+        evt.currentTarget.classList.add("active");
+    }
 
     </script>
 @endsection
