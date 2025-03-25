@@ -32,6 +32,10 @@ class HoursController extends Controller
         $data['address'] = $restaurant;
         $data['cards'] = getUserCards($restaurantId, $uid);
         $data['title'] = 'Information';
+        $restaurant = Restaurant::where('restaurant_id', $restaurantId)->first();
+        $data['tip1'] = $restaurant ? $restaurant->tip1 : 0.0;
+        $data['tip2'] = $restaurant ? $restaurant->tip2 : 0.0;
+        $data['tip3'] = $restaurant ? $restaurant->tip3 : 0.0;
         $data['restaurant_phone'] = 'Information';
         // dd($data);
         return view('customer.hours.index', $data);

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\customer;
 
 use App\Http\Controllers\Controller;
+use App\Models\Restaurant;
 use Illuminate\Http\Request;
 use App\Models\Card;
 use Auth;
@@ -34,10 +35,15 @@ class CardController extends Controller
     public function getCardsList()
     {
 
+        $restaurantId = session()->get('restaurantId');
         $uid = Auth::user()->uid; 
         $data['cards'] = getUserCards(1,$uid);
         $data['orderDetails'] = array();
         $data['title'] = 'Payment Cards';
+        $restaurant = Restaurant::where('restaurant_id', $restaurantId)->first();
+        $data['tip1'] = $restaurant ? $restaurant->tip1 : 0.0;
+        $data['tip2'] = $restaurant ? $restaurant->tip2 : 0.0;
+        $data['tip3'] = $restaurant ? $restaurant->tip3 : 0.0;
         return view('customer.card.index',$data); 
 
     }

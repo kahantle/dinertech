@@ -68,7 +68,10 @@
                         </div>
                     </div>
                     <div class="overlay"></div>
-                    {{-- @include('customer-layouts.right-sidebar') --}}
+                    
+                    @if (!isMobile())
+                        @include('customer-layouts.right-sidebar')
+                    @endif
                 </div>
             </div>
         </div>

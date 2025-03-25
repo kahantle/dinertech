@@ -23,6 +23,7 @@ class CartController extends Controller
         $cart = session()->get('cart', []);
         $uid = Auth::user()->uid;
         $restaurantId = session()->get('restaurantId');
+        $restaurant = Restaurant::where('restaurant_id', $restaurantId)->first();
         if (!empty($cart)) {
             $cartItems = array();
             $modifierdata = array();
@@ -50,6 +51,9 @@ class CartController extends Controller
             $data['cartItems'] = array();
         }
         $data['cards'] = getUserCards($restaurantId, $uid);
+        $data['tip1'] = $restaurant ? $restaurant->tip1 : 0.0;
+        $data['tip2'] = $restaurant ? $restaurant->tip2 : 0.0;
+        $data['tip3'] = $restaurant ? $restaurant->tip3 : 0.0;
         $data['promotions'] = session()->get('promotion');
         $data['title'] = 'Cart - Dinertech';
         return view('customer.cart.index', $data);

@@ -10,6 +10,7 @@ use App\Models\Promotion;
 use App\Models\User;
 use App\Models\Cart;
 use Auth;
+use App\Models\Restaurant;
 use Config;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -20,6 +21,7 @@ class HomeController extends Controller
     public function index()
     {
         $restaurantId = 1;
+        $restaurant = Restaurant::where('restaurant_id', $restaurantId)->first();
         if (Auth::check()) {
             $uid = Auth::user()->uid;
             $data['cards'] = getUserCards($restaurantId, $uid);
@@ -28,6 +30,9 @@ class HomeController extends Controller
         $data['promotionLists'] = $promotionLists->get();
         $data['categories'] = Category::where('restaurant_id', $restaurantId)->latest()->get();
         $data['search'] = true;
+        $data['tip1'] = $restaurant ? $restaurant->tip1 : 0.0;
+        $data['tip2'] = $restaurant ? $restaurant->tip2 : 0.0;
+        $data['tip3'] = $restaurant ? $restaurant->tip3 : 0.0;
         $data['title'] = 'Customer';
         return view('customer.home', $data);
     }

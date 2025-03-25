@@ -6,16 +6,28 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/customer/css/promotion_page.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
-<style>
-        .owl-next, .owl-prev {
+    @if (isMobile())
+        <style>
+            #testinomial{
+                padding-left: 0px;
+                padding-right: 0px;
+            }
+            .owl-next, .owl-prev {
                 pointer-events: none; /* Disables clicking */
                 opacity: 0; /* Hides the button */
                 visibility: hidden; /* Ensures it's fully removed */
             }
-        #testinomial{
-            padding-left: 0px;
-            padding-right: 0px;
-        }
+        </style>
+    @else
+        <style>
+            #testinomial{
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+        </style>
+    @endif
+<style>
+      
         #testinomial .cat1 .owl-carousel .owl-stage-outer .owl-stage .owl-item {
             width: 166px !important;
             height: auto !important;
@@ -367,7 +379,7 @@
             <div id="chatdesk" class="chart-board ">
                 @include('customer.messages')
                 <div class="row">
-                    <div class="col-xl-12 col-lg-12 col-md-12">
+                    <div class="col-xl-8 col-lg-12 col-md-12">
                         <div id="searchItems" class="scrollbar"></div>
                         <div id="menuItems">
                             <div class="content">
@@ -459,7 +471,9 @@
                             </div>
                         </div>
                     </div>
-                    {{-- @include('customer-layouts.right-sidebar') --}}
+                    @if (!isMobile())
+                        @include('customer-layouts.right-sidebar')
+                    @endif
                 </div>
             </div>
         </div>

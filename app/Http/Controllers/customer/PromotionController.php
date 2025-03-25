@@ -7,6 +7,7 @@ use App\Models\MenuItem;
 use App\Models\Promotion;
 use App\Models\Cart;
 use App\Models\PromotionCategoryItem;
+use App\Models\Restaurant;
 use Auth;
 use Illuminate\Http\Request;
 
@@ -16,10 +17,14 @@ class PromotionController extends Controller
     public function index()
     {
         $restaurantId = 1;
+        $restaurant = Restaurant::where('restaurant_id', $restaurantId)->first();
         $data['promotions'] = Promotion::where('restaurant_id', 1)
             ->with('promotion_item')
             ->get();
         $data['title'] = 'Promotions';
+        $data['tip1'] = $restaurant ? $restaurant->tip1 : 0.0;
+        $data['tip2'] = $restaurant ? $restaurant->tip2 : 0.0;
+        $data['tip3'] = $restaurant ? $restaurant->tip3 : 0.0;
         $uid = Auth::user()->uid;
         $data['cards'] = getUserCards($restaurantId, $uid);
 

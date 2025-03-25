@@ -42,6 +42,9 @@ class OrdersController extends Controller
             ->orderBy('order_date', 'desc')
             ->get();
         $restaurantId = session()->get('restaurantId');
+        $data['tip1'] = $restaurant ? $restaurant->tip1 : 0.0;
+        $data['tip2'] = $restaurant ? $restaurant->tip2 : 0.0;
+        $data['tip3'] = $restaurant ? $restaurant->tip3 : 0.0;
         $data['cards'] = getUserCards($restaurantId, $uid);
         $data['title'] = 'Orders';
         return view('customer.order.index', $data);

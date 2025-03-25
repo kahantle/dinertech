@@ -174,9 +174,9 @@
                 align-items: flex-start;
             }
         }
-.wrp-ar-nav-body{
+/* .wrp-ar-nav-body{
 	margin-top: -10px !important;
-}
+} */
     </style>
 @endsection
 
