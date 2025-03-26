@@ -17,6 +17,23 @@
                 opacity: 0; /* Hides the button */
                 visibility: hidden; /* Ensures it's fully removed */
             }
+            
+            .border-card {
+                height: 383.29px !important;
+                width: 97% !important;
+                border: none !important; /* Removes any existing border */
+                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15); /* Uniform shadow on all sides */
+                padding: 10px; /* Adds spacing inside */
+                background: white; /* Ensures shadow is visible */
+                border-radius: 20px !important; /* Optional: Soft rounded corners */
+                /* padding-left: 12px !important; */
+            }
+            .dash-body-ar {
+                margin-top: 5rem;
+            }
+            .inncol-ar-list{
+                margin-top: -55px;
+            }
         </style>
     @else
         <style>
@@ -27,7 +44,13 @@
         </style>
     @endif
 <style>
+      /* for search */
       
+        .input-group {
+            display: flex;
+            gap: 10px; /* Adds space between elements */
+        }
+
         #testinomial .cat1 .owl-carousel .owl-stage-outer .owl-stage .owl-item {
             width: 166px !important;
             height: auto !important;
@@ -194,21 +217,13 @@
                 padding: 8px 10px;
             } */
         }
-        .border-card {
-            /* height: 67px !important; */
-            border: none !important; /* Removes any existing border */
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15); /* Uniform shadow on all sides */
-            padding: 10px; /* Adds spacing inside */
-            background: white; /* Ensures shadow is visible */
-            border-radius: 20px !important; /* Optional: Soft rounded corners */
-        }
         /* Menu item images */
         .menu-img{
-            width: 470 !important;
-            height: 214 !important;
+            width: 367 !important;
+            height: 182.77 !important;
             /* width: 367px;
             height: 182.77px; */
-            margin: 10px;      
+            margin: 8px;      
             object-fit: cover;
             display: block;
             border-radius: 20px !important;
@@ -291,17 +306,17 @@
             border-radius: 50%;
             width: 27px !important;
             height: 27px !important;
-            background-color: #2B34FB;
+            /* background-color: #2B34FB !important; */
             border-radius: 100%;
         }
         #exampleModalCenter .modal-content .modal-header .close .closing-logo span{
-            color: white;
+            /* color: white; */
             /* width: 6px;
             height: 9px; */
             /* margin: -2px; */
         }
         .modal-second-inner h6{
-            color:#007AFF;
+            color: #007AFF;
             font-family: 'Poppins', sans-serif;
             font-weight: 600;
             font-size: 16px;
@@ -367,6 +382,19 @@
 
         .menu-item{
             margin-right: -20px !important;
+        }
+        .home-title-mobile{
+            font-family: 'Poppins' !important;
+            font-weight: 600 !important;
+            font-size: 18px !important;
+            margin-top: 26px !important;
+            margin-bottom: -10px !important;
+        }
+        .item-title{
+            font-family: 'Poppins' !important;
+            font-weight: 600 !important;
+            font-size: 18px !important;
+            color: #4E4E4E !important;
         }
     </style>
 @endsection
@@ -435,7 +463,11 @@
                                     @endif
                                 </div>
                                 @if ($categories->count() != 0)
+                                @if (isMobile())
+                                    <h2 class="home-title-mobile">What are you hungry for? </h2>
+                                @else
                                     <h2>What are you hungry for? </h2>
+                                @endif
                                     <div id="testinomial" class="banner-container">
                                         <div class="cat">
                                             <div class="owl-carousel owl-carousell owl-first-blog  owl-theme">

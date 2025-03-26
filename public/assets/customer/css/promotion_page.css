@@ -4,10 +4,11 @@
 
  html,
  body {
-     background: #F5F4FF;
-     background: #F5F4FF;
+     /* background: #F5F4FF; */
+     background: #F9F9F9;
      overflow-x: hidden;
      padding: 0px !important;
+     margin: 0 !important;
      height: 100%;
  }
 
@@ -292,7 +293,9 @@
  }
 
  .wrp-ar-nav-body {
-     padding: 5px 15px 5px 15px;
+    overflow-x:hidden;
+     padding: 5px 10px 5px 10px;
+     /* padding: 5px 15px 5px 15px; */
  }
 
 
@@ -772,6 +775,15 @@
      margin: 0 10px 0 0;
      border-radius: 50%;
  }
+ 
+ @media (max-width:768px) {
+    .user-profile-img {
+        width: 35px;
+        height: 35px;
+        margin: 0 10px 0 0;
+        border-radius: 50%;
+    }
+}
 
  .dropdown {
      position: relative;
@@ -1529,9 +1541,9 @@
      margin: 10px 0;
      display: flex;
      align-items: center;
+     justify-content: space-between;
      margin-left: 30px;
  }
-
  .wd-check-input label {
      margin-bottom: 0;
      width: 68%;
@@ -4192,7 +4204,7 @@
      }
 
      .scrollbar .card {
-         margin: 15px 10px 0 0 !important;
+         margin: 15px 1px 0 1px !important;
      }
 
      .content h2 {
@@ -4298,7 +4310,7 @@
      }
 
      .dash-body-ar {
-         margin-top: 4rem;
+         margin-top: 4.5rem;
      }
 
      .top-nav-ar.hidden-menu30 {

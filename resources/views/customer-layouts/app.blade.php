@@ -14,6 +14,7 @@
 <!-- jQuery UI (Required for datepicker) -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 
@@ -40,7 +41,7 @@
         .header-container {
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
             position: relative;
             width: 100%;
             padding: 10px;
@@ -54,10 +55,11 @@
         }
 
         .right-icon {
-            position: absolute;
-            right: -20px;
+            position: fixed;
+            right: 15px;
             width: 20px;
             cursor: pointer;
+            /* transform: translateX(-50%); */
         }
 
     </style>

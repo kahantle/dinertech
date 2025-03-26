@@ -26,7 +26,7 @@
             font-size: 12px;
             font-weight: 500;
             font-family: 'Poppins', sans-serif; /* Keeps consistency */
-            font-weight: bold;
+            font-weight: 500;
             cursor: pointer;
         }
 
@@ -94,7 +94,7 @@
         .order-header {
             display: flex;
             justify-content: space-between;
-            font-size: 14px;
+            font-size: 12px;
             color: #666;
         }
 
@@ -114,13 +114,14 @@
         .order-number {
             color: #6F70C2;
             text-decoration: none;
-            font-weight: bold;
+            font-weight: 500;
             font-size: 14px;
             font-family: 'Poppins', sans-serif;
         }
 
         .order-price {
-            font-weight: bold;
+            color: #636363;
+            font-weight: 500;
             font-size: 16px;
         }
 
@@ -136,7 +137,7 @@
             display: flex;
             align-items: center;
             color: #438F00;
-            font-weight: bold;
+            font-weight: 500;
             font-size: 12px;
             /* text-transform: lowercase; */
         }
@@ -145,7 +146,7 @@
             display: flex;
             align-items: center;
             color: #FC0000;
-            font-weight: bold;
+            font-weight: 500;
             font-size: 12px;
             /* text-transform: lowercase; */
         }
@@ -170,7 +171,7 @@
         .order-details {
             font-family: 'Poppins', sans-serif; /* Keeps consistency */
             font-size: 12px;
-            font-weight: bold;
+            font-weight: 500;
             color: #007bff;
             text-decoration: none;
         }

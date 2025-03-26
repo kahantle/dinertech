@@ -1,5 +1,5 @@
 
-<h2 class="mb-0 mt-4">{{ $category->category_name ?? "" }}</h2>
+<h2 class="mb-0 item-title">{{ $category->category_name ?? "" }}</h2>
 <div class="row">
     @forelse($menuItems as $item)
         <div class="col-md-6">
