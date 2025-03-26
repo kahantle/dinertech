@@ -1846,9 +1846,14 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     .stafftip{
-        width: 40px;
+        width: 50px;
         height: 37px;
         padding: 0px;
+    }
+    .tipbutton.selected {
+        background-color: #007bff !important; /* Change to desired color */
+        color: white !important;
+        border-color: #007bff !important;
     }
 
     .iconbutton {
@@ -2294,23 +2299,24 @@ document.addEventListener("DOMContentLoaded", function() {
                         <div class="text-center" id="tips">
                             <h4 class="mb-2 promotion_text-cololr mb-4">Add Tip For</h4>
                             @php
-                                $totalwithsalestax = ($cart['sub_total'] ?? 0.00) + ($cart['tax_charge'] ?? 0.00);
+                                $totalwithsalestax = ($cart['sub_total'] ?? 0.00);
+                                // $totalwithsalestax = ($cart['sub_total'] ?? 0.00) + ($cart['tax_charge'] ?? 0.00);
                             @endphp
                             <div class="input-group mb-3 full-div">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text bg-primary text-white stafftip" >Tip 1</span>
                                 </div>
                                 <button type="button" style="padding: 6px" value="{{ round($totalwithsalestax * $tip1) / 100 ,2}}"
-                                    class="btn btn-light tip tipbutton text-left">${{round($totalwithsalestax * $tip1) / 100 ,2}}</button>
+                                    class="btn btn-light tip tipbutton text-left">{{$tip1}} %</button>
                                 {{-- <button type="button" style="boarder-radius:20px" class="btn btn-light tipbutton">Light</button> --}}
                                 <div class="input-group-prepend">
                                     <span class="input-group-text bg-primary text-white stafftip">Tip 2</span>
                                 </div>
-                                <button type="button" style="padding: 6px" value="{{ round($totalwithsalestax * $tip2) / 100 ,2}}" class="btn btn-light tip tipbutton">${{round($totalwithsalestax * $tip2) / 100 ,2}}</button>
+                                <button type="button" style="padding: 6px" value="{{ round($totalwithsalestax * $tip2) / 100 ,2}}" class="btn btn-light tip tipbutton">{{$tip2}} %</button>
                                 <div class="input-group-prepend">
                                     <span class="input-group-text bg-primary text-white stafftip">Tip 3</span>
                                 </div>
-                                <button type="button" style="padding: 6px" value="{{ round($totalwithsalestax * $tip3) / 100 ,2}}" class="btn btn-light tip tipbutton">${{ round ($totalwithsalestax * $tip3) / 100 ,2}}</button>
+                                <button type="button" style="padding: 6px" value="{{ round($totalwithsalestax * $tip3) / 100 ,2}}" class="btn btn-light tip tipbutton">{{ $tip3 }} %</button>
                             </div>
                             {{-- <br>
                             <div class="input-group mb-3">
@@ -2344,9 +2350,9 @@ document.addEventListener("DOMContentLoaded", function() {
                                 <div class="input-group-prepend">
                                     <span class="input-group-text custom-tip-btn bg-primary text-white customtip">CUSTOM</span>
                                 </div>
-                                <button type="button" class="btn custom-tip-btn  custom custombutton" id="cutomtip">0.00</button>
+                                <button type="button" class="btn custom-tip-btn  custom custombutton tipbutton" id="cutomtip">0.00 %</button>
 
-                                <button type="button" class="btn custom-tip-btn">No Tip</button>
+                                <button type="button" class="btn custom-tip-btn tip tipbutton" value="0">No Tip</button>
 
                                 {{-- <button type="button" style="boarder-radius:20px" class="btn btn-light custom custombutton" id="cutomtip">0.00</button>
                                 <button type="button" style="width: 140px" class="btn btn-light">No Tip</button> --}}
@@ -2774,6 +2780,19 @@ populateTimeOptions(timeSlots);
     //         this.value = ""; // Clear the input
     //     }
     // });
+     document.addEventListener("DOMContentLoaded", function() {
+        let buttons = document.querySelectorAll(".tipbutton");
+
+        buttons.forEach(button => {
+            button.addEventListener("click", function() {
+                // Remove "selected" class from all buttons
+                buttons.forEach(btn => btn.classList.remove("selected"));
+
+                // Add "selected" class to the clicked button
+                this.classList.add("selected");
+            });
+        });
+    });
 </script>
 
 @endif
