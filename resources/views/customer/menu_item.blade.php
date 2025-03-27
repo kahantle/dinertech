@@ -22,7 +22,8 @@
                         <p>$ {{ number_format($item->item_price, 2) }}</p>
                     </div>
                     <div class="p-0 rateYo" data-rating="5"></div>
-                    <p class="more wd-dr-lor">{{ $item->item_details }}</p>
+                    <p class="more wd-dr-lor">{{ $item->item_details }} || Images used are for representation purposes only, and do not indicate size, portion, quantity or color of the actual dish.||</p>
+                    <p class="more wd-dr-lor">{{ $item->item_details }} </p>
                     <div class="d-flex justify-content-end w-100 align-items-center">
                         <div class="product-quantity product-quantity-{{ $item->menu_id }} {{ in_array($item->menu_id, $cartMenuItemIds) ? 'd-inline-flex' : 'd-none' }} ">
                             <span class="product-quantity-minus" data-cart-menu-item-id="{{ in_array($item->menu_id, $cartMenuItemIds) ? array_keys($cartMenuItemIds, $item->menu_id)[0] : ""  }}"></span>

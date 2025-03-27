@@ -252,7 +252,7 @@
                                 </label>
                             </div>
 
-                            <h5>Tax</h5>
+                            <h5>Tax & Tips</h5>
                             <div class="checkbox switcher check-box-trains">
                                 <label>
                                     <div class="title">
@@ -265,6 +265,38 @@
                                             value="{{ $restaurant->sales_tax ? $restaurant->sales_tax : '' }}"
                                             id="tax-value">
                                         <button type="button" id="save-tax" data-type="sales-tax">Save</button>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="checkbox switcher check-box-trains">
+                                <label>
+                                    <div class="title">
+                                        <p>Tips</p>
+                                    </div>
+                                    <div class="switch-btn d-flex align-items-center justify-content-end">
+                                        {{-- <span class="input-group-text">%</span> --}}
+                                        <div class="switch-btn">
+                                        <input type="text" max="100" min="0"
+                                            style="padding: 8px 28px 8px 15px; width: 100%;"
+                                        value="{{ $restaurant->tip1 ? $restaurant->tip1 : '' }}"
+                                        placeholder="%"
+                                        id="tip1">
+                                        </div>
+                                        <div class="switch-btn">
+                                        <input type="text" max="100" min="0"
+                                            style="padding: 8px 28px 8px 15px; width: 100%;"
+                                            value="{{ $restaurant->tip2 ? $restaurant->tip2 : '' }}"
+                                            placeholder="%"
+                                            id="tip2">
+                                            </div>
+                                            <div class="switch-btn">
+                                        <input type="text" max="100" min="0"
+                                            style="padding: 8px 28px 8px 15px; width: 100%;"
+                                            value="{{ $restaurant->tip3 ? $restaurant->tip3 : '' }}"
+                                            placeholder="%"
+                                            id="tip3">
+                                            </div>
+                                        <button type="button" id="tips" data-type="tips">Save</button>
                                     </div>
                                 </label>
                             </div>

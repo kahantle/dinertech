@@ -19,8 +19,8 @@
             }
             
             .border-card {
-                height: 383.29px !important;
-                width: 97% !important;
+                /* height: 383.29px !important; */
+                width: 98% !important;
                 border: none !important; /* Removes any existing border */
                 box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15); /* Uniform shadow on all sides */
                 padding: 10px; /* Adds spacing inside */

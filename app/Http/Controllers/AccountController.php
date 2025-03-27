@@ -109,6 +109,20 @@ class AccountController extends Controller
                     $returns['success'] = false;
                     $returns['message'] = "Error in Auto print receipts Enabling !";
                 }
+            }  else if($request->post('type') === 'tips'){
+                $restaurant = Restaurant::where('uid', $uid)->first();
+                $tips = explode(',', $request->post('notification_value'));
+                $restaurant->tip1 = $tips[0];
+                $restaurant->tip2 = $tips[1];
+                $restaurant->tip3 = $tips[2];
+                
+                if ($restaurant->save()) {
+                    $returns['success'] = true;
+                    $returns['message'] = "Tips successfully updated!";
+                } else {
+                    $returns['success'] = false;
+                    $returns['message'] = "Tips does not change successfully!";
+                }
             }
 
             return response()->json($returns);

@@ -163,6 +163,7 @@ $(document).ready(function() {
   $(document).on("click", "#save-tax", function () {
     var type = $(this).data("type");
     var salesTax = $("#tax-value").val();
+    console.log(url)
       $.ajax({
           headers: {
               "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
@@ -173,6 +174,45 @@ $(document).ready(function() {
           data: {
               type: type,
               notification_value: salesTax,
+          },
+          beforeSend: function () {
+              $("body").preloader();
+          },
+          complete: function () {
+              $("body").preloader("remove");
+          },
+          success: function (res) {
+              if (res.success) {
+                  toastr.success(res.message, "", toastrSetting);
+              } else {
+                  toastr.error(res.message, "", toastrSetting);
+              }
+          },
+          error: function (xhr, ajaxOptions, thrownError) {
+              swal.fire("Error change setting!", "Please try again", "error");
+          },
+      });
+  });
+
+  $(document).on("click", "#tips", function () {
+    var type = $(this).data("type");
+    var tip1 = $("#tip1").val();
+    var tip2 = $("#tip2").val();
+    var tip3 = $("#tip3").val();
+    console.log(url)
+      $.ajax({
+          headers: {
+              "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+          },
+          url: url,
+          type: "POST",
+          dataType: "json",
+          data: {
+              type: type,
+              notification_value: `${tip1},${tip2},${tip3}`,
+              // tip1: tip1,
+              // tip2: tip2,
+              // tip3: tip3,
           },
           beforeSend: function () {
               $("body").preloader();
