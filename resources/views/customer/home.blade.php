@@ -19,6 +19,7 @@
             }
             
             .border-card {
+                height: auto !important;
                 /* height: 383.29px !important; */
                 width: 98% !important;
                 border: none !important; /* Removes any existing border */
