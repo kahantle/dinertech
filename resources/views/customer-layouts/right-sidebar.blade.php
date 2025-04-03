@@ -1032,7 +1032,9 @@
                                 $promotion_code ="";
                                 $prmotion_id = $cart['promotion_id'] ?? "0";
                                 if($prmotion_id){
-                                    $promotion_code = \App\Models\Promotion::where('restaurant_id', 1)
+                                    $restaurantId = getRestaurantId();
+                                    // $promotion_code = \App\Models\Promotion::where('restaurant_id', 1)
+                                    $promotion_code = \App\Models\Promotion::where('restaurant_id', $restaurantId)
                                         ->where('promotion_id',$prmotion_id)
                                         ->first();
                                 }
@@ -1467,7 +1469,9 @@
                 <h3 class="my-4">Best Offers</h3>
                     <div style="max-height: 700px;overflow-y: auto;">
                         @php
-                            $promotions = \App\Models\Promotion::where('restaurant_id', 1)
+                            $restaurantId = getRestaurantId();
+                            // $promotions = \App\Models\Promotion::where('restaurant_id', 1)
+                            $promotions = \App\Models\Promotion::where('restaurant_id', $restaurantId)
                                 ->with('promotion_item')
                                 ->get();
                         @endphp
@@ -2258,7 +2262,9 @@ document.addEventListener("DOMContentLoaded", function() {
                                         $promotion_code ="";
                                         $prmotion_id = $cart['promotion_id'] ?? "0";
                                         if($prmotion_id){
-                                            $promotion_code = \App\Models\Promotion::where('restaurant_id', 1)
+                                            $restaurantId = getRestaurantId();
+                                            // $promotion_code = \App\Models\Promotion::where('restaurant_id', 1)
+                                            $promotion_code = \App\Models\Promotion::where('restaurant_id', $restaurantId)
                                                 ->where('promotion_id',$prmotion_id)
                                                 ->first();
                                         }
@@ -2591,7 +2597,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 <h3 class="my-4">Best Offers</h3>
                     <div style="max-height: 700px;overflow-y: auto;">
                         @php
-                            $promotions = \App\Models\Promotion::where('restaurant_id', 1)
+                            $restaurantId = getRestaurantId();
+                            // $promotions = \App\Models\Promotion::where('restaurant_id', 1)
+                            $promotions = \App\Models\Promotion::where('restaurant_id', $restaurantId)
                                 ->with('promotion_item')
                                 ->get();
                         @endphp

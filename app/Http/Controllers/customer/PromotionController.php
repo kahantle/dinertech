@@ -16,7 +16,8 @@ class PromotionController extends Controller
 
     public function index()
     {
-        $restaurantId = 1;
+        $restaurantId = getRestaurantId();
+        // $restaurantId = 1;
         $restaurant = Restaurant::where('restaurant_id', $restaurantId)->first();
         $data['promotions'] = Promotion::where('restaurant_id', 1)
             ->with('promotion_item')

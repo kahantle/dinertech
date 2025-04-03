@@ -17,7 +17,9 @@ class ProfileController extends Controller
     {
         if (Auth::check()) {
             $data['customer'] = User::with('address')->findOrFail(Auth::user()->uid);
-            $restaurantId = 1;
+            $restaurantId = getRestaurantId();
+            // $restaurantId = 1;
+            // dd($restaurantId);
             $restaurant = Restaurant::where('restaurant_id', $restaurantId)->first();
             $uid = Auth::user()->uid;
             $data['cards'] = getUserCards($restaurantId, $uid);

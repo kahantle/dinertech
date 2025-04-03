@@ -133,7 +133,9 @@ class OrdersController extends Controller
         }
 
         //Restaurant Open or Not
-        $restaurantdays  = RestaurantHours::where('restaurant_id',1)->get();
+        $restaurantId = getRestaurantId();
+        $restaurantdays  = RestaurantHours::where('restaurant_id',$restaurantId)->get();
+        // $restaurantdays  = RestaurantHours::where('restaurant_id',1)->get();
         // dd($request);
 
         $testDay  = [];
@@ -150,7 +152,9 @@ class OrdersController extends Controller
             $testDay[]= $day->day == $currentday;
         }
 
-        $restaurantday  = RestaurantHours::with('allTimes')->where('restaurant_id',1)->get();
+        $restaurantId = getRestaurantId();
+        $restaurantday  = RestaurantHours::with('allTimes')->where('restaurant_id',$restaurantId)->get();
+        // $restaurantday  = RestaurantHours::with('allTimes')->where('restaurant_id',1)->get();
         $testResult  = [];
         // dd($testDay);
         if($request->post("orderTime")){
@@ -182,7 +186,8 @@ class OrdersController extends Controller
         $orderDetails = ['order_status' => $request->order_status, 'menu_item' => json_decode(base64_decode($request->menuItem)), 'instruction' => $request->instruction, 'cart_charge' => $request->cart_charge, 'sales_tax' => $request->sales_tax, 'discount_charge' => $request->discount_charge, 'orderDate' => $request->orderDate, 'orderTime' => $request->orderTime, 'grand_total' => $request->grand_total];
 
         $uid = Auth::user()->uid;
-        $restaurantId = 1;
+        $restaurantId = getRestaurantId();
+        // $restaurantId = 1;
 
 
         $userPoint = auth()->user()->total_points;

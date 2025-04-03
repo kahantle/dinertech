@@ -13,7 +13,8 @@ class LoyaltyController extends Controller
 {
     public function index()
     {
-        $restaurantId = 1;
+        $restaurantId = getRestaurantId();
+        // $restaurantId = 1;
         $restaurant = Restaurant::where('restaurant_id', $restaurantId)->first();
         $user = $data['user'] = Auth::user();
         $uid = $user->uid;
