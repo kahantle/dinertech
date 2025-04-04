@@ -21,7 +21,9 @@ class HomeController extends Controller
     public function index()
     {
         $restaurantId = getRestaurantId();
-        // $restaurantId = 1;
+        if(!$restaurantId){
+            $restaurantId = 1;
+        }
         $restaurant = Restaurant::where('restaurant_id', $restaurantId)->first();
         if (Auth::check()) {
             $uid = Auth::user()->uid;
@@ -42,6 +44,9 @@ class HomeController extends Controller
     {
         $categoryId = $request->post('categoryId');
         $restaurantId = getRestaurantId();
+        if(!$restaurantId){
+            $restaurantId = 1;
+        }
         // $restaurantId = 1;
         $data['cart'] = $cart = getCart($restaurantId);
         $data['cartMenuItems'] = getCartQty();
@@ -55,6 +60,9 @@ class HomeController extends Controller
     {
         $searchItem = $request->searchItem;
         $restaurantId = getRestaurantId();
+        if(!$restaurantId){
+            $restaurantId = 1;
+        }
         // $restaurantId = 1;
         $data['cart'] = $cart = getCart($restaurantId);
         $data['cartMenuItemIds'] = !empty($cart) ? array_column($cart->cartMenuItems->toArray(),'menu_id') : [];
@@ -66,6 +74,9 @@ class HomeController extends Controller
     {
         $menuId = $request->menuId;
         $restaurantId = getRestaurantId();
+        if(!$restaurantId){
+            $restaurantId = 1;
+        }
         // $restaurantId = 1;
         $data['item'] = MenuItem::with('modifierList', 'modifierList.modifier_item')->where('restaurant_id', $restaurantId)->where('menu_id', $menuId)->first();
         return response()->json(['view' => \View::make('customer.menu_modifier', $data)->render()], 200);

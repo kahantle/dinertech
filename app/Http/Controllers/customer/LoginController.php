@@ -43,18 +43,26 @@ class LoginController extends Controller
     public function attemptLogin(Request $request)
     {
         $username = $request->post('username');
+        // 
         $restaurantId = 1;
-        $user = User::where('role', Config::get('constants.ROLES.CUSTOMER'))
+        /*$user = User::where('role', Config::get('constants.ROLES.CUSTOMER'))
             ->whereHas('restaurant_user', function ($query) use ($restaurantId) {
                 $query->where('restaurant_id', $restaurantId);
             })
             ->where(function ($query) use ($username) {
                 $query->where('email_id', $username);
                 $query->orWhere('mobile_number', $username);
-            })->first();
+            })->first();*/
+            $user = User::where('role', Config::get('constants.ROLES.CUSTOMER'))
+                ->with('restaurant_user')
+                ->where(function ($query) use ($username) {
+                    $query->where('email_id', $username);
+                    $query->orWhere('mobile_number', $username);
+                })->first();
         if (!$user) {
             return "Customer does not exist.";
         }
+        // dd($user);
         if (!empty($user->restaurant_user)) {
             foreach ($user->restaurant_user as $restaurant) {
                 session()->put('restaurantId', $restaurant->restaurant_id);

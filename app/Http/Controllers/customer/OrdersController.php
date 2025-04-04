@@ -134,6 +134,9 @@ class OrdersController extends Controller
 
         //Restaurant Open or Not
         $restaurantId = getRestaurantId();
+        if(!$restaurantId){
+            $restaurantId = 1;
+        }
         $restaurantdays  = RestaurantHours::where('restaurant_id',$restaurantId)->get();
         // $restaurantdays  = RestaurantHours::where('restaurant_id',1)->get();
         // dd($request);
@@ -153,6 +156,9 @@ class OrdersController extends Controller
         }
 
         $restaurantId = getRestaurantId();
+        if(!$restaurantId){
+            $restaurantId = 1;
+        }
         $restaurantday  = RestaurantHours::with('allTimes')->where('restaurant_id',$restaurantId)->get();
         // $restaurantday  = RestaurantHours::with('allTimes')->where('restaurant_id',1)->get();
         $testResult  = [];
