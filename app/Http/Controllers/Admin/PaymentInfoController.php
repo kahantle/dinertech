@@ -67,7 +67,7 @@ class PaymentInfoController extends Controller
             }]);
             $data['filterType'] = '1 Month';
         }
-    
+
         $data['restaurants'] = $restaurant->latest()->paginate(12);
         // $restaurant = $restaurant->latest()->get();
         return view('admin.payment.index',$data);
@@ -152,7 +152,7 @@ class PaymentInfoController extends Controller
                 $duaration = date('t');
                 $amounts = [];
                 // \DB::enableQueryLog();
-                for($var=1;$var<=$duaration;$var++) 
+                for($var=1;$var<=$duaration;$var++)
                 {
                     // $data['days'][] = "Day".$var;
                     // $data['colors'][] =  '#706bc8';
@@ -164,36 +164,36 @@ class PaymentInfoController extends Controller
                                 ->where('order_date','=',$date)
                                 ->sum('grand_total');
                     $amounts[] = number_format($order,2);
-                   
-                    
+
+
                     $cartCharge = \DB::table('orders')
                             ->where('order_progress_status',Config::get('constants.ORDER_STATUS.COMPLETED'))
                             ->where('order_date','>=',$date)
                             ->sum('cart_charge');
-    
+
                     $discountCharge = \DB::table('orders')
                             ->where('order_progress_status',Config::get('constants.ORDER_STATUS.COMPLETED'))
                             ->where('order_date','>=',$date)
                             ->sum('discount_charge');
-    
+
                     $taxCharge = \DB::table('orders')
                             ->where('order_progress_status',Config::get('constants.ORDER_STATUS.COMPLETED'))
                             ->where('order_date','>=',$date)
                             ->sum('tax_charge');
                     $profit[] = number_format($cartCharge - $discountCharge - $taxCharge,2);
-                    
+
                 }
                 $salesData['amount'] =  array_reverse($amounts);
                 $salesData['days'] = array_reverse($days);
                 $salesData['colors'] = $colors;
-                $data['salesData'] = $salesData; 
-    
-                $profitData['days'] = array_reverse($days); 
+                $data['salesData'] = $salesData;
+
+                $profitData['days'] = array_reverse($days);
                 $profitData['colors'] = $colors;
-                $profitData['profits'] = $profit;  
+                $profitData['profits'] = $profit;
                 $data['profit'] = array_reverse($profitData);
             }
-            elseif ($filter == 'Year') 
+            elseif ($filter == 'Year')
             {
                 $amounts = [];
                 for($var=1;$var<=12;$var++) {
@@ -204,14 +204,14 @@ class PaymentInfoController extends Controller
                     //                         ->where('order_progress_status',Config::get('constants.ORDER_STATUS.COMPLETED'))
                     //                         ->whereMonth('order_date', date('m',strtotime('-'.$var.' month')))
                     //                         ->sum('grand_total'),2);
-                  
+
                     $order = \DB::table('orders')
                             ->where('order_progress_status',Config::get('constants.ORDER_STATUS.COMPLETED'))
                             ->whereMonth('order_date', date('m',strtotime('-'.$var.' month')))
                             ->sum('grand_total');
                     $amounts[] =  number_format($order,2);
                     // $salesData['amount'][] =  number_format($order,2);
-                    
+
                     $cartCharge = \DB::table('orders')
                                 ->where('order_progress_status',Config::get('constants.ORDER_STATUS.COMPLETED'))
                                 ->whereMonth('order_date', date('m',strtotime('-'.$var.' month')))
@@ -234,12 +234,12 @@ class PaymentInfoController extends Controller
                 $salesData['amount'] = $amounts;
                 $data['salesData'] = $salesData;
 
-                $profitData['days'] = $days; 
+                $profitData['days'] = $days;
                 $profitData['colors'] = $colors;
-                $profitData['profits'] = $profit;  
+                $profitData['profits'] = $profit;
                 $data['profit'] = $profitData;
             }
-            elseif ($filter == 'Day') 
+            elseif ($filter == 'Day')
             {
                 $amounts = [];
                 for($var=1;$var<=7;$var++) {
@@ -251,14 +251,14 @@ class PaymentInfoController extends Controller
                     // //                         ->sum('grand_total'),2);
                     $days[] = date ("l", strtotime('-'.$var.' day'));
                     $colors[] = '#706bc8';
-                   
+
                     $order = \DB::table('orders')
                             ->where('order_progress_status',Config::get('constants.ORDER_STATUS.COMPLETED'))
                             ->whereDate('order_date', date('Y-m-d',strtotime('-'.$var.' day')))
                             ->sum('grand_total');
                     $amounts[] = number_format($order,2);
                     // $salesData['amount'][] =  number_format($order,2);
-                    
+
                     $cartCharge = \DB::table('orders')
                         ->where('order_progress_status',Config::get('constants.ORDER_STATUS.COMPLETED'))
                         ->whereDate('order_date', date('Y-m-d',strtotime('-'.$var.' day')))
@@ -275,26 +275,26 @@ class PaymentInfoController extends Controller
                             ->sum('tax_charge');
                     // echo $cartCharge;
                     $profit[] = number_format($cartCharge - $discountCharge - $taxCharge,2);
-                   
+
                 }
                 $salesData['days'] = array_reverse($days);
                 $salesData['amount'] = array_reverse($amounts);
                 $salesData['colors'] = $colors;
                 $data['salesData'] = $salesData;
-                $profitData['days'] = array_reverse($days); 
+                $profitData['days'] = array_reverse($days);
                 $profitData['colors'] = $colors;
-                $profitData['profits'] = array_reverse($profit);  
+                $profitData['profits'] = array_reverse($profit);
                 $data['profit'] = $profitData;
             }
         }
         else
         {
-            
+
             $duaration = date('t');
             $amounts = [];
             // \DB::enableQueryLog();
-            for($var=1;$var<=$duaration;$var++) 
-            { 
+            for($var=1;$var<=$duaration;$var++)
+            {
                 $colors[] =  '#706bc8';
                 $date = \Carbon\Carbon::today()->subDays($var)->format('Y-m-d');
                 $days[] = 'Days '.date('d',strtotime($date));
@@ -303,8 +303,8 @@ class PaymentInfoController extends Controller
                             ->where('order_date','=',$date)
                             ->sum('grand_total');
                 $amounts[] = number_format($order,2);
-               
-                
+
+
                 $cartCharge = \DB::table('orders')
                         ->where('order_progress_status',Config::get('constants.ORDER_STATUS.COMPLETED'))
                         ->where('order_date','=',$date)
@@ -320,19 +320,19 @@ class PaymentInfoController extends Controller
                         ->where('order_date','=',$date)
                         ->sum('tax_charge');
                 $profit[] = number_format($cartCharge - $discountCharge - $taxCharge,2);
-                
+
             }
             $salesData['amount'] =  array_reverse($amounts);
             $salesData['days'] = array_reverse($days);
             $salesData['colors'] = $colors;
-            $data['salesData'] = $salesData; 
+            $data['salesData'] = $salesData;
 
-            $profitData['days'] = array_reverse($days); 
+            $profitData['days'] = array_reverse($days);
             $profitData['colors'] = $colors;
-            $profitData['profits'] = array_reverse($profit);  
+            $profitData['profits'] = array_reverse($profit);
             $data['profit'] = array_reverse($profitData);
         }
-        
+
         return response()->json($data);
     }
 }

@@ -22,7 +22,7 @@ class DashboardController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
 
     public function index()
     {
@@ -32,7 +32,7 @@ class DashboardController extends Controller
         $data['activeOrders'] = Order::where('order_progress_status','!=',Config::get('constants.ORDER_STATUS.COMPLETED'))->where('order_progress_status','!=',Config::get('constants.ORDER_STATUS.CANCEL'))->whereMonth('order_date',date('m'))->count();
         $data['declinedOrders'] = Order::where('order_progress_status','!=',Config::get('constants.ORDER_STATUS.CANCEL'))->whereMonth('order_date',date('m'))->count();
         $totalSales = RestaurantPayments::where('status','SUCCESS')->sum('amount');
-        $data['totalSales'] = $totalSales;
+        $data['totalSales'] = $totalSales; 
         $data['percentage'] = ($totalSales * 1) / 100;
         $data['liveSales'] = Order::where('order_progress_status',Config::get('constants.ORDER_STATUS.COMPLETED'))->whereMonth('order_date',date('m'))->sum('grand_total');
         $previousMonth = date('m',strtotime('-1 month'));
@@ -40,13 +40,13 @@ class DashboardController extends Controller
         $sales = array();
         $days = array();
         $duaration = date('t');
-        
+
         for($var=1; $var<=$duaration; $var++) {
             $date = \Carbon\Carbon::today()->subDays($var)->format('Y-m-d');
             $days[] = 'Days '.date('d',strtotime($date));
             $sales[] = number_format(\DB::table('restaurant_payment')->where('status','SUCCESS')->whereDate('created_at',$date)->sum('amount'));
         }
-        
+
         $data['chart']['sales'] = array_reverse($sales);
         $data['chart']['days'] = array_reverse($days);
         $data['filter'] = '1 Month';
@@ -84,7 +84,7 @@ class DashboardController extends Controller
                 $data['chart']['days'] = array_reverse($days);
                 $data['filter'] = '1 Month';
             }
-            elseif ($filter == 'Year') 
+            elseif ($filter == 'Year')
             {
                 $data['users'] = User::where('role',Config('constants.ROLES.CUSTOMER'))->whereYear('created_at',date('Y'))->count();
                 $data['restaurants'] = User::where('role',Config('constants.ROLES.RESTAURANT'))->whereYear('created_at',date('Y'))->count();
@@ -141,7 +141,7 @@ class DashboardController extends Controller
                 $data['totalSales'] = number_format($totalSales,2);
                 $data['percentage'] = number_format(($totalSales * 1) / 100);
                 $data['liveSales'] = number_format(Order::where('order_progress_status',Config::get('constants.ORDER_STATUS.COMPLETED'))->whereBetween('order_date',[$fromDate,$toDate])->sum('grand_total'),2);
-                
+
                 /* Last Week */
                 $today =  Carbon::now()->startOfWeek();
                 $startOfLastWeek  =  $today->copy()->subDays(7)->format('Y-m-d');
@@ -162,7 +162,7 @@ class DashboardController extends Controller
             {
                 $fromDate = Carbon::createFromFormat('Y-m-d',$request->fromDate);
                 $toDate = Carbon::createFromFormat('Y-m-d',$request->toDate);
-                
+
                 $data['filter'] = date('d-m-Y',strtotime($fromDate)).' To '.date('d-m-Y',strtotime($toDate));
                 $data['users'] = User::where('role',Config('constants.ROLES.CUSTOMER'))->whereBetween('created_at',[$fromDate->format('Y-m-d'),$toDate->format('Y-m-d')])->count();
                 $data['restaurants'] = User::where('role',Config('constants.ROLES.RESTAURANT'))->whereBetween('created_at',[$fromDate->format('Y-m-d'),$toDate->format('Y-m-d')])->count();
@@ -173,21 +173,21 @@ class DashboardController extends Controller
                 $data['totalSales'] = number_format($totalSales,2);
                 $data['percentage'] = number_format(($totalSales * 1) / 100);
                 $data['liveSales'] = number_format(Order::where('order_progress_status',Config::get('constants.ORDER_STATUS.COMPLETED'))->whereBetween('order_date',[$fromDate->format('Y-m-d'),$toDate->format('Y-m-d')])->sum('grand_total'),2);
-                
+
                 $different =  $fromDate->diffInDays($toDate);
                 $sales = array();
                 $days = array();
                 $period = \Carbon\CarbonPeriod::create($fromDate->format('Y-m-d'), $toDate->format('Y-m-d'));
-                
+
                 // Iterate over the period
                 foreach ($period as $date) {
                     $days[] = $date->format('d-m-Y');
                     $sales[] = number_format(\DB::table('restaurant_payment')->where('status','SUCCESS')->whereDate('created_at',$date->format('Y-m-d'))->sum('amount'),2);
                 }
-                
+
                 $data['chart']['sales'] = $sales;
                 $data['chart']['days'] = $days;
-                
+
                 /* Previous Dates */
                 $previousFromDate = $fromDate->subDays($different)->format('Y-m-d');
                 $previousToDate = $toDate->subDays($different)->format('Y-m-d');

@@ -19,7 +19,7 @@
                                     <li><a href="{{route('admin.paymentInfo.index','currentMonth')}}">1 Month</a></li>
                                     <li><a href="{{route('admin.paymentInfo.index','currentYear')}}">1 Year</a></li>
                                 </ul>
-                            </div> 
+                            </div>
                         </div>
                         <div class="clearfix"></div>
                     </div>
@@ -66,17 +66,17 @@
                                         <h3>
                                             Online Payment
                                         </h3>
-                                        
+
                                         @if ($restaurant->restaurant->online_orders_count != 0 && $restaurant->restaurant->OnlineOrders->sum('grand_total') != 0)
                                             @php
                                                 $percentage = number_format($restaurant->restaurant->OnlineOrders->sum('grand_total') * $restaurant->restaurant->online_orders_count / 100,2);
                                             @endphp
                                         @else
                                             @php
-                                                $percentage = 0;
+                                                $percentage = $restaurant->restaurant->OnlineOrders->sum('grand_total');
                                             @endphp
                                         @endif
-                                        
+
                                         <h2>
                                             {{$percentage}}%
                                         </h2>
@@ -99,7 +99,7 @@
                                         {
                                             $profitPercentage = number_format($restaurant->restaurant->online_orders_count * $onlineProfit / 100,2);
                                         }
-                                        else 
+                                        else
                                         {
                                             $profitPercentage = 0;
                                         }
@@ -125,7 +125,7 @@
                             </div>
                         </div>
                     @endforeach
-                    
+
                     {{-- <div class="row zmd-hierarchical-display in paymentinfo-row" data-animation="hierarchical-display">
                         <div class="col-sm-4 zoomIn animated right-border" style="animation-delay: 0.12s;">
                             <div class="panel panel-default panel-user panel-res">
@@ -219,9 +219,9 @@
                             </div>
                         </div>
                     </div> --}}
-                    
+
                     {{$restaurants->links('vendor.pagination.custom')}}
-                </section> 
+                </section>
                 <!-- /#page-content -->
             </div>
         </div>
