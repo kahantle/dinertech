@@ -23,10 +23,10 @@
                                     <a href="{{ route('customer.index') }}" alt="Back to Home" class="back-to-home">Back
                                         To Home</a>
                                 </div>
-                            </div>
+                            </div>  
                         </div>
                     </div>
-                    
+
                     @if (!isMobile())
                         @include('customer-layouts.right-sidebar')
                     @endif

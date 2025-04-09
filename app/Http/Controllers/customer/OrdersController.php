@@ -16,6 +16,7 @@ use App\Models\OrderMenuGroupItem;
 use App\Models\OrderMenuItem;
 use App\Models\RestaurantHours;
 use App\Models\RestaurantUser;
+use App\Models\Restaurant;
 use App\Models\User;
 use Auth;
 use Cartalyst\Stripe\Stripe;
@@ -77,7 +78,7 @@ class OrdersController extends Controller
         $data['cards'] = getUserCards($restaurantId, $uid);
         $data['title'] = 'Order Detail';
         return view('customer.order.detail', $data);
-    } 
+    }
 
     public function submitToOrder(Request $request)
     {
@@ -137,6 +138,7 @@ class OrdersController extends Controller
         if(!$restaurantId){
             $restaurantId = 1;
         }
+        $restaurant = Restaurant::where('restaurant_id', $restaurantId)->first();
         $restaurantdays  = RestaurantHours::where('restaurant_id',$restaurantId)->get();
         // $restaurantdays  = RestaurantHours::where('restaurant_id',1)->get();
         // dd($request);
@@ -146,7 +148,7 @@ class OrdersController extends Controller
             $givenDate = $request->post("orderDate"); // "26-02-2025"; // Example: dd-mm-yyyy format
             $dateObject = \DateTime::createFromFormat('j/n/Y', $givenDate);
 
-            $currentday = lcfirst($dateObject->format('l')); 
+            $currentday = lcfirst($dateObject->format('l'));
         }else{
             $currentday=lcfirst(date('l'));
         }
@@ -216,6 +218,7 @@ class OrdersController extends Controller
 
             }else if($loyalty->loyalty_type == Config::get('constants.LOYALTY_TYPE.CATEGORY_BASED')){
                 $loyaltyCategories = LoyaltyCategory::where('loyalty_id',$loyalty->loyalty_id)->where('restaurant_id',$restaurantId)->get()->pluck('category_id')->toArray();
+                $addPoint = false;
                 foreach ($orderDetails['menu_item'] as $key => $menuItem) {
                     $category_menu = MenuItem::where('menu_id',$menuItem->menu_id)->first();
                     $addPoint = false;
@@ -363,6 +366,9 @@ class OrdersController extends Controller
                         $this->emptyCart();
                         $data['title'] = 'Success Order';
                         $data['cards'] = getUserCards($restaurantId, $uid);
+                        $data['tip1'] = $restaurant ? $restaurant->tip1 : 0.0;
+                        $data['tip2'] = $restaurant ? $restaurant->tip2 : 0.0;
+                        $data['tip3'] = $restaurant ? $restaurant->tip3 : 0.0;
 
                         return view('customer.order.success', $data);
                     } else {
